@@ -16,7 +16,7 @@
 <p>We argue about decisions we have no control over, defend players who don't know we exist, and spend hours imagining combinations that may never take the field.</p>
 <p>And somehow, we enjoy every bit of it.</p>
 <p>Because the IPL is no longer just a two-month cricket tournament. It's a year-round conversation.</p>
-<p>The matches may last a few hours. The season may last two months. But for the fans, the IPL never really ends.</p></div></article><div class="bottom"><a href="./#writing">← Back to Writing &amp; Analysis</a><div class="share-actions"><button id="share" type="button">Share article ↗</button><button id="share-story" type="button">Share story card ↗</button><a class="download-card" href="ipl-story-card.png" download="tcs-ipl-story.png">Download story card ↓</a></div></div><p class="share-help">For Instagram Stories or WhatsApp Status, share or download the story card, then add the article link in the app.</p><p id="status" aria-live="polite"></p></main><script>
+<p>The matches may last a few hours. The season may last two months. But for the fans, the IPL never really ends.</p></div></article><div class="bottom"><a href="./#writing">← Back to Writing &amp; Analysis</a><div class="share-actions"><button id="share" type="button">Share article ↗</button><button id="copy-link" type="button">Copy article link</button><button id="share-story" type="button">Share story card ↗</button><a class="download-card" href="ipl-story-card.png" download="tcs-ipl-story.png">Download story card ↓</a></div></div><p class="share-help">For Instagram Stories, upload the card and paste the article URL into a Link sticker. For a tappable link in WhatsApp Status, paste the URL into a text status.</p><p id="status" aria-live="polite"></p></main><script>
 const articleUrl = 'https://mstmayank.github.io/what-makes-the-ipl-so-special.html';
 const articleTitle = 'What Makes the IPL So Special.';
 const status = document.getElementById('status');
@@ -33,6 +33,7 @@ async function copyArticleLink() {
     status.textContent = 'Copy this link to share: ' + articleUrl;
   }
 }
+document.getElementById('copy-link').addEventListener('click', copyArticleLink);
 document.getElementById('share').addEventListener('click', async () => {
   if (!navigator.share) { await copyArticleLink(); return; }
   try {
