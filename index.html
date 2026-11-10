@@ -97,12 +97,28 @@
 .record-search { display:block; margin-bottom:16px; }
 .record-search button { margin-top:8px; padding:9px 15px; border-radius:8px; border:1px solid var(--orange); background:#171715; color:var(--ink); }
 .record-search input { display:block; width:min(100%,520px); margin-top:8px; padding:12px; background:#171715; color:var(--ink); border:1px solid var(--line); border-radius:8px; font:inherit; }
+.writing-feature { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,30%); gap:20px; align-items:start; }
+.history-card { aspect-ratio:1; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(18px,2vw,32px); border:1px solid var(--line); border-radius:16px; color:#fff; background:linear-gradient(180deg,#171715d9,#17171548 30%,#171715fa 72%),url("ipl-match.jpg") center/cover; }
+.history-card h3 { margin:8px 0; font-size:clamp(1.2rem,2.2vw,2rem); line-height:1.08; }
+.history-card time, .history-card a { color:#ffab8e; }
+.history-card a { text-decoration:underline; }
+@media(max-width:760px) { .writing-feature { grid-template-columns:minmax(0,1fr); } .history-card { width:min(100%,360px); } }
 </style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#records">Records</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-labelledby="writing-title">
   <div class="section-head reveal">
     <div><h2 id="writing-title">Writing &amp; Analysis</h2></div>
     <p>Cricket observations, match breakdowns, and the decisions that shape a game.</p>
   </div>
+  <div class="writing-feature">
   <a class="featured-essay reveal" href="what-makes-the-ipl-so-special.html"><span class="essay-image"><img src="ipl-match.jpg" alt="" width="960" height="540" loading="lazy"></span><div><span class="label">Latest article / IPL</span><h3>The IPL Never Really Ends, Does It?</h3><p>How IPL trade rumours keep fans debating team combinations long before the first ball.</p><span class="essay-meta">By Mayank Shekhar Tiwari · 3 min read <b>Read article <span class="essay-arrow" aria-hidden="true">↗</span></b></span></div></a>
+  <aside class="history-card" id="on-this-day" aria-label="On This Day">
+    <span class="label" style="color:#fff">On This Day</span>
+    <div>
+      <time></time>
+      <h3>No moment added for today yet</h3>
+      <a hidden>Read more ↗</a>
+    </div>
+  </aside>
+  </div>
   <div class="writing-grid">
     <div><span class="label">01 / Short reads</span><h3>Quick Takes</h3><p>One moment or idea from a match, in a few paragraphs.</p></div>
     <div><span class="label">02 / Long reads</span><h3>Deep Dives</h3><p>Closer looks at tactics, player form, and team selection.</p></div>
@@ -121,5 +137,30 @@
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;document.getElementById('year').textContent=new Date().getFullYear();const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));if(!reduced){const cursor=document.querySelector('.cursor'),orb=document.querySelector('.orb');window.addEventListener('pointermove',e=>{cursor.style.transform=`translate(${e.clientX-8}px,${e.clientY-8}px)`;orb.style.setProperty('--mx',`${(e.clientX/innerWidth-.5)*35}px`);orb.style.setProperty('--my',`${(e.clientY/innerHeight-.5)*25}px`)},{passive:true})}const modal=document.getElementById('modal'),open=document.getElementById('open'),close=document.getElementById('close'),brief=document.getElementById('brief'),copy=document.getElementById('copy');function dismiss(){modal.hidden=true;document.body.style.overflow='';open.focus()}open.onclick=()=>{modal.hidden=false;document.body.style.overflow='hidden';brief.focus()};close.onclick=dismiss;modal.onclick=e=>{if(e.target===modal)dismiss()};document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')dismiss();if(e.key==='Tab'){if(e.shiftKey&&document.activeElement===brief){e.preventDefault();copy.focus()}else if(!e.shiftKey&&document.activeElement===copy){e.preventDefault();brief.focus()}}});copy.onclick=async()=>{const msg=document.getElementById('message');if(!brief.value.trim()){msg.textContent='Add your idea first.';return}try{await navigator.clipboard.writeText('Project brief for Mayank Shekhar Tiwari\n\n'+brief.value.trim());msg.textContent='Copied — your brief is ready to share.'}catch{msg.textContent='Select the text above and copy it manually.'}};
 
 
+const historyCard = document.querySelector('#on-this-day');
+const historyMoments = {
+  '04-18': {
+    date: '2008-04-18',
+    title: 'McCullum’s 158* opens the IPL',
+    url: 'https://www.iplt20.com/news/article/ipl-has-changed-the-way-the-game-is-played-mccullum'
+  }
+};
+const indiaDate = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'
+});
+const historyDateParts = Object.fromEntries(indiaDate.formatToParts(new Date()).map(({type, value}) => [type, value]));
+const historyDay = historyDateParts.month + '-' + historyDateParts.day;
+const historyMoment = historyMoments[historyDay];
+const historyDate = historyMoment?.date || historyDateParts.year + '-' + historyDay;
+const historyTime = historyCard.querySelector('time');
+historyTime.dateTime = historyDate;
+historyTime.textContent = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric'
+}).format(new Date(historyDate));
+if (historyMoment) {
+  historyCard.querySelector('h3').textContent = historyMoment.title;
+  const historyLink = historyCard.querySelector('a');
+  historyLink.href = historyMoment.url;
+  historyLink.hidden = false;
+}
 </script></body></html>
-
