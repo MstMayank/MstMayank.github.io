@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cricket Record Book | The Cricket Space</title>
@@ -18,8 +18,12 @@
   td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
   .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
   button { margin-top: 16px; cursor: pointer; }
-</style>
-<a href="./#records">← The Cricket Space</a>
+</style><link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="design-v2.css?v=1"></head><body class="v2">
+<nav class="site-nav" aria-label="Main navigation"><div class="wrap">
+<a class="logo D" href="./" aria-label="The Cricket Space home">tcs<i>.</i></a>
+<button type="button" class="nav-toggle" aria-controls="site-links" aria-expanded="false">Menu ☰</button>
+<div class="links" id="site-links"><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="./#writing">Writing</a><a href="./#about">About</a></div>
+<a class="btn nav-contact" href="./#contact">Let’s talk</a></div></nav><main class="wrap page archive-page">
 <h1>Cricket Record Book</h1>
 <div class="filters">
   <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
@@ -35,7 +39,7 @@
   </table>
 </div>
 <button id="more" type="button" hidden>Show more</button>
-<footer style="margin-top:32px;font-size:14px"><p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p></footer>
+<footer style="margin-top:32px;font-size:14px"><p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p></footer></main>
 <script>
   const format = document.getElementById('format');
   const category = document.getElementById('category');
@@ -190,4 +194,4 @@
   }
   render();
 </script>
-</html>
+<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
