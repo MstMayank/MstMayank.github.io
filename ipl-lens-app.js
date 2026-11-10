@@ -3,7 +3,29 @@ const $=id=>document.getElementById(id);let D,tab='batting',selected=null,sort='
 function empty(id){return {id,runs:0,balls:0,dots:0,fours:0,sixes:0,wickets:0,conceded:0,legal:0,wides:0,noballs:0,bowdots:0,outs:0,matches:new Set(),catches:0,runouts:0,stumpings:0}}
 function add(s,r){['runs','balls','dots','fours','sixes','wickets','conceded','legal','wides','noballs','bowdots','outs'].forEach((k,i)=>s[k]+=r[i+4]);s.matches.add(r[0]);return s}
 function finalize(s){s.sr=rate(s.runs,s.balls);s.batdot=rate(s.dots,s.balls);s.avg=s.outs?s.runs/s.outs:null;s.economy=rate(s.conceded,s.legal,6);s.dot=rate(s.bowdots,s.legal);s.matches=s.matches.size;s.extras=s.wides+s.noballs;return s}
-function baseMatch(mid){const m=D.matches[mid];return (!$('season').value||m[0]==$('season').value)&&(!$('venue').value||m[1]==$('venue').value)}
+const venueAliases = [
+  "Rajiv Gandhi International Stadium",
+  "Maharashtra Cricket Association Stadium",
+  "M Chinnaswamy Stadium",
+  "Wankhede Stadium",
+  "Eden Gardens",
+  "Arun Jaitley Stadium|Feroz Shah Kotla",
+  "Punjab Cricket Association IS Bindra Stadium|Punjab Cricket Association Stadium",
+  "MA Chidambaram Stadium",
+  "Sawai Mansingh Stadium",
+  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium",
+  "Sheikh Zayed Stadium|Zayed Cricket Stadium",
+  "Brabourne Stadium",
+  "Dr DY Patil Sports Academy",
+  "Himachal Pradesh Cricket Association Stadium",
+  "Maharaja Yadavindra Singh International Cricket Stadium",
+  "Shaheed Veer Narayan Singh International Stadium"
+];
+function venueName(name) {
+  const label = name.split(',')[0].replace(/^M\./, 'M ');
+  return venueAliases.find(group => group.split('|').includes(label))?.split('|')[0] ?? name;
+}
+function baseMatch(mid){const m=D.matches[mid];return (!$('season').value||m[0]==$('season').value)&&(!$('venue').value||venueName(D.venues[m[1]]) === $('venue').value)}
 function render(){filtered=D.rows.filter(r=>baseMatch(r[0])&&(!$('phase').value||r[3]==$('phase').value));let map=new Map();const bowling=tab==='bowling';for(const r of filtered){let id=r[bowling?2:1];if(!map.has(id))map.set(id,empty(id));add(map.get(id),r)}
 if(tab==='fielding'){map=new Map();for(const w of D.dismissals){if(!baseMatch(w[0])||($('phase').value&&w[4]!=$('phase').value))continue;for(const id of w[5]){if(!map.has(id))map.set(id,empty(id));let s=map.get(id);s.matches.add(w[0]);if(w[3]==='caught')s.catches++;if(w[3]==='run out')s.runouts++;if(w[3]==='stumped')s.stumpings++}if(w[3]==='caught and bowled'){let id=w[2];if(!map.has(id))map.set(id,empty(id));map.get(id).catches++;map.get(id).matches.add(w[0])}}}
 stats=[...map.values()].map(finalize);if (tab !== 'matchups' && !map.has(selected)) selected = null;
@@ -29,7 +51,7 @@ function renderDetail(){
   $('lens-detail').hidden = selected === null;
   if (selected === null) return;
 if(tab==='fielding'){$('playerName').textContent=D.players[selected];$('sample').textContent='Successful events only. Drops and catch conversion are unavailable.';let events=D.dismissals.filter(w=>baseMatch(w[0])&&(!$('phase').value||w[4]==$('phase').value)&&(w[5].includes(selected)||(w[3]==='caught and bowled'&&w[2]===selected)));bars('phaseChart',[0,1,2].map(p=>[['Powerplay','Middle overs','Death overs'][p],events.filter(w=>w[4]===p).length]));let kinds={};events.forEach(w=>kinds[w[3]]=(kinds[w[3]]||0)+1);$('dismissTitle').textContent='Fielding events';bars('dismissChart',Object.entries(kinds));return}let bowling=tab==='bowling';let rs=filtered.filter(r=>r[bowling?2:1]===selected&&(tab!=='matchups'||r[2]===+$('bowler').value));$('playerName').textContent=D.players[selected];let s=rs.reduce((a,r)=>add(a,r),empty(selected));$('sample').textContent=tab==='fielding'?'Successful fielding events only. Dropped catches are not recorded.':`${fmt(bowling?s.legal:s.balls)} ${bowling?'legal balls bowled':'balls faced'} · ${s.matches.size} matches${tab==='matchups'?' vs '+D.players[+$('bowler').value]:''}`;bars('phaseChart',[0,1,2].map((p)=>{const a=rs.filter(r=>r[3]===p).reduce((a,r)=>add(a,r),empty(selected));let v=bowling?rate(a.conceded,a.legal,6):rate(a.runs,a.balls);return [['Powerplay','Middle overs','Death overs'][p],v,v.toFixed(2)+(bowling?' econ':' SR')]}));let dm={};for(const w of D.dismissals)if(baseMatch(w[0])&&(!$('phase').value||w[4]==$('phase').value)&&(bowling?w[2]===selected&&!['run out','retired hurt','retired out','obstructing the field'].includes(w[3]):w[1]===selected)&&(tab!=='matchups'||w[2]===+$('bowler').value))dm[w[3]]=(dm[w[3]]||0)+1;$('dismissTitle').textContent=bowling?'Wickets by dismissal':'Dismissal breakdown';bars('dismissChart',Object.entries(dm).sort((a,b)=>b[1]-a[1]));}
-Promise.resolve(window.IPL_DATA).then(d=>{D=d;const seasons=[...new Set(d.matches.map(m=>m[0]))].sort().reverse();$('season').innerHTML+=seasons.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');$('venue').innerHTML+=d.venues.map((v,i)=>[v,i]).sort((a,b)=>a[0].localeCompare(b[0])).map(([v,i])=>`<option value="${i}">${esc(v)}</option>`).join('');const options=d.players.map((p,i)=>[p,i]).sort((a,b)=>a[0].localeCompare(b[0])).map(([p,i])=>`<option value="${i}">${esc(p)}</option>`).join('');$('batter').innerHTML = '<option value="">Select batter</option>' + options;
+Promise.resolve(window.IPL_DATA).then(d=>{D=d;const seasons=[...new Set(d.matches.map(m=>m[0]))].sort().reverse();$('season').innerHTML+=seasons.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');$('venue').innerHTML+=[...new Set(d.venues.map(venueName))].sort((a,b)=>a.localeCompare(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');const options=d.players.map((p,i)=>[p,i]).sort((a,b)=>a[0].localeCompare(b[0])).map(([p,i])=>`<option value="${i}">${esc(p)}</option>`).join('');$('batter').innerHTML = '<option value="">Select batter</option>' + options;
 $('bowler').innerHTML = '<option value="">Select bowler</option>' + options;
 selected = null;$('coverage').textContent=`${fmt(d.matches.length)} matches · Through ${d.matches.map(m=>m[2]).sort().at(-1)}`;$('loading').hidden=true;$('content').hidden=false;render()}).catch(e=>{$('loading').textContent='Unable to load the dataset. Please reload to try again.';console.error(e)});
 ['season','venue','phase','batter','bowler'].forEach(id=>$(id).onchange=render);$('search').oninput=renderTable;$('reset').onclick=()=>{['season','venue','phase','search','batter','bowler'].forEach(id=>$(id).value='');render()};document.querySelectorAll('#ipl-lens .lens-tabs button').forEach(b=>b.onclick=()=>{if (tab !== b.dataset.tab) selected = null;
