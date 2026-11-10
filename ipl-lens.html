@@ -333,4 +333,67 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTeamMatchup();
 })();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  for (const id of ['compare-first', 'compare-second', 'team-one', 'team-two']) {
+    const select = document.getElementById(id);
+    const input = document.createElement('input');
+    input.type = 'search';
+    input.placeholder = 'Search by name';
+    input.setAttribute('aria-label', 'Search ' + (id.includes('first') || id.includes('one') ? 'first' : 'second') + (id.startsWith('team') ? ' team' : ' player'));
+    const suggestions = document.createElement('div');
+    suggestions.className = 'lens-suggestions';
+    suggestions.hidden = true;
+    select.closest('label').after(suggestions);
+    select.before(input);
+    select.hidden = true;
+    input.style.width = '100%';
+    input.style.fontSize = '16px';
+    const field = document.createElement('div');
+    select.closest('label').before(field);
+    field.append(select.closest('label'), suggestions);
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      if (select.value && select.selectedOptions[0].text !== input.value) {
+        select.value = '';
+        select.dispatchEvent(new Event('change'));
+      }
+      suggestions.replaceChildren();
+      suggestions.hidden = !query;
+      if (!query) return;
+      const matches = Array.from(select.options).filter(option =>
+        option.value && !option.disabled && option.text.toLowerCase().includes(query)
+      ).slice(0, 20);
+      for (const option of matches) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = option.text;
+        button.addEventListener('click', () => {
+          select.value = option.value;
+          input.value = option.text;
+          suggestions.hidden = true;
+          input.focus();
+          select.dispatchEvent(new Event('change'));
+        });
+        suggestions.append(button);
+      }
+      if (!matches.length) suggestions.textContent = 'No matches found.';
+    });
+    field.addEventListener('focusout', event => {
+      if (!field.contains(event.relatedTarget)) suggestions.hidden = true;
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape') suggestions.hidden = true;
+    });
+    for (const control of [document.getElementById('comparison-mode'), document.getElementById('reset')]) {
+      control.addEventListener(control.tagName === 'SELECT' ? 'change' : 'click', () => {
+        input.value = select.value ? select.selectedOptions[0].text : '';
+        suggestions.hidden = true;
+      });
+    }
+  }
+});
+</script>
 </body></html>
