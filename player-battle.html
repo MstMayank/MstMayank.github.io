@@ -211,6 +211,31 @@
 }
 #ipl-lens .battle-result details { margin:18px 0 28px; }
 #ipl-lens .battle-result summary { cursor:pointer; padding:10px 0; font-weight:600; }
+
+#ipl-lens .battle-workspace { grid-template-columns:minmax(0,2fr) minmax(0,1fr); align-items:start; }
+#ipl-lens .battle-workspace .main-panel { min-width:0; min-height:360px; }
+#ipl-lens .battle-result table { table-layout:auto; white-space:nowrap; overflow-wrap:normal; }
+#ipl-lens .battle-result .table-wrap { max-height:520px; }
+#ipl-lens .battle-result th { position:sticky; top:0; }
+#ipl-lens .battle-result td:first-child { min-width:140px; }
+#ipl-lens .battle-result tbody tr { cursor:pointer; }
+#ipl-lens .battle-result tbody tr:hover, #ipl-lens .battle-result tr.selected { background:#f1d8c9; }
+#ipl-lens #battle-compare-label { max-width:390px; }
+#ipl-lens #battle-clear { margin-bottom:10px; }
+#ipl-lens #battle-detail .panel { min-width:0; }
+#ipl-lens .battle-players { margin-top:24px; }
+#ipl-lens .battle-result h3 { margin:18px 0 10px; }
+#ipl-lens .battle-panel-subtitle { margin:4px 0 16px; color:var(--dim); font-size:.85rem; }
+#ipl-lens .battle-empty { color:var(--dim); }
+@media(max-width:850px) {
+  #ipl-lens .battle-workspace { grid-template-columns:minmax(0,1fr); }
+}
+#ipl-lens .battle-players { grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; align-items:end; }
+#ipl-lens #battle-clear { margin:0; min-height:46px; align-self:end; }
+@media(max-width:600px) {
+ #ipl-lens .battle-players { grid-template-columns:minmax(0,1fr); }
+ #ipl-lens #battle-clear { justify-self:start; }
+}
 </style></head>
 <body>
 <header><a class="logo" href="./" aria-label="The Cricket Space home">tcs<i>.</i></a>
@@ -225,28 +250,45 @@
 <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
 <button type="button" data-competition="international" aria-pressed="false">International</button>
 </div>
+<div class="lens-tabs" role="group" aria-label="Cricket statistics">
+<button type="button" data-view="batting">↗ Batting explorer</button>
+<button type="button" data-view="matchups" class="active">⇄ Head to head</button>
+<button type="button" data-view="bowling">◎ Bowling lab</button>
+<button type="button" data-view="fielding">◇ Fielding</button>
+</div>
 <div class="battle-filters">
 <label id="gender-field" hidden>Category<select id="battle-gender"><option value="male">Men</option><option value="female">Women</option></select></label>
 
 <label>Season<select id="battle-season"><option value="">All seasons</option></select></label>
 <label class="battle-venue">Venue<select id="battle-venue"><option value="">All venues</option></select></label>
+<label id="battle-phase-label">Phase<select id="battle-phase"><option value="">All overs</option><option value="0">Powerplay</option><option value="1">Middle overs</option><option value="2">Death overs</option></select></label>
+<button type="button" id="battle-reset">Reset filters ↺</button>
 </div>
-<div class="battle-modes" role="group" aria-label="Comparison mode">
-<button type="button" data-mode="direct" aria-pressed="true">Batter vs Bowler</button>
-<button type="button" data-mode="batters" aria-pressed="false">Batter vs Batter</button>
-<button type="button" data-mode="bowlers" aria-pressed="false">Bowler vs Bowler</button>
-<button type="button" data-mode="teams" aria-pressed="false">Team vs Team</button>
-</div>
+
+
+<label id="battle-compare-label">Compare<select id="battle-compare">
+<option value="direct">Batter vs Bowler</option><option value="batters">Batter vs Batter</option>
+<option value="bowlers">Bowler vs Bowler</option><option value="teams">Team vs Team</option>
+</select></label>
 <p class="battle-status" id="battle-status" role="status">Loading match data…</p>
+<div class="workspace battle-workspace">
+<section class="panel main-panel">
+<div class="panel-head"><div><div class="eyebrow" id="battle-panel-label">MATCHUP EXPLORER</div><h2 id="battle-panel-title">Batter vs Bowler</h2></div>
+<label id="battle-search-label" hidden>Search player<input id="battle-search" type="search" placeholder="Search a player…" autocomplete="off"></label></div>
 <div class="battle-players" id="battle-players">
 <div class="battle-picker"><label><span id="battle-first-label">Batter</span><input id="battle-first" type="search" placeholder="Search batter" autocomplete="off" aria-controls="battle-first-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-first-results" hidden></div></div>
 <div class="battle-picker"><label><span id="battle-second-label">Bowler</span><input id="battle-second" type="search" placeholder="Search bowler" autocomplete="off" aria-controls="battle-second-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-second-results" hidden></div></div>
+<button type="button" id="battle-clear">Clear players</button>
 </div>
-<button type="button" id="battle-clear">Clear selections</button>
-<section class="panel battle-result" id="battle-result" aria-live="polite" hidden></section>
+
+<p class="hint" id="battle-hint">Select two players. Click a player row to explore their performance.</p>
+<div class="battle-result" id="battle-result" aria-live="polite" hidden></div>
+</section>
+<aside class="detail" id="battle-detail" aria-live="polite" hidden></aside>
+</div>
 <p class="battle-note" id="battle-method"></p>
 <p class="lens-source">Based on available <a href="https://cricsheet.org/">Cricsheet</a> ball-by-ball data under the <a href="https://cricsheet.org/licensing/">ODC Attribution License</a>. Coverage varies by competition and format.</p>
 </section>
 </main>
-<script defer src="player-battle.js?v=compact-results"></script>
+<script defer src="player-battle.js?v=restored-lens"></script>
 </body></html>

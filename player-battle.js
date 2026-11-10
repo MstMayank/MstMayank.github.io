@@ -12,6 +12,8 @@
   let competition = new URLSearchParams(location.search).get('competition') || 'ipl';
   if (!['ipl', 'wpl', 'international'].includes(competition)) competition = 'ipl';
   let mode = 'direct';
+  let view = 'matchups';
+  let detailKey = '';
   let data = null;
   let availablePlayers = [[], []];
   let loadingController = null;
@@ -52,6 +54,9 @@
     });
     result.replaceChildren();
     result.hidden = true;
+    byId('battle-detail').replaceChildren();
+    byId('battle-detail').hidden = true;
+    detailKey = '';
   }
 
 const venueAliases = [
@@ -142,37 +147,129 @@ function venueLabel(name) {
     if (!candidates.length) suggestions[index].textContent = 'No matching names in this dataset.';
   }
 
-  function makeTable(title, names, labels, figures) {
-    const heading = document.createElement('h3');
-    heading.textContent = title;
+  function makeRows(title, labels, rows, choose) {
+    if (title) {
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+      result.appendChild(heading);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
     const table = document.createElement('table');
     const header = table.createTHead().insertRow();
-    for (const label of ['Metric', ...names]) {
+    for (const label of labels) {
       const cell = document.createElement('th');
       cell.scope = 'col';
       cell.textContent = label;
       header.appendChild(cell);
     }
     const body = table.createTBody();
-    labels.forEach((label, index) => {
+    rows.forEach((values, index) => {
       const row = body.insertRow();
-      const cell = document.createElement('th');
-      cell.scope = 'row';
-      cell.textContent = label;
-      row.appendChild(cell);
-      figures.forEach(player => { row.insertCell().textContent = player[index]; });
+      values.forEach(value => { row.insertCell().textContent = value; });
+      if (choose) {
+        row.tabIndex = 0;
+        row.addEventListener('click', () => {
+          body.querySelectorAll('tr').forEach(item => item.classList.toggle('selected', item === row));
+          choose(index);
+        });
+        row.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            row.click();
+          }
+        });
+      }
     });
-    result.append(heading, table);
+    wrap.appendChild(table);
+    result.appendChild(wrap);
   }
 
-  function battingFigures(stats) {
-    return [number(stats.runs), number(stats.balls), divide(stats.runs, stats.balls, 100),
-      divide(stats.runs, stats.outs)];
+  function rowIncluded(row, format) {
+    const match = data.matches[row[0]];
+    return (!format || match[7] === format) && matchIncluded(match) &&
+      (!byId('battle-phase').value || (format || data.format) === 'Test' || row[3] === +byId('battle-phase').value);
   }
 
-  function bowlingFigures(stats) {
-    return [number(stats.wickets), overs(stats.legal),
-      divide(stats.conceded, stats.legal, 6), divide(stats.conceded, stats.wickets)];
+  function addBars(panel, title, entries, suffix) {
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+    panel.appendChild(heading);
+    if (!entries.length) {
+      const note = document.createElement('p');
+      note.className = 'hint';
+      note.textContent = 'No recorded events for this selection.';
+      panel.appendChild(note);
+      return;
+    }
+    const max = Math.max(1, ...entries.map(entry => entry[1]));
+    for (const [label, value, display] of entries) {
+      const name = document.createElement('div');
+      name.className = 'bar-label';
+      const text = document.createElement('span');
+      const figure = document.createElement('b');
+      text.textContent = label;
+      figure.textContent = display ?? (suffix ? value.toFixed(2) + suffix : number(value));
+      name.append(text, figure);
+      const track = document.createElement('div');
+      track.className = 'bar-track';
+      const fill = document.createElement('div');
+      fill.className = 'bar-fill';
+      fill.style.width = value / max * 100 + '%';
+      track.appendChild(fill);
+      panel.append(name, track);
+    }
+  }
+
+  function showDetail(format, id, rows, bowling, fielding = false) {
+    const detail = byId('battle-detail');
+    detail.replaceChildren();
+    detail.hidden = false;
+    detailKey = String(id) + ':' + format;
+    const panel = document.createElement('section');
+    panel.className = 'panel';
+    const eyebrow = document.createElement('div');
+    eyebrow.className = 'eyebrow';
+    eyebrow.textContent = 'UNDER THE LENS';
+    const name = document.createElement('h2');
+    name.textContent = data.players[id];
+    const summary = document.createElement('p');
+    summary.className = 'hint';
+    const totals = emptyStats();
+    rows.forEach(row => addStats(totals, row));
+    summary.textContent = (format ? format + ' · ' : '') +
+      (fielding ? 'Recorded successful fielding events' : number(bowling ? totals.legal : totals.balls) + (bowling ? ' legal balls bowled' : ' balls faced') +
+      ' · ' + new Set(rows.map(row => row[0])).size + ' matches' + (view === 'matchups' && mode === 'direct' ? ' vs ' + data.players[selected[1]] : ''));
+    panel.append(eyebrow, name, summary);
+    const wickets = (data.dismissals || []).filter(wicket => {
+      const match = data.matches[wicket[0]];
+      return (!format || match[7] === format) && matchIncluded(match) &&
+        (!byId('battle-phase').value || (format || data.format) === 'Test' || wicket[4] === +byId('battle-phase').value) &&
+        (fielding ? wicket[5].includes(id) || (wicket[3] === 'caught and bowled' && wicket[2] === id) : bowling ? wicket[2] === id && !['run out','retired hurt','retired out','obstructing the field'].includes(wicket[3]) : wicket[1] === id) &&
+        (view !== 'matchups' || mode !== 'direct' || wicket[2] === selected[1]);
+    });
+    if ((format || data.format) !== 'Test') {
+      const phases = groups(format || data.format).map((label, phase) => {
+        const stats = emptyStats();
+        rows.filter(row => row[3] === phase).forEach(row => addStats(stats, row));
+        const value = fielding ? wickets.filter(wicket => wicket[4] === phase).length
+          : bowling ? (stats.legal ? stats.conceded / stats.legal * 6 : 0)
+          : (stats.balls ? stats.runs / stats.balls * 100 : 0);
+        return [label, value];
+      });
+      addBars(panel, 'Performance by phase', phases, fielding ? '' : bowling ? ' econ' : ' SR');
+    }
+    detail.appendChild(panel);
+    const breakdown = document.createElement('section');
+    breakdown.className = 'panel';
+    const label = document.createElement('div');
+    label.className = 'eyebrow';
+    label.textContent = 'HOW THE WICKETS FALL';
+    breakdown.appendChild(label);
+    const counts = new Map();
+    wickets.forEach(wicket => counts.set(wicket[3], (counts.get(wicket[3]) || 0) + 1));
+    addBars(breakdown, fielding ? 'Fielding events' : 'Dismissal breakdown', [...counts].sort((a,b) => b[1] - a[1]), '');
+    detail.appendChild(breakdown);
   }
 
   function renderTeams(format) {
@@ -204,91 +301,99 @@ function venueLabel(name) {
 
   function render() {
     result.replaceChildren();
-    result.hidden = !data || selected.some(value => value === null);
+    byId('battle-detail').replaceChildren();
+    byId('battle-detail').hidden = true;
+    detailKey = '';
+    const matchup = view === 'matchups';
+    const titles = {direct:'Batter vs Bowler',batters:'Batter vs Batter',bowlers:'Bowler vs Bowler',teams:'Team vs Team'};
+    byId('battle-panel-title').textContent = matchup ? titles[mode] : {batting:'Batting leaderboard',bowling:'Bowling leaderboard',fielding:'Fielding leaderboard'}[view];
+    byId('battle-panel-label').textContent = matchup ? 'MATCHUP EXPLORER' : 'PLAYER EXPLORER';
+    byId('battle-players').hidden = !matchup;
+    byId('battle-clear').hidden = !matchup;
+    byId('battle-compare-label').hidden = !matchup;
+    byId('battle-search-label').hidden = matchup;
+    byId('battle-phase-label').hidden = matchup && mode === 'teams';
+    result.hidden = !data || (matchup && selected.some(value => value === null));
     if (result.hidden) return;
-    const heading = document.createElement('h2');
-    heading.className = 'result-heading';
-    heading.textContent = selected.map(nameFor).join(' vs ');
-    result.appendChild(heading);
-
-    const formats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
+    const formats = competition === 'international' ? ['Test','ODI','T20I'] : [null];
     for (const format of formats) {
-      if (format) {
-        const formatHeading = document.createElement('h2');
-        formatHeading.textContent = format;
-        result.appendChild(formatHeading);
-      }
-      if (mode === 'teams') renderTeams(format);
-      else renderPlayers(format);
+      if (matchup && mode === 'teams') {
+        if (format) {
+          const heading = document.createElement('h3');
+          heading.textContent = format;
+          result.appendChild(heading);
+        }
+        renderTeams(format);
+      } else renderPlayers(format);
     }
   }
 
   function renderPlayers(format) {
-
-    const totals = [emptyStats(), emptyStats()];
-    const phases = [0, 1].map(() => groups(format || data.format).map(emptyStats));
-    let deliveriesFound = false;
-    for (const row of data.rows) {
-      const match = data.matches[row[0]];
-      if ((format && match[7] !== format) || !matchIncluded(match)) continue;
-      if (mode === 'direct') {
-        if (row[1] !== selected[0] || row[2] !== selected[1]) continue;
-        if (row[5] || row[11]) deliveriesFound = true;
-        addStats(totals[0], row);
-        if (phases[0][row[3]]) addStats(phases[0][row[3]], row);
-      } else {
-        const column = mode === 'bowlers' ? 2 : 1;
-        const index = selected.indexOf(row[column]);
-        if (index < 0) continue;
-        if (row[5] || row[11]) deliveriesFound = true;
-        addStats(totals[index], row);
-        if (phases[index][row[3]]) addStats(phases[index][row[3]], row);
+    const matchup = view === 'matchups';
+    const bowling = view === 'bowling' || (matchup && mode === 'bowlers');
+    const fielding = view === 'fielding';
+    const filtered = data.rows.filter(row => rowIncluded(row, format));
+    const map = new Map();
+    const playerRows = new Map();
+    for (const row of filtered) {
+      const id = row[bowling ? 2 : 1];
+      if (matchup && (mode === 'direct' ? id !== selected[0] || row[2] !== selected[1] : !selected.includes(id))) continue;
+      if (!map.has(id)) {
+        map.set(id, emptyStats());
+        playerRows.set(id, []);
+      }
+      addStats(map.get(id), row);
+      playerRows.get(id).push(row);
+    }
+    if (fielding) {
+      map.clear();
+      for (const wicket of data.dismissals || []) {
+        const match = data.matches[wicket[0]];
+        if ((format && match[7] !== format) || !matchIncluded(match) ||
+          (byId('battle-phase').value && (format || data.format) !== 'Test' && wicket[4] !== +byId('battle-phase').value)) continue;
+        const fielders = new Set(wicket[5]);
+        if (wicket[3] === 'caught and bowled') fielders.add(wicket[2]);
+        for (const id of fielders) {
+          if (!map.has(id)) map.set(id, {catches:0,runouts:0,stumpings:0});
+          const stats = map.get(id);
+          if (['caught','caught and bowled'].includes(wicket[3])) stats.catches++;
+          if (wicket[3] === 'run out') stats.runouts++;
+          if (wicket[3] === 'stumped') stats.stumpings++;
+        }
       }
     }
-    if (!deliveriesFound) {
+    let entries = [...map].filter(([id]) => !byId('battle-search').value ||
+      data.players[id].toLowerCase().includes(byId('battle-search').value.toLowerCase()));
+    entries.sort((a,b) => fielding ? b[1].catches - a[1].catches : bowling ? b[1].wickets - a[1].wickets : b[1].runs - a[1].runs);
+    if (!entries.length) {
       const note = document.createElement('p');
-      note.textContent = 'No recorded deliveries for this selection and these filters.';
+      note.className = 'hint';
+      note.textContent = (format ? format + ' · ' : '') + 'No recorded data for this selection.';
       result.appendChild(note);
       return;
     }
-    const names = selected.map(nameFor);
-    const bowling = mode === 'bowlers';
-    const labels = bowling
-      ? ['Wickets', 'Overs', 'Economy', 'Bowling average']
-      : ['Runs', 'Balls', 'Strike rate', 'Batting average'];
-    const figures = bowling ? bowlingFigures : battingFigures;
-    if (mode === 'direct') {
-      const directFigures = stats => [
-        number(stats.runs), number(stats.balls), divide(stats.runs, stats.balls, 100), number(stats.wickets),
-        number(stats.fours), number(stats.sixes)
-      ];
-      const directLabels = ['Runs', 'Balls', 'Strike rate', 'Bowler dismissals', 'Fours', 'Sixes'];
-      makeTable('Overall matchup', [names[0] + ' facing ' + names[1]], directLabels, [directFigures(totals[0])]);
-      renderPhases(format, [names[0]], directLabels, phases, directFigures);
-    } else {
-      makeTable('Overall', names, labels, totals.map(figures));
-      renderPhases(format, names, labels, phases, figures);
-    }
-  }
-
-
-  function renderPhases(format, names, labels, phases, figures) {
-    if ((format || data.format) === 'Test') return;
-    const section = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = 'Performance by phase';
-    section.appendChild(summary);
-    groups(format || data.format).forEach((phase, index) => {
-      makeTable(phase, names, labels, phases.slice(0, names.length).map(player => figures(player[index])));
-      const table = result.lastElementChild;
-      const heading = table.previousElementSibling;
-      section.append(heading, table);
+    entries = entries.slice(0,150);
+    const headers = fielding ? ['Player','Catches','Run-outs','Stumpings']
+      : bowling ? ['Player','Wickets','Overs','Economy','Average','Dot %','Wides','NB']
+      : ['Player','Runs','Balls','SR','Dot %','4s','6s',matchup && mode === 'direct' ? 'Dismissals' : 'Average'];
+    const rows = entries.map(([id,stats]) => {
+      const values = fielding ? [stats.catches,stats.runouts,stats.stumpings]
+        : bowling ? [stats.wickets,overs(stats.legal),divide(stats.conceded,stats.legal,6),divide(stats.conceded,stats.wickets),divide(stats.bowlingDots,stats.legal,100),stats.wides,stats.noBalls]
+        : [stats.runs,stats.balls,divide(stats.runs,stats.balls,100),divide(stats.dots,stats.balls,100),stats.fours,stats.sixes,matchup && mode === 'direct' ? stats.wickets : divide(stats.runs,stats.outs)];
+      return [data.players[id], ...values.map(value => typeof value === 'number' ? number(value) : value)];
     });
-    result.appendChild(section);
+    makeRows(format || '', headers, rows, index => {
+      const id = entries[index][0];
+      showDetail(format,id,playerRows.get(id) || [],bowling,fielding);
+    });
+    const note = document.createElement('p');
+    note.className = 'table-foot';
+    note.textContent = matchup ? 'Historical matchup · Small samples may not represent ability.' : map.size + ' players · Showing ' + entries.length;
+    result.appendChild(note);
   }
 
   function combineFormats(datasets) {
-    const combined = { players: [], venues: [], matches: [], rows: [], format: 'International' };
+    const combined = { players: [], venues: [], matches: [], rows: [], dismissals: [], format: 'International' };
     const playerIds = new Map();
     const venueIds = new Map();
     for (const dataset of datasets) {
@@ -314,6 +419,14 @@ function venueLabel(name) {
         merged[7] = format;
         combined.matches.push(merged);
       }
+      for (const wicket of dataset.dismissals || []) {
+        const merged = wicket.slice();
+        merged[0] += matchOffset;
+        merged[1] = players[wicket[1]];
+        merged[2] = players[wicket[2]];
+        merged[5] = wicket[5].map(id => players[id]);
+        combined.dismissals.push(merged);
+      }
       for (const row of dataset.rows) {
         const merged = row.slice();
         merged[0] += matchOffset;
@@ -330,9 +443,12 @@ function venueLabel(name) {
     if (loadingController) loadingController.abort();
     loadingController = new AbortController();
     data = null;
+    byId('battle-phase').value = '';
+    byId('battle-search').value = '';
     clearSelections();
     inputs.forEach(input => { input.disabled = true; });
     const international = competition === 'international';
+    byId('battle-title').textContent = international ? 'International Lens' : competition.toUpperCase() + ' Lens';
     byId('gender-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.competition === competition));
@@ -357,7 +473,7 @@ function venueLabel(name) {
       const dates = data.matches.map(match => match[2]).sort();
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
       byId('battle-method').textContent = international
-        ? 'Results are grouped by Test, ODI and T20I. Open Performance by phase for limited-overs breakdowns. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
+        ? 'Results are grouped by Test, ODI and T20I. Click a player row for phase charts and dismissal breakdown. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
         : data.format === 'Test'
         ? 'Test comparisons show overall figures. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
         : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
@@ -392,12 +508,27 @@ function venueLabel(name) {
     competition = button.dataset.competition;
     loadData();
   }));
-  document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
-    mode = button.dataset.mode;
-    document.querySelectorAll('[data-mode]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  byId('battle-compare').addEventListener('change', () => {
+    mode = byId('battle-compare').value;
     clearSelections();
     updateChoices();
+    render();
+  });
+  document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+    view = button.dataset.view;
+    document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active',item === button));
+    byId('battle-search').value = '';
+    clearSelections();
+    updateChoices();
+    render();
   }));
+  byId('battle-search').addEventListener('input', render);
+  byId('battle-phase').addEventListener('change', render);
+  byId('battle-reset').addEventListener('click', () => {
+    for (const id of ['battle-season','battle-venue','battle-phase','battle-search']) byId(id).value = '';
+    clearSelections();
+    render();
+  });
   byId('battle-gender').addEventListener('change', loadData);
   for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', render);
   byId('battle-clear').addEventListener('click', clearSelections);
