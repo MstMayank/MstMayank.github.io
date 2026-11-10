@@ -236,6 +236,18 @@
  #ipl-lens .battle-players { grid-template-columns:minmax(0,1fr); }
  #ipl-lens #battle-clear { justify-self:start; }
 }
+
+#ipl-lens .battle-workspace .main-panel { min-height:0; }
+#ipl-lens .battle-picker { position:relative; align-self:start; }
+#ipl-lens .battle-suggestions {
+  position:absolute; top:100%; left:0; right:0; z-index:15;
+  margin-top:6px; padding:6px; border:1px solid #d8ccc0; border-radius:10px;
+  background:#fffaf2; box-shadow:0 10px 24px #0003; font-size:14px; line-height:1.5;
+}
+#ipl-lens .battle-suggestions button { margin:0; border:0; border-radius:6px; }
+#ipl-lens .battle-suggestions button:hover, #ipl-lens .battle-suggestions button:focus-visible { background:#f1d8c9; color:#26201c; }
+#ipl-lens .battle-players { align-items:end; }
+#ipl-lens .battle-result:empty { display:none; }
 </style></head>
 <body>
 <header><a class="logo" href="./" aria-label="The Cricket Space home">tcs<i>.</i></a>
@@ -290,5 +302,5 @@
 <p class="lens-source">Based on available <a href="https://cricsheet.org/">Cricsheet</a> ball-by-ball data under the <a href="https://cricsheet.org/licensing/">ODC Attribution License</a>. Coverage varies by competition and format.</p>
 </section>
 </main>
-<script defer src="player-battle.js?v=restored-lens"></script>
+<script defer src="player-battle.js?v=aligned-search"></script>
 </body></html>

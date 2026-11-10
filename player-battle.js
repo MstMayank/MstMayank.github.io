@@ -117,6 +117,10 @@ function venueLabel(name) {
     return mode === 'teams' ? value : data.players[value];
   }
 
+  function searchKey(value) {
+    return value.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
   function showSuggestions(index) {
     const query = inputs[index].value.trim().toLowerCase();
     if (selected[index] !== null && inputs[index].value !== nameFor(selected[index])) {
@@ -128,7 +132,7 @@ function venueLabel(name) {
     if (!query || !data) return;
     const candidates = availablePlayers[index].filter(value =>
       (mode === 'direct' || value !== selected[1 - index]) &&
-      query.split(/\s+/).every(term => nameFor(value).toLowerCase().includes(term))
+      query.split(/\s+/).every(term => searchKey(nameFor(value)).includes(searchKey(term)))
     ).slice(0, 30);
     for (const value of candidates) {
       const button = document.createElement('button');
