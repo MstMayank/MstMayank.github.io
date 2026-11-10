@@ -130,6 +130,12 @@
           for (const value of [playerNames.get(row[1]) || row[1], bowling ? row[4] + '/' + row[5] : row[4], row[2], row[3], row[6], row[8] || '—']) {
             tr.insertCell().textContent = value;
           }
+          if (row[11]) {
+            const source = document.createElement('a');
+            source.href = row[11];
+            source.textContent = 'BCCI scorecard';
+            tr.lastElementChild.append(' · ', source);
+          }
           remaining--;
         }
       }
