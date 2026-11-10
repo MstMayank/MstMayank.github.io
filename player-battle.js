@@ -33,9 +33,9 @@
     return Math.floor(legalBalls / 6) + '.' + legalBalls % 6;
   }
 
-  function groups() {
-    if (data.format === 'Test') return ['Match innings 1', 'Match innings 2', 'Match innings 3', 'Match innings 4'];
-    if (data.format === 'ODI') return ['Powerplay · Overs 1–10', 'Middle · Overs 11–40', 'Death · Overs 41–50'];
+  function groups(format = data.format) {
+    if (format === 'Test') return ['Match innings 1', 'Match innings 2', 'Match innings 3', 'Match innings 4'];
+    if (format === 'ODI') return ['Powerplay · Overs 1–10', 'Middle · Overs 11–40', 'Death · Overs 41–50'];
     return ['Powerplay · Overs 1–6', 'Middle · Overs 7–15', 'Death · Overs 16–20'];
   }
 
@@ -175,10 +175,10 @@ function venueLabel(name) {
       divide(stats.conceded, stats.legal, 6), divide(stats.conceded, stats.wickets)];
   }
 
-  function renderTeams() {
+  function renderTeams(format) {
     const counts = [0, 0, 0, 0, 0];
     for (const match of data.matches) {
-      if (!matchIncluded(match) || !selected.every(team => match[3].includes(team))) continue;
+      if ((format && match[7] !== format) || !matchIncluded(match) || !selected.every(team => match[3].includes(team))) continue;
       const outcome = match[4];
       if (outcome === 'win') counts[selected.indexOf(match[5])] += 1;
       if (outcome === 'no result') counts[2] += 1;
@@ -210,17 +210,28 @@ function venueLabel(name) {
     heading.className = 'result-heading';
     heading.textContent = selected.map(nameFor).join(' vs ');
     result.appendChild(heading);
-    if (mode === 'teams') {
-      renderTeams();
-      return;
+
+    const formats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
+    for (const format of formats) {
+      if (format) {
+        const formatHeading = document.createElement('h2');
+        formatHeading.textContent = format;
+        result.appendChild(formatHeading);
+      }
+      if (mode === 'teams') renderTeams(format);
+      else renderPlayers(format);
     }
+  }
+
+  function renderPlayers(format) {
 
     const totals = [emptyStats(), emptyStats()];
-    const phases = [0, 1].map(() => groups().map(emptyStats));
+    const phases = [0, 1].map(() => groups(format || data.format).map(emptyStats));
     let deliveriesFound = false;
     const matches = [new Set(), new Set()];
     for (const row of data.rows) {
-      if (!matchIncluded(data.matches[row[0]])) continue;
+      const match = data.matches[row[0]];
+      if ((format && match[7] !== format) || !matchIncluded(match)) continue;
       if (mode === 'direct') {
         if (row[1] !== selected[0] || row[2] !== selected[1]) continue;
         if (row[5] || row[11]) deliveriesFound = true;
@@ -256,11 +267,50 @@ function venueLabel(name) {
       ];
       const directLabels = ['Runs', 'Balls', 'Strike rate', 'Bowler dismissals', 'Fours', 'Sixes'];
       makeTable('Overall matchup', [names[0] + ' facing ' + names[1]], directLabels, [directFigures(totals[0])]);
-      groups().forEach((phase, index) => makeTable(phase, [names[0]], directLabels, [directFigures(phases[0][index])]));
+      groups(format || data.format).forEach((phase, index) => makeTable(phase, [names[0]], directLabels, [directFigures(phases[0][index])]));
     } else {
       makeTable('Overall', names, ['Matches', ...labels], totals.map((stats, index) => [number(matches[index].size), ...figures(stats)]));
-      groups().forEach((phase, index) => makeTable(phase, names, labels, phases.map(player => figures(player[index]))));
+      groups(format || data.format).forEach((phase, index) => makeTable(phase, names, labels, phases.map(player => figures(player[index]))));
     }
+  }
+
+
+  function combineFormats(datasets) {
+    const combined = { players: [], venues: [], matches: [], rows: [], format: 'International' };
+    const playerIds = new Map();
+    const venueIds = new Map();
+    for (const dataset of datasets) {
+      const players = dataset.players.map(name => {
+        if (!playerIds.has(name)) {
+          playerIds.set(name, combined.players.length);
+          combined.players.push(name);
+        }
+        return playerIds.get(name);
+      });
+      const venues = dataset.venues.map(name => {
+        if (!venueIds.has(name)) {
+          venueIds.set(name, combined.venues.length);
+          combined.venues.push(name);
+        }
+        return venueIds.get(name);
+      });
+      const matchOffset = combined.matches.length;
+      const format = dataset.format === 'T20' ? 'T20I' : dataset.format;
+      for (const match of dataset.matches) {
+        const merged = match.slice();
+        merged[1] = venues[match[1]];
+        merged[7] = format;
+        combined.matches.push(merged);
+      }
+      for (const row of dataset.rows) {
+        const merged = row.slice();
+        merged[0] += matchOffset;
+        merged[1] = players[row[1]];
+        merged[2] = players[row[2]];
+        combined.rows.push(merged);
+      }
+    }
+    return combined;
   }
 
   async function loadData() {
@@ -272,26 +322,31 @@ function venueLabel(name) {
     inputs.forEach(input => { input.disabled = true; });
     const international = competition === 'international';
     byId('gender-field').hidden = !international;
-    byId('format-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.competition === competition));
     });
     byId('battle-season').replaceChildren(new Option('All seasons', ''));
     byId('battle-venue').replaceChildren(new Option('All venues', ''));
     status.textContent = 'Loading ' + (international ? 'international' : competition.toUpperCase()) + ' match data…';
-    const key = international ? byId('battle-format').value + '_' + byId('battle-gender').value : competition;
+    const keys = international
+      ? ['tests', 'odis', 't20s'].map(format => format + '_' + byId('battle-gender').value)
+      : [competition];
     try {
-      const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
-      if (!response.ok) throw new Error('Dataset download failed');
-      const next = await response.json();
+      const datasets = await Promise.all(keys.map(async key => {
+        const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
+        if (!response.ok) throw new Error('Dataset download failed');
+        return response.json();
+      }));
       if (current !== requestNumber) return;
-      data = next;
+      data = international ? combineFormats(datasets) : datasets[0];
       const seasons = [...new Set(data.matches.map(match => match[0]))].sort().reverse();
       seasons.forEach(season => { byId('battle-season').add(new Option(season, season)); });
       [...new Set(data.venues.map(venueLabel))].sort().forEach(venue => { byId('battle-venue').add(new Option(venue, venue)); });
       const dates = data.matches.map(match => match[2]).sort();
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
-      byId('battle-method').textContent = data.format === 'Test'
+      byId('battle-method').textContent = international
+        ? 'Results are grouped by Test, ODI and T20I. Test figures use match innings. Limited-overs figures use their format’s phases. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
+        : data.format === 'Test'
         ? 'Test comparisons show each innings of the match. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
         : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
       inputs.forEach(input => { input.disabled = false; });
@@ -331,7 +386,7 @@ function venueLabel(name) {
     clearSelections();
     updateChoices();
   }));
-  for (const id of ['battle-gender', 'battle-format']) byId(id).addEventListener('change', loadData);
+  byId('battle-gender').addEventListener('change', loadData);
   for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', render);
   byId('battle-clear').addEventListener('click', clearSelections);
   loadData();
