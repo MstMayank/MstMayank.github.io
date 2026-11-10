@@ -110,12 +110,12 @@
   </div>
   <div class="writing-feature">
   <a class="featured-essay reveal" href="what-makes-the-ipl-so-special.html"><span class="essay-image"><img src="ipl-match.jpg" alt="" width="960" height="540" loading="lazy"></span><div><span class="label">Latest article / IPL</span><h3>The IPL Never Really Ends, Does It?</h3><p>How IPL trade rumours keep fans debating team combinations long before the first ball.</p><span class="essay-meta">By Mayank Shekhar Tiwari · 3 min read <b>Read article <span class="essay-arrow" aria-hidden="true">↗</span></b></span></div></a>
-  <aside class="history-card" aria-label="On This Day">
+  <aside class="history-card" id="on-this-day" aria-label="On This Day">
     <span class="label" style="color:#fff">On This Day</span>
     <div>
-      <time datetime="2008-04-18">18 April 2008</time>
-      <h3>McCullum’s 158* opens the IPL</h3>
-      <a href="https://www.iplt20.com/news/article/ipl-has-changed-the-way-the-game-is-played-mccullum">Read more ↗</a>
+      <time></time>
+      <h3>No moment added for today yet</h3>
+      <a hidden>Read more ↗</a>
     </div>
   </aside>
   </div>
@@ -136,5 +136,32 @@
 <section class="section about" id="about"><div class="monogram reveal" aria-label="Mayank monogram"><strong>m.</strong><small>THE PERSON BEHIND THE CONTENT</small></div><div class="reveal"><span class="label">About the Creator</span><h2>Mayank Shekhar Tiwari</h2><p>I'm Mayank Shekhar Tiwari, a content creator and the person behind TheCricketSpace.</p><p>This is my personal corner of the internet — a place for my work, my ideas and the things I create. Cricket is part of my story. Creating is how I tell it.</p><div class="signature">Mayank ↗</div></div></section><section class="section services"><div class="service reveal"><span>01</span><h3>Content creation</h3><p>Turning an idea into something worth stopping for.</p><b>↗</b></div><div class="service reveal"><span>02</span><h3>Cricket & culture</h3><p>Exploring the game through TheCricketSpace.</p><b>↗</b></div><div class="service reveal"><span>03</span><h3>Creative collaboration</h3><p>A fresh perspective for the next idea we make together.</p><b>↗</b></div></section><section class="contact" id="contact"><span class="label">03 / Work with me</span><h2 class="reveal">LET'S CREATE<br>SOMETHING<br>WORTH SHARING.</h2><div class="contact-bottom"><p>For content collaborations and creative projects,<br>let's start with a conversation.</p><button class="brief-btn" id="open">Share your idea ↗</button></div><div class="social-links" aria-label="TheCricketSpace social profiles"><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram <span>↗</span></a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube <span>↗</span></a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook <span>↗</span></a></div></section></main><footer><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><span>© <span id="year"></span> The Cricket Space</span><a href="#">Back to top ↑</a></footer><div class="modal" id="modal" hidden><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title"><span class="label">Let's create</span><h2 id="modal-title">What's the idea?</h2><p>Write a quick brief, copy it, and share it via Instagram or Facebook using the links on this page.</p><label for="brief">Your project idea</label><textarea id="brief" placeholder="The idea, the format, the timeline..."></textarea><div class="actions"><button class="close" id="close">Close</button><button id="copy">Copy brief ↗</button></div><p id="message" aria-live="polite"></p></section></div><script>
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;document.getElementById('year').textContent=new Date().getFullYear();const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));if(!reduced){const cursor=document.querySelector('.cursor'),orb=document.querySelector('.orb');window.addEventListener('pointermove',e=>{cursor.style.transform=`translate(${e.clientX-8}px,${e.clientY-8}px)`;orb.style.setProperty('--mx',`${(e.clientX/innerWidth-.5)*35}px`);orb.style.setProperty('--my',`${(e.clientY/innerHeight-.5)*25}px`)},{passive:true})}const modal=document.getElementById('modal'),open=document.getElementById('open'),close=document.getElementById('close'),brief=document.getElementById('brief'),copy=document.getElementById('copy');function dismiss(){modal.hidden=true;document.body.style.overflow='';open.focus()}open.onclick=()=>{modal.hidden=false;document.body.style.overflow='hidden';brief.focus()};close.onclick=dismiss;modal.onclick=e=>{if(e.target===modal)dismiss()};document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')dismiss();if(e.key==='Tab'){if(e.shiftKey&&document.activeElement===brief){e.preventDefault();copy.focus()}else if(!e.shiftKey&&document.activeElement===copy){e.preventDefault();brief.focus()}}});copy.onclick=async()=>{const msg=document.getElementById('message');if(!brief.value.trim()){msg.textContent='Add your idea first.';return}try{await navigator.clipboard.writeText('Project brief for Mayank Shekhar Tiwari\n\n'+brief.value.trim());msg.textContent='Copied — your brief is ready to share.'}catch{msg.textContent='Select the text above and copy it manually.'}};
 
+
+const historyCard = document.querySelector('#on-this-day');
+const historyMoments = {
+  '04-18': {
+    date: '2008-04-18',
+    title: 'McCullum’s 158* opens the IPL',
+    url: 'https://www.iplt20.com/news/article/ipl-has-changed-the-way-the-game-is-played-mccullum'
+  }
+};
+const indiaDate = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'
+});
+const historyDateParts = Object.fromEntries(indiaDate.formatToParts(new Date()).map(({type, value}) => [type, value]));
+const historyDay = historyDateParts.month + '-' + historyDateParts.day;
+const historyMoment = historyMoments[historyDay];
+const historyDate = historyMoment?.date || historyDateParts.year + '-' + historyDay;
+const historyTime = historyCard.querySelector('time');
+historyTime.dateTime = historyDate;
+historyTime.textContent = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric'
+}).format(new Date(historyDate));
+if (historyMoment) {
+  historyCard.querySelector('h3').textContent = historyMoment.title;
+  const historyLink = historyCard.querySelector('a');
+  historyLink.href = historyMoment.url;
+  historyLink.hidden = false;
+}
 </script></body></html>
 
