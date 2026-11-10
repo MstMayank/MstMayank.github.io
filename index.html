@@ -229,7 +229,6 @@ document.getElementById('clear-matchup').addEventListener('click', () => {
   batter.value = '';
   bowler.value = '';
   bowler.dispatchEvent(new Event('change'));
-  batter.focus();
 });
 </script>
 <script>
@@ -252,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const id of ['clear-matchup', 'reset']) {
       document.getElementById(id).addEventListener('click', () => {
         input.value = '';
-        if (id === 'clear-matchup' && role === 'batter') input.focus();
       });
     }
   }
