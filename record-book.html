@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cricket Record Book | The Cricket Space</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
+  a { color: #ff946f; }
+  h1 { font: 500 clamp(36px, 8vw, 72px) Georgia, serif; margin-bottom: 12px; }
+  p { color: #b7b6af; }
+  .filters { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
+  label { display: grid; gap: 6px; }
+  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  .table { overflow: auto; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
+  .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
+  button { margin-top: 16px; cursor: pointer; }
+</style>
+<a href="./#records">← The Cricket Space</a>
+<h1>Cricket Record Book</h1>
+<p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p>
+<div class="filters">
+  <label>Format<select id="format"><option>Test</option><option>ODI</option><option>T20I</option><option value="T20">Other T20</option></select></label>
+  <label>Category<select id="category"><option>Batting</option><option>Bowling</option><option>Team totals</option></select></label>
+  <label>Competition group<select id="gender"><option value="">Everyone</option><option value="male">Men</option><option value="female">Women</option></select></label>
+  <label>Search<input type="search" id="query" placeholder="Player, team, tournament or year"></label>
+</div>
+<p id="status" role="status"></p>
+<div class="table">
+  <table>
+    <thead><tr><th scope="col">Player or team</th><th scope="col" id="metric">Runs</th><th scope="col">Team</th><th scope="col">Opponent</th><th scope="col">Date</th><th scope="col">Competition</th></tr></thead>
+    <tbody id="results"></tbody>
+  </table>
+</div>
+<button id="more" type="button" hidden>Show more</button>
+<script>
+  const format = document.getElementById('format');
+  const category = document.getElementById('category');
+  const gender = document.getElementById('gender');
+  const query = document.getElementById('query');
+  query.value = new URLSearchParams(location.search).get('q') || '';
+  const playerNames = new Map([['V Kohli', 'Virat Kohli'], ['RG Sharma', 'Rohit Sharma'], ['SR Tendulkar', 'Sachin Tendulkar']]);
+  const status = document.getElementById('status');
+  const metric = document.getElementById('metric');
+  const results = document.getElementById('results');
+  const more = document.getElementById('more');
+  const datasets = new Map();
+  const archives = window.cricketArchives = new Map();
+  const pending = new Map();
+  let request = 0;
+  let limit = 25;
+
+  function loadDataset(key) {
+    if (!pending.has(key)) {
+      pending.set(key, new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = './archive-' + key + '.js';
+        script.onload = async () => {
+          try {
+            const bytes = Uint8Array.from(atob(archives.get(key)), char => char.charCodeAt(0));
+            const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+            datasets.set(key, await new Response(stream).json());
+            archives.delete(key);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        };
+        script.onerror = reject;
+        document.head.append(script);
+      }).finally(() => pending.delete(key)));
+    }
+    return pending.get(key);
+  }
+
+  async function render() {
+    const current = ++request;
+    const selectedFormat = format.value;
+    const terms = query.value.trim().toLowerCase().split(/\s+/).filter(term => term && term !== 'in');
+    const bowling = category.value === 'Bowling';
+    try {
+      if (!datasets.has(selectedFormat)) {
+        status.textContent = 'Loading match records…';
+        results.replaceChildren();
+        more.hidden = true;
+        await loadDataset(selectedFormat);
+      }
+      if (current !== request) return;
+      const { rows, matches } = datasets.get(selectedFormat);
+      const filtered = rows.filter(row =>
+        row[0] === category.value &&
+        (!gender.value || row[7] === gender.value) &&
+        terms.every(term => [row[1], playerNames.get(row[1]), row[2], row[3], row[6], row[8]].join(' ').toLowerCase().includes(term))
+      );
+      const series = new Map();
+      for (const row of filtered) {
+        const key = row[8] ? JSON.stringify([row[7], row[8], row[9]]) : JSON.stringify([row[7], row[6], ...[row[2], row[3]].sort()]);
+        if (!series.has(key)) series.set(key, []);
+        series.get(key).push(row);
+      }
+      const groups = [...series.values()];
+      for (const group of groups) group.sort((a, b) => a[6].localeCompare(b[6]));
+      groups.sort((a, b) => b[0][6].localeCompare(a[0][6]));
+      metric.textContent = bowling ? 'Wickets / runs' : 'Runs';
+      results.replaceChildren();
+      let remaining = limit;
+      for (const group of groups) {
+        if (!remaining) break;
+        const heading = results.insertRow().insertCell();
+        heading.colSpan = 6;
+        heading.className = 'series-heading';
+        const first = group[0];
+        heading.textContent = first[8] ? first[8] + (first[9] ? ' · ' + first[9] : '') : first[2] + ' vs ' + first[3] + ' · ' + first[6];
+        for (const row of group.slice(0, remaining)) {
+          const tr = results.insertRow();
+          for (const value of [playerNames.get(row[1]) || row[1], bowling ? row[4] + '/' + row[5] : row[4], row[2], row[3], row[6], row[8] || '—']) {
+            tr.insertCell().textContent = value;
+          }
+          remaining--;
+        }
+      }
+      status.textContent = filtered.length.toLocaleString() + ' results · ' + matches.toLocaleString() + ' matches in this format’s archive';
+      more.hidden = filtered.length <= limit;
+    } catch {
+      if (current === request) status.textContent = 'Could not load the match archive. Reload the page to try again.';
+    }
+  }
+
+  document.querySelector('.filters').addEventListener('input', () => { limit = 25; render(); });
+  more.addEventListener('click', () => { limit += 25; render(); });
+  render();
+</script>
+</html>
