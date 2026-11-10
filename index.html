@@ -90,7 +90,31 @@
   }
   .featured-essay { grid-template-columns: 1fr; }
 }
-</style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-labelledby="writing-title">
+
+.six-play { position:absolute; right:5%; bottom:145px; width:min(29vw,350px); z-index:1; pointer-events:none; }
+.six-play .delivery { opacity:0; animation: delivery 1.2s .8s linear both; }
+.six-play .flight { opacity:0; animation: flight 1s 2s ease-out both; }
+.six-play .bat { transform-origin:220px 77px; animation: swing .35s 1.83s ease-out both; }
+.six-play .result { animation: score 3.7s both; }
+@keyframes delivery { 0% { opacity:1; } 75% { transform:translate(145px,27px); } 99% { opacity:1; } 100% { transform:translate(178px,2px); opacity:0; } }
+@keyframes flight { 0% { opacity:1; } 60% { transform:translate(70px,-49px); } 95% { opacity:1; } 100% { transform:translate(110px,-38px); opacity:0; } }
+@keyframes swing { to { transform:rotate(-132deg); } }
+@keyframes score { 0%,80% { opacity:0; } 87%,95% { opacity:1; } 100% { opacity:0; } }
+@media(max-width:750px) { .six-play { position:relative; align-self:flex-end; right:auto; bottom:auto; width:min(58vw,260px); margin:8px 0 0; } }
+@media(prefers-reduced-motion:reduce) { .six-play { display:none; } }
+</style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><svg class="six-play" viewBox="0 0 340 125" aria-hidden="true">
+  <path d="M8 110H326M212 107v-28m5 28V79m5 28V79" fill="none" stroke="#f2f0e9" opacity=".3"/>
+  <g fill="#171715" stroke="#b8b1a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="43" cy="56" r="6"/>
+    <path d="m41 65-7 20 16 7 11 16M34 85l-14 22m21-42 13-17 4-17m-17 34 17 6 14-6"/>
+    <circle cx="229" cy="59" r="7"/>
+    <path d="m229 67 6 21-14 20m14-20 14 20m-20-41-9 10-12 2"/>
+    <path class="bat" d="m220 77-13 25" stroke="#dbc5a4" stroke-width="5"/>
+  </g>
+  <circle class="delivery" cx="34" cy="77" r="3.5" fill="#ff6435"/>
+  <g class="flight" fill="#ff6435"><path d="m212 79-15 9 12-12z" opacity=".65"/><circle cx="212" cy="79" r="4"/></g>
+  <text class="result" x="280" y="27" fill="#ff6435" font-family="sans-serif" font-size="20" font-weight="700">SIX!</text>
+</svg><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-labelledby="writing-title">
   <div class="section-head reveal">
     <div><h2 id="writing-title">Writing &amp; Analysis</h2></div>
     <p>Cricket observations, match breakdowns, and the decisions that shape a game.</p>
