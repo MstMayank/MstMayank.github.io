@@ -38,7 +38,7 @@ const headings = {
   fielding: 'Fielding leaderboard'
 };
 $('panelTitle').textContent = headings[tab];
-$('panelLabel').textContent=tab==='matchups'?'MATCHUP EXPLORER':'PLAYER EXPLORER';$('matchControls').hidden=tab!=='matchups';$('search').hidden=tab==='matchups';$('hint').textContent=tab==='fielding'?'Run-outs show involvements; multiple fielders can share one event. Drops are unavailable.':tab==='matchups'?'Select two players. Figures respect your season, venue and phase filters.':'Select a player to explore their performance. Click a column to sort.';renderTable();renderDetail()}
+$('panelLabel').textContent=tab==='matchups'?'MATCHUP EXPLORER':'PLAYER EXPLORER';$('matchControls').hidden=tab!=='matchups';$('search').hidden=tab==='matchups';$('hint').textContent=tab==='fielding'?'Run-outs show involvements; multiple fielders can share one event. Drops are unavailable.':tab==='matchups'?'Select two players. Figures respect your season, venue and phase filters.':'Select a player to explore their performance. Click a column to sort.';renderTable();renderDetail();renderComparison()}
 function renderTable(){let cols=tab==='bowling'?[['matches','Matches'],['wickets','Wkts'],['economy','Econ'],['dot','Dot %'],['wides','Wides'],['noballs','NB']]:tab==='fielding'?[['catches','Catches'],['runouts','Run-outs'],['stumpings','Stumpings']]:[['runs','Runs'],['balls','Balls'],['sr','SR'],['batdot','Dot %'],['fours','4s'],['sixes','6s']];if (tab === 'matchups') cols.push(['wickets', 'Dismissals']);
 let list=stats.filter(s=>D.players[s.id].toLowerCase().includes($('search').value.toLowerCase()));const needsPlayers = tab === 'matchups' && (!$('batter').value || !$('bowler').value);
 if (needsPlayers) {
@@ -57,4 +57,91 @@ selected = null;$('coverage').textContent=`${fmt(d.matches.length)} matches · T
 ['season','venue','phase','batter','bowler'].forEach(id=>$(id).onchange=render);$('search').oninput=renderTable;$('reset').onclick=()=>{['season','venue','phase','search','batter','bowler'].forEach(id=>$(id).value='');render()};document.querySelectorAll('#ipl-lens .lens-tabs button').forEach(b=>b.onclick=()=>{if (tab !== b.dataset.tab) selected = null;
  tab=b.dataset.tab;sort=tab==='bowling'?'wickets':tab==='fielding'?'catches':'runs';direction=-1;$('search').value='';document.querySelectorAll('#ipl-lens .lens-tabs button').forEach(x=>x.classList.toggle('active',x===b));render()});
 
+
+const compareFirst = $('compare-first');
+const compareSecond = $('compare-second');
+const compareMode = $('comparison-mode');
+const phaseNames = ['Powerplay · Overs 1–6', 'Middle · Overs 7–15', 'Death · Overs 16–20'];
+let comparisonRole = '';
+
+function renderComparison() {
+  if (!compareMode) return;
+  const active = tab === 'matchups';
+  const mode = compareMode.value;
+  const playerMode = active && (mode === 'batters' || mode === 'bowlers');
+  $('comparison-controls').hidden = !active;
+  $('player-comparison').hidden = !playerMode;
+  $('team-comparison').hidden = !active || mode !== 'teams';
+  $('lens-workspace').hidden = active && mode !== 'direct';
+  $('phase').closest('label').hidden = active && mode !== 'direct';
+  $('season').closest('label').hidden = active && mode === 'teams';
+  $('venue').closest('label').hidden = active && mode === 'teams';
+  if (!playerMode) return;
+
+  const bowling = mode === 'bowlers';
+  const role = bowling ? 'Bowler' : 'Batter';
+  const playerColumn = bowling ? 2 : 1;
+  if (comparisonRole !== role) {
+    comparisonRole = role;
+    const ids = [...new Set(D.rows.map(row => row[playerColumn]))];
+    ids.sort((a, b) => D.players[a].localeCompare(D.players[b]));
+    [compareFirst, compareSecond].forEach((select, index) => {
+      $(index ? 'compare-second-label' : 'compare-first-label').textContent = role + ' ' + (index + 1);
+      select.replaceChildren(new Option('Select ' + role.toLowerCase(), ''));
+      for (const id of ids) select.add(new Option(D.players[id], id));
+    });
+  }
+
+  for (const option of compareFirst.options) option.disabled = Boolean(option.value && option.value === compareSecond.value);
+  for (const option of compareSecond.options) option.disabled = Boolean(option.value && option.value === compareFirst.value);
+  const output = $('phase-comparison');
+  output.replaceChildren();
+  if (!compareFirst.value || !compareSecond.value) return;
+
+  const ids = [+compareFirst.value, +compareSecond.value];
+  const totals = ids.map(id => phaseNames.map(() => empty(id)));
+  for (const row of D.rows) {
+    const player = ids.indexOf(row[playerColumn]);
+    if (player >= 0 && totals[player][row[3]] && baseMatch(row[0])) add(totals[player][row[3]], row);
+  }
+  const ratio = (value, denominator, multiplier = 1) => denominator ? (value * multiplier / denominator).toFixed(2) : '—';
+  function values(stats) {
+    return bowling
+      ? [fmt(stats.wickets), Math.floor(stats.legal / 6) + '.' + stats.legal % 6, ratio(stats.conceded, stats.legal, 6), ratio(stats.conceded, stats.wickets)]
+      : [fmt(stats.runs), fmt(stats.balls), ratio(stats.runs, stats.balls, 100), ratio(stats.runs, stats.outs)];
+  }
+  const labels = bowling ? ['Wickets', 'Overs', 'Economy', 'Bowling average'] : ['Runs', 'Balls', 'Strike rate', 'Batting average'];
+  phaseNames.forEach((phase, index) => {
+    const heading = document.createElement('h3');
+    heading.textContent = phase;
+    const table = document.createElement('table');
+    const header = table.createTHead().insertRow();
+    for (const label of ['Metric', ...ids.map(id => D.players[id])]) {
+      const cell = document.createElement('th');
+      cell.scope = 'col';
+      cell.textContent = label;
+      header.append(cell);
+    }
+    const body = table.createTBody();
+    const figures = totals.map(player => values(player[index]));
+    labels.forEach((label, metric) => {
+      const row = body.insertRow();
+      const name = document.createElement('th');
+      name.scope = 'row';
+      name.textContent = label;
+      row.append(name);
+      for (const player of figures) row.insertCell().textContent = player[metric];
+    });
+    output.append(heading, table);
+  });
+}
+
+[compareFirst, compareSecond, compareMode].forEach(control => control?.addEventListener('change', renderComparison));
+$('reset').addEventListener('click', () => {
+  if (!compareMode) return;
+  for (const id of ['compare-first', 'compare-second', 'team-one', 'team-two']) {
+    $(id).value = '';
+    $(id).dispatchEvent(new Event('change'));
+  }
+});
 })();

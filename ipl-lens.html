@@ -175,6 +175,12 @@
   #ipl-lens .team-matchup-fields { grid-template-columns:minmax(0,1fr); }
   #ipl-lens .team-matchup select { min-height:44px; font-size:16px; }
 }
+
+#ipl-lens #comparison-controls { margin-bottom:16px; }
+#ipl-lens #comparison-mode { width:min(100%, 300px); }
+#ipl-lens #phase-comparison table { table-layout:fixed; white-space:normal; overflow-wrap:anywhere; }
+#ipl-lens #phase-comparison th { position:static; }
+#ipl-lens #phase-comparison th:first-child, #ipl-lens #phase-comparison td:first-child { min-width:0; }
 </style></head><body>
 <header>
   <a class="logo" href="./" aria-label="The Cricket Space home">tcs<i>.</i></a>
@@ -187,23 +193,41 @@
     <div><span class="label">IPL Analytics</span><h2 id="ipl-lens-title" role="heading" aria-level="1">IPL Lens</h2></div>
   </div>
   
-  <details class="panel team-matchup">
-    <summary>Team Head to Head</summary>
+
+  <div class="lens-tabs" role="group" aria-label="IPL statistics"><button class="active" data-tab="batting">↗ <span>Batting explorer</span></button><button data-tab="matchups">⇄ <span>Head to head</span></button><button data-tab="bowling">◎ <span>Bowling lab</span></button><button data-tab="fielding">◇ <span>Fielding</span></button></div>
+  <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label>VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section>
+<div id="comparison-controls" hidden>
+  <label>Compare
+    <select id="comparison-mode">
+      <option value="direct">Batter vs Bowler</option>
+      <option value="batters">Batter vs Batter</option>
+      <option value="bowlers">Bowler vs Bowler</option>
+      <option value="teams">Team vs Team</option>
+    </select>
+  </label>
+</div>
+<section id="player-comparison" class="panel team-matchup" hidden>
+  <div class="team-matchup-fields">
+    <label><span id="compare-first-label">Player 1</span><select id="compare-first"></select></label>
+    <label><span id="compare-second-label">Player 2</span><select id="compare-second"></select></label>
+  </div>
+  <div id="phase-comparison" aria-live="polite"></div>
+</section>
+  <section id="team-comparison" class="panel team-matchup" hidden>
+    <h2>Team vs Team</h2>
     <div class="team-matchup-fields">
       <label>Team 1<select id="team-one"><option value="">Select team</option></select></label>
       <label>Team 2<select id="team-two"><option value="">Select opponent</option></select></label>
     </div>
     <div id="team-matchup-result" aria-live="polite"></div>
     <p class="hint">All seasons in the Cricsheet IPL archive. Matches decided by a Super Over are counted as ties.</p>
-  </details>
-  <div class="lens-tabs" role="group" aria-label="IPL statistics"><button class="active" data-tab="batting">↗ <span>Batting explorer</span></button><button data-tab="matchups">⇄ <span>Head to head</span></button><button data-tab="bowling">◎ <span>Bowling lab</span></button><button data-tab="fielding">◇ <span>Fielding</span></button></div>
-  <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label>VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section><section class="workspace"><div class="panel main-panel"><div class="panel-head"><div><div class="eyebrow" id="panelLabel">PLAYER EXPLORER</div><h2 id="panelTitle">Batting leaderboard</h2></div><input id="search" placeholder="Search a player…" aria-label="Search a player"></div><div id="matchControls" hidden><div class="lens-picker"><label>Batter<input id="batter-search" aria-controls="batter-suggestions" placeholder="Search batter" autocomplete="off"></label><div class="lens-suggestions" id="batter-suggestions" hidden></div></div><select id="batter" hidden></select><div class="lens-picker"><label>Bowler<input id="bowler-search" aria-controls="bowler-suggestions" placeholder="Search bowler" autocomplete="off"></label><div class="lens-suggestions" id="bowler-suggestions" hidden></div></div><select id="bowler" hidden></select><button type="button" id="clear-matchup">Clear players</button></div><p class="hint" id="hint">Select a player to explore their performance. Click a column to sort.</p><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div class="table-foot" id="tableFoot"></div></div><div class="detail" id="lens-detail" hidden><div class="panel"><div class="eyebrow">UNDER THE LENS</div><h2 id="playerName">Select a player</h2><p class="hint" id="sample"></p><h3>Performance by phase</h3><div id="phaseChart"></div></div><div class="panel"><div class="eyebrow">HOW THE WICKETS FALL</div><h2 id="dismissTitle">Dismissal breakdown</h2><div id="dismissChart"></div></div></div></section>
+  </section><section class="workspace" id="lens-workspace"><div class="panel main-panel"><div class="panel-head"><div><div class="eyebrow" id="panelLabel">PLAYER EXPLORER</div><h2 id="panelTitle">Batting leaderboard</h2></div><input id="search" placeholder="Search a player…" aria-label="Search a player"></div><div id="matchControls" hidden><div class="lens-picker"><label>Batter<input id="batter-search" aria-controls="batter-suggestions" placeholder="Search batter" autocomplete="off"></label><div class="lens-suggestions" id="batter-suggestions" hidden></div></div><select id="batter" hidden></select><div class="lens-picker"><label>Bowler<input id="bowler-search" aria-controls="bowler-suggestions" placeholder="Search bowler" autocomplete="off"></label><div class="lens-suggestions" id="bowler-suggestions" hidden></div></div><select id="bowler" hidden></select><button type="button" id="clear-matchup">Clear players</button></div><p class="hint" id="hint">Select a player to explore their performance. Click a column to sort.</p><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div class="table-foot" id="tableFoot"></div></div><div class="detail" id="lens-detail" hidden><div class="panel"><div class="eyebrow">UNDER THE LENS</div><h2 id="playerName">Select a player</h2><p class="hint" id="sample"></p><h3>Performance by phase</h3><div id="phaseChart"></div></div><div class="panel"><div class="eyebrow">HOW THE WICKETS FALL</div><h2 id="dismissTitle">Dismissal breakdown</h2><div id="dismissChart"></div></div></div></section>
   </div>
   <p class="lens-source"><span id="coverage"></span> · <a href="https://cricsheet.org/licensing/">Cricsheet · ODC Attribution License</a></p>
 </section>
 </main>
 <script defer src="ipl-lens-data.js"></script>
-<script defer src="ipl-lens-app.js?v=matchup-prompt"></script>
+<script defer src="ipl-lens-app.js?v=compare-phases"></script>
 <script>
 document.getElementById('clear-matchup').addEventListener('click', () => {
   const batter = document.getElementById('batter');
