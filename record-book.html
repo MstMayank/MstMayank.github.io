@@ -23,10 +23,11 @@
 <h1>Cricket Record Book</h1>
 <p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p>
 <div class="filters">
+  <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
+  <label>Year<select id="year"><option value="">All years</option></select></label>
   <label>Format<select id="format"><option>Test</option><option>ODI</option><option>T20I</option><option value="T20">Other T20</option></select></label>
   <label>Category<select id="category"><option>Batting</option><option>Bowling</option><option>Team totals</option></select></label>
   <label>Competition group<select id="gender"><option value="">Everyone</option><option value="male">Men</option><option value="female">Women</option></select></label>
-  <label>Search<input type="search" id="query" placeholder="Player, team, tournament or year"></label>
 </div>
 <p id="status" role="status"></p>
 <div class="table">
@@ -41,7 +42,10 @@
   const category = document.getElementById('category');
   const gender = document.getElementById('gender');
   const query = document.getElementById('query');
-  query.value = new URLSearchParams(location.search).get('q') || '';
+  const year = document.getElementById('year');
+  const initialQuery = new URLSearchParams(location.search).get('q') || '';
+  const legacyQuery = initialQuery.match(/^(.+?)\s+(?:in\s+)?(\d{4})$/i);
+  query.value = legacyQuery ? legacyQuery[1] : initialQuery;
   const playerNames = new Map([['V Kohli', 'Virat Kohli'], ['RG Sharma', 'Rohit Sharma'], ['SR Tendulkar', 'Sachin Tendulkar']]);
   const status = document.getElementById('status');
   const metric = document.getElementById('metric');
@@ -90,10 +94,19 @@
       }
       if (current !== request) return;
       const { rows, matches } = datasets.get(selectedFormat);
+      const years = [...new Set(rows.map(row => row[6].slice(0, 4)))].sort().reverse();
+      const selectedYear = year.value || (legacyQuery && !year.dataset.ready ? legacyQuery[2] : '');
+      if (year.dataset.format !== selectedFormat) {
+        year.replaceChildren(new Option('All years', ''), ...years.map(value => new Option(value, value)));
+        year.value = years.includes(selectedYear) ? selectedYear : '';
+        year.dataset.format = selectedFormat;
+        year.dataset.ready = 'true';
+      }
       const filtered = rows.filter(row =>
         row[0] === category.value &&
+        (!year.value || row[6].startsWith(year.value + '-')) &&
         (!gender.value || row[7] === gender.value) &&
-        terms.every(term => [row[1], playerNames.get(row[1]), row[2], row[3], row[6], row[8]].join(' ').toLowerCase().includes(term))
+        terms.every(term => [row[1], playerNames.get(row[1])].join(' ').toLowerCase().includes(term))
       );
       const series = new Map();
       for (const row of filtered) {
