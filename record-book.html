@@ -21,7 +21,6 @@
 </style>
 <a href="./#records">← The Cricket Space</a>
 <h1>Cricket Record Book</h1>
-<p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p>
 <div class="filters">
   <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
   <label>Year<select id="year"><option value="">All years</option></select></label>
@@ -36,6 +35,7 @@
   </table>
 </div>
 <button id="more" type="button" hidden>Show more</button>
+<footer style="margin-top:32px;font-size:14px"><p>Series-wise innings from the <a href="https://cricsheet.org/coverage/">Cricsheet match archive</a>. Historical coverage varies by format and competition. Batting and bowling figures are for individual innings. Data derived from Cricsheet under the <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution License</a>.</p></footer>
 <script>
   const format = document.getElementById('format');
   const category = document.getElementById('category');
