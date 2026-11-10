@@ -12,7 +12,7 @@ let cards=bowling?[['RUNS CONCEDED',fmt(total.conceded),'Excludes byes & leg-bye
 const headings = {
   batting: 'Batting leaderboard',
   bowling: 'Bowling leaderboard',
-  matchups: 'Batter vs bowler',
+  matchups: 'Batter vs Bowler',
   fielding: 'Fielding leaderboard'
 };
 $('panelTitle').textContent = headings[tab];
