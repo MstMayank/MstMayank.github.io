@@ -94,9 +94,6 @@
 
 #records { border-top:1px solid var(--line); }
 
-.record-search { display:block; margin-bottom:16px; }
-.record-search button { margin-top:8px; padding:9px 15px; border-radius:8px; border:1px solid var(--orange); background:#171715; color:var(--ink); }
-.record-search input { display:block; width:min(100%,520px); margin-top:8px; padding:12px; background:#171715; color:var(--ink); border:1px solid var(--line); border-radius:8px; font:inherit; }
 .writing-feature { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,30%); gap:20px; align-items:start; }
 .history-card { aspect-ratio:1; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(18px,2vw,32px); border:1px solid var(--line); border-radius:16px; color:#fff; background:linear-gradient(180deg,#171715d9,#17171548 30%,#171715fa 72%),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20360%20360%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2220%22%20height%3D%2220%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M20%200H0V20%22%20fill%3D%22none%22%20stroke%3D%22%23c08664%22%20stroke-opacity%3D%22.18%22%2F%3E%3C%2Fpattern%3E%3CradialGradient%20id%3D%22ball%22%20cx%3D%22.32%22%20cy%3D%22.27%22%20r%3D%22.8%22%3E%3Cstop%20stop-color%3D%22%23ea7654%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2364251e%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cpath%20fill%3D%22%23251b18%22%20d%3D%22M0%200h360v360H0z%22%2F%3E%3Cpath%20fill%3D%22url(%23grid)%22%20d%3D%22M0%200h360v360H0z%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23c08664%22%20opacity%3D%22.55%22%3E%3Ccircle%20cx%3D%22216%22%20cy%3D%22151%22%20r%3D%22102%22%2F%3E%3Ccircle%20cx%3D%22216%22%20cy%3D%22151%22%20r%3D%22113%22%20stroke-dasharray%3D%222%208%22%2F%3E%3Cpath%20d%3D%22M65%20151h294M216%2028v246M80%20254l43-43M309%2075l29-29%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22216%22%20cy%3D%22151%22%20r%3D%2274%22%20fill%3D%22url(%23ball)%22%20stroke%3D%22%23ed9b76%22%20stroke-width%3D%222%22%2F%3E%3Cg%20transform%3D%22rotate(35%20216%20151)%22%20fill%3D%22none%22%20stroke%3D%22%23ffd0ab%22%3E%3Cpath%20d%3D%22M209%2078q-22%2073%200%20146m13-146q-22%2073%200%20146%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M215%2083q-22%2068%200%20136%22%20stroke-width%3D%225%22%20stroke-dasharray%3D%222%205%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23e5a17e%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20letter-spacing%3D%222%22%3E%3Ctext%20x%3D%2222%22%20y%3D%22154%22%3ETCS%3C%2Ftext%3E%3Ctext%20x%3D%2222%22%20y%3D%22170%22%3EARCHIVE%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/cover; }
 .history-summary { margin:0; font-size:.9rem; line-height:1.35; }
@@ -105,54 +102,14 @@
 .history-card a { text-decoration:underline; }
 @media(max-width:760px) { .writing-feature { grid-template-columns:minmax(0,1fr); } .history-card { width:min(100%,360px); } }
 
-#ipl-lens .lens-tabs, #ipl-lens .filters, #ipl-lens #matchControls { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:20px 0; }
-#ipl-lens button, #ipl-lens input, #ipl-lens select { font:inherit; color:var(--ink); background:#191917; border:1px solid var(--line); border-radius:8px; padding:9px 12px; max-width:100%; }
-#ipl-lens button.active, #ipl-lens button:hover { color:#ff946f; border-color:#ff946f; }
-#ipl-lens label { display:grid; gap:6px; font-size:.85rem; min-width:0; }
-#ipl-lens [hidden] { display:none!important; }
-#ipl-lens .metrics { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
-#ipl-lens .metrics > div, #ipl-lens .panel { background:#181817; border:1px solid var(--line); border-radius:14px; padding:clamp(12px,2vw,24px); }
-#ipl-lens .metrics > div { flex:1 1 140px; display:grid; gap:5px; }
-#ipl-lens .metrics strong { color:#ff946f; font-size:1.35rem; }
-#ipl-lens .workspace { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:16px; }
-#ipl-lens .detail { display:grid; align-content:start; gap:16px; min-width:0; }
-#ipl-lens .panel-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
-#ipl-lens h2, #ipl-lens h3 { margin-block:8px; }
-#ipl-lens .panel h2 { font-size:clamp(1.2rem,2.3vw,1.8rem); line-height:1.2; }
-#ipl-lens .table-wrap { overflow:auto; max-height:420px; }
-#ipl-lens table { width:100%; border-collapse:collapse; white-space:nowrap; }
-#ipl-lens th, #ipl-lens td { text-align:left; padding:9px; border-bottom:1px solid var(--line); }
-#ipl-lens th { position:sticky; top:0; background:#181817; }
-#ipl-lens tr[data-id], #ipl-lens th[data-sort] { cursor:pointer; }
-#ipl-lens tr.selected { background:#ff64351c; }
-#ipl-lens .rank { color:var(--dim); margin-right:8px; }
-#ipl-lens .hint, #ipl-lens .table-foot, #ipl-lens .lens-source { color:var(--dim); font-size:.85rem; }
-#ipl-lens .lens-source a { color:#ff946f; }
-#ipl-lens .bar-label { display:flex; justify-content:space-between; gap:10px; margin-top:8px; font-size:.85rem; }
-#ipl-lens .bar-track { height:5px; background:var(--line); border-radius:6px; }
-#ipl-lens .bar-fill { height:100%; background:var(--orange); border-radius:6px; }
-@media(max-width:850px) { #ipl-lens .workspace { grid-template-columns:minmax(0,1fr); } }
-#ipl-lens .panel h2 { letter-spacing:normal; }
-#ipl-lens .lens-picker { flex:1 1 190px; min-width:0; max-width:300px; }
-#ipl-lens .lens-picker input { width:100%; font-size:16px; }
-#ipl-lens #matchControls { align-items:start; }
-#ipl-lens .lens-suggestions { max-height:200px; overflow:auto; margin-top:6px; }
-#ipl-lens .lens-suggestions button { display:block; width:100%; text-align:left; min-height:44px; }
-#ipl-lens .panel {
-  --ink:#26201c;
-  --dim:#655952;
-  --line:#d8ccc0;
-  --orange:#ad3e23;
-  background:#f7f1e7;
-  color:var(--ink);
-}
-#ipl-lens .panel th { background:#f0e6d9; }
-#ipl-lens .panel input, #ipl-lens .panel button { background:#fffaf2; color:var(--ink); }
-#ipl-lens .panel button:hover { color:var(--orange); border-color:var(--orange); }
-#ipl-lens .panel tr.selected { background:#f1d8c9; }
-#ipl-lens .panel :focus-visible { outline:2px solid var(--orange); outline-offset:2px; }
+
+.tool-card { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:clamp(20px,4vw,42px); border:1px solid var(--line); border-radius:14px; background:#181817; color:var(--ink); text-decoration:none; }
+.tool-card:hover, .tool-card:focus-visible { border-color:var(--orange); }
+.tool-card h2 { font-size:clamp(28px,5vw,60px); margin:8px 0 0; }
+.tool-card-arrow { color:#ff946f; font-size:1.6rem; }
+
 .social-links svg { flex:none; margin-inline-end:8px; vertical-align:middle; }
-</style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#writing">Writing</a><a href="#records">Records</a><a href="#ipl-lens">IPL Lens</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-label="Cricket articles and history">
+</style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#writing">Writing</a><a href="record-book.html">Records</a><a href="ipl-lens.html">IPL Lens</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-label="Cricket articles and history">
   <div class="writing-feature">
   <a class="featured-essay reveal" href="what-makes-the-ipl-so-special.html"><span class="essay-image"><img src="ipl-match.jpg" alt="" width="960" height="540" loading="lazy"></span><div><span class="label">Latest article / IPL</span><h3>The IPL Never Really Ends, Does It?</h3><p>How IPL trade rumours keep fans debating team combinations long before the first ball.</p><span class="essay-meta">By Mayank Shekhar Tiwari · 3 min read <b>Read article <span class="essay-arrow" aria-hidden="true">↗</span></b></span></div></a>
   <aside class="history-card" id="on-this-day" aria-label="On This Day">
@@ -167,22 +124,16 @@
   </div>
 
 </section><section class="section" id="records" aria-labelledby="records-title">
-  <div class="section-head"><div><span class="label">Records &amp; Facts</span><h2 id="records-title">Cricket Record Book</h2></div><a href="record-book.html" style="color:#ff946f">Explore Record Book ↗</a></div>
-  <form class="record-search" action="record-book.html" method="get">
-    <label for="homepage-record-query">Search the match archive</label>
-    <input id="homepage-record-query" name="q" type="search" placeholder="e.g. Virat Kohli">
-    <button type="submit">Search records</button>
-  </form>
+  <a class="tool-card" href="record-book.html">
+    <div><span class="label">Match Archive</span><h2 id="records-title">Cricket Record Book</h2></div>
+    <span class="tool-card-arrow" aria-hidden="true">↗</span>
+  </a>
 </section>
-
 <section class="section" id="ipl-lens" aria-labelledby="ipl-lens-title">
-  <div class="section-head">
+  <a class="tool-card" href="ipl-lens.html">
     <div><span class="label">IPL Analytics</span><h2 id="ipl-lens-title">IPL Lens</h2></div>
-  </div>
-  <div class="lens-tabs" role="group" aria-label="IPL statistics"><button class="active" data-tab="batting">↗ <span>Batting explorer</span></button><button data-tab="matchups">⇄ <span>Head to head</span></button><button data-tab="bowling">◎ <span>Bowling lab</span></button><button data-tab="fielding">◇ <span>Fielding</span></button></div>
-  <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label>VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section><section class="workspace"><div class="panel main-panel"><div class="panel-head"><div><div class="eyebrow" id="panelLabel">PLAYER EXPLORER</div><h2 id="panelTitle">Batting leaderboard</h2></div><input id="search" placeholder="Search a player…" aria-label="Search a player"></div><div id="matchControls" hidden><div class="lens-picker"><label>Batter<input id="batter-search" aria-controls="batter-suggestions" placeholder="Search batter" autocomplete="off"></label><div class="lens-suggestions" id="batter-suggestions" hidden></div></div><select id="batter" hidden></select><div class="lens-picker"><label>Bowler<input id="bowler-search" aria-controls="bowler-suggestions" placeholder="Search bowler" autocomplete="off"></label><div class="lens-suggestions" id="bowler-suggestions" hidden></div></div><select id="bowler" hidden></select><button type="button" id="clear-matchup">Clear players</button></div><p class="hint" id="hint">Select a player to explore their performance. Click a column to sort.</p><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div class="table-foot" id="tableFoot"></div></div><div class="detail" id="lens-detail" hidden><div class="panel"><div class="eyebrow">UNDER THE LENS</div><h2 id="playerName">Select a player</h2><p class="hint" id="sample"></p><h3>Performance by phase</h3><div id="phaseChart"></div></div><div class="panel"><div class="eyebrow">HOW THE WICKETS FALL</div><h2 id="dismissTitle">Dismissal breakdown</h2><div id="dismissChart"></div></div></div></section>
-  </div>
-  <p class="lens-source"><span id="coverage"></span> · <a href="https://cricsheet.org/licensing/">Cricsheet · ODC Attribution License</a></p>
+    <span class="tool-card-arrow" aria-hidden="true">↗</span>
+  </a>
 </section>
 <section class="section about" id="about"><div class="monogram reveal" aria-label="Mayank monogram"><strong>m.</strong><small>THE PERSON BEHIND THE CONTENT</small></div><div class="reveal"><span class="label">About the Creator</span><h2>Mayank Shekhar Tiwari</h2><p>I'm Mayank Shekhar Tiwari, a content creator and the person behind TheCricketSpace.</p><p>This is my personal corner of the internet — a place for my work, my ideas and the things I create. Cricket is part of my story. Creating is how I tell it.</p><div class="signature">Mayank ↗</div><div class="social-links" aria-label="TheCricketSpace social profiles"><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Instagram <span aria-hidden="true">↗</span></a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="1" y="4" width="22" height="16" rx="5" fill="currentColor"/><path d="m10 8 6 4-6 4z" fill="#10100f"/></svg>YouTube <span aria-hidden="true">↗</span></a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-4H14V7c0-1 .3-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v9z"/></svg>Facebook <span aria-hidden="true">↗</span></a></div></div></section><section class="section services"><div class="service reveal"><span>01</span><h3>Content creation</h3><p>Turning an idea into something worth stopping for.</p><b>↗</b></div><div class="service reveal"><span>02</span><h3>Cricket & culture</h3><p>Exploring the game through TheCricketSpace.</p><b>↗</b></div><div class="service reveal"><span>03</span><h3>Creative collaboration</h3><p>A fresh perspective for the next idea we make together.</p><b>↗</b></div></section><section class="contact" id="contact"><span class="label">03 / Work with me</span><h2 class="reveal">LET'S CREATE<br>SOMETHING<br>WORTH SHARING.</h2><div class="contact-bottom"><p>For content collaborations and creative projects,<br>let's start with a conversation.</p><button class="brief-btn" id="open">Share your idea ↗</button></div></section></main><footer><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><span>© <span id="year"></span> The Cricket Space</span><a href="#">Back to top ↑</a></footer><div class="modal" id="modal" hidden><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title"><span class="label">Let's create</span><h2 id="modal-title">What's the idea?</h2><p>Write a quick brief. Send by email opens a draft in your email app for you to send.</p><label for="brief">Your project idea</label><textarea id="brief" placeholder="The idea, the format, the timeline..."></textarea><div class="actions"><button class="close" id="close">Close</button><button id="copy">Send by email ↗</button></div><p id="message" aria-live="polite"></p></section></div><script>
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;document.getElementById('year').textContent=new Date().getFullYear();const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));if(!reduced){const cursor=document.querySelector('.cursor'),orb=document.querySelector('.orb');window.addEventListener('pointermove',e=>{cursor.style.transform=`translate(${e.clientX-8}px,${e.clientY-8}px)`;orb.style.setProperty('--mx',`${(e.clientX/innerWidth-.5)*35}px`);orb.style.setProperty('--my',`${(e.clientY/innerHeight-.5)*25}px`)},{passive:true})}const modal=document.getElementById('modal'),open=document.getElementById('open'),close=document.getElementById('close'),brief=document.getElementById('brief'),copy=document.getElementById('copy');function dismiss(){modal.hidden=true;document.body.style.overflow='';open.focus()}open.onclick=()=>{modal.hidden=false;document.body.style.overflow='hidden';brief.focus()};close.onclick=dismiss;modal.onclick=e=>{if(e.target===modal)dismiss()};document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')dismiss();if(e.key==='Tab'){if(e.shiftKey&&document.activeElement===brief){e.preventDefault();copy.focus()}else if(!e.shiftKey&&document.activeElement===copy){e.preventDefault();brief.focus()}}});copy.onclick=()=>{
@@ -238,67 +189,4 @@ if (historyMoment) {
     summary.hidden = false;
   }
 }
-</script><script defer src="ipl-lens-data.js"></script>
-<script defer src="ipl-lens-app.js?v=venue-groups"></script>
-<script>
-document.getElementById('clear-matchup').addEventListener('click', () => {
-  const batter = document.getElementById('batter');
-  const bowler = document.getElementById('bowler');
-  batter.value = '';
-  bowler.value = '';
-  bowler.dispatchEvent(new Event('change'));
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  for (const role of ['batter', 'bowler']) {
-    const input = document.getElementById(role + '-search');
-    const select = document.getElementById(role);
-    const list = document.getElementById(role + '-suggestions');
-    const picker = input.closest('.lens-picker');
-    function setPlayer(value) {
-      if (select.value === value) return;
-      select.value = value;
-      select.dispatchEvent(new Event('change'));
-    }
-    input.addEventListener('input', () => {
-      setPlayer('');
-      const query = input.value.trim().toLowerCase();
-      list.replaceChildren();
-      list.hidden = !query;
-      if (!query) return;
-      const matches = Array.from(select.options)
-        .filter(option => option.value && option.text.toLowerCase().includes(query)).slice(0, 20);
-      for (const option of matches) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = option.text;
-        button.addEventListener('click', () => {
-          input.value = option.text;
-          setPlayer(option.value);
-          list.hidden = true;
-          input.focus();
-        });
-        list.append(button);
-      }
-      if (!matches.length) list.textContent = 'No matching players.';
-    });
-    picker.addEventListener('focusout', event => {
-      if (!picker.contains(event.relatedTarget)) list.hidden = true;
-    });
-    picker.addEventListener('keydown', event => {
-      if (event.key === 'Escape') {
-        list.hidden = true;
-        input.focus();
-      }
-    });
-    for (const id of ['clear-matchup', 'reset']) {
-      document.getElementById(id).addEventListener('click', () => {
-        input.value = '';
-        list.hidden = true;
-      });
-    }
-  }
-});
-</script>
-</body></html>
+</script></body></html>
