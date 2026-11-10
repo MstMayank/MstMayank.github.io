@@ -155,7 +155,7 @@
 
 @media (max-width:600px) {
   #ipl-lens .filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
-  #ipl-lens .filters label:has(#venue) { grid-column:1 / -1; }
+  #ipl-lens .filters .venue-filter { grid-column:1 / -1; }
   #ipl-lens .filters select, #ipl-lens .filters button { width:100%; min-width:0; min-height:44px; font-size:16px; }
   #ipl-lens .panel { min-width:0; }
   #ipl-lens .panel-head input { width:100%; font-size:16px; }
@@ -195,7 +195,7 @@
   
 
   <div class="lens-tabs" role="group" aria-label="IPL statistics"><button class="active" data-tab="batting">↗ <span>Batting explorer</span></button><button data-tab="matchups">⇄ <span>Head to head</span></button><button data-tab="bowling">◎ <span>Bowling lab</span></button><button data-tab="fielding">◇ <span>Fielding</span></button></div>
-  <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label>VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section>
+  <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label class="venue-filter">VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section>
 <div id="comparison-controls" hidden>
   <label>Compare
     <select id="comparison-mode">
@@ -227,7 +227,7 @@
 </section>
 </main>
 <script defer src="ipl-lens-data.js"></script>
-<script defer src="ipl-lens-app.js?v=compare-phases"></script>
+<script defer src="ipl-lens-app.js?v=browser-compat"></script>
 <script>
 document.getElementById('clear-matchup').addEventListener('click', () => {
   const batter = document.getElementById('batter');

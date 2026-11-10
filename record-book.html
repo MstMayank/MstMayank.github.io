@@ -55,6 +55,32 @@
   let request = 0;
   let limit = 25;
 
+  let gzipFallback;
+  async function readArchive(bytes) {
+    if (typeof DecompressionStream === 'function' && typeof Blob.prototype.stream === 'function') {
+      try {
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        return await new Response(stream).json();
+      } catch (error) {
+        // Some engines expose the stream API without working gzip support.
+      }
+    }
+    if (!gzipFallback) {
+      gzipFallback = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js';
+        script.onload = () => window.fflate ? resolve(window.fflate) : reject(new Error('Archive decoder unavailable'));
+        script.onerror = reject;
+        document.head.appendChild(script);
+      }).catch(error => {
+        gzipFallback = null;
+        throw error;
+      });
+    }
+    const decoder = await gzipFallback;
+    return JSON.parse(decoder.strFromU8(decoder.gunzipSync(bytes)));
+  }
+
   function loadDataset(key) {
     if (!pending.has(key)) {
       pending.set(key, new Promise((resolve, reject) => {
@@ -63,8 +89,7 @@
         script.onload = async () => {
           try {
             const bytes = Uint8Array.from(atob(archives.get(key)), char => char.charCodeAt(0));
-            const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-            datasets.set(key, await new Response(stream).json());
+            datasets.set(key, await readArchive(bytes));
             archives.delete(key);
             resolve();
           } catch (error) {
