@@ -97,12 +97,28 @@
 .record-search { display:block; margin-bottom:16px; }
 .record-search button { margin-top:8px; padding:9px 15px; border-radius:8px; border:1px solid var(--orange); background:#171715; color:var(--ink); }
 .record-search input { display:block; width:min(100%,520px); margin-top:8px; padding:12px; background:#171715; color:var(--ink); border:1px solid var(--line); border-radius:8px; font:inherit; }
+.writing-feature { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,30%); gap:20px; align-items:start; }
+.history-card { aspect-ratio:1; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(18px,2vw,32px); border:1px solid var(--line); border-radius:16px; color:#fff; background:linear-gradient(180deg,#171715d9,#17171548 30%,#171715fa 72%),url("ipl-match.jpg") center/cover; }
+.history-card h3 { margin:8px 0; font-size:clamp(1.2rem,2.2vw,2rem); line-height:1.08; }
+.history-card time, .history-card a { color:#ffab8e; }
+.history-card a { text-decoration:underline; }
+@media(max-width:760px) { .writing-feature { grid-template-columns:minmax(0,1fr); } .history-card { width:min(100%,360px); } }
 </style></head><body><div class="cursor" aria-hidden="true"></div><header><a class="logo" href="#" aria-label="The Cricket Space home">tcs<i>.</i></a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#records">Records</a><a href="#about">About</a></nav><a class="contact-link" href="#contact">Let's talk ↗</a></header><main><section class="hero hero-collage"><div class="topline intro"><span>Content. Cricket. My perspective.</span><span class="status">Cricket stories &amp; analysis</span></div><h1 class="intro delay">The Cricket Space</h1><div class="orb" aria-hidden="true"><div class="orb-ring"></div></div><div class="hero-bottom intro delay"><p>Cricket stories, match observations,<br>and a closer look at the game.</p><a class="round-link" href="#writing"><span>↘</span>Read the latest</a><span class="hero-index">SCROLL TO DISCOVER — 01</span></div></section><div class="marquee" aria-hidden="true"><div class="track"><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span><span>CONTENT WITH CHARACTER <b>✳</b> STORIES WITH SOUL <b>✳</b> THE CRICKET SPACE <b>✳</b> </span></div></div><section class="section writing" id="writing" aria-labelledby="writing-title">
   <div class="section-head reveal">
     <div><h2 id="writing-title">Writing &amp; Analysis</h2></div>
     <p>Cricket observations, match breakdowns, and the decisions that shape a game.</p>
   </div>
+  <div class="writing-feature">
   <a class="featured-essay reveal" href="what-makes-the-ipl-so-special.html"><span class="essay-image"><img src="ipl-match.jpg" alt="" width="960" height="540" loading="lazy"></span><div><span class="label">Latest article / IPL</span><h3>The IPL Never Really Ends, Does It?</h3><p>How IPL trade rumours keep fans debating team combinations long before the first ball.</p><span class="essay-meta">By Mayank Shekhar Tiwari · 3 min read <b>Read article <span class="essay-arrow" aria-hidden="true">↗</span></b></span></div></a>
+  <aside class="history-card" aria-label="On This Day">
+    <span class="label" style="color:#fff">On This Day</span>
+    <div>
+      <time datetime="2008-04-18">18 April 2008</time>
+      <h3>McCullum’s 158* opens the IPL</h3>
+      <a href="https://www.iplt20.com/news/article/ipl-has-changed-the-way-the-game-is-played-mccullum">Read more ↗</a>
+    </div>
+  </aside>
+  </div>
   <div class="writing-grid">
     <div><span class="label">01 / Short reads</span><h3>Quick Takes</h3><p>One moment or idea from a match, in a few paragraphs.</p></div>
     <div><span class="label">02 / Long reads</span><h3>Deep Dives</h3><p>Closer looks at tactics, player form, and team selection.</p></div>
