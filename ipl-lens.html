@@ -164,6 +164,17 @@
   #ipl-lens th:first-child, #ipl-lens td:first-child { white-space:normal; min-width:8rem; }
   #ipl-lens .table-wrap::before { content:"Swipe left for more stats"; display:block; padding:6px 0; color:var(--dim); font-size:.75rem; }
 }
+
+#ipl-lens .team-matchup { margin:20px 0; }
+#ipl-lens .team-matchup summary { cursor:pointer; font-weight:700; }
+#ipl-lens .team-matchup-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
+#ipl-lens .team-matchup select { width:100%; min-width:0; background:#fffaf2; }
+#ipl-lens .team-matchup dl { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 16px; }
+#ipl-lens .team-matchup dd { margin:0; font-weight:700; }
+@media(max-width:600px) {
+  #ipl-lens .team-matchup-fields { grid-template-columns:minmax(0,1fr); }
+  #ipl-lens .team-matchup select { min-height:44px; font-size:16px; }
+}
 </style></head><body>
 <header>
   <a class="logo" href="./" aria-label="The Cricket Space home">tcs<i>.</i></a>
@@ -175,6 +186,16 @@
   <div class="section-head">
     <div><span class="label">IPL Analytics</span><h2 id="ipl-lens-title" role="heading" aria-level="1">IPL Lens</h2></div>
   </div>
+  
+  <details class="panel team-matchup">
+    <summary>Team Head to Head</summary>
+    <div class="team-matchup-fields">
+      <label>Team 1<select id="team-one"><option value="">Select team</option></select></label>
+      <label>Team 2<select id="team-two"><option value="">Select opponent</option></select></label>
+    </div>
+    <div id="team-matchup-result" aria-live="polite"></div>
+    <p class="hint">All seasons in the Cricsheet IPL archive. Matches decided by a Super Over are counted as ties.</p>
+  </details>
   <div class="lens-tabs" role="group" aria-label="IPL statistics"><button class="active" data-tab="batting">↗ <span>Batting explorer</span></button><button data-tab="matchups">⇄ <span>Head to head</span></button><button data-tab="bowling">◎ <span>Bowling lab</span></button><button data-tab="fielding">◇ <span>Fielding</span></button></div>
   <div class="filters"><label>SEASON<select id="season"><option value="">All seasons</option></select></label><label>VENUE<select id="venue"><option value="">All grounds</option></select></label><label>PHASE<select id="phase"><option value="">All overs</option><option value="0">Powerplay · 1–6</option><option value="1">Middle · 7–15</option><option value="2">Death · 16–20</option></select></label><button class="reset" id="reset">Reset filters ↺</button></div><div id="loading" role="status">Loading the innings…</div><div id="content" hidden><section class="metrics" id="metrics" hidden></section><section class="workspace"><div class="panel main-panel"><div class="panel-head"><div><div class="eyebrow" id="panelLabel">PLAYER EXPLORER</div><h2 id="panelTitle">Batting leaderboard</h2></div><input id="search" placeholder="Search a player…" aria-label="Search a player"></div><div id="matchControls" hidden><div class="lens-picker"><label>Batter<input id="batter-search" aria-controls="batter-suggestions" placeholder="Search batter" autocomplete="off"></label><div class="lens-suggestions" id="batter-suggestions" hidden></div></div><select id="batter" hidden></select><div class="lens-picker"><label>Bowler<input id="bowler-search" aria-controls="bowler-suggestions" placeholder="Search bowler" autocomplete="off"></label><div class="lens-suggestions" id="bowler-suggestions" hidden></div></div><select id="bowler" hidden></select><button type="button" id="clear-matchup">Clear players</button></div><p class="hint" id="hint">Select a player to explore their performance. Click a column to sort.</p><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div class="table-foot" id="tableFoot"></div></div><div class="detail" id="lens-detail" hidden><div class="panel"><div class="eyebrow">UNDER THE LENS</div><h2 id="playerName">Select a player</h2><p class="hint" id="sample"></p><h3>Performance by phase</h3><div id="phaseChart"></div></div><div class="panel"><div class="eyebrow">HOW THE WICKETS FALL</div><h2 id="dismissTitle">Dismissal breakdown</h2><div id="dismissChart"></div></div></div></section>
   </div>
@@ -243,5 +264,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+</script>
+
+<script>
+(() => {
+  const records = {"Chennai Super Kings | Deccan Chargers":[6,4,0,0],"Chennai Super Kings | Delhi Capitals":[21,12,0,0],"Chennai Super Kings | Gujarat Titans":[4,6,0,0],"Chennai Super Kings | Kochi Tuskers Kerala":[1,1,0,0],"Chennai Super Kings | Kolkata Knight Riders":[21,11,0,0],"Chennai Super Kings | Lucknow Super Giants":[3,4,1,0],"Chennai Super Kings | Mumbai Indians":[20,21,0,0],"Chennai Super Kings | Pune Warriors":[4,2,0,0],"Chennai Super Kings | Punjab Kings":[16,16,0,1],"Chennai Super Kings | Rajasthan Royals":[16,16,0,0],"Chennai Super Kings | Royal Challengers Bengaluru":[21,14,0,0],"Chennai Super Kings | Sunrisers Hyderabad":[15,9,0,0],"Deccan Chargers | Delhi Capitals":[4,7,0,0],"Deccan Chargers | Kochi Tuskers Kerala":[1,0,0,0],"Deccan Chargers | Kolkata Knight Riders":[2,7,0,0],"Deccan Chargers | Mumbai Indians":[4,6,0,0],"Deccan Chargers | Pune Warriors":[3,1,0,0],"Deccan Chargers | Punjab Kings":[3,7,0,0],"Deccan Chargers | Rajasthan Royals":[2,7,0,0],"Deccan Chargers | Royal Challengers Bengaluru":[6,5,0,0],"Delhi Capitals | Gujarat Lions":[3,1,0,0],"Delhi Capitals | Gujarat Titans":[3,5,0,0],"Delhi Capitals | Kochi Tuskers Kerala":[1,1,0,0],"Delhi Capitals | Kolkata Knight Riders":[15,20,0,1],"Delhi Capitals | Lucknow Super Giants":[5,3,0,0],"Delhi Capitals | Mumbai Indians":[17,21,0,0],"Delhi Capitals | Pune Warriors":[3,2,1,0],"Delhi Capitals | Punjab Kings":[17,18,1,1],"Delhi Capitals | Rajasthan Royals":[16,15,0,1],"Delhi Capitals | Rising Pune Supergiant":[2,2,0,0],"Delhi Capitals | Royal Challengers Bengaluru":[13,20,1,1],"Delhi Capitals | Sunrisers Hyderabad":[11,14,1,1],"Gujarat Lions | Kolkata Knight Riders":[3,1,0,0],"Gujarat Lions | Mumbai Indians":[2,1,0,1],"Gujarat Lions | Punjab Kings":[2,2,0,0],"Gujarat Lions | Rising Pune Supergiant":[3,1,0,0],"Gujarat Lions | Royal Challengers Bengaluru":[2,3,0,0],"Gujarat Lions | Sunrisers Hyderabad":[0,5,0,0],"Gujarat Titans | Kolkata Knight Riders":[4,2,0,0],"Gujarat Titans | Lucknow Super Giants":[5,3,0,0],"Gujarat Titans | Mumbai Indians":[5,4,0,0],"Gujarat Titans | Punjab Kings":[4,4,0,0],"Gujarat Titans | Rajasthan Royals":[8,3,0,0],"Gujarat Titans | Royal Challengers Bengaluru":[4,6,0,0],"Gujarat Titans | Sunrisers Hyderabad":[6,1,0,0],"Kochi Tuskers Kerala | Kolkata Knight Riders":[2,0,0,0],"Kochi Tuskers Kerala | Mumbai Indians":[1,0,0,0],"Kochi Tuskers Kerala | Pune Warriors":[0,1,0,0],"Kochi Tuskers Kerala | Punjab Kings":[0,1,0,0],"Kochi Tuskers Kerala | Rajasthan Royals":[1,1,0,0],"Kochi Tuskers Kerala | Royal Challengers Bengaluru":[0,2,0,0],"Kolkata Knight Riders | Lucknow Super Giants":[2,5,0,1],"Kolkata Knight Riders | Mumbai Indians":[12,25,0,0],"Kolkata Knight Riders | Pune Warriors":[4,1,0,0],"Kolkata Knight Riders | Punjab Kings":[21,13,2,0],"Kolkata Knight Riders | Rajasthan Royals":[17,12,0,2],"Kolkata Knight Riders | Rising Pune Supergiant":[3,1,0,0],"Kolkata Knight Riders | Royal Challengers Bengaluru":[20,16,0,0],"Kolkata Knight Riders | Sunrisers Hyderabad":[20,11,0,1],"Lucknow Super Giants | Mumbai Indians":[6,3,0,0],"Lucknow Super Giants | Punjab Kings":[3,5,0,0],"Lucknow Super Giants | Rajasthan Royals":[2,6,0,0],"Lucknow Super Giants | Royal Challengers Bengaluru":[3,5,0,0],"Lucknow Super Giants | Sunrisers Hyderabad":[5,2,0,0],"Mumbai Indians | Pune Warriors":[5,1,0,0],"Mumbai Indians | Punjab Kings":[18,17,0,1],"Mumbai Indians | Rajasthan Royals":[16,16,0,0],"Mumbai Indians | Rising Pune Supergiant":[2,4,0,0],"Mumbai Indians | Royal Challengers Bengaluru":[19,16,0,1],"Mumbai Indians | Sunrisers Hyderabad":[14,11,0,1],"Pune Warriors | Punjab Kings":[3,3,0,0],"Pune Warriors | Rajasthan Royals":[1,4,0,0],"Pune Warriors | Royal Challengers Bengaluru":[0,5,0,0],"Pune Warriors | Sunrisers Hyderabad":[0,2,0,0],"Punjab Kings | Rajasthan Royals":[12,18,0,1],"Punjab Kings | Rising Pune Supergiant":[2,2,0,0],"Punjab Kings | Royal Challengers Bengaluru":[18,20,0,0],"Punjab Kings | Sunrisers Hyderabad":[8,18,0,0],"Rajasthan Royals | Royal Challengers Bengaluru":[15,17,2,0],"Rajasthan Royals | Sunrisers Hyderabad":[10,14,0,0],"Rising Pune Supergiant | Royal Challengers Bengaluru":[2,2,0,0],"Rising Pune Supergiant | Sunrisers Hyderabad":[3,1,0,0],"Royal Challengers Bengaluru | Sunrisers Hyderabad":[12,14,0,1]};
+  const teams = [...new Set(Object.keys(records).flatMap(pair => pair.split(' | ')))].sort();
+  const first = document.getElementById('team-one');
+  const second = document.getElementById('team-two');
+  const result = document.getElementById('team-matchup-result');
+  for (const team of teams) {
+    first.add(new Option(team, team));
+    second.add(new Option(team, team));
+  }
+
+  function renderTeamMatchup() {
+    for (const option of first.options) option.disabled = Boolean(option.value && option.value === second.value);
+    for (const option of second.options) option.disabled = Boolean(option.value && option.value === first.value);
+    result.replaceChildren();
+    if (!first.value || !second.value) return;
+
+    const pair = [first.value, second.value].sort();
+    const counts = records[pair.join(' | ')] || [0, 0, 0, 0];
+    const stats = [
+      ['Matches', counts.reduce((total, count) => total + count, 0)],
+      [first.value + ' wins', counts[pair.indexOf(first.value)]],
+      [second.value + ' wins', counts[pair.indexOf(second.value)]],
+      ['No result', counts[2]],
+      ['Ties', counts[3]],
+    ];
+    const list = document.createElement('dl');
+    for (const [label, count] of stats) {
+      const term = document.createElement('dt');
+      const value = document.createElement('dd');
+      term.textContent = label;
+      value.textContent = count;
+      list.append(term, value);
+    }
+    result.append(list);
+  }
+
+  first.addEventListener('change', renderTeamMatchup);
+  second.addEventListener('change', renderTeamMatchup);
+  renderTeamMatchup();
+})();
 </script>
 </body></html>
