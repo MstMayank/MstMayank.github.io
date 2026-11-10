@@ -46,7 +46,7 @@
   const initialQuery = new URLSearchParams(location.search).get('q') || '';
   const legacyQuery = initialQuery.match(/^(.+?)\s+(?:in\s+)?(\d{4})$/i);
   query.value = legacyQuery ? legacyQuery[1] : initialQuery;
-  const playerNames = new Map([['V Kohli', 'Virat Kohli'], ['RG Sharma', 'Rohit Sharma'], ['SR Tendulkar', 'Sachin Tendulkar']]);
+  const playerNames = new Map([['H Kaur', 'Harmanpreet Kaur'], ['V Kohli', 'Virat Kohli'], ['RG Sharma', 'Rohit Sharma'], ['SR Tendulkar', 'Sachin Tendulkar']]);
   const status = document.getElementById('status');
   const metric = document.getElementById('metric');
   const results = document.getElementById('results');
