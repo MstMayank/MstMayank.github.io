@@ -271,8 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (!matches.length) list.textContent = 'No matching players.';
     });
+    document.addEventListener('click', event => {
+      if (!picker.contains(event.target)) list.hidden = true;
+    });
     picker.addEventListener('focusout', event => {
-      if (!picker.contains(event.relatedTarget)) list.hidden = true;
+      if (event.relatedTarget && !picker.contains(event.relatedTarget)) list.hidden = true;
     });
     picker.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
@@ -381,8 +384,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (!matches.length) suggestions.textContent = 'No matches found.';
     });
+    document.addEventListener('click', event => {
+      if (!field.contains(event.target)) suggestions.hidden = true;
+    });
     field.addEventListener('focusout', event => {
-      if (!field.contains(event.relatedTarget)) suggestions.hidden = true;
+      if (event.relatedTarget && !field.contains(event.relatedTarget)) suggestions.hidden = true;
     });
     input.addEventListener('keydown', event => {
       if (event.key === 'Escape') suggestions.hidden = true;
