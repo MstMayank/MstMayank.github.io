@@ -167,11 +167,11 @@ function venueLabel(name) {
 
   function battingFigures(stats) {
     return [number(stats.runs), number(stats.balls), divide(stats.runs, stats.balls, 100),
-      divide(stats.runs, stats.outs), number(stats.outs), number(stats.fours), number(stats.sixes)];
+      divide(stats.runs, stats.outs)];
   }
 
   function bowlingFigures(stats) {
-    return [number(stats.wickets), overs(stats.legal), number(stats.conceded),
+    return [number(stats.wickets), overs(stats.legal),
       divide(stats.conceded, stats.legal, 6), divide(stats.conceded, stats.wickets)];
   }
 
@@ -228,7 +228,6 @@ function venueLabel(name) {
     const totals = [emptyStats(), emptyStats()];
     const phases = [0, 1].map(() => groups(format || data.format).map(emptyStats));
     let deliveriesFound = false;
-    const matches = [new Set(), new Set()];
     for (const row of data.rows) {
       const match = data.matches[row[0]];
       if ((format && match[7] !== format) || !matchIncluded(match)) continue;
@@ -237,7 +236,6 @@ function venueLabel(name) {
         if (row[5] || row[11]) deliveriesFound = true;
         addStats(totals[0], row);
         if (phases[0][row[3]]) addStats(phases[0][row[3]], row);
-        matches[0].add(row[0]);
       } else {
         const column = mode === 'bowlers' ? 2 : 1;
         const index = selected.indexOf(row[column]);
@@ -245,7 +243,6 @@ function venueLabel(name) {
         if (row[5] || row[11]) deliveriesFound = true;
         addStats(totals[index], row);
         if (phases[index][row[3]]) addStats(phases[index][row[3]], row);
-        matches[index].add(row[0]);
       }
     }
     if (!deliveriesFound) {
@@ -257,8 +254,8 @@ function venueLabel(name) {
     const names = selected.map(nameFor);
     const bowling = mode === 'bowlers';
     const labels = bowling
-      ? ['Wickets', 'Overs', 'Runs conceded', 'Economy', 'Bowling average']
-      : ['Runs', 'Balls', 'Strike rate', 'Batting average', 'Dismissals', 'Fours', 'Sixes'];
+      ? ['Wickets', 'Overs', 'Economy', 'Bowling average']
+      : ['Runs', 'Balls', 'Strike rate', 'Batting average'];
     const figures = bowling ? bowlingFigures : battingFigures;
     if (mode === 'direct') {
       const directFigures = stats => [
@@ -267,13 +264,28 @@ function venueLabel(name) {
       ];
       const directLabels = ['Runs', 'Balls', 'Strike rate', 'Bowler dismissals', 'Fours', 'Sixes'];
       makeTable('Overall matchup', [names[0] + ' facing ' + names[1]], directLabels, [directFigures(totals[0])]);
-      groups(format || data.format).forEach((phase, index) => makeTable(phase, [names[0]], directLabels, [directFigures(phases[0][index])]));
+      renderPhases(format, [names[0]], directLabels, phases, directFigures);
     } else {
-      makeTable('Overall', names, ['Matches', ...labels], totals.map((stats, index) => [number(matches[index].size), ...figures(stats)]));
-      groups(format || data.format).forEach((phase, index) => makeTable(phase, names, labels, phases.map(player => figures(player[index]))));
+      makeTable('Overall', names, labels, totals.map(figures));
+      renderPhases(format, names, labels, phases, figures);
     }
   }
 
+
+  function renderPhases(format, names, labels, phases, figures) {
+    if ((format || data.format) === 'Test') return;
+    const section = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Performance by phase';
+    section.appendChild(summary);
+    groups(format || data.format).forEach((phase, index) => {
+      makeTable(phase, names, labels, phases.slice(0, names.length).map(player => figures(player[index])));
+      const table = result.lastElementChild;
+      const heading = table.previousElementSibling;
+      section.append(heading, table);
+    });
+    result.appendChild(section);
+  }
 
   function combineFormats(datasets) {
     const combined = { players: [], venues: [], matches: [], rows: [], format: 'International' };
@@ -345,9 +357,9 @@ function venueLabel(name) {
       const dates = data.matches.map(match => match[2]).sort();
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
       byId('battle-method').textContent = international
-        ? 'Results are grouped by Test, ODI and T20I. Test figures use match innings. Limited-overs figures use their format’s phases. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
+        ? 'Results are grouped by Test, ODI and T20I. Open Performance by phase for limited-overs breakdowns. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
         : data.format === 'Test'
-        ? 'Test comparisons show each innings of the match. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
+        ? 'Test comparisons show overall figures. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
         : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
       inputs.forEach(input => { input.disabled = false; });
       updateChoices();
