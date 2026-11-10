@@ -95,8 +95,10 @@
       const selectedYear = year.value || (legacyQuery && !year.dataset.ready ? legacyQuery[2] : '');
       if (year.dataset.format !== selectedFormat) {
         const years = [...new Set(rows.map(row => row[6].slice(0, 4)))].sort().reverse();
+        if (selectedYear && !years.includes(selectedYear)) years.push(selectedYear);
+        years.sort().reverse();
         year.replaceChildren(new Option('All years', ''), ...years.map(value => new Option(value, value)));
-        year.value = years.includes(selectedYear) ? selectedYear : '';
+        year.value = selectedYear || '';
         year.dataset.format = selectedFormat;
         year.dataset.ready = 'true';
       }
@@ -133,7 +135,7 @@
           if (row[11]) {
             const source = document.createElement('a');
             source.href = row[11];
-            source.textContent = 'BCCI scorecard';
+            source.textContent = 'Match scorecard';
             tr.lastElementChild.append(' · ', source);
           }
           remaining--;
@@ -147,7 +149,20 @@
   }
 
   document.querySelector('.filters').addEventListener('input', () => { limit = 25; render(); });
-  more.addEventListener('click', () => { limit += 25; render(); });
+  function showMore() {
+    limit += 25;
+    render();
+  }
+
+  more.addEventListener('click', showMore);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (!year.value && !more.hidden && entries.some(entry => entry.isIntersecting)) {
+        showMore();
+      }
+    });
+    observer.observe(more);
+  }
   render();
 </script>
 </html>
