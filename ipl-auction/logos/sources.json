@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-11-11",
+  "page": "https://www.iplt20.com/teams",
+  "teams": {
+    "csk": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1622%2Ficon-dark.svg",
+      "name": "Chennai Super Kings"
+    },
+    "dc": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1396%2Ficon-dark.svg",
+      "name": "Delhi Capitals"
+    },
+    "gt": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F2879%2Ficon-dark.svg",
+      "name": "Gujarat Titans"
+    },
+    "kkr": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1873%2Ficon-dark.svg",
+      "name": "Kolkata Knight Riders"
+    },
+    "lsg": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F2880%2Ficon-dark.svg",
+      "name": "Lucknow Super Giants"
+    },
+    "mi": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1854%2Ficon-dark.svg",
+      "name": "Mumbai Indians"
+    },
+    "pbks": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F2040%2Ficon-dark.svg",
+      "name": "Punjab Kings"
+    },
+    "rr": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1558%2Ficon-dark.svg",
+      "name": "Rajasthan Royals"
+    },
+    "rcb": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F2138%2Ficon-dark.svg",
+      "name": "Royal Challengers Bengaluru"
+    },
+    "srh": {
+      "sourceUrl": "https://www.iplt20.com/api/team-assets?pathname=static%2Fteams%2F1153%2Ficon-dark.svg",
+      "name": "Sunrisers Hyderabad"
+    }
+  }
+}

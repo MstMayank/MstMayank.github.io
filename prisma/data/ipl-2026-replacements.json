@@ -1,0 +1,247 @@
+{
+  "checkedAt": "2026-11-11",
+  "policy": "CUSTOM_SIMULATION_REPLACEMENTS_TO_AUCTION",
+  "note": "Replacement status is source-verified. Default auction placement is a user-requested simulation rule, not an official 2027 retention-ineligibility claim.",
+  "rows": [
+    {
+      "teamId": "mi",
+      "playerId": "ipl-ec280c77-b2ea-428a-9863-69f71c25e788",
+      "name": "Krish Bhagat",
+      "replacedPlayerId": "ipl-5927d16d-7590-4198-b80e-d0a91688826d",
+      "replacedPlayerName": "Atharva Ankolekar",
+      "sourceUrl": "https://www.iplt20.com/news/article/mumbai-indians-sign-krish-bhagat-as-a-replacement-for-atharva-ankolekar",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "mi",
+      "playerId": "ipl-0ffdb1b8-673b-43ba-899d-f73591b333e3",
+      "name": "Keshav Maharaj",
+      "replacedPlayerId": "ipl-1c0d13b3-03f8-4e10-af88-6deb0e7b4bef",
+      "replacedPlayerName": "Mitch Santner",
+      "sourceUrl": "https://www.iplt20.com/news/article/mumbai-indians-sign-keshav-maharaj-as-replacement-for-injured-mitchell-santner",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "mi",
+      "playerId": "ipl-bd6945ff-904f-4e4b-af8b-7cb7b3e371a3",
+      "name": "Mahipal Lomror",
+      "replacedPlayerId": "ipl-dab1b16a-039b-4d4d-9a43-278c7e600213",
+      "replacedPlayerName": "Quinton de Kock",
+      "sourceUrl": "https://www.iplt20.com/news/article/mi-sign-mahipal-lomror-and-ruchit-ahir-as-replacements",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "mi",
+      "playerId": "ipl-f4fba21e-0212-4637-8059-38b4d8cae682",
+      "name": "Ruchit Ahir",
+      "replacedPlayerId": "ipl-e7643ddf-c3b3-4531-845e-3395b0243e9b",
+      "replacedPlayerName": "Raj Bawa",
+      "sourceUrl": "https://www.iplt20.com/news/article/mi-sign-mahipal-lomror-and-ruchit-ahir-as-replacements",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "csk",
+      "playerId": "ipl-ee2f3969-85c3-44f8-92a7-b66e62d27cc9",
+      "name": "Spencer Johnson",
+      "replacedPlayerId": "ipl-2a4ea20f-3aaf-4714-9d90-79fdff333f70",
+      "replacedPlayerName": "Nathan Ellis",
+      "sourceUrl": "https://www.iplt20.com/news/article/spencer-johnson-joins-csk-for-tata-ipl-2026",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "csk",
+      "playerId": "ipl-e2295c33-e3b2-4feb-b4d5-47a699903252",
+      "name": "Kuldip Yadav",
+      "replacedPlayerId": "ipl-ab6e7d3c-2ef9-4f52-ac08-426500e51556",
+      "replacedPlayerName": "Khaleel Ahmed",
+      "sourceUrl": "https://www.iplt20.com/news/article/kuldip-yadav-and-richard-gleeson-named-injury-replacements-for-khaleel-ahmed-and-nuwan-thushara",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "csk",
+      "playerId": "ipl-87788332-24a6-47e0-8137-e140ec4d63cd",
+      "name": "Akash Madhwal",
+      "replacedPlayerId": "ipl-c2692731-e575-4096-81d6-4fafef92043d",
+      "replacedPlayerName": "Ayush Mhatre",
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-sign-akash-madhwal-as-a-replacement-for-ayush-mhatre",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "csk",
+      "playerId": "ipl-7833cfb4-9ea5-4003-9537-7e09001d7bc3",
+      "name": "Macneil Noronha",
+      "replacedPlayerId": "ipl-ef35334a-1051-49b5-9788-0aeab3fd5c84",
+      "replacedPlayerName": "Ramakrishna Ghosh",
+      "sourceUrl": "https://www.iplt20.com/news/article/macneil-noronha-named-replacement-for-injured-ramakrishna-ghosh",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "csk",
+      "playerId": "ipl-fac47c06-8bae-4838-a576-7f158d52f663",
+      "name": "Dian Forrester",
+      "replacedPlayerId": "ipl-29744aa5-f041-46a5-9e82-3272a01ef1c6",
+      "replacedPlayerName": "Jamie Overton",
+      "sourceUrl": "https://www.iplt20.com/news/article/dian-forrester-named-replacement-for-injured-jamie-overton",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "dc",
+      "playerId": "ipl-7ea9d1e7-564d-4d8d-ab0a-fd0b4c8faa13",
+      "name": "Rehan Ahmed",
+      "replacedPlayerId": "ipl-623e455d-76be-4cb0-8d59-ebf213e979c8",
+      "replacedPlayerName": "Ben Duckett",
+      "sourceUrl": "https://www.iplt20.com/news/article/delhi-capitals-sign-rehan-ahmed-as-replacement-for-ben-duckett",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "gt",
+      "playerId": "ipl-42d6087f-0ced-49d3-9d86-2d96795519c7",
+      "name": "Kulwant Khejroliya",
+      "replacedPlayerId": "ipl-2fc7c130-8327-4e84-9d7d-5ccc09b322b2",
+      "replacedPlayerName": "Yarra Prithviraj",
+      "sourceUrl": "https://www.iplt20.com/news/article/navdeep-saini-replaces-harshit-rana-in-kkr-kulwant-khejroliya-joins-gt-in-place-of-prithviraj-yarra",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "gt",
+      "playerId": "ipl-e47a5a38-7d91-4709-a5bb-f3cb5995c268",
+      "name": "Connor Esterhuizen",
+      "replacedPlayerId": "ipl-9a38f9bd-cde9-4a0c-8517-1bcea2fbbf85",
+      "replacedPlayerName": "Tom Banton",
+      "sourceUrl": "https://www.iplt20.com/news/article/gujarat-titans-sign-connor-esterhuizen-as-a-replacement-for-tom-banton",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "kkr",
+      "playerId": "ipl-df1a272d-3e4d-4842-8f16-01ad80f8e10b",
+      "name": "Saurabh Dubey",
+      "replacedPlayerId": "ipl-5bdb8d0b-74d6-498b-860c-b740d36961dc",
+      "replacedPlayerName": "Akash Deep",
+      "sourceUrl": "https://www.iplt20.com/news/article/kkr-srh-pick-player-replacements-for-tata-ipl-2026",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "kkr",
+      "playerId": "ipl-d1575619-7447-4911-943a-73bf6639e074",
+      "name": "Navdeep Saini",
+      "replacedPlayerId": "ipl-4dd4528d-7a7a-47f8-8d47-b48169eccf3f",
+      "replacedPlayerName": "Harshit Rana",
+      "sourceUrl": "https://www.iplt20.com/news/article/navdeep-saini-replaces-harshit-rana-in-kkr-kulwant-khejroliya-joins-gt-in-place-of-prithviraj-yarra",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "kkr",
+      "playerId": "ipl-b34d09be-77fa-434b-97b5-22b9beb798eb",
+      "name": "Luvnith Sisodia",
+      "replacedPlayerId": "ipl-c8d06511-d621-4e7a-82a6-e8fc0e546d05",
+      "replacedPlayerName": "Matheesha Pathirana",
+      "sourceUrl": "https://www.iplt20.com/news/article/kkr-pick-luvnith-sisodia-as-replacement-for-injured-matheesha-pathirana",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "lsg",
+      "playerId": "ipl-89371fe9-32cb-40b7-ab98-de023186e9ed",
+      "name": "George Linde",
+      "replacedPlayerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "replacedPlayerName": "Wanindu Hasaranga",
+      "sourceUrl": "https://www.iplt20.com/news/article/lsg-sign-george-linde-as-a-replacement-for-wanindu-hasaranga",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "rr",
+      "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
+      "name": "Dasun Shanaka",
+      "replacedPlayerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "replacedPlayerName": "Sam Curran",
+      "sourceUrl": "https://www.iplt20.com/news/article/rajasthan-royals-pick-player-replacement-for-tata-ipl-2026",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "rr",
+      "playerId": "ipl-02c3d48a-5f7d-4854-94c5-946bd48ea26b",
+      "name": "Emanjot Singh Chahal",
+      "replacedPlayerId": "ipl-48904fc9-0f07-4acd-8988-e83d6070dc97",
+      "replacedPlayerName": "Ravi Singh",
+      "sourceUrl": "https://www.iplt20.com/news/article/rajasthan-royals-sign-emanjot-chahal-as-a-replacement-for-injured-ravi-singh",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "rcb",
+      "playerId": "ipl-ce91f263-45d7-47fa-be0a-00a29b5ad186",
+      "name": "Richard Gleeson",
+      "replacedPlayerId": "ipl-f59c67e9-6f83-488a-bca6-3611b16ec6e7",
+      "replacedPlayerName": "Nuwan Thushara",
+      "sourceUrl": "https://www.iplt20.com/news/article/kuldip-yadav-and-richard-gleeson-named-injury-replacements-for-khaleel-ahmed-and-nuwan-thushara",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "srh",
+      "playerId": "ipl-ef3ec648-ac95-4e53-99e6-d386adc4bc79",
+      "name": "David Payne",
+      "replacedPlayerId": "ipl-39a82b0e-badb-4e3d-8136-ac254087fc9e",
+      "replacedPlayerName": "Jack Edwards",
+      "sourceUrl": "https://www.iplt20.com/news/article/kkr-srh-pick-player-replacements-for-tata-ipl-2026",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "srh",
+      "playerId": "ipl-70384a8b-3619-40d2-a18b-559bcb991664",
+      "name": "Dilshan Madushanka",
+      "replacedPlayerId": "ipl-9ee73a43-28c9-4fa2-8bc7-062b0babce50",
+      "replacedPlayerName": "Brydon Carse",
+      "sourceUrl": "https://www.iplt20.com/news/article/sunrisers-hyderabad-pick-dilshan-madushanka-as-injury-replacement-for-brydon-carse",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "srh",
+      "playerId": "ipl-5b07d6b6-23e1-4437-840d-f06f5da0c57b",
+      "name": "Gerald Coetzee",
+      "replacedPlayerId": "ipl-ef3ec648-ac95-4e53-99e6-d386adc4bc79",
+      "replacedPlayerName": "David Payne",
+      "sourceUrl": "https://www.iplt20.com/news/article/sunrisers-hyderabad-pick-gerald-coetzee-as-injury-replacement-for-david-payne",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "srh",
+      "playerId": "ipl-8bbcc84c-f7cd-43ea-af3b-3ed0b400924d",
+      "name": "RS Ambrish",
+      "replacedPlayerId": "ipl-fe31dc03-3e9a-4917-afdb-f62828cc2536",
+      "replacedPlayerName": "Shivam Mavi",
+      "sourceUrl": "https://www.iplt20.com/news/article/sunrisers-hyderabad-sign-rs-ambrish-as-injury-replacement-for-shivam-mavi",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    },
+    {
+      "teamId": "kkr",
+      "playerId": "ipl-c7608f6f-661b-4043-bd43-efdf88e3b79c",
+      "name": "Blessing Muzarabani",
+      "replacedPlayerId": "ipl-434136d2-5375-44a5-9171-5fb3e01abd2a",
+      "replacedPlayerName": "Mustafizur Rahman",
+      "sourceUrl": "https://www.espn.co.uk/cricket/story/_/id/48194724/zimbabwe-bowler-blessing-muzarabani-pulls-psl-2026-joins-kkr-ipl",
+      "checkedAt": "2026-11-11",
+      "classification": "2026_REPLACEMENT_SIGNING"
+    }
+  ]
+}
