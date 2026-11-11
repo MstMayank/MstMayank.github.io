@@ -156,12 +156,28 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2021,
+      "battingInnings": 11,
+      "battingSuccess": 6,
+      "bowlingInnings": 16,
+      "bowlingSuccess": 12
+    },
+    {
       "playerId": "ipl-312863bc-7672-4dc3-8d32-eacf60f0ee89",
       "year": 2021,
       "battingInnings": 11,
       "battingSuccess": 2,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2021,
+      "battingInnings": 4,
+      "battingSuccess": 2,
+      "bowlingInnings": 9,
+      "bowlingSuccess": 4
     },
     {
       "playerId": "ipl-8ff6d6c1-e5a9-41c2-9453-e451c85d1813",
@@ -236,6 +252,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2021,
+      "battingInnings": 7,
+      "battingSuccess": 0,
+      "bowlingInnings": 11,
+      "bowlingSuccess": 8
+    },
+    {
       "playerId": "ipl-dc7c68d4-19e4-459b-ae08-6f03b1ef8dd0",
       "year": 2021,
       "battingInnings": 2,
@@ -276,6 +300,22 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2021,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 10,
+      "bowlingSuccess": 6
+    },
+    {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2021,
+      "battingInnings": 5,
+      "battingSuccess": 2,
+      "bowlingInnings": 7,
+      "bowlingSuccess": 5
+    },
+    {
       "playerId": "ipl-b0c05c29-721f-4c87-aeba-ba5e3eba9c95",
       "year": 2021,
       "battingInnings": 13,
@@ -288,6 +328,14 @@
       "year": 2021,
       "battingInnings": 10,
       "battingSuccess": 2,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2021,
+      "battingInnings": 10,
+      "battingSuccess": 4,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
     },
@@ -468,6 +516,14 @@
       "bowlingSuccess": 13
     },
     {
+      "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
+      "year": 2021,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 2
+    },
+    {
       "playerId": "ipl-8adfc8aa-d61a-4324-abcf-9e07052e1ec9",
       "year": 2021,
       "battingInnings": 1,
@@ -538,6 +594,22 @@
       "battingSuccess": 0,
       "bowlingInnings": 4,
       "bowlingSuccess": 2
+    },
+    {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2021,
+      "battingInnings": 2,
+      "battingSuccess": 0,
+      "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2021,
+      "battingInnings": 1,
+      "battingSuccess": 1,
+      "bowlingInnings": 8,
+      "bowlingSuccess": 7
     },
     {
       "playerId": "ipl-b6321bf3-e752-413b-8a63-1a46d5b02153",
@@ -668,12 +740,28 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2021,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-8896ead7-bac4-452d-bad8-251abc420267",
       "year": 2022,
       "battingInnings": 14,
       "battingSuccess": 6,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2022,
+      "battingInnings": 10,
+      "battingSuccess": 5,
+      "bowlingInnings": 10,
+      "bowlingSuccess": 8
     },
     {
       "playerId": "ipl-e580c225-f6c5-4e87-9449-8281620b4d4c",
@@ -785,6 +873,14 @@
       "battingInnings": 14,
       "battingSuccess": 11,
       "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2022,
+      "battingInnings": 8,
+      "battingSuccess": 6,
+      "bowlingInnings": 0,
       "bowlingSuccess": 0
     },
     {
@@ -916,6 +1012,14 @@
       "bowlingSuccess": 4
     },
     {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2022,
+      "battingInnings": 8,
+      "battingSuccess": 5,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-f33bb0a9-e600-40c3-b71e-a246fb01134a",
       "year": 2022,
       "battingInnings": 4,
@@ -938,6 +1042,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 5,
       "bowlingSuccess": 2
+    },
+    {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2022,
+      "battingInnings": 7,
+      "battingSuccess": 0,
+      "bowlingInnings": 16,
+      "bowlingSuccess": 10
     },
     {
       "playerId": "ipl-64be54ad-4625-4219-9cd2-83bbee85696d",
@@ -988,12 +1100,28 @@
       "bowlingSuccess": 9
     },
     {
+      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
+      "year": 2022,
+      "battingInnings": 7,
+      "battingSuccess": 3,
+      "bowlingInnings": 12,
+      "bowlingSuccess": 7
+    },
+    {
       "playerId": "ipl-0170bba0-ca72-4022-9351-3556801aed49",
       "year": 2022,
       "battingInnings": 0,
       "battingSuccess": 0,
       "bowlingInnings": 16,
       "bowlingSuccess": 9
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2022,
+      "battingInnings": 2,
+      "battingSuccess": 0,
+      "bowlingInnings": 13,
+      "bowlingSuccess": 7
     },
     {
       "playerId": "ipl-007f3aa9-7d73-43c3-9283-92870cb454c0",
@@ -1108,6 +1236,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2022,
+      "battingInnings": 6,
+      "battingSuccess": 0,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 11
+    },
+    {
       "playerId": "ipl-af866799-ba6c-4277-9918-cd529af96990",
       "year": 2022,
       "battingInnings": 3,
@@ -1186,6 +1322,14 @@
       "battingSuccess": 2,
       "bowlingInnings": 16,
       "bowlingSuccess": 10
+    },
+    {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2022,
+      "battingInnings": 2,
+      "battingSuccess": 0,
+      "bowlingInnings": 17,
+      "bowlingSuccess": 8
     },
     {
       "playerId": "ipl-9731c36a-21dd-4f26-aeb8-b54dbef5b432",
@@ -1284,6 +1428,14 @@
       "bowlingSuccess": 1
     },
     {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2022,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 5,
+      "bowlingSuccess": 2
+    },
+    {
       "playerId": "ipl-327ebf02-2207-400d-a1d2-56ec1af8d8b8",
       "year": 2022,
       "battingInnings": 5,
@@ -1298,6 +1450,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 6,
       "bowlingSuccess": 4
+    },
+    {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2022,
+      "battingInnings": 5,
+      "battingSuccess": 3,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-8d831f3b-18cc-4176-a447-c42fa3736a96",
@@ -1460,6 +1620,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
+      "year": 2022,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 5,
+      "bowlingSuccess": 4
+    },
+    {
       "playerId": "ipl-f302f614-dad3-4858-9d1c-520cfca262e6",
       "year": 2022,
       "battingInnings": 2,
@@ -1506,6 +1674,14 @@
       "battingSuccess": 11,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2023,
+      "battingInnings": 12,
+      "battingSuccess": 8,
+      "bowlingInnings": 16,
+      "bowlingSuccess": 9
     },
     {
       "playerId": "ipl-312863bc-7672-4dc3-8d32-eacf60f0ee89",
@@ -1564,6 +1740,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2023,
+      "battingInnings": 8,
+      "battingSuccess": 7,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-9c8052c8-90e4-47a2-84fe-24987680f25d",
       "year": 2023,
       "battingInnings": 10,
@@ -1600,6 +1784,22 @@
       "year": 2023,
       "battingInnings": 14,
       "battingSuccess": 10,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2023,
+      "battingInnings": 13,
+      "battingSuccess": 9,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 5
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2023,
+      "battingInnings": 12,
+      "battingSuccess": 5,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
     },
@@ -1868,6 +2068,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2023,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 9
+    },
+    {
       "playerId": "ipl-08f1c873-bfd0-438f-8b78-02286f5e96b1",
       "year": 2023,
       "battingInnings": 5,
@@ -1999,6 +2207,14 @@
       "playerId": "ipl-4de0836e-ce14-43f4-8e33-42049b9cb37b",
       "year": 2023,
       "battingInnings": 10,
+      "battingSuccess": 6,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2023,
+      "battingInnings": 15,
       "battingSuccess": 6,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
@@ -2164,6 +2380,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2023,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-336e718e-daed-45eb-b5f8-8af98aafbb86",
       "year": 2023,
       "battingInnings": 6,
@@ -2244,6 +2468,14 @@
       "bowlingSuccess": 3
     },
     {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2023,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 8,
+      "bowlingSuccess": 6
+    },
+    {
       "playerId": "ipl-4b2a7361-7cdb-43fc-9692-f41284235064",
       "year": 2023,
       "battingInnings": 2,
@@ -2290,6 +2522,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 8,
       "bowlingSuccess": 5
+    },
+    {
+      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
+      "year": 2023,
+      "battingInnings": 9,
+      "battingSuccess": 5,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-42d6087f-0ced-49d3-9d86-2d96795519c7",
@@ -2412,6 +2652,22 @@
       "bowlingSuccess": 1
     },
     {
+      "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
+      "year": 2023,
+      "battingInnings": 3,
+      "battingSuccess": 0,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
+      "year": 2023,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-3c2267a5-45fa-4fac-8a29-9b78947f5f6c",
       "year": 2024,
       "battingInnings": 15,
@@ -2466,6 +2722,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 9,
       "bowlingSuccess": 5
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2024,
+      "battingInnings": 11,
+      "battingSuccess": 7,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 9
     },
     {
       "playerId": "ipl-8896ead7-bac4-452d-bad8-251abc420267",
@@ -2564,6 +2828,14 @@
       "bowlingSuccess": 8
     },
     {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2024,
+      "battingInnings": 12,
+      "battingSuccess": 7,
+      "bowlingInnings": 13,
+      "bowlingSuccess": 6
+    },
+    {
       "playerId": "ipl-9421928e-793b-488e-8b97-c5746ecef946",
       "year": 2024,
       "battingInnings": 1,
@@ -2652,6 +2924,14 @@
       "bowlingSuccess": 5
     },
     {
+      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
+      "year": 2024,
+      "battingInnings": 12,
+      "battingSuccess": 8,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-45c7b444-b5d8-433d-9aaa-9338694a46fa",
       "year": 2024,
       "battingInnings": 14,
@@ -2708,6 +2988,14 @@
       "bowlingSuccess": 5
     },
     {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2024,
+      "battingInnings": 5,
+      "battingSuccess": 0,
+      "bowlingInnings": 16,
+      "bowlingSuccess": 7
+    },
+    {
       "playerId": "ipl-8d831f3b-18cc-4176-a447-c42fa3736a96",
       "year": 2024,
       "battingInnings": 2,
@@ -2721,6 +3009,14 @@
       "battingInnings": 0,
       "battingSuccess": 0,
       "bowlingInnings": 14,
+      "bowlingSuccess": 8
+    },
+    {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2024,
+      "battingInnings": 10,
+      "battingSuccess": 4,
+      "bowlingInnings": 16,
       "bowlingSuccess": 8
     },
     {
@@ -2972,6 +3268,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2024,
+      "battingInnings": 12,
+      "battingSuccess": 10,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-e557dc11-4ef3-4977-b9b4-145377bcab78",
       "year": 2024,
       "battingInnings": 4,
@@ -3074,6 +3378,22 @@
       "battingSuccess": 10,
       "bowlingInnings": 1,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2024,
+      "battingInnings": 11,
+      "battingSuccess": 7,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
+      "year": 2024,
+      "battingInnings": 1,
+      "battingSuccess": 1,
+      "bowlingInnings": 5,
+      "bowlingSuccess": 2
     },
     {
       "playerId": "ipl-ee2f3969-85c3-44f8-92a7-b66e62d27cc9",
@@ -3276,6 +3596,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
+      "year": 2024,
+      "battingInnings": 11,
+      "battingSuccess": 6,
+      "bowlingInnings": 7,
+      "bowlingSuccess": 2
+    },
+    {
       "playerId": "ipl-0705dc16-8938-4554-8b13-68e7a8fd6cac",
       "year": 2024,
       "battingInnings": 0,
@@ -3308,6 +3636,14 @@
       "bowlingSuccess": 5
     },
     {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2024,
+      "battingInnings": 7,
+      "battingSuccess": 3,
+      "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-0ffdb1b8-673b-43ba-899d-f73591b333e3",
       "year": 2024,
       "battingInnings": 1,
@@ -3322,6 +3658,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 3,
       "bowlingSuccess": 2
+    },
+    {
+      "playerId": "ipl-fba0069a-be26-4a4f-93a4-acf488844469",
+      "year": 2024,
+      "battingInnings": 8,
+      "battingSuccess": 4,
+      "bowlingInnings": 5,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-5bdb8d0b-74d6-498b-860c-b740d36961dc",
@@ -3356,6 +3700,22 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2024,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 7,
+      "bowlingSuccess": 3
+    },
+    {
+      "playerId": "ipl-ae73cb65-5aae-4bb6-8940-cb65b6d1c753",
+      "year": 2024,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 4,
+      "bowlingSuccess": 1
+    },
+    {
       "playerId": "ipl-4de0836e-ce14-43f4-8e33-42049b9cb37b",
       "year": 2024,
       "battingInnings": 6,
@@ -3364,12 +3724,28 @@
       "bowlingSuccess": 1
     },
     {
+      "playerId": "ipl-f59c67e9-6f83-488a-bca6-3611b16ec6e7",
+      "year": 2024,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 7,
+      "bowlingSuccess": 3
+    },
+    {
       "playerId": "ipl-c1b305ff-79d3-4853-a5b7-5971414b6485",
       "year": 2024,
       "battingInnings": 5,
       "battingSuccess": 2,
       "bowlingInnings": 7,
       "bowlingSuccess": 4
+    },
+    {
+      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
+      "year": 2024,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 1,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-fe9c779d-8c1c-4e4d-bd4c-e0bd58f77973",
@@ -3580,6 +3956,14 @@
       "bowlingSuccess": 2
     },
     {
+      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
+      "year": 2025,
+      "battingInnings": 13,
+      "battingSuccess": 9,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-3c2267a5-45fa-4fac-8a29-9b78947f5f6c",
       "year": 2025,
       "battingInnings": 15,
@@ -3636,6 +4020,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
+      "year": 2025,
+      "battingInnings": 11,
+      "battingSuccess": 4,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 1
+    },
+    {
       "playerId": "ipl-577b61a8-db3b-4f5b-91a6-a2cd9f50d95b",
       "year": 2025,
       "battingInnings": 13,
@@ -3650,6 +4042,14 @@
       "battingSuccess": 5,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2025,
+      "battingInnings": 9,
+      "battingSuccess": 4,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 7
     },
     {
       "playerId": "ipl-748cc426-3e63-409d-8965-2c90e93f73f3",
@@ -3756,6 +4156,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-fba0069a-be26-4a4f-93a4-acf488844469",
+      "year": 2025,
+      "battingInnings": 11,
+      "battingSuccess": 8,
+      "bowlingInnings": 8,
+      "bowlingSuccess": 3
+    },
+    {
       "playerId": "ipl-3368a9b9-e9d9-45dc-8d26-c0de7539f56d",
       "year": 2025,
       "battingInnings": 14,
@@ -3820,12 +4228,28 @@
       "bowlingSuccess": 9
     },
     {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2025,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 5,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-2a4ea20f-3aaf-4714-9d90-79fdff333f70",
       "year": 2025,
       "battingInnings": 0,
       "battingSuccess": 0,
       "bowlingInnings": 1,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2025,
+      "battingInnings": 14,
+      "battingSuccess": 7,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 7
     },
     {
       "playerId": "ipl-24e038e4-739e-4550-9a46-72094942de65",
@@ -4116,6 +4540,30 @@
       "bowlingSuccess": 8
     },
     {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2025,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 15,
+      "bowlingSuccess": 10
+    },
+    {
+      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
+      "year": 2025,
+      "battingInnings": 3,
+      "battingSuccess": 0,
+      "bowlingInnings": 15,
+      "bowlingSuccess": 7
+    },
+    {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2025,
+      "battingInnings": 15,
+      "battingSuccess": 13,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-687b3266-5916-46b1-87f1-47547efe2399",
       "year": 2025,
       "battingInnings": 15,
@@ -4145,6 +4593,14 @@
       "battingInnings": 11,
       "battingSuccess": 2,
       "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2025,
+      "battingInnings": 11,
+      "battingSuccess": 5,
+      "bowlingInnings": 1,
       "bowlingSuccess": 0
     },
     {
@@ -4180,6 +4636,14 @@
       "bowlingSuccess": 2
     },
     {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2025,
+      "battingInnings": 5,
+      "battingSuccess": 0,
+      "bowlingInnings": 11,
+      "bowlingSuccess": 4
+    },
+    {
       "playerId": "ipl-8ff6d6c1-e5a9-41c2-9453-e451c85d1813",
       "year": 2025,
       "battingInnings": 3,
@@ -4202,6 +4666,22 @@
       "battingSuccess": 7,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2025,
+      "battingInnings": 9,
+      "battingSuccess": 6,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2025,
+      "battingInnings": 6,
+      "battingSuccess": 0,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 9
     },
     {
       "playerId": "ipl-c8d06511-d621-4e7a-82a6-e8fc0e546d05",
@@ -4266,6 +4746,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 7,
       "bowlingSuccess": 4
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2025,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 4,
+      "bowlingSuccess": 2
     },
     {
       "playerId": "ipl-4de0836e-ce14-43f4-8e33-42049b9cb37b",
@@ -4372,6 +4860,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-79dcfed0-7f8d-477f-b8fd-b9b0db68ed06",
+      "year": 2025,
+      "battingInnings": 11,
+      "battingSuccess": 7,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-6196def3-41d8-4e52-867b-a0c8f0d70843",
       "year": 2025,
       "battingInnings": 1,
@@ -4418,6 +4914,14 @@
       "battingSuccess": 2,
       "bowlingInnings": 7,
       "bowlingSuccess": 1
+    },
+    {
+      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
+      "year": 2025,
+      "battingInnings": 3,
+      "battingSuccess": 0,
+      "bowlingInnings": 6,
+      "bowlingSuccess": 2
     },
     {
       "playerId": "ipl-1f8498f3-a468-43f6-b7aa-33a8a5700440",
@@ -4484,6 +4988,14 @@
       "bowlingSuccess": 1
     },
     {
+      "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
+      "year": 2025,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 2,
+      "bowlingSuccess": 1
+    },
+    {
       "playerId": "ipl-0320fecc-1b2b-4db6-b5cc-18f20b5c4193",
       "year": 2025,
       "battingInnings": 0,
@@ -4505,6 +5017,14 @@
       "battingInnings": 0,
       "battingSuccess": 0,
       "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-a9a99fe2-951a-4069-b39b-8fb5d5007e17",
+      "year": 2025,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 0,
       "bowlingSuccess": 0
     },
     {
@@ -4546,6 +5066,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-f59c67e9-6f83-488a-bca6-3611b16ec6e7",
+      "year": 2025,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 1,
+      "bowlingSuccess": 1
     },
     {
       "playerId": "ipl-e25745b8-b4b4-4443-9884-dffd1f1e32e2",
@@ -4594,6 +5122,14 @@
       "battingSuccess": 12,
       "bowlingInnings": 0,
       "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
+      "year": 2026,
+      "battingInnings": 13,
+      "battingSuccess": 10,
+      "bowlingInnings": 14,
+      "bowlingSuccess": 4
     },
     {
       "playerId": "ipl-577b61a8-db3b-4f5b-91a6-a2cd9f50d95b",
@@ -4660,6 +5196,14 @@
       "bowlingSuccess": 3
     },
     {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2026,
+      "battingInnings": 4,
+      "battingSuccess": 0,
+      "bowlingInnings": 16,
+      "bowlingSuccess": 13
+    },
+    {
       "playerId": "ipl-0276ae1a-6b27-4485-a630-8a4ecfa31337",
       "year": 2026,
       "battingInnings": 0,
@@ -4692,6 +5236,14 @@
       "bowlingSuccess": 9
     },
     {
+      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
+      "year": 2026,
+      "battingInnings": 6,
+      "battingSuccess": 3,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-1bd01724-c2b9-403e-8f86-462255d2a34c",
       "year": 2026,
       "battingInnings": 15,
@@ -4721,6 +5273,14 @@
       "battingInnings": 12,
       "battingSuccess": 4,
       "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2026,
+      "battingInnings": 15,
+      "battingSuccess": 9,
+      "bowlingInnings": 1,
       "bowlingSuccess": 0
     },
     {
@@ -4964,6 +5524,14 @@
       "bowlingSuccess": 8
     },
     {
+      "playerId": "ipl-ae73cb65-5aae-4bb6-8940-cb65b6d1c753",
+      "year": 2026,
+      "battingInnings": 2,
+      "battingSuccess": 0,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 1
+    },
+    {
       "playerId": "ipl-45a35578-ccce-423c-a9ee-b73b4fe005ca",
       "year": 2026,
       "battingInnings": 4,
@@ -5012,6 +5580,14 @@
       "bowlingSuccess": 5
     },
     {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2026,
+      "battingInnings": 11,
+      "battingSuccess": 7,
+      "bowlingInnings": 12,
+      "bowlingSuccess": 7
+    },
+    {
       "playerId": "ipl-786de32e-4a28-48d0-af87-775b1e4ce987",
       "year": 2026,
       "battingInnings": 16,
@@ -5044,6 +5620,14 @@
       "bowlingSuccess": 2
     },
     {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2026,
+      "battingInnings": 17,
+      "battingSuccess": 12,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-687b3266-5916-46b1-87f1-47547efe2399",
       "year": 2026,
       "battingInnings": 16,
@@ -5074,6 +5658,14 @@
       "battingSuccess": 9,
       "bowlingInnings": 5,
       "bowlingSuccess": 1
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2026,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-9c8052c8-90e4-47a2-84fe-24987680f25d",
@@ -5212,6 +5804,14 @@
       "bowlingSuccess": 2
     },
     {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2026,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 12,
+      "bowlingSuccess": 5
+    },
+    {
       "playerId": "ipl-74998d14-9418-4452-8c45-91e706bfc9f2",
       "year": 2026,
       "battingInnings": 13,
@@ -5298,6 +5898,14 @@
       "battingSuccess": 0,
       "bowlingInnings": 10,
       "bowlingSuccess": 5
+    },
+    {
+      "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
+      "year": 2026,
+      "battingInnings": 3,
+      "battingSuccess": 0,
+      "bowlingInnings": 11,
+      "bowlingSuccess": 8
     },
     {
       "playerId": "ipl-5dd88d41-8842-423f-ab24-c492bef795a4",
@@ -5668,6 +6276,14 @@
       "bowlingSuccess": 2
     },
     {
+      "playerId": "ipl-70384a8b-3619-40d2-a18b-559bcb991664",
+      "year": 2026,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 1,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-8cf71e88-c634-4d40-93cf-0f68c50288f3",
       "year": 2026,
       "battingInnings": 6,
@@ -5708,6 +6324,14 @@
       "bowlingSuccess": 1
     },
     {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2026,
+      "battingInnings": 3,
+      "battingSuccess": 1,
+      "bowlingInnings": 8,
+      "bowlingSuccess": 4
+    },
+    {
       "playerId": "ipl-256d0f77-ec9c-44b8-972b-195c50db9bbc",
       "year": 2026,
       "battingInnings": 7,
@@ -5740,6 +6364,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
+      "year": 2026,
+      "battingInnings": 1,
+      "battingSuccess": 0,
+      "bowlingInnings": 1,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-1d256f2b-20f5-467f-a413-16be0f76f61b",
       "year": 2026,
       "battingInnings": 7,
@@ -5748,11 +6380,27 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2026,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-f949b20c-b97f-4924-8e2d-72befa24a2f4",
       "year": 2026,
       "battingInnings": 1,
       "battingSuccess": 0,
       "bowlingInnings": 2,
+      "bowlingSuccess": 2
+    },
+    {
+      "playerId": "ipl-fba0069a-be26-4a4f-93a4-acf488844469",
+      "year": 2026,
+      "battingInnings": 7,
+      "battingSuccess": 5,
+      "bowlingInnings": 6,
       "bowlingSuccess": 2
     },
     {
@@ -5780,6 +6428,14 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-79dcfed0-7f8d-477f-b8fd-b9b0db68ed06",
+      "year": 2026,
+      "battingInnings": 5,
+      "battingSuccess": 5,
+      "bowlingInnings": 0,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-638eddca-5eae-4973-ad32-350940056933",
       "year": 2026,
       "battingInnings": 2,
@@ -5796,12 +6452,36 @@
       "bowlingSuccess": 0
     },
     {
+      "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
+      "year": 2026,
+      "battingInnings": 5,
+      "battingSuccess": 1,
+      "bowlingInnings": 3,
+      "bowlingSuccess": 0
+    },
+    {
+      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
+      "year": 2026,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 2,
+      "bowlingSuccess": 0
+    },
+    {
       "playerId": "ipl-0436a792-866d-4bd2-ab3a-14293aca8cf2",
       "year": 2026,
       "battingInnings": 0,
       "battingSuccess": 0,
       "bowlingInnings": 1,
       "bowlingSuccess": 1
+    },
+    {
+      "playerId": "ipl-d0c9aad5-b333-4e72-a10c-d63eabeddadc",
+      "year": 2026,
+      "battingInnings": 0,
+      "battingSuccess": 0,
+      "bowlingInnings": 1,
+      "bowlingSuccess": 0
     },
     {
       "playerId": "ipl-e557dc11-4ef3-4977-b9b4-145377bcab78",

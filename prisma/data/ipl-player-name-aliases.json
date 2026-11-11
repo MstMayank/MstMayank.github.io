@@ -1,0 +1,28 @@
+{
+  "source": "Canonical names in existing source-labelled player-career-index.json; explicit roster-name aliases, not fuzzy matches.",
+  "aliases": {
+    "Pat Cummins": "Patrick James Cummins",
+    "Phil Salt": "Philip Dean Salt",
+    "Tim David": "Timothy Hays David",
+    "Bhuvneshwar Kumar": "Bhuvneshwar Kumar Singh",
+    "Ravindra Jadeja": "Ravindrasinh Anirudhsinh Jadeja",
+    "Will Jacks": "William George Jacks",
+    "Matt Henry": "Matthew James Henry",
+    "Lungi Ngidi": "Lungisani True-man Ngidi",
+    "Sai Sudharsan": "Bhardwaj Sai Sudharsan",
+    "Shahrukh Khan": "Masood Shahrukh Khan",
+    "Prasidh Krishna": "Muralikrishna Prasidh Krishna",
+    "Sai Kishore": "Ravisrinivasan Sai Kishore",
+    "Wanindu Hasaranga": "Pinnaduwage Wanindu Hasaranga de Silva",
+    "Josh Inglis": "Joshua Patrick Inglis",
+    "Mitch Owen": "Mitchell J Owen",
+    "Ben Dwarshuis": "Benjamin James Dwarshuis",
+    "Lockie Ferguson": "Lachlan Hammond Ferguson",
+    "Dasun Shanaka": "Madagamagamage Dasun Shanaka",
+    "Sam Curran": "Samuel Matthew Curran",
+    "Nuwan Thushara": "Ilandari Dewage Nuwan Thushara",
+    "Dilshan Madushanka": "Lokumarakkalage Dilshan Madushanka",
+    "Dushmantha Chameera": "Pathira Vasan Dushmantha Chameera",
+    "Nitish Kumar Reddy": "Kaki Nitish Kumar Reddy"
+  }
+}

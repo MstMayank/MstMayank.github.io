@@ -1,4 +1,5 @@
 {
+  "archiveSha256": "46ff2f5e41147510a55502e52ea8761b216a319974cad907d6ff2d8c2d4be495",
   "updatedAt": "2026-11-11",
   "window": [
     2021,
@@ -1215,6 +1216,37 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
+      "year": 2023,
+      "matches": 3,
+      "audit": {
+        "runs": 26,
+        "balls": 26,
+        "outs": 2,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 3,
+        "bowlingInnings": 0,
+        "fours": 2,
+        "sixes": 1
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359536",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359544",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370350"
+      ],
+      "runs": 26,
+      "wickets": 0,
+      "battingAverage": "13.00",
+      "strikeRate": "100.00",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
@@ -2732,6 +2764,74 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2025&status=results"
+    },
+    {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2021,
+      "matches": 7,
+      "audit": {
+        "runs": 93,
+        "balls": 56,
+        "outs": 3,
+        "wickets": 9,
+        "conceded": 237,
+        "legalBalls": 161,
+        "battingInnings": 5,
+        "bowlingInnings": 7,
+        "fours": 5,
+        "sixes": 8
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254060",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254062",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254067",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254075",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254078",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254082"
+      ],
+      "runs": 93,
+      "wickets": 9,
+      "battingAverage": "31.00",
+      "strikeRate": "166.07",
+      "bowlingAverage": "26.33",
+      "economy": "8.83",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
+      "year": 2022,
+      "matches": 5,
+      "audit": {
+        "runs": 63,
+        "balls": 24,
+        "outs": 4,
+        "wickets": 7,
+        "conceded": 212,
+        "legalBalls": 119,
+        "battingInnings": 5,
+        "bowlingInnings": 5,
+        "fours": 5,
+        "sixes": 6
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304060",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304065",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304071",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304076",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304102"
+      ],
+      "runs": 63,
+      "wickets": 7,
+      "battingAverage": "15.75",
+      "strikeRate": "262.50",
+      "bowlingAverage": "30.29",
+      "economy": "10.69",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
@@ -4304,6 +4404,75 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2022,
+      "matches": 5,
+      "audit": {
+        "runs": 145,
+        "balls": 114,
+        "outs": 4,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 5,
+        "bowlingInnings": 0,
+        "fours": 14,
+        "sixes": 3
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304062",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304067",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304089",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304094",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304097"
+      ],
+      "runs": 145,
+      "wickets": 0,
+      "battingAverage": "36.25",
+      "strikeRate": "127.19",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
+      "year": 2023,
+      "matches": 8,
+      "audit": {
+        "runs": 362,
+        "balls": 256,
+        "outs": 7,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 8,
+        "bowlingInnings": 0,
+        "fours": 33,
+        "sixes": 12
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359475",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359481",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359487",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359492",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359497",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359536",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370352",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370353"
+      ],
+      "runs": 362,
+      "wickets": 0,
+      "battingAverage": "51.71",
+      "strikeRate": "141.41",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
@@ -13612,6 +13781,39 @@
     },
     {
       "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
+      "year": 2022,
+      "matches": 5,
+      "audit": {
+        "runs": 0,
+        "balls": 0,
+        "outs": 0,
+        "wickets": 6,
+        "conceded": 121,
+        "legalBalls": 96,
+        "battingInnings": 0,
+        "bowlingInnings": 5,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304103",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304108",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304113",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312197",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312200"
+      ],
+      "runs": 0,
+      "wickets": 6,
+      "battingAverage": null,
+      "strikeRate": null,
+      "bowlingAverage": "20.17",
+      "economy": "7.56",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
       "year": 2024,
       "matches": 5,
       "runs": 13,
@@ -13713,6 +13915,114 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2021,
+      "matches": 8,
+      "audit": {
+        "runs": 18,
+        "balls": 11,
+        "outs": 0,
+        "wickets": 13,
+        "conceded": 224,
+        "legalBalls": 180,
+        "battingInnings": 1,
+        "bowlingInnings": 8,
+        "fours": 1,
+        "sixes": 1
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254087",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254092",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254096",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254098",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254106",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254115",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254116",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254117"
+      ],
+      "runs": 18,
+      "wickets": 13,
+      "battingAverage": null,
+      "strikeRate": "163.64",
+      "bowlingAverage": "17.23",
+      "economy": "7.47",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2022,
+      "matches": 13,
+      "audit": {
+        "runs": 5,
+        "balls": 4,
+        "outs": 2,
+        "wickets": 12,
+        "conceded": 427,
+        "legalBalls": 286,
+        "battingInnings": 2,
+        "bowlingInnings": 13,
+        "fours": 1,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304050",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304056",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304062",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304067",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304070",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304075",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304081",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304086",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304089",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304094",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304097",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304113",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312200"
+      ],
+      "runs": 5,
+      "wickets": 12,
+      "battingAverage": "2.50",
+      "strikeRate": "125.00",
+      "bowlingAverage": "35.58",
+      "economy": "8.96",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
+      "year": 2023,
+      "matches": 3,
+      "audit": {
+        "runs": 0,
+        "balls": 0,
+        "outs": 0,
+        "wickets": 1,
+        "conceded": 96,
+        "legalBalls": 46,
+        "battingInnings": 0,
+        "bowlingInnings": 3,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359487",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359493",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359496"
+      ],
+      "runs": 0,
+      "wickets": 1,
+      "battingAverage": null,
+      "strikeRate": null,
+      "bowlingAverage": "96.00",
+      "economy": "12.52",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
@@ -14354,6 +14664,116 @@
     },
     {
       "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2021,
+      "matches": 2,
+      "audit": {
+        "runs": 1,
+        "balls": 2,
+        "outs": 1,
+        "wickets": 0,
+        "conceded": 60,
+        "legalBalls": 36,
+        "battingInnings": 2,
+        "bowlingInnings": 2,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254087",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254113"
+      ],
+      "runs": 1,
+      "wickets": 0,
+      "battingAverage": "1.00",
+      "strikeRate": "50.00",
+      "bowlingAverage": null,
+      "economy": "10.00",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2022,
+      "matches": 16,
+      "audit": {
+        "runs": 38,
+        "balls": 43,
+        "outs": 7,
+        "wickets": 26,
+        "conceded": 430,
+        "legalBalls": 342,
+        "battingInnings": 7,
+        "bowlingInnings": 16,
+        "fours": 4,
+        "sixes": 1
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304049",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304052",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304059",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304064",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304068",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304073",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304077",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304082",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304085",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304089",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304095",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304100",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304106",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304113",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312198",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312199"
+      ],
+      "runs": 38,
+      "wickets": 26,
+      "battingAverage": "5.43",
+      "strikeRate": "88.37",
+      "bowlingAverage": "16.54",
+      "economy": "7.54",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
+      "year": 2023,
+      "matches": 8,
+      "audit": {
+        "runs": 33,
+        "balls": 28,
+        "outs": 2,
+        "wickets": 9,
+        "conceded": 258,
+        "legalBalls": 174,
+        "battingInnings": 5,
+        "bowlingInnings": 8,
+        "fours": 3,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359494",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359498",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359501",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359506",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359510",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359517",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359524",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359528"
+      ],
+      "runs": 33,
+      "wickets": 9,
+      "battingAverage": "16.50",
+      "strikeRate": "117.86",
+      "bowlingAverage": "28.67",
+      "economy": "8.90",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
       "year": 2025,
       "matches": 11,
       "runs": 9,
@@ -14389,6 +14809,123 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2025&status=results"
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2021,
+      "matches": 11,
+      "audit": {
+        "runs": 153,
+        "balls": 114,
+        "outs": 7,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 10,
+        "bowlingInnings": 0,
+        "fours": 9,
+        "sixes": 10
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254061",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254065",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254068",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254071",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254074",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254078",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254083",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254086",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254090",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254094",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254102"
+      ],
+      "runs": 153,
+      "wickets": 0,
+      "battingAverage": "21.86",
+      "strikeRate": "134.21",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2022,
+      "matches": 8,
+      "audit": {
+        "runs": 117,
+        "balls": 108,
+        "outs": 7,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 8,
+        "bowlingInnings": 0,
+        "fours": 4,
+        "sixes": 9
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304049",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304054",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304057",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304062",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304069",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304074",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304078",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304116"
+      ],
+      "runs": 117,
+      "wickets": 0,
+      "battingAverage": "16.71",
+      "strikeRate": "108.33",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
+      "year": 2023,
+      "matches": 14,
+      "audit": {
+        "runs": 156,
+        "balls": 94,
+        "outs": 7,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 12,
+        "bowlingInnings": 0,
+        "fours": 13,
+        "sixes": 9
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359476",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359482",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359488",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359492",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359495",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359501",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359505",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359512",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359515",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359520",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359527",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359533",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359538",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359540"
+      ],
+      "runs": 156,
+      "wickets": 0,
+      "battingAverage": "22.29",
+      "strikeRate": "165.96",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
@@ -15408,6 +15945,85 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2021,
+      "matches": 9,
+      "audit": {
+        "runs": 56,
+        "balls": 29,
+        "outs": 3,
+        "wickets": 9,
+        "conceded": 328,
+        "legalBalls": 198,
+        "battingInnings": 4,
+        "bowlingInnings": 9,
+        "fours": 5,
+        "sixes": 3
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254059",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254065",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254069",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254076",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254080",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254084",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254089",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254098"
+      ],
+      "runs": 56,
+      "wickets": 9,
+      "battingAverage": "18.67",
+      "strikeRate": "193.10",
+      "bowlingAverage": "36.44",
+      "economy": "9.94",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
+      "year": 2023,
+      "matches": 14,
+      "audit": {
+        "runs": 276,
+        "balls": 203,
+        "outs": 10,
+        "wickets": 10,
+        "conceded": 489,
+        "legalBalls": 287,
+        "battingInnings": 13,
+        "bowlingInnings": 14,
+        "fours": 20,
+        "sixes": 13
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359476",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359482",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359488",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359492",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359495",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359501",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359505",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359512",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359515",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359520",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359527",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359533",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359538",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359540"
+      ],
+      "runs": 276,
+      "wickets": 10,
+      "battingAverage": "27.60",
+      "strikeRate": "135.96",
+      "bowlingAverage": "48.90",
+      "economy": "10.22",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
@@ -17268,6 +17884,46 @@
     },
     {
       "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
+      "year": 2022,
+      "matches": 12,
+      "audit": {
+        "runs": 43,
+        "balls": 28,
+        "outs": 4,
+        "wickets": 9,
+        "conceded": 384,
+        "legalBalls": 264,
+        "battingInnings": 7,
+        "bowlingInnings": 12,
+        "fours": 3,
+        "sixes": 3
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304050",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304053",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304066",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304077",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304083",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304088",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304091",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304099",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304103",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304109",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312198"
+      ],
+      "runs": 43,
+      "wickets": 9,
+      "battingAverage": "10.75",
+      "strikeRate": "153.57",
+      "bowlingAverage": "42.67",
+      "economy": "8.73",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
       "year": 2024,
       "matches": 1,
       "runs": 0,
@@ -17591,6 +18247,89 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2021,
+      "matches": 10,
+      "audit": {
+        "runs": 0,
+        "balls": 1,
+        "outs": 1,
+        "wickets": 12,
+        "conceded": 351,
+        "legalBalls": 231,
+        "battingInnings": 1,
+        "bowlingInnings": 10,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254060",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254062",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254067",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254075",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254078",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254082",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254087",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254096",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254098"
+      ],
+      "runs": 0,
+      "wickets": 12,
+      "battingAverage": "0.00",
+      "strikeRate": "0.00",
+      "bowlingAverage": "29.25",
+      "economy": "9.12",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
+      "year": 2022,
+      "matches": 17,
+      "audit": {
+        "runs": 6,
+        "balls": 12,
+        "outs": 1,
+        "wickets": 19,
+        "conceded": 551,
+        "legalBalls": 399,
+        "battingInnings": 2,
+        "bowlingInnings": 17,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304051",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304055",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304059",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304066",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304070",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304076",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304080",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304085",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304090",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304093",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304098",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304104",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304109",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304114",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312197",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312199",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1312200"
+      ],
+      "runs": 6,
+      "wickets": 19,
+      "battingAverage": "6.00",
+      "strikeRate": "50.00",
+      "bowlingAverage": "29.00",
+      "economy": "8.29",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
@@ -18546,6 +19285,115 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2021,
+      "matches": 1,
+      "audit": {
+        "runs": 1,
+        "balls": 3,
+        "outs": 1,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 1,
+        "bowlingInnings": 0,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254113"
+      ],
+      "runs": 1,
+      "wickets": 0,
+      "battingAverage": "1.00",
+      "strikeRate": "33.33",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2022,
+      "matches": 8,
+      "audit": {
+        "runs": 186,
+        "balls": 86,
+        "outs": 5,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 8,
+        "bowlingInnings": 0,
+        "fours": 12,
+        "sixes": 16
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304048",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304055",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304090",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304097",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304102",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304105",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304111",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304115"
+      ],
+      "runs": 186,
+      "wickets": 0,
+      "battingAverage": "37.20",
+      "strikeRate": "216.28",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
+      "year": 2023,
+      "matches": 16,
+      "audit": {
+        "runs": 231,
+        "balls": 146,
+        "outs": 9,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 15,
+        "bowlingInnings": 0,
+        "fours": 12,
+        "sixes": 15
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359479",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359486",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359490",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359496",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359499",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359505",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359509",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359516",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359520",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359523",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359528",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359531",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359537",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359543",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370351",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370352"
+      ],
+      "runs": 231,
+      "wickets": 0,
+      "battingAverage": "25.67",
+      "strikeRate": "158.22",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
@@ -21706,6 +22554,132 @@
     },
     {
       "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2021,
+      "matches": 16,
+      "audit": {
+        "runs": 227,
+        "balls": 156,
+        "outs": 3,
+        "wickets": 13,
+        "conceded": 346,
+        "legalBalls": 294,
+        "battingInnings": 11,
+        "bowlingInnings": 16,
+        "fours": 19,
+        "sixes": 9
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254059",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254065",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254069",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254076",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254080",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254084",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254089",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254091",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254094",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254098",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254104",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254110",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254113",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254114",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254117"
+      ],
+      "runs": 227,
+      "wickets": 13,
+      "battingAverage": "75.67",
+      "strikeRate": "145.51",
+      "bowlingAverage": "26.62",
+      "economy": "7.06",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2022,
+      "matches": 10,
+      "audit": {
+        "runs": 116,
+        "balls": 98,
+        "outs": 6,
+        "wickets": 5,
+        "conceded": 248,
+        "legalBalls": 198,
+        "battingInnings": 10,
+        "bowlingInnings": 10,
+        "fours": 6,
+        "sixes": 5
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304047",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304053",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304057",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304063",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304068",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304075",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304079",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304084",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304092",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304095"
+      ],
+      "runs": 116,
+      "wickets": 5,
+      "battingAverage": "19.33",
+      "strikeRate": "118.37",
+      "bowlingAverage": "49.60",
+      "economy": "7.52",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
+      "year": 2023,
+      "matches": 16,
+      "audit": {
+        "runs": 190,
+        "balls": 133,
+        "outs": 8,
+        "wickets": 20,
+        "conceded": 431,
+        "legalBalls": 342,
+        "battingInnings": 12,
+        "bowlingInnings": 16,
+        "fours": 11,
+        "sixes": 9
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359475",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359480",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359486",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359491",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359498",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359503",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359507",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359511",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359515",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359519",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359523",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359529",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359535",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359541",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370350",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1370353"
+      ],
+      "runs": 190,
+      "wickets": 20,
+      "battingAverage": "23.75",
+      "strikeRate": "142.86",
+      "bowlingAverage": "21.55",
+      "economy": "7.56",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
       "year": 2024,
       "matches": 14,
       "runs": 267,
@@ -24441,6 +25415,37 @@
     },
     {
       "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
+      "year": 2021,
+      "matches": 3,
+      "audit": {
+        "runs": 0,
+        "balls": 0,
+        "outs": 0,
+        "wickets": 5,
+        "conceded": 125,
+        "legalBalls": 72,
+        "battingInnings": 0,
+        "bowlingInnings": 3,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254072",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254080",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254084"
+      ],
+      "runs": 0,
+      "wickets": 5,
+      "battingAverage": null,
+      "strikeRate": null,
+      "bowlingAverage": "25.00",
+      "economy": "10.42",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
       "year": 2025,
       "matches": 2,
       "runs": 0,
@@ -25976,6 +26981,36 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
+      "year": 2023,
+      "matches": 2,
+      "audit": {
+        "runs": 0,
+        "balls": 0,
+        "outs": 0,
+        "wickets": 0,
+        "conceded": 54,
+        "legalBalls": 30,
+        "battingInnings": 0,
+        "bowlingInnings": 2,
+        "fours": 0,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359539",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359543"
+      ],
+      "runs": 0,
+      "wickets": 0,
+      "battingAverage": null,
+      "strikeRate": null,
+      "bowlingAverage": null,
+      "economy": "10.80",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
@@ -27921,6 +28956,129 @@
     },
     {
       "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2021,
+      "matches": 11,
+      "audit": {
+        "runs": 34,
+        "balls": 30,
+        "outs": 1,
+        "wickets": 6,
+        "conceded": 335,
+        "legalBalls": 252,
+        "battingInnings": 7,
+        "bowlingInnings": 11,
+        "fours": 3,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254060",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254063",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254066",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254071",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254085",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254091",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254095",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254100",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254105",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254107",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1254109"
+      ],
+      "runs": 34,
+      "wickets": 6,
+      "battingAverage": "34.00",
+      "strikeRate": "113.33",
+      "bowlingAverage": "55.83",
+      "economy": "7.98",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2022,
+      "matches": 14,
+      "audit": {
+        "runs": 24,
+        "balls": 26,
+        "outs": 3,
+        "wickets": 12,
+        "conceded": 383,
+        "legalBalls": 313,
+        "battingInnings": 6,
+        "bowlingInnings": 14,
+        "fours": 3,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304051",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304058",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304063",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304067",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304071",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304074",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304082",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304086",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304092",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304096",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304100",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304107",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304111",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1304116"
+      ],
+      "runs": 24,
+      "wickets": 12,
+      "battingAverage": "8.00",
+      "strikeRate": "92.31",
+      "bowlingAverage": "31.92",
+      "economy": "7.34",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
+      "year": 2023,
+      "matches": 14,
+      "audit": {
+        "runs": 42,
+        "balls": 47,
+        "outs": 3,
+        "wickets": 16,
+        "conceded": 425,
+        "legalBalls": 306,
+        "battingInnings": 5,
+        "bowlingInnings": 14,
+        "fours": 4,
+        "sixes": 0
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359478",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359484",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359488",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359493",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359499",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359503",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359508",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359514",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359521",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359526",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359532",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359536",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359539",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359543"
+      ],
+      "runs": 42,
+      "wickets": 16,
+      "battingAverage": "14.00",
+      "strikeRate": "89.36",
+      "bowlingAverage": "26.56",
+      "economy": "8.33",
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
+    },
+    {
+      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
       "year": 2024,
       "matches": 16,
       "runs": 23,
@@ -28102,6 +29260,43 @@
       ],
       "provider": "Official IPL scorecards",
       "sourceUrl": "https://www.iplt20.com/matches?season=2026&status=results"
+    },
+    {
+      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
+      "year": 2023,
+      "matches": 9,
+      "audit": {
+        "runs": 218,
+        "balls": 133,
+        "outs": 8,
+        "wickets": 0,
+        "conceded": 0,
+        "legalBalls": 0,
+        "battingInnings": 9,
+        "bowlingInnings": 0,
+        "fours": 24,
+        "sixes": 10
+      },
+      "sourceMatches": [
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359502",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359508",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359514",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359518",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359524",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359529",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359533",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359538",
+        "https://cricsheet.org/downloads/ipl_json.zip#match=1359541"
+      ],
+      "runs": 218,
+      "wickets": 0,
+      "battingAverage": "27.25",
+      "strikeRate": "163.91",
+      "bowlingAverage": null,
+      "economy": null,
+      "provider": "Cricsheet",
+      "sourceUrl": "https://cricsheet.org/downloads/",
+      "licence": "ODC-BY-1.0"
     },
     {
       "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
@@ -30259,11 +31454,6 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-fba0069a-be26-4a4f-93a4-acf488844469",
-      "name": "Will Jacks",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-573b5a8d-0c09-4d9c-b49f-efc0b34b6c1e",
       "name": "Danish Malewar",
       "reason": "No unique exact alias identity"
@@ -30304,11 +31494,6 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-ae73cb65-5aae-4bb6-8940-cb65b6d1c753",
-      "name": "Matt Henry",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-fac47c06-8bae-4838-a576-7f158d52f663",
       "name": "Dian Forrester",
       "reason": "No unique exact alias identity"
@@ -30339,43 +31524,13 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-8fcb7dd1-d4ac-4961-b814-64af6b5c28e8",
-      "name": "Dushmantha Chameera",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
-      "name": "Lungi Ngidi",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-14944865-9494-455c-b339-cff5b8b039eb",
       "name": "Ajay Mandal",
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-2490cf68-4516-4584-a902-2e6ac93205b6",
-      "name": "Sai Sudharsan",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-78688c2f-c599-4d53-a33d-5019d6c48253",
-      "name": "Shahrukh Khan",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-9231b458-2a37-46e5-8f0a-0afee38fc97b",
-      "name": "Prasidh Krishna",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-2fc7c130-8327-4e84-9d7d-5ccc09b322b2",
       "name": "Yarra Prithviraj",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-72ecc618-a84d-4367-8495-2c2e61dc0a34",
-      "name": "Sai Kishore",
       "reason": "No unique exact alias identity"
     },
     {
@@ -30434,38 +31589,13 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-76d02e46-ac83-4f34-80c3-20c0608e59c3",
-      "name": "Wanindu Hasaranga",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-79dcfed0-7f8d-477f-b8fd-b9b0db68ed06",
-      "name": "Josh Inglis",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-0092311e-73e9-4f70-bb38-f0e8be3a3379",
       "name": "Pyla Avinash",
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-a9a99fe2-951a-4069-b39b-8fb5d5007e17",
-      "name": "Mitch Owen",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-ad8daa35-4d78-431b-a7bb-b6323d89fcae",
       "name": "Harnoor Singh",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-d0c9aad5-b333-4e72-a10c-d63eabeddadc",
-      "name": "Ben Dwarshuis",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-7309a385-e3cb-497d-932f-2779b5f03b17",
-      "name": "Lockie Ferguson",
       "reason": "No unique exact alias identity"
     },
     {
@@ -30484,11 +31614,6 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
-      "name": "Dasun Shanaka",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-01e5004b-fa01-4450-8903-5009dbf1787b",
       "name": "Vaibhav Sooryavanshi",
       "reason": "No unique exact alias identity"
@@ -30504,33 +31629,13 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-7e05ef83-dbbd-4ad5-80cb-2514984aa0db",
-      "name": "Sam Curran",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-b2e76c0b-166c-4d7c-97df-a1503726e55c",
-      "name": "Ravindra Jadeja",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-9df2c53f-5eb8-43d3-b5bf-2bd1a7c87010",
       "name": "Jordan Cox",
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-975975b3-d61c-4772-8271-a50be4e607d9",
-      "name": "Tim David",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-a6a84974-f373-47c0-99d4-66e545c7cff7",
       "name": "Vihaan Malhotra",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
-      "name": "Phil Salt",
       "reason": "No unique exact alias identity"
     },
     {
@@ -30549,18 +31654,8 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-f59c67e9-6f83-488a-bca6-3611b16ec6e7",
-      "name": "Nuwan Thushara",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-9574e55f-de3f-45fe-9417-5ca502876b8c",
       "name": "Mangesh Yadav",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
-      "name": "Bhuvneshwar Kumar",
       "reason": "No unique exact alias identity"
     },
     {
@@ -30579,11 +31674,6 @@
       "reason": "No unique exact alias identity"
     },
     {
-      "playerId": "ipl-159a6337-5b3b-4246-9443-e96965339d21",
-      "name": "Pat Cummins",
-      "reason": "No unique exact alias identity"
-    },
-    {
       "playerId": "ipl-c3fed83c-a99c-49a4-afee-69c47b8afe10",
       "name": "Krains Fuletra",
       "reason": "No unique exact alias identity"
@@ -30596,11 +31686,6 @@
     {
       "playerId": "ipl-b4b4d8e5-714e-4985-8f7b-85a0253637d5",
       "name": "Amit Kumar",
-      "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-70384a8b-3619-40d2-a18b-559bcb991664",
-      "name": "Dilshan Madushanka",
       "reason": "No unique exact alias identity"
     },
     {
@@ -30617,12 +31702,6 @@
       "playerId": "ipl-39a82b0e-badb-4e3d-8136-ac254087fc9e",
       "name": "Jack Edwards",
       "reason": "No unique exact alias identity"
-    },
-    {
-      "playerId": "ipl-db109714-ae28-4f6e-a3a7-2fc4f713e673",
-      "name": "Nitish Kumar Reddy",
-      "reason": "No unique exact alias identity"
     }
-  ],
-  "archiveSha256": "46ff2f5e41147510a55502e52ea8761b216a319974cad907d6ff2d8c2d4be495"
+  ]
 }

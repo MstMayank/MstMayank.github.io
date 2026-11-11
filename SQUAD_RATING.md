@@ -19,10 +19,12 @@ Unavailable components are omitted and the overall score explicitly rescaled by 
 
 ## Data and reproduction
 
-Performance: 817 current-roster player-season rows in `prisma/data/ipl-six-season-stats.json`, Cricsheet 2021–23 plus the existing checked official IPL 2024–26 snapshot (2025 incomplete). Run `python3 scripts/build-six-season-stats.py --archive /absolute/path/ipl.zip`.
+Performance: 849 current-roster player-season rows in `prisma/data/ipl-six-season-stats.json`, Cricsheet 2021–23 plus the existing checked official IPL 2024–26 snapshot (2025 incomplete). Run `python3 scripts/build-six-season-stats.py --archive /absolute/path/ipl.zip`.
 
-Consistency: 735 current-roster player-season contribution rows in `prisma/data/ipl-rating-consistency.json`. Run `python3 scripts/build-rating-consistency.py --archive /absolute/path/ipl.zip`. Archive match coverage is 60/74/74/71/74/74 for 2021–26. The separate Cricsheet consistency coverage does not change official scorecard totals or fill missing performance figures. Both artifacts record input SHA256 and provenance. Exact aliases / unique canonical first-and-last identities only; ambiguous names remain unavailable.
+Consistency: 820 current-roster player-season contribution rows in `prisma/data/ipl-rating-consistency.json`. Run `python3 scripts/build-rating-consistency.py --archive /absolute/path/ipl.zip`. Archive match coverage is 60/74/74/71/74/74 for 2021–26. The separate Cricsheet consistency coverage does not change official scorecard totals or fill missing performance figures. Both artifacts record input SHA256 and provenance. Exact aliases / unique canonical first-and-last identities only; ambiguous names remain unavailable.
 
 Cricsheet attribution: https://cricsheet.org/downloads/ under ODC Attribution 1.0 https://opendatacommons.org/licenses/by/1-0/. Regular innings only; no super overs. Six historical leader anchors reconcile in tests. No record does not prove zero performance. Does not assess fielding, fitness, availability, domestic form or phase specialism.
 
 Build: `node scripts/build-browser-auction.mjs`. Checks: `node --import tsx --test tests/*.test.ts`, `npm run typecheck`, `npm run lint`. Data and rating load on demand; existing saves and routes are preserved. v2 replaces v1; old and new scores are not directly comparable.
+
+Explicit roster-to-canonical aliases are stored in `prisma/data/ipl-player-name-aliases.json` and used by both importers (including Cummins, Salt, David, Bhuvneshwar and Jadeja). Regression tests require these identities to resolve.

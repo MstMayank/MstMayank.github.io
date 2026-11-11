@@ -11,6 +11,7 @@ for p in index:
   parts=p[1].split()
   if len(parts)>2 and len(parts[0])>1:names[norm(parts[0]+' '+parts[-1])].add(p[0][3:])
 alias={'Sanju Samson':'Sanju Viswanath Samson','Mitch Marsh':'Mitchell Ross Marsh','Mitch Santner':'Mitchell Josef Santner','Matt Short':'Matthew William Short','Zak Foulkes':'Zakary Foulkes','Aman Khan':'Aman Hakim Khan','Raj Bawa':'Raj Angad Bawa','Mohammad Shami':'Mohammed Shami','AM Ghazanfar':'Allah Mohammad Ghazanfar'}
+alias.update(json.loads((root/'prisma/data/ipl-player-name-aliases.json').read_text())['aliases'])
 z=zipfile.ZipFile(args.archive);matches=[]
 for name in z.namelist():
  if not name.endswith('.json'):continue

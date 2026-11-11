@@ -8,6 +8,7 @@ ro=json.loads((root/'prisma/data/ipl-2026-reference-squads.json').read_text())
 players=[p for t in ro['teams'].values() for p in t['players']]
 index=json.loads((root/'player-career-index.json').read_text())['players']
 alias={'Sanju Samson':'Sanju Viswanath Samson','Mitch Marsh':'Mitchell Ross Marsh','Mitch Santner':'Mitchell Josef Santner','Matt Short':'Matthew William Short','Zak Foulkes':'Zakary Foulkes','Aman Khan':'Aman Hakim Khan','Raj Bawa':'Raj Angad Bawa','Mohammad Shami':'Mohammed Shami','AM Ghazanfar':'Allah Mohammad Ghazanfar'}
+alias.update(json.loads((root/'prisma/data/ipl-player-name-aliases.json').read_text())['aliases'])
 byname=collections.defaultdict(set)
 for p in index:
  if p[0].startswith('cs:') and 'IPL' in p[5] and p[3]=='male':
