@@ -29,3 +29,5 @@
 .squad-rating{margin-bottom:24px}.rating-result{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:24px 0}.rating-result strong{font-size:48px;color:#f6c453}.rating-breakdown>div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #ffffff26}.squad-rating details{margin-top:20px}.squad-rating summary{cursor:pointer;color:#f6c453;min-height:44px}.squad-rating li{margin:8px 0}.squad-rating a{text-decoration:underline}
 
 .auction-hero.auction-hero-simple{display:block;min-height:0;padding-block:48px}.auction-hero-simple h1{font-size:clamp(48px,8vw,112px);line-height:1.05;margin-bottom:28px;max-width:100%}
+
+.squad-tools{margin:24px 0}.squad-tool-buttons{display:flex;flex-wrap:wrap;gap:10px}.squad-tool-buttons .button{min-height:44px;padding:10px 16px;font-size:14px}.squad-tool-buttons .button[aria-expanded="true"]{border-color:var(--gold);color:var(--gold)}.squad-tools .surface{margin:14px 0 0;padding:20px}.squad-tools .rating-result{margin-top:16px}.squad-tools .squad-share-actions{margin-top:0}@media(max-width:600px){.squad-tool-buttons .button{flex:1;justify-content:center}.squad-tools .surface{padding:16px}}
