@@ -67,6 +67,11 @@
   const day=document.getElementById('otd-d');
   if(day) {
     const moments={
+  '11-11': {
+    date: '1994-11-11',
+    title: 'Sanju Samson is born',
+    summary: 'Indian wicketkeeper-batter Sanju Samson was born on 11 November 1994.'
+  },
   '11-10': {
     date: '1991-11-10',
     title: 'South Africa Returns to International Cricket',
