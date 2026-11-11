@@ -1,14 +1,20 @@
 'use client';
-import Image from 'next/image';
-import {useEffect,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
 import type {SessionView}from '@/lib/ipl-auction/types';
-import {renderSquadCard,squadShareModel,squadShareText,type ShareScope}from '@/lib/ipl-auction/squad-share';
-export default function SquadShare({session,disabled,compact=false}:{session:SessionView;disabled:boolean;compact?:boolean}){
- const [scope,setScope]=useState<ShareScope>('ALL'),[file,setFile]=useState<File|null>(null),[imageUrl,setImageUrl]=useState(''),[status,setStatus]=useState(''),[preparing,setPreparing]=useState(false);
- useEffect(()=>()=>{if(imageUrl)URL.revokeObjectURL(imageUrl);},[imageUrl]);
- const model=squadShareModel(session,scope),text=squadShareText(model);
- async function prepare(){setPreparing(true);setStatus('');try{const prepared=await renderSquadCard(model);setFile(prepared);setImageUrl(URL.createObjectURL(prepared));setStatus('Card ready. Share the image or download it for Instagram/WhatsApp.');}catch(e){setStatus((e as Error).message);}finally{setPreparing(false);}}
- async function share(){if(!file)return;try{if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:`${model.shortName} · My IPL squad`});setStatus('Share menu opened.');}else setStatus('Image sharing is unavailable in this browser. Use Download PNG.');}catch(e){setStatus((e as Error).name==='AbortError'?'Sharing cancelled. Your card is still ready.':'Could not open sharing. Use Download PNG.');}}
- async function copy(){try{await navigator.clipboard.writeText(text);setStatus('Full squad text copied.');}catch{setStatus('Copy is unavailable. Open Squad text below and copy it manually.');}}
- return <section className="squad-share surface" aria-label="Share your squad">{!compact&&<div><span className="eyebrow">YOUR TEAM. YOUR CALL.</span><h2>Share your squad.</h2><p className="fine-print">Every player is included, regardless of your search filters. Drafts show undecided players.</p></div>}<div className="squad-share-actions"><label>Include<select value={scope} disabled={disabled||preparing} onChange={e=>{setScope(e.target.value as ShareScope);setFile(null);setImageUrl('');setStatus('');}}><option value="ALL">Full squad & decisions</option><option value="RETAINED" disabled={!session.totals.retained}>Retained players only</option></select></label><button className="button" disabled={disabled||preparing} onClick={()=>void prepare()}>{preparing?'Preparing…':'Create squad card ↗'}</button><button className="button secondary" disabled={disabled} onClick={()=>void copy()}>Copy squad text</button>{!disabled&&<a className="button secondary" href={`https://wa.me/?text=${encodeURIComponent(text)}`} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>}</div>{file&&imageUrl&&<div className="squad-card-preview"><Image unoptimized width={1080} height={Math.max(1920,400+Math.ceil(model.players.length/2)*94+150)} src={imageUrl} alt={`${model.shortName} full squad card with ${model.players.length} players and their decisions`}/><div><button className="button" disabled={disabled} onClick={()=>void share()}>Share image ↗</button><a className="button secondary" href={imageUrl} download={file.name}>Download PNG ↓</a><p className="fine-print">For Instagram stories or WhatsApp status, download the card and select it in the app. Available share destinations depend on your device.</p></div></div>}<p role="status" aria-live="polite">{status}</p><details><summary>Squad text</summary><pre>{text}</pre></details></section>;
+import {renderSquadCard,squadShareModel}from '@/lib/ipl-auction/squad-share';
+import {shareSquadFile}from '@/lib/ipl-auction/native-share';
+export default function SquadShare({session,disabled}:{session:SessionView;disabled:boolean}){
+ const model=useMemo(()=>squadShareModel(session,'RETAINED'),[session]);
+ const signature=JSON.stringify(model);
+ const [prepared,setPrepared]=useState<{signature:string;file:File}|null>(null),[generationError,setGenerationError]=useState(''),[status,setStatus]=useState(''),[sharing,setSharing]=useState(false);
+ // Prepare privately so the eventual click can invoke native sharing synchronously.
+ // No canvas/image preview, object URL, or download link is attached to the page.
+ useEffect(()=>{let active=true;
+  async function prepare(){try{if(!navigator.share||!navigator.canShare)throw new Error('Image sharing is not supported by this browser.');if(!model.players.length)return;const file=await renderSquadCard(model);if(active){setPrepared({signature,file});setGenerationError('');}}catch(error){if(active)setGenerationError((error as Error).message);}}
+  void prepare();return()=>{active=false;};
+ },[model,signature]);
+ const file=prepared?.signature===signature?prepared.file:null;
+ const preparing=model.players.length>0&&!file&&!generationError;
+ async function share(){if(generationError){setStatus(generationError);return;}if(!file)return;setSharing(true);setStatus('');const message=await shareSquadFile(file);setStatus(message);setSharing(false);}
+ return <><button className="button secondary" disabled={disabled||preparing||sharing||!model.players.length} aria-busy={preparing||sharing} onClick={()=>void share()}>{sharing?'Opening share menu…':preparing?'Preparing squad card…':'Share your squad'} <span aria-hidden="true">↗</span></button>{status&&<p className="squad-share-status" role="status">{status}</p>}</>;
 }

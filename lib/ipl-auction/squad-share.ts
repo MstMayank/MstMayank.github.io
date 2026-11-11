@@ -8,11 +8,11 @@ export function squadShareModel(session:SessionView,scope:ShareScope='ALL'){
 export type SquadShareModel=ReturnType<typeof squadShareModel>;
 export function squadShareText(model:SquadShareModel){return [`THE CRICKET SPACE · IPL ${model.year}`,`${model.team} · ${model.title} · ${model.state}`,`Purse left: ${shareMoney(model.remainingLakh)} | Committed: ${shareMoney(model.spentLakh)}`,`${model.retained} retained · ${model.released} released · ${model.undecided} undecided`,'',...model.players.map((p,i)=>`${i+1}. ${p.name} — ${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`),'','Fan-made simulation. 2026 baseline + confirmed 2027 trades; not official 2027 decisions.'].join('\n');}
 export async function renderSquadCard(model:SquadShareModel){
- if(!model.players.length)throw new Error('No retained players to share yet. Choose Full squad or retain a player.');
+ if(!model.players.length)throw new Error('Retain at least one player before sharing your squad.');
  await document.fonts.ready;
  const width=1080,rowHeight=94,rows=Math.ceil(model.players.length/2),height=Math.max(1920,400+rows*rowHeight+150);
  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
- const c=canvas.getContext('2d');if(!c)throw new Error('Image sharing is unavailable. Use Copy squad text.');
+ const c=canvas.getContext('2d');if(!c)throw new Error('Image generation is unavailable in this browser.');
  c.fillStyle='#07241a';c.fillRect(0,0,width,height);c.strokeStyle='#355b48';c.lineWidth=2;c.strokeRect(28,28,width-56,height-56);
  const text=(value:string,x:number,y:number,size:number,color='#f5f1df',bold=false)=>{c.fillStyle=color;c.font=`${bold?'700':'400'} ${size}px Arial, sans-serif`;c.fillText(value,x,y);};
  text('THE CRICKET SPACE',60,86,25,'#f6c453',true);text(`IPL ${model.year} / ${model.state}`,700,86,24,'#b4cbb9');
