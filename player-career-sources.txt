@@ -1,0 +1,40 @@
+The Cricket Space — free stored player records
+Built: 11 November 2026. Access dates do not imply current complete careers.
+
+Metadata catalogue:
+Cricsheet Register — https://cricsheet.org/register/ — ODC Attribution License.
+cricketdata, Rob J Hyndman and contributors — GPL-3.0:
+https://github.com/robjhyndman/cricketdata
+Original metadata: https://github.com/robjhyndman/cricketdata/blob/master/data/player_meta.rda
+
+Historical complete-career Test batting snapshots (6 October 2025):
+weird, Rob J Hyndman and contributors — GPL-3.0:
+https://pkg.robjhyndman.com/weird/reference/cricket_batting.html
+https://github.com/robjhyndman/weird/blob/main/data/cricket_batting.rda
+Originally sourced by those authors from ESPNcricinfo. These are dated snapshots.
+The converted metadata and Test snapshot components retain GPL-3.0, without warranty.
+Licence: https://www.gnu.org/licenses/gpl-3.0.txt
+
+Published records, with player IDs and source URLs preserved per format:
+Association of Cricket Statisticians and Historians / CricketArchive:
+https://stats.acscricket.com/Records/index.html
+These public statistical record lists have eligibility thresholds; they are not a complete player database.
+Only factual table values are stored; source HTML, articles and photographs are not republished.
+Bowling and batting may come from different tables. If the update date is not published, it is unknown.
+
+Career snapshots independently checked on 11 November 2026:
+https://www.cricbuzz.com/cricket-stats
+Primary retired-player career table:
+BCCI Annual Report 2013–14 (Sachin Tendulkar List A):
+https://documents.bcci.tv/documents/bcci/documents/1638361890_BCCI%20Annual%20Report%202013-14.pdf
+
+IPL aggregates:
+Cricsheet — https://cricsheet.org/downloads/ — ODC Attribution Licence:
+https://cricsheet.org/licensing/
+Derived from regular innings in the downloaded IPL archive through 31 May 2026.
+They are labelled ARCHIVED MATCHES, not guaranteed complete current careers.
+
+Transformations:
+Stable identifiers link source records. Name matching is unique and conservative.
+Null/absent values mean unavailable, not zero. No career totals are inferred from partial match coverage.
+First-class includes Tests; List A includes ODIs. IPL is not equivalent to all T20 cricket.

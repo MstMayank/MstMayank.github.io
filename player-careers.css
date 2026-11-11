@@ -1,0 +1,29 @@
+#ipl-lens #career-view-button[hidden],#player-career-shell[hidden],#ipl-lens .battle-workspace[hidden],#ipl-lens .battle-filters[hidden]{display:none!important}
+#ipl-lens #player-career-shell{margin-top:24px;padding:clamp(18px,3vw,36px);min-width:0}
+#player-career-shell h2{font:800 clamp(34px,4vw,56px)/1.1 'Big Shoulders Display',sans-serif;margin:12px 0}
+#player-career-shell .career-search{position:relative;max-width:780px;margin:26px 0 14px}
+#player-career-shell .career-search label{display:block;margin-bottom:8px}
+#player-career-shell .career-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+#player-career-shell #career-player-search{width:100%;min-height:52px;font-size:17px}
+#player-career-shell .career-suggestions{position:absolute;top:100%;left:0;right:0;z-index:25;max-height:340px;overflow-y:auto;margin-top:8px;padding:8px;border:1px solid #72967b;border-radius:8px;background:#0c3022;box-shadow:0 12px 30px #0006}
+#player-career-shell .career-suggestions[hidden]{display:none}
+#player-career-shell .career-suggestions button{display:block;width:100%;text-align:left;white-space:normal;border:0;border-radius:4px;min-height:44px;margin:2px 0;color:#f2f5ef}
+#player-career-shell .career-suggestions button:hover,#player-career-shell .career-suggestions button:focus-visible{background:#235638;color:#f6c453}
+#player-career-shell .career-profile-tools[hidden]{display:none}
+#player-career-shell .career-profile-tools input{width:100%;margin-top:10px}
+#player-career-shell .career-profile-heading h3{font:800 clamp(30px,4vw,46px)/1.1 'Big Shoulders Display',sans-serif;margin:30px 0 8px}
+#player-career-shell .career-format-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px;align-items:start}
+#player-career-shell .career-format-card{padding:22px;border:1px solid #315b44;border-radius:10px;background:#0a291e;min-width:0;overflow-wrap:anywhere}
+#player-career-shell .career-format-card h4{font:800 32px/1.1 'Big Shoulders Display',sans-serif;margin:0 0 12px}
+#player-career-shell .career-availability{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#f6c453;margin:0 0 20px}
+#player-career-shell .career-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:0 0 20px}
+#player-career-shell .career-metrics>div{display:block;padding:0;background:none;border:0}
+#player-career-shell .career-metrics dt{font-size:12px;color:#b7ccba;font-weight:400}
+#player-career-shell .career-metrics dd{font-size:23px;color:#f2f5ef;margin:4px 0 0;font-weight:700}
+#player-career-shell .career-source-date{font-size:12px;line-height:1.5;color:#b7ccba;margin:8px 0}
+#player-career-shell .hint{font-size:13px;line-height:1.7}
+#player-career-shell details summary{cursor:pointer;color:#f6c453;margin:14px 0}
+#player-career-shell .career-data-notes{border-top:1px solid #315b44;margin-top:32px;font-size:13px}
+#player-career-shell a{color:#f6c453;font-size:13px}
+@media(max-width:1000px){#player-career-shell .career-format-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#player-career-shell .career-format-grid{grid-template-columns:minmax(0,1fr)}#player-career-shell .career-format-card{padding:20px}#player-career-shell #career-player-search{font-size:16px}#player-career-shell .career-search-row{gap:7px}}

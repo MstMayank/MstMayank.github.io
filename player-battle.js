@@ -12,7 +12,7 @@
   let competition = new URLSearchParams(location.search).get('competition') || 'ipl';
   if (!['ipl', 'wpl', 'international'].includes(competition)) competition = 'ipl';
   let mode = 'direct';
-  let view = 'matchups';
+  let view = competition==='international' && !new URLSearchParams(location.search).has('first') ? 'careers' : 'matchups';
   let detailKey = '';
   let data = null;
   let careerRecords = null;
@@ -325,8 +325,21 @@ function venueLabel(name) {
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
     detailKey = '';
+    const profiles=competition==='international'&&view==='careers';
+    byId('career-view-button').hidden=competition!=='international';
+    byId('player-career-shell').hidden=!profiles;
+    document.querySelector('.battle-workspace').hidden=profiles;
+    document.querySelector('.battle-filters').hidden=profiles;
+    for(const id of ['battle-status','battle-method','battle-source'])byId(id).hidden=profiles;
+    document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
+    if(profiles){
+      byId('battle-title').textContent='International Lens';
+      byId('battle-compare-label').hidden=true;byId('battle-career-scope-label').hidden=true;
+      window.TCSPlayerCareers.mount(byId('player-career-shell'),initialLink.get('player'));
+      return;
+    }
     const matchup = view === 'matchups';
-    const careerAvailable = competition==='international' && byId('battle-gender').value==='male' && view==='batting';
+    const careerAvailable = false;
     byId('battle-career-scope-label').hidden=!careerAvailable;
     byId('battle-career-scope').value=careerScope;
     const careerView=careerAvailable && careerScope==='career';
@@ -629,7 +642,7 @@ function venueLabel(name) {
     return combined;
   }
 
-  async function loadData() {
+  async function loadData(forceArchive=false) {
     const current = ++requestNumber;
     if (loadingController) loadingController.abort();
     loadingController = new AbortController();
@@ -639,6 +652,11 @@ function venueLabel(name) {
     clearSelections();
     inputs.forEach(input => { input.disabled = true; });
     const international = competition === 'international';
+    byId('career-view-button').hidden=!international;
+    if(international && view==='careers' && !forceArchive){
+      document.querySelectorAll('[data-competition]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.competition===competition)));
+      render();return;
+    }
     byId('battle-title').textContent = international ? 'International Lens' : competition.toUpperCase() + ' Lens';
     byId('gender-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
@@ -696,7 +714,6 @@ function venueLabel(name) {
         if (initialLink.get('gender')==='female') byId('battle-gender').value='female';
         [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
       }
-      if(initialLink.get('view')==='batting' && !initialLink.has('first')){view='batting';document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));}
       updateChoices();
       render();
     } catch (error) {
@@ -725,6 +742,7 @@ function venueLabel(name) {
   });
   document.querySelectorAll('[data-competition]').forEach(button => button.addEventListener('click', () => {
     competition = button.dataset.competition;
+    view=competition==='international'?'careers':view==='careers'?'matchups':view;
     loadData();
   }));
   byId('battle-compare').addEventListener('change', () => {
@@ -738,6 +756,7 @@ function venueLabel(name) {
     document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active',item === button));
     byId('battle-search').value = '';
     clearSelections();
+    if(competition==='international' && view!=='careers' && !data){loadData(true);return;}
     updateChoices();
     render();
   }));
