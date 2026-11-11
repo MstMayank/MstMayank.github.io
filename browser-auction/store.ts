@@ -1,0 +1,53 @@
+import {applyDecision,calculate,confirmRetentions,PUBLISHED_SALARY_RULES} from '../lib/ipl-auction/engine';
+import type {Action} from '../lib/ipl-auction/engine';
+import type {SessionView,Player,Team} from '../lib/ipl-auction/types';
+import roster from '../prisma/data/ipl-2026-reference-squads.json';
+import salaries from '../prisma/data/ipl-salary-references.json';
+import stats from '../prisma/data/ipl-official-season-stats.json';
+import careers from '../prisma/data/auction-career-records.json';
+export const SAVE_KEY='tcs-auction-latest-v1';
+const updatedAt=roster.verifiedAt+'T00:00:00Z';
+const season={id:'ipl-2027-custom',year:2027,name:'IPL 2027 · Custom simulation',isSimulation:true};
+const definitions=[['csk','Chennai Super Kings','CSK','Chennai','#f6ca46'],['dc','Delhi Capitals','DC','Delhi','#539cff'],['gt','Gujarat Titans','GT','Ahmedabad','#9eaeff'],['kkr','Kolkata Knight Riders','KKR','Kolkata','#b591ff'],['lsg','Lucknow Super Giants','LSG','Lucknow','#42d1cb'],['mi','Mumbai Indians','MI','Mumbai','#4caaff'],['pbks','Punjab Kings','PBKS','Mullanpur','#ff7979'],['rr','Rajasthan Royals','RR','Jaipur','#f291cf'],['rcb','Royal Challengers Bengaluru','RCB','Bengaluru','#f36b6d'],['srh','Sunrisers Hyderabad','SRH','Hyderabad','#ffad5a']];
+export const teams:Team[]=definitions.map(([id,name,shortName,city,color])=>({id,name,shortName,city,color,squadCount:roster.teams[id as keyof typeof roster.teams].players.length}));
+const rate=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)?n.toFixed(2):null;
+const careerStats=(id:string,kind:string)=>careers.rows.filter(s=>s.playerId===id&&s.kind===kind).map(s=>({format:s.format,matches:s.matches,runs:s.runs,wickets:s.wickets,battingAverage:rate(s.battingAverage),bowlingAverage:rate(s.bowlingAverage),strikeRate:rate(s.strikeRate),economy:rate(s.economy),updatedAt,source:{name:`Published career snapshot · as-of ${s.asOf||'not supplied'}${s.bowlingSource&&s.bowlingSource!==s.source?' · bowling: '+s.bowlingSource:''} · coverage varies`,url:s.source,isDemo:false,updatedAt}}));
+export const players:Player[]=Object.values(roster.teams).flatMap(team=>team.players.map(p=>({...p,isDemo:false,updatedAt,source:{name:'Official IPL 2026 reference roster, including replacements',url:team.sourceUrl,isDemo:false,updatedAt},iplStats:stats.records.filter(s=>s.playerId===p.id).map(s=>({year:s.year,matches:s.matches,runs:s.runs,wickets:s.wickets,battingAverage:s.battingAverage,bowlingAverage:s.bowlingAverage,strikeRate:s.strikeRate,economy:s.economy,updatedAt,source:{name:`Official IPL ${s.year} scorecards · derived figures; 2025 coverage incomplete`,url:`https://www.iplt20.com/matches?season=${s.year}&status=results`,isDemo:false,updatedAt}})),domesticStats:careerStats(p.id,'domestic'),internationalStats:careerStats(p.id,'international')})));
+
+type Save={version:1;id:string;teamId:string;state:'RETENTION'|'CONFIRMED';revision:number;createdAt:string;updatedAt:string;confirmedAt:string|null;decisions:Record<string,Action>};
+export type StorageLike=Pick<Storage,'getItem'|'setItem'>;
+export function createStore(storage:StorageLike){
+ function view(saved:Save):SessionView{
+  const team=teams.find(t=>t.id===saved.teamId);if(!team)throw Error('Saved franchise is unavailable.');
+  const squad=roster.teams[team.id as keyof typeof roster.teams].players.map(p=>{const salary=salaries.rows.find(s=>s.playerId===p.id);return {playerId:p.id,eligible:true,isOverseas:p.isOverseas,previousSalaryLakh:salary?.salaryLakh??null,salaryVerified:!!salary,customSalaryLakh:null,player:players.find(player=>player.id===p.id)!};});
+  return {...saved,expiresAt:'',season,team,squad,rules:PUBLISHED_SALARY_RULES,totals:calculate(PUBLISHED_SALARY_RULES,squad,saved.decisions)};
+ }
+ function read():Save|null{let raw;try{raw=storage.getItem(SAVE_KEY);}catch{throw Error('Browser storage is blocked. Allow site storage to save your team.');}if(!raw)return null;try{const s=JSON.parse(raw);if(s.version!==1||!/^local-[a-z0-9-]+$/.test(s.id)||!Number.isSafeInteger(s.revision)||s.revision<0||!['RETENTION','CONFIRMED'].includes(s.state)||!s.decisions||typeof s.decisions!=='object'||Array.isArray(s.decisions))throw Error();view(s);return s;}catch{throw Error('This browser save cannot be read. Start a new simulation to replace it.');}}
+ function write(s:Save){try{storage.setItem(SAVE_KEY,JSON.stringify(s));}catch{throw Error('Unable to save in this browser. Free some storage or allow site storage, then retry.');}return view(s);}
+ return {async request(path:string,init:RequestInit={}){
+  const u=new URL(path,'https://local.invalid');const route=u.pathname.replace('/api/ipl-auction','');const method=init.method||'GET';const body=init.body?JSON.parse(String(init.body)):{};
+  if(route==='/seasons'&&method==='GET')return [{...season,rules:[{name:'Published contract simulation',config:PUBLISHED_SALARY_RULES}]}];
+  if(route==='/teams'&&method==='GET')return teams;
+  if(route==='/players'&&method==='GET')return players.filter(p=>!u.searchParams.get('playerId')||p.id===u.searchParams.get('playerId'));
+  if(route==='/sessions'&&method==='GET'){const saved=read();return saved?[view(saved)]:[];}
+  if(route==='/sessions'&&method==='POST'){
+   if(body.seasonId!==season.id||!teams.some(t=>t.id===body.franchiseId))throw Error('Invalid season or franchise.');
+   const now=new Date().toISOString();const id='local-'+Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join('');return write({version:1,id,teamId:body.franchiseId,state:'RETENTION',revision:0,createdAt:now,updatedAt:now,confirmedAt:null,decisions:{}});
+  }
+  const match=route.match(/^\/sessions\/([^/]+)(?:\/(retention|confirm))?$/);if(!match)throw Error('Unknown auction action.');
+  const saved=read();if(!saved||saved.id!==match[1])throw Error('This game is no longer saved. Open the auction room to start or resume your latest team.');
+  if(!match[2]&&method==='GET')return view(saved);
+  if(body.revision!==saved.revision)throw Error('Your game changed in another tab. Refresh to load the latest decisions.');
+  const current=view(saved);const next={...saved,revision:saved.revision+1,updatedAt:new Date().toISOString()};
+  if(match[2]==='retention'&&method==='PATCH'){
+   if(!['RETAIN','RELEASE','UNDO'].includes(body.action))throw Error('Invalid decision.');
+   next.decisions=applyDecision(current.rules,current.squad,saved.decisions,body.playerId,body.action,saved.state);
+  }else if(match[2]==='confirm'&&method==='POST'){
+   confirmRetentions(current.rules,current.squad,saved.decisions,saved.state);next.state='CONFIRMED';next.confirmedAt=next.updatedAt;
+  }else throw Error('Unsupported action.');
+  return write(next);
+ }};
+}
+let store:ReturnType<typeof createStore>|undefined;
+export async function localApi<T>(url:string,init?:RequestInit):Promise<T>{try{store??=createStore(window.localStorage);}catch{throw Error("Browser storage is blocked. Allow site storage to save your team.");}return await store.request(url,init) as T;}
+export async function localFetch(url:string,init?:RequestInit){try{return new Response(JSON.stringify(await localApi(url,init)),{status:200});}catch(e){return new Response(JSON.stringify({error:(e as Error).message}),{status:400});}}

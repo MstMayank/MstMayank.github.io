@@ -161,3 +161,6 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
  .v2 .contact h2 { font-size:48px; }
  .v2 .site-footer .wrap { flex-wrap:wrap; }
 }
+
+/* IPL Auction entry */
+.auction-promo{grid-column:1/-1;background:linear-gradient(120deg,#123e2d,#09271d);border-color:#b89444}.auction-promo h3{color:#f6c453}.auction-promo .body{min-height:170px}.cta{flex-wrap:wrap}

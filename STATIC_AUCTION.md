@@ -1,0 +1,1 @@
+The live IPL Auction runs entirely on GitHub Pages. See browser-auction/README.md for source, build instructions, local-save behaviour and data coverage limits. Compiled assets are committed; no deployment build service is needed. Existing homepage and other routes are preserved. No private local database or credentials are included.
