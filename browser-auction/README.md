@@ -12,4 +12,4 @@ This is the published browser-only entry point. No Vercel, Neon, database, API h
 - Clearing browser storage removes the save; private browsing may remove it when closed. No cross-device sync. Old local server saves are not migrated.
 - Player references and coverage limitations are unchanged. 2027 rules/purse are custom assumptions. Download/share cards contain the full selected squad, not a private session URL.
 
-Squad cards start collapsed, showing just the name and View stats. Opening mounts the details and fetches stats on demand through a separate JS chunk. Retain/Release and Undo are inside the expanded card. Missing data and source labels are preserved. The first stats request loads the shared stats chunk; later player lookups reuse it.
+Squad cards start collapsed, showing just the name and View stats. Opening mounts the details and fetches stats on demand through a separate JS chunk. Retain/Release and Undo stay in the main row with the name and contract value; View stats is a separate secondary button. Missing data and source labels are preserved. The first stats request loads the shared stats chunk; later player lookups reuse it.
