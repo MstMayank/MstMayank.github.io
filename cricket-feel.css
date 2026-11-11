@@ -164,3 +164,6 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
 
 /* IPL Auction entry */
 .auction-promo{grid-column:1/-1;background:linear-gradient(120deg,#123e2d,#09271d);border-color:#b89444}.auction-promo h3{color:#f6c453}.auction-promo .body{min-height:170px}.cta{flex-wrap:wrap}
+
+/* Hero social links */
+.v2 .hero-social{gap:12px}.v2 .hero-social a{min-height:48px;padding:10px 18px;font-size:16px;box-sizing:border-box}.v2 .hero-social svg{width:20px;height:20px}
