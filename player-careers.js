@@ -17,7 +17,8 @@
   const clear=text('button','Clear');clear.type='button';const suggestions=text('div','','career-suggestions');suggestions.id='career-player-options';suggestions.hidden=true;
   const line=text('p','Loading player catalogue…','hint');line.setAttribute('role','status');
   const result=text('div','','career-profile');result.id='career-profile';const tools=text('div','','career-profile-tools');tools.hidden=true;
-  const share=text('button','Copy player link ↗');share.type='button';const linkInput=document.createElement('input');linkInput.readOnly=true;linkInput.hidden=true;linkInput.setAttribute('aria-label','Player profile link');const shareStatus=text('p','');shareStatus.setAttribute('role','status');tools.append(share,linkInput,shareStatus);
+  const nativeShare=text('button','Share player ↗');nativeShare.type='button';const whatsapp=sourceLink('https://wa.me/','WhatsApp ↗');
+  const share=text('button','Copy player link ↗');share.type='button';const linkInput=document.createElement('input');linkInput.readOnly=true;linkInput.hidden=true;linkInput.setAttribute('aria-label','Player profile link');const shareStatus=text('p','');shareStatus.setAttribute('role','status');tools.append(nativeShare,whatsapp,share,linkInput,shareStatus);
   const searchRow=text('div','','career-search-row');searchRow.append(input,clear);field.append(label,searchRow,suggestions);host.append(field,line,tools,result);
   const credit=document.createElement('details');credit.className='career-data-notes';credit.append(text('summary','About these records'));
   credit.append(text('p','This is a free, stored-data service. Names in the catalogue do not guarantee that full career statistics are available. Published record lists have eligibility thresholds. Missing data is never converted to zero.'));
@@ -64,7 +65,7 @@
      if(record.source)card.append(sourceLink(record.source,'Record source ↗'));
      grid.appendChild(card);
     }
-    tools.hidden=false;shareStatus.textContent='';
+    tools.hidden=false;shareStatus.textContent='';whatsapp.href='https://wa.me/?text='+encodeURIComponent('The Cricket Space · '+player.name+'\n'+playerURL());
    }catch(error){if(request!==selectionNumber)return;result.replaceChildren(text('p','Player records could not load. Your selection has not been replaced with zero statistics.','hint'));const retry=text('button','Retry records');retry.type='button';retry.addEventListener('click',()=>select(player));result.appendChild(retry);}
   }
   input.addEventListener('input',()=>{reset();shown=20;show();});input.addEventListener('focus',()=>{if(!selected&&input.value)show();});
@@ -72,7 +73,9 @@
   suggestions.addEventListener('keydown',event=>{if(event.key==='Escape'){close();input.focus();}if(['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();const buttons=[...suggestions.querySelectorAll('button')],i=buttons.indexOf(document.activeElement),next=i+(event.key==='ArrowDown'?1:-1);if(next<0)input.focus();else buttons[Math.min(next,buttons.length-1)]?.focus();}});
   document.addEventListener('click',event=>{if(!field.contains(event.target))close();});
   clear.addEventListener('click',()=>{reset();input.value='';line.textContent=catalogue.length.toLocaleString('en-IN')+' searchable player names. Select a player to view available records.';});
-  share.addEventListener('click',async()=>{if(!selected)return;const url=new URL('player-battle.html',location.href);url.searchParams.set('competition','international');url.searchParams.set('view','careers');url.searchParams.set('player',selected.id);try{await navigator.clipboard.writeText(url.href);shareStatus.textContent='Player link copied.';}catch{linkInput.value=url.href;linkInput.hidden=false;linkInput.focus();linkInput.select();shareStatus.textContent='Copy the selected player link.';}});
+  function playerURL(){const url=new URL('player-battle.html',location.href);url.searchParams.set('competition','international');url.searchParams.set('view','careers');url.searchParams.set('player',selected.id);return url.href;}
+  nativeShare.addEventListener('click',()=>{if(!selected)return;if(typeof navigator.share==='function'){navigator.share({title:'The Cricket Space · '+selected.name,url:playerURL()}).catch(error=>{if(error.name!=='AbortError')shareStatus.textContent='Use WhatsApp or Copy player link in this browser.';});}else shareStatus.textContent='Use WhatsApp or Copy player link in this browser.';});
+  share.addEventListener('click',async()=>{if(!selected)return;const url=playerURL();try{await navigator.clipboard.writeText(url);shareStatus.textContent='Player link copied.';}catch{linkInput.value=url;linkInput.hidden=false;linkInput.focus();linkInput.select();shareStatus.textContent='Copy the selected player link.';}});
   try{
    if(!indexPromise)indexPromise=json('player-career-index.json?v=1').catch(e=>{indexPromise=null;throw e;});const index=await indexPromise;
    catalogue=index.players.map(([id,name,country,gender,aliases])=>({id,name,country,gender,keys:[name,...aliases].map(clean)}));

@@ -266,7 +266,16 @@
 .battle-card-sheet label { display:block; margin-top:20px; }
 .battle-card-sheet input { display:block; width:100%; background:#07241a; color:#f2f5ef; padding:12px; border:1px solid #72967b; font:inherit; }
 .battle-card-sheet p { color:#b7ccba; font-size:14px; }
-</style><style>.battle-coverage-warning{border-left:3px solid var(--gold);padding:10px 14px;background:#f6c4530c;color:var(--chalk);font-size:14px;line-height:1.6;}#battle-career-scope-label{display:grid;gap:8px;max-width:360px;margin-top:18px;}#battle-career-scope-label[hidden]{display:none;}</style><link rel="stylesheet" href="player-careers.css?v=1"></head>
+</style><style>.battle-coverage-warning{border-left:3px solid var(--gold);padding:10px 14px;background:#f6c4530c;color:var(--chalk);font-size:14px;line-height:1.6;}#battle-career-scope-label{display:grid;gap:8px;max-width:360px;margin-top:18px;}#battle-career-scope-label[hidden]{display:none;}</style><link rel="stylesheet" href="player-careers.css?v=1"><style>
+#player-career-shell .career-profile-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}#player-career-shell .career-profile-tools p{flex-basis:100%}#player-career-shell .career-profile-tools a{display:inline-block;padding:9px 12px;border:1px solid #72967b;border-radius:6px;font-size:14px}
+#ipl-lens .battle-share-tools{border:1px solid var(--line);padding:14px;border-radius:8px;margin:16px 0;background:#123c2a;align-items:center}
+#ipl-lens .battle-share-tools label{display:flex;align-items:center;gap:8px;font-size:13px}
+#ipl-lens .battle-share-tools a{display:inline-block;padding:9px 12px;border:1px solid #72967b;border-radius:6px;color:#f2f5ef;font-size:14px}
+#ipl-lens .battle-share-tools p:empty{display:none}
+.battle-card-actions{position:sticky;top:0;z-index:1;background:#0c3022;padding:10px 0}
+.battle-card-sheet img{max-height:45vh}
+@media(max-width:600px){.battle-card-dialog{padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom));place-items:start center}.battle-card-sheet{width:100%;padding:16px;max-height:94vh;max-height:94dvh;overscroll-behavior:contain}.battle-card-actions button,.battle-card-actions a{flex:1 1 120px;text-align:center;font-size:14px}.battle-card-sheet img{max-height:40vh}#ipl-lens .battle-share-tools{gap:8px}#ipl-lens .battle-share-tools button,#ipl-lens .battle-share-tools a{font-size:14px}}
+</style></head>
 <body class="v2 cricket-feel">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#D6252E"/><path d="M6 8c6 4 6 12 0 16M26 8c-6 4-6 12 0 16" fill="none" stroke="#F2F5EF" stroke-width="1.6" stroke-dasharray="2.5 2.5"/></svg>tcs.</a>
@@ -284,7 +293,6 @@
 </div>
 <div class="lens-tabs" role="group" aria-label="Cricket statistics">
 <button type="button" data-view="careers" id="career-view-button" hidden>Player profiles</button>
-<button type="button" data-view="batting">↗ Batting explorer</button>
 <button type="button" data-view="matchups" class="active">⇄ Head to head</button>
 <button type="button" data-view="bowling">◎ Bowling lab</button>
 <button type="button" data-view="fielding">◇ Fielding</button>
@@ -316,13 +324,16 @@
 <button type="button" id="battle-clear">Clear players</button>
 </div>
 
-<p class="hint" id="battle-hint">Select two players. Click a player row to explore their performance.</p>
-<div class="battle-result" id="battle-result" aria-live="polite" hidden></div>
 <div id="battle-share-tools" class="battle-share-tools" hidden>
 <label>Card format<select id="battle-card-format" aria-label="Battle card format"></select></label>
-<button type="button" id="battle-card-preview">Preview / Share battle card ↗</button>
+<button type="button" id="battle-card-preview">Share battle card ↗</button>
+<button type="button" id="battle-share-link">Share battle link ↗</button>
+<a id="battle-whatsapp" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
 <button type="button" id="battle-copy-link">Copy battle link</button>
 <p id="battle-share-status" role="status"></p></div>
+<p class="hint" id="battle-hint">Select two players. Click a player row to explore their performance.</p>
+<div class="battle-result" id="battle-result" aria-live="polite" hidden></div>
+
 </section>
 <aside class="detail" id="battle-detail" aria-live="polite" hidden></aside>
 </div>
@@ -332,10 +343,10 @@
 </main>
 <div id="battle-card-dialog" class="battle-card-dialog" role="dialog" aria-modal="true" aria-labelledby="battle-card-heading" hidden>
 <div class="battle-card-sheet"><h2 id="battle-card-heading">Your battle card</h2><button type="button" id="battle-card-close">Close ×</button>
+<div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><button type="button" id="battle-card-copy">Copy battle link</button><a id="battle-card-open" target="_blank" rel="noopener noreferrer">Open image ↗</a></div>
 <img id="battle-card-image" alt="The Cricket Space battle statistics card">
-<div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><button type="button" id="battle-card-copy">Copy battle link</button></div>
 <label>Link to this comparison<input id="battle-card-link" readonly></label>
 <p>Instagram: upload the card, then add the battle link using a Link sticker. WhatsApp: share the image and link; for Status, add the URL in a separate text status. PNG images do not contain tappable links.</p><p id="battle-card-feedback" role="status"></p></div></div>
-<script defer src="player-careers.js?v=1"></script>
-<script defer src="player-battle.js?v=player-profiles-1"></script>
+<script defer src="player-careers.js?v=mobile-share-2"></script>
+<script defer src="player-battle.js?v=mobile-share-2"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

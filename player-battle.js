@@ -517,12 +517,15 @@ function venueLabel(name) {
     select.replaceChildren(...cardTables.map((table,i)=>new Option(table.format,String(i))));
     if([...select.options].some(o=>o.value===previous))select.value=previous;
     byId('battle-share-status').textContent='';
+    byId('battle-whatsapp').href='https://wa.me/?text='+encodeURIComponent('The Cricket Space · Player Battle\n'+battleLink());
   }
   let cardBlob=null,cardObjectURL='';
   function drawBattleCard() {
+    byId('battle-card-feedback').textContent='';
+    try {
     const table=cardTables[+byId('battle-card-format').value||0]; if(!table)return;
     const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
-    const c=canvas.getContext('2d');c.fillStyle='#07241A';c.fillRect(0,0,1080,1920);
+    const c=canvas.getContext('2d');if(!c)throw new Error('Canvas unavailable');c.fillStyle='#07241A';c.fillRect(0,0,1080,1920);
     c.strokeStyle='#315B44';c.lineWidth=3;c.strokeRect(38,38,1004,1844);
     function text(value,x,y,size=30,color='#F2F5EF',weight=600){c.font=weight+' '+size+'px Arial, sans-serif';c.fillStyle=color;c.fillText(String(value),x,y);}
     function wrap(value,x,y,maxWidth,size=40){c.font='700 '+size+'px Arial, sans-serif';let line='';for(const word of value.split(' ')){if(c.measureText(line+word).width>maxWidth&&line){text(line,x,y,size);line='';y+=size*1.25;}line+=word+' ';}text(line,x,y,size);return y+size*1.25;}
@@ -559,10 +562,13 @@ function venueLabel(name) {
       if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
       cardBlob=blob;if(cardObjectURL)URL.revokeObjectURL(cardObjectURL);cardObjectURL=URL.createObjectURL(blob);
       byId('battle-card-image').src=cardObjectURL;byId('battle-card-download').href=cardObjectURL;
+      byId('battle-card-open').href=cardObjectURL;
       byId('battle-card-link').value=battleLink();byId('battle-card-dialog').hidden=false;
       byId('battle-card-close').focus();
     },'image/png');
+    }catch(error){byId('battle-share-status').textContent='Image preview is unavailable in this browser. Use Share battle link or WhatsApp.';}
   }
+  byId('battle-card-format').addEventListener('change',()=>{cardBlob=null;byId('battle-card-dialog').hidden=true;});
   byId('battle-card-dialog').addEventListener('keydown',event=>{
     if(event.key!=='Tab')return;
     const items=[...byId('battle-card-dialog').querySelectorAll('button,a[href],input')];
@@ -579,13 +585,27 @@ function venueLabel(name) {
   }
   byId('battle-copy-link').addEventListener('click',copyBattleLink);
   byId('battle-card-copy').addEventListener('click',copyBattleLink);
-  byId('battle-card-native').addEventListener('click',async()=>{
-    if(!cardBlob)return;
-    const file=new File([cardBlob],'thecricketspace-battle.png',{type:'image/png'});
+  byId('battle-share-link').addEventListener('click',()=>{
+    const url=battleLink();
+    if(typeof navigator.share==='function'){
+      navigator.share({title:'The Cricket Space · Player Battle',url}).catch(error=>{
+        if(error.name!=='AbortError')byId('battle-share-status').textContent='Use WhatsApp or Copy battle link to share from this browser.';
+      });
+    }else{byId('battle-share-status').textContent='Use WhatsApp or Copy battle link to share from this browser.';}
+  });
+  byId('battle-card-native').addEventListener('click',()=>{
+    if(!cardBlob){byId('battle-card-feedback').textContent='Generate a battle card first.';return;}
+    const fallback=()=>{byId('battle-card-feedback').textContent='Save with Download PNG or Open image, then upload it in Instagram/WhatsApp. Use Copy battle link for a tappable link.';};
     try{
-      if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'The Cricket Space · Player Battle',text:battleLink()});}
-      else{byId('battle-card-feedback').textContent='Use Download PNG, then upload the image in Instagram or WhatsApp. Copy the battle link separately.';}
-    }catch(error){if(error.name!=='AbortError')byId('battle-card-feedback').textContent='Sharing is unavailable here. Download the PNG and copy the link.';}
+      if(typeof navigator.share!=='function'||typeof File!=='function'){fallback();return;}
+      const file=new File([cardBlob],'thecricketspace-battle.png',{type:'image/png'});
+      const payload={files:[file]};
+      if(typeof navigator.canShare==='function'&&!navigator.canShare(payload)){fallback();return;}
+      // No async work before share(): Safari requires the original tap activation.
+      // File-only payload avoids mobile targets rejecting image + URL combinations.
+      const promise=navigator.share(payload);
+      if(promise?.catch)promise.catch(error=>{if(error.name==='AbortError')byId('battle-card-feedback').textContent='Sharing cancelled. You can try again or save the image.';else fallback();});
+    }catch(error){fallback();}
   });
 
   function combineFormats(datasets) {
