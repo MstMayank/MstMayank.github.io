@@ -352,7 +352,7 @@ function venueLabel(name) {
     if(data){
       status.textContent=careerView?'Career records · top 50 per format · verified '+(careerRecords?.verified||'unavailable'):archiveStatus;
       byId('battle-method').textContent=careerView?'Career totals are verified snapshots for the top 50 men’s run-scorers in each format. Career rankings include matches outside the ball-by-ball archive.':archiveMethod;
-      byId('battle-hint').textContent=careerView?'Search the verified career leaders, or click a row for career details.':matchup?'Select two players. Click a player row to explore their archived performance.':'Click a player row to explore their archived performance.';
+      byId('battle-hint').textContent=careerView?'Search the verified career leaders, or click a row for career details.':matchup?'Select two players. Click a player name to explore their archived performance.':'Click a player name to explore their archived performance.';
       const source=byId('battle-source');source.replaceChildren();const link=document.createElement('a');
       link.href=careerView?'https://www.cricbuzz.com/cricket-stats':'https://cricsheet.org/';link.textContent=careerView?'Cricbuzz career records':'Cricsheet ball-by-ball data';link.target='_blank';link.rel='noopener noreferrer';source.append('Source: ',link);
       if(!careerView){const licence=document.createElement('a');licence.href='https://cricsheet.org/licensing/';licence.textContent='ODC Attribution License';source.append(' · ',licence,' · Archive coverage varies; totals may be incomplete.');}
@@ -396,6 +396,37 @@ function venueLabel(name) {
       });
       if(!rows.length){const note=document.createElement('p');note.className='hint';note.textContent='No match among the verified top 50 '+format+' run-scorers. Use Archived match analysis to search the ball-by-ball dataset.';result.appendChild(note);}
     }
+  }
+
+  function renderBattleBoard(format, headers, rows, choose) {
+    const board=document.createElement('section');board.className='duel-board';
+    if(format){const heading=document.createElement('h3');heading.textContent=format;board.appendChild(heading);}
+    const names=document.createElement('div');names.className='duel-names';
+    const ids=mode==='direct'?selected:rows.map(row=>data.players.indexOf(row[0]));
+    ids.forEach((id,index)=>{const button=document.createElement('button');button.type='button';button.className='duel-name';
+      const small=document.createElement('small');small.textContent=mode==='direct'?(index?'BOWLER':'BATTER'):'PLAYER '+(index+1);
+      const name=document.createElement('strong');name.textContent=data.players[id];button.append(small,name);
+      button.addEventListener('click',()=>choose(mode==='direct'?0:index));names.appendChild(button);});board.appendChild(names);
+    let leads=[0,0],comparable=0;
+    headers.slice(1).forEach((label,i)=>{
+      const line=document.createElement('div');line.className='duel-row';
+      const title=document.createElement('div');title.className='duel-label';title.textContent=label;line.appendChild(title);
+      const bars=document.createElement('div');bars.className='duel-bars';
+      const values=rows.map(row=>Number(String(row[i+1]).replace(/,/g,'')));
+      const valid=rows.length===2&&values.every(Number.isFinite);
+      const lower=(mode==='bowlers'&&['Economy','Average','Wides','NB'].includes(label))||(mode!=='bowlers'&&label==='Dot %');
+      const neutral=['Balls','Overs'].includes(label);
+      let leader=valid&&values[0]!==values[1]&&!neutral?(lower?Number(values[1]<values[0]):Number(values[1]>values[0])):-1;
+      if(valid&&!neutral){comparable++;if(leader>=0)leads[leader]++;}
+      rows.forEach((row,index)=>{const side=document.createElement('div');side.className='duel-side'+(leader===index?' leads':'');
+        const value=document.createElement('strong');value.textContent=row[i+1];
+        const track=document.createElement('div');track.className='duel-track';const bar=document.createElement('div');bar.className='duel-bar';
+        const max=Math.max(...values.filter(Number.isFinite),1);bar.style.setProperty('--fill',Number.isFinite(values[index])?Math.max(0,values[index]/max*100)+'%':'0%');track.appendChild(bar);side.append(value,track);bars.appendChild(side);});
+      line.appendChild(bars);board.appendChild(line);
+    });
+    const verdict=document.createElement('p');verdict.className='duel-verdict';
+    verdict.textContent=rows.length===1?'Batter’s record against this bowler':leads[0]===leads[1]?'Level across the compared metrics':rows[leads[0]>leads[1]?0:1][0]+' leads in '+Math.max(...leads)+' of '+comparable+' metrics';
+    board.appendChild(verdict);result.appendChild(board);
   }
 
   function renderPlayers(format) {
@@ -447,6 +478,7 @@ function venueLabel(name) {
       result.appendChild(note);
       return;
     }
+    if(matchup && mode!=='direct') entries.sort((a,b)=>selected.indexOf(a[0])-selected.indexOf(b[0]));
     entries = entries.slice(0,150);
     const headers = fielding ? ['Player','Catches','Run-outs','Stumpings']
       : bowling ? ['Player','Wickets','Overs','Economy','Average','Dot %','Wides','NB']
@@ -456,6 +488,9 @@ function venueLabel(name) {
         : bowling ? [stats.wickets,overs(stats.legal),divide(stats.conceded,stats.legal,6),divide(stats.conceded,stats.wickets),divide(stats.bowlingDots,stats.legal,100),stats.wides,stats.noBalls]
         : [stats.runs,stats.balls,divide(stats.runs,stats.balls,100),divide(stats.dots,stats.balls,100),stats.fours,stats.sixes,...(matchup && mode === 'direct' ? [stats.wickets,divide(stats.runs,stats.wickets)] : [divide(stats.runs,stats.outs)])];
       return [data.players[id], ...values.map(value => typeof value === 'number' ? number(value) : value)];
+    });
+    if(matchup) renderBattleBoard(format,headers,rows,index=>{
+      const id=entries[index][0];showDetail(format,id,playerRows.get(id)||[],bowling,fielding);
     });
     makeRows(format || '', headers, rows, index => {
       const id = entries[index][0];
@@ -783,6 +818,11 @@ function venueLabel(name) {
     updateChoices();
     render();
   }));
+  byId('battle-swap').addEventListener('click',()=>{
+    if(selected.some(value=>value===null))return;
+    selected.reverse();const first=inputs[0].value;inputs[0].value=inputs[1].value;inputs[1].value=first;
+    suggestions.forEach((_,index)=>setExpanded(index,false));updateChoices();render();
+  });
   byId('battle-search').addEventListener('input', render);
   function filterChanged(){careerScope='archive';render();}
   byId('battle-phase').addEventListener('change', filterChanged);

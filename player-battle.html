@@ -280,7 +280,34 @@
 #ipl-lens .battle-workspace.has-detail{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 #ipl-lens #battle-detail[hidden]{display:none!important}
 @media(max-width:850px){#ipl-lens .battle-workspace.has-detail{grid-template-columns:minmax(0,1fr)}}
-</style></head>
+</style>
+<style>
+#ipl-lens .battle-players{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;align-items:end}
+#ipl-lens .duel-board{border:1px solid var(--line,rgba(242,245,239,.22));border-radius:12px;overflow:hidden;margin:24px 0;background:#0c3022}
+#ipl-lens .duel-board>h3{padding:16px 22px;margin:0;color:#f6c453}
+#ipl-lens .duel-names{display:grid;grid-template-columns:1fr 1fr;background:#103a2a;border-bottom:1px solid #ffffff30}
+#ipl-lens .duel-name{border:0;border-radius:0;background:transparent;color:#f2f5ef;padding:22px;text-align:left;min-width:0;white-space:normal}
+#ipl-lens .duel-name:last-child{text-align:right}
+#ipl-lens .duel-name small{display:block;color:#9db8a8;font:700 12px Karla,sans-serif;letter-spacing:.12em}
+#ipl-lens .duel-name strong{display:block;font:800 clamp(25px,3vw,44px)/1.15 'Big Shoulders Display',sans-serif;margin-top:8px}
+#ipl-lens .duel-row{padding:13px 22px;border-bottom:1px solid #ffffff20}
+#ipl-lens .duel-label{text-align:center;color:#9db8a8;font-size:13px;font-weight:700;margin-bottom:8px}
+#ipl-lens .duel-bars{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+#ipl-lens .duel-side{display:flex;align-items:center;gap:12px;min-width:0}
+#ipl-lens .duel-side:first-child{flex-direction:row-reverse;text-align:right}
+#ipl-lens .duel-side strong{min-width:65px;font:800 25px 'Big Shoulders Display',sans-serif;color:#f2f5ef}
+#ipl-lens .duel-track{flex:1;min-width:0;overflow:hidden}
+#ipl-lens .duel-bar{width:var(--fill);height:11px;background:#6b8b79;border-radius:8px;transform-origin:left;animation:duel-grow .8s cubic-bezier(.2,.8,.2,1) both}
+#ipl-lens .duel-side:first-child .duel-bar{margin-left:auto;transform-origin:right}
+#ipl-lens .duel-side.leads strong{color:#f6c453}#ipl-lens .duel-side.leads .duel-bar{background:#f6c453}
+#ipl-lens .duel-verdict{margin:0;padding:20px;text-align:center;background:#a32630;color:#fff;font-weight:700}
+#ipl-lens .duel-board+.table-wrap{display:none}
+#ipl-lens #battle-swap{background:#b62330;color:white;border-color:#b62330}
+@keyframes duel-grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(max-width:650px){#ipl-lens .battle-players{grid-template-columns:1fr 1fr}#ipl-lens .battle-picker{grid-column:1/-1}#ipl-lens .duel-bars{gap:12px}#ipl-lens .duel-row{padding:12px}#ipl-lens .duel-name{padding:18px 12px}#ipl-lens .duel-side{gap:6px}#ipl-lens .duel-side strong{font-size:21px;min-width:50px}}
+@media(prefers-reduced-motion:reduce){#ipl-lens .duel-bar{animation:none}}
+</style>
+</head>
 <body class="v2 cricket-feel">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#D6252E"/><path d="M6 8c6 4 6 12 0 16M26 8c-6 4-6 12 0 16" fill="none" stroke="#F2F5EF" stroke-width="1.6" stroke-dasharray="2.5 2.5"/></svg>tcs.</a>
@@ -324,6 +351,7 @@
 <div class="battle-players" id="battle-players">
 <div class="battle-picker"><label><span id="battle-first-label">Batter</span><input id="battle-first" type="search" placeholder="Search batter" autocomplete="off" aria-controls="battle-first-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-first-results" hidden></div></div>
 <div class="battle-picker"><label><span id="battle-second-label">Bowler</span><input id="battle-second" type="search" placeholder="Search bowler" autocomplete="off" aria-controls="battle-second-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-second-results" hidden></div></div>
+<button type="button" id="battle-swap" aria-label="Swap players">⇄ Swap</button>
 <button type="button" id="battle-clear">Clear players</button>
 </div>
 
@@ -351,5 +379,5 @@
 <label>Link to this comparison<input id="battle-card-link" readonly></label>
 <p>Instagram: upload the card, then add the battle link using a Link sticker. WhatsApp: share the image and link; for Status, add the URL in a separate text status. PNG images do not contain tappable links.</p><p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=league-profiles-3"></script>
-<script defer src="player-battle.js?v=click-detail-layout-4"></script>
+<script defer src="player-battle.js?v=duel-design-5"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
