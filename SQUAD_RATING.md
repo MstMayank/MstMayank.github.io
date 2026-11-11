@@ -1,19 +1,28 @@
-# TCS squad rating v1
+# TCS retained-core rating v2
 
-Browser-only, on-demand, no server or paid API. Open a retention room, retain players and press **Rate my squad**. The result is derived from the latest choices and is invalidated when choices change. It does not alter or enlarge the saved game.
+Open a retention room, retain players and press **Rate my squad**. Every eligible retained player contributes, regardless of search filters. There is no generated XI, four-overseas selection cutoff, bench-depth component or penalty for leaving XI/bench slots vacant. A small core is labelled provisional. Choices changing invalidate the displayed report; the rating never modifies the save or purse.
 
-The window is 2021–2026. Season weights 1–6, expressed as equivalent 2026 deliveries for sample thresholds. Batting: 55% run-rate percentile + 45% average percentile. Bowling: equal economy and wickets-per-ball percentiles. Cohort is current roster players with at least 60 weighted deliveries in that discipline. No-dismissal batting average uses denominator one for model stability. These model averages are separate from displayed scorecard averages.
+## Weights
 
-Suggested XI: keeper first, up to five bowling options, then batting/remaining players ranked by their strongest discipline. At most four overseas players. This is a greedy suggestion, not an exhaustive best-XI optimiser. Bowling options include roster bowlers/all-rounders and players with 120 weighted bowling deliveries. Two-discipline options include roster all-rounders or 300 batting plus 120 bowling deliveries.
+- Recent IPL form: 30. 2025–26 player role performance, weighted 1:2.
+- Batting strength: 20. Six-season run-rate percentile (55%) plus runs-per-dismissal percentile (45%).
+- Bowling strength: 20. Six-season economy and wickets-per-ball percentiles, equally weighted.
+- Role coverage: 15. Six points each for batting/bowling options relative to the retained count (ceil 50% / ceil 40%), three for a wicketkeeper. These are model assumptions, not official squad requirements.
+- Match consistency: 10. Percentile of useful-contribution frequency from available Cricsheet innings. Batting success: 20+ runs or 10+ runs at SR 150+. Bowling: 2+ wickets or economy <=8.5 over 12+ legal deliveries. At least eight weighted innings; (success+2)/(innings+4) sample smoothing. This is a custom contribution-frequency definition, not an official consistency statistic.
+- Value for money: 5. Role performance / sqrt(published salary in lakh), percentile against the reference roster. Announced trade fees override old salaries. Missing salaries remain unavailable.
 
-Weights: batting 25, bowling 25, XI balance 20 (six batting + five bowling options), two-discipline options 10 (two), keeper 10 (one), bench 10 (seven). Missing performance samples are omitted rather than zero-filled; if a whole performance component is unavailable no overall rating is given. Results with fewer than 11 players, inadequate samples or incomplete XI performance coverage are provisional. Delivery confidence is sample sufficiency, not a prediction or win probability. Fame and salary do not affect the score.
+Historical weights rise 1–6 over 2021–2026. Performance needs 60 weighted deliveries per discipline. Batting no-dismissal samples use one as denominator for model stability. Role performance uses batting for batters/keepers, bowling for bowlers, average available disciplines for all-rounders. Historical bowling samples of 120 weighted deliveries also establish a bowling option.
 
-## Reproducible data
+Scores are relative percentiles rather than school grades; franchise identity, reputation, trophies or an expected target score do not change the formula. The same selected players receive the same result under any franchise label.
 
-Run `python3 scripts/build-six-season-stats.py --archive /absolute/path/ipl.zip` with the local Cricsheet JSON ZIP. It reads existing player aliases from `player-career-index.json`, unique canonical first/last names, and explicit full-name aliases. Ambiguous/unmatched identities are left unavailable; no fuzzy surname matching. The artifact records the archive SHA256, provenance, match references, numerator/denominator audit and withheld identities.
+Unavailable components are omitted and the overall score explicitly rescaled by assessed model weight. Missing individual samples are never zero ability. Confidence includes sample sufficiency, primary-role and discipline coverage, and available component weights. With no primary performance data no overall score is returned. Fewer than three players, missing coverage or confidence below 70% are provisional. Confidence is not prediction accuracy.
 
-2021–23 archive coverage: 60, 74, 74 matches. Cricsheet, https://cricsheet.org/downloads/, ODC-BY-1.0 https://opendatacommons.org/licenses/by/1-0/. 2024–26 retain the existing checked official IPL snapshot unchanged; 2025 coverage remains incomplete. Six historical leader anchors reconcile (Gaikwad/Harshal 2021, Buttler/Chahal 2022, Gill/Shami 2023). Source and scorecard total reconciliation for the official snapshot remains in its existing tests.
+## Data and reproduction
 
-817 player-season records are available for the present roster, not all historical IPL players. No record does not establish a zero-stat season. Historical archive stats, role assumptions and incomplete coverage limit this model. It does not assess fitness, availability, fielding or phase specialisms.
+Performance: 817 current-roster player-season rows in `prisma/data/ipl-six-season-stats.json`, Cricsheet 2021–23 plus the existing checked official IPL 2024–26 snapshot (2025 incomplete). Run `python3 scripts/build-six-season-stats.py --archive /absolute/path/ipl.zip`.
 
-Build: `node scripts/build-browser-auction.mjs`. Tests: `node --import tsx --test tests/*.test.ts`. Rating/stat modules and shared data are lazy chunks; source match URL lists stay in the auditable JSON but are stripped from browser bundles. Existing saved games and homepage routes are preserved.
+Consistency: 735 current-roster player-season contribution rows in `prisma/data/ipl-rating-consistency.json`. Run `python3 scripts/build-rating-consistency.py --archive /absolute/path/ipl.zip`. Archive match coverage is 60/74/74/71/74/74 for 2021–26. The separate Cricsheet consistency coverage does not change official scorecard totals or fill missing performance figures. Both artifacts record input SHA256 and provenance. Exact aliases / unique canonical first-and-last identities only; ambiguous names remain unavailable.
+
+Cricsheet attribution: https://cricsheet.org/downloads/ under ODC Attribution 1.0 https://opendatacommons.org/licenses/by/1-0/. Regular innings only; no super overs. Six historical leader anchors reconcile in tests. No record does not prove zero performance. Does not assess fielding, fitness, availability, domestic form or phase specialism.
+
+Build: `node scripts/build-browser-auction.mjs`. Checks: `node --import tsx --test tests/*.test.ts`, `npm run typecheck`, `npm run lint`. Data and rating load on demand; existing saves and routes are preserved. v2 replaces v1; old and new scores are not directly comparable.

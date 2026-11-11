@@ -1,4 +1,11 @@
 import records from '../prisma/data/ipl-six-season-stats.json';
+import consistency from '../prisma/data/ipl-rating-consistency.json';
+import salaries from '../prisma/data/ipl-salary-references.json';
+import trades from '../prisma/data/ipl-2027-confirmed-trades.json';
+import roster from '../prisma/data/ipl-2026-reference-squads.json';
 import {rateSquad} from '../lib/ipl-auction/rating';
 import type {SessionView} from '../lib/ipl-auction/types';
-export const buildRating=(session:SessionView)=>rateSquad(session,records.records);
+const roles=new Map(Object.values(roster.teams).flatMap(t=>t.players).map(p=>[p.id,p.role]));
+const tradeCosts=new Map(trades.rows.map(t=>[t.playerId,t.salaryLakh]));
+const contracts=salaries.rows.map(c=>({playerId:c.playerId,salaryLakh:tradeCosts.get(c.playerId)??c.salaryLakh,role:roles.get(c.playerId)??'BATTER'}));
+export const buildRating=(session:SessionView)=>rateSquad(session,records.records,consistency.records,contracts);
