@@ -379,11 +379,11 @@ function venueLabel(name) {
     entries = entries.slice(0,150);
     const headers = fielding ? ['Player','Catches','Run-outs','Stumpings']
       : bowling ? ['Player','Wickets','Overs','Economy','Average','Dot %','Wides','NB']
-      : ['Player','Runs','Balls','SR','Dot %','4s','6s',matchup && mode === 'direct' ? 'Dismissals' : 'Average'];
+      : ['Player','Runs','Balls','SR','Dot %','4s','6s',...(matchup && mode === 'direct' ? ['Dismissals','Average'] : ['Average'])];
     const rows = entries.map(([id,stats]) => {
       const values = fielding ? [stats.catches,stats.runouts,stats.stumpings]
         : bowling ? [stats.wickets,overs(stats.legal),divide(stats.conceded,stats.legal,6),divide(stats.conceded,stats.wickets),divide(stats.bowlingDots,stats.legal,100),stats.wides,stats.noBalls]
-        : [stats.runs,stats.balls,divide(stats.runs,stats.balls,100),divide(stats.dots,stats.balls,100),stats.fours,stats.sixes,matchup && mode === 'direct' ? stats.wickets : divide(stats.runs,stats.outs)];
+        : [stats.runs,stats.balls,divide(stats.runs,stats.balls,100),divide(stats.dots,stats.balls,100),stats.fours,stats.sixes,...(matchup && mode === 'direct' ? [stats.wickets,divide(stats.runs,stats.wickets)] : [divide(stats.runs,stats.outs)])];
       return [data.players[id], ...values.map(value => typeof value === 'number' ? number(value) : value)];
     });
     makeRows(format || '', headers, rows, index => {
