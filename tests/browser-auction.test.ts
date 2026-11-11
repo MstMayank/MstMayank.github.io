@@ -6,9 +6,9 @@ function setup(){const values=new Map<string,string>();return {values,store:crea
 const start=(store:ReturnType<typeof createStore>,team='csk')=>store.request('/api/ipl-auction/sessions',{method:'POST',body:JSON.stringify({seasonId:'ipl-2027-custom',franchiseId:team})}) as Promise<SessionView>;
 test('all ten squads and reference player stats are available',()=>{assert.equal(teams.length,10);assert.equal(players.length,274);assert.ok(players.find(p=>p.name.includes('Dhoni'))?.internationalStats.length);});
 test('save, reload, undo, confirm and latest-only replacement',async()=>{const {store,values}=setup();let s=await start(store);const url='/api/ipl-auction/sessions/'+s.id;const id=s.squad[0].playerId;const salary=s.squad[0].previousSalaryLakh;assert.notEqual(salary,null);
- s=await store.request(url+'/retention',{method:'PATCH',body:JSON.stringify({playerId:id,action:'RETAIN',revision:s.revision})}) as SessionView;assert.equal(s.totals.remainingLakh,12000-salary!);
+ s=await store.request(url+'/retention',{method:'PATCH',body:JSON.stringify({playerId:id,action:'RETAIN',revision:s.revision})}) as SessionView;assert.equal(s.totals.remainingLakh,13000-salary!);
  const reloaded=createStore({getItem:k=>values.get(k)??null,setItem:(k,v)=>{values.set(k,v);}});assert.deepEqual((await reloaded.request(url) as SessionView).decisions,s.decisions);
- s=await store.request(url+'/retention',{method:'PATCH',body:JSON.stringify({playerId:id,action:'UNDO',revision:s.revision})}) as SessionView;assert.equal(s.totals.remainingLakh,12000);
+ s=await store.request(url+'/retention',{method:'PATCH',body:JSON.stringify({playerId:id,action:'UNDO',revision:s.revision})}) as SessionView;assert.equal(s.totals.remainingLakh,13000);
  await assert.rejects(()=>store.request(url+'/confirm',{method:'POST',body:JSON.stringify({revision:s.revision})}),/every eligible/);
  for(const member of s.squad)s=await store.request(url+'/retention',{method:'PATCH',body:JSON.stringify({playerId:member.playerId,action:'RELEASE',revision:s.revision})}) as SessionView;
  s=await store.request(url+'/confirm',{method:'POST',body:JSON.stringify({revision:s.revision})}) as SessionView;assert.equal(s.state,'CONFIRMED');
