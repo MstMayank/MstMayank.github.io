@@ -15,6 +15,10 @@
   let view = 'matchups';
   let detailKey = '';
   let data = null;
+  let careerRecords = null;
+  let careerScope = 'career';
+  let archiveStatus='';
+  let archiveMethod='';
   let cardTables = [];
   let restoreLink = true;
   const initialLink = new URLSearchParams(location.search);
@@ -243,6 +247,7 @@ function venueLabel(name) {
     eyebrow.textContent = 'UNDER THE LENS';
     const name = document.createElement('h2');
     name.textContent = data.players[id];
+    if(competition==='international'){const coverage=document.createElement('p');coverage.className='battle-coverage-warning';coverage.textContent='Archive analysis only. Phase charts, splits and matchups exclude matches absent from our ball-by-ball archive.';panel.appendChild(coverage);}
     const summary = document.createElement('p');
     summary.className = 'hint';
     const totals = emptyStats();
@@ -321,8 +326,21 @@ function venueLabel(name) {
     byId('battle-detail').hidden = true;
     detailKey = '';
     const matchup = view === 'matchups';
+    const careerAvailable = competition==='international' && byId('battle-gender').value==='male' && view==='batting';
+    byId('battle-career-scope-label').hidden=!careerAvailable;
+    byId('battle-career-scope').value=careerScope;
+    const careerView=careerAvailable && careerScope==='career';
     const titles = {direct:'Batter vs Bowler',batters:'Batter vs Batter',bowlers:'Bowler vs Bowler',teams:'Team vs Team'};
     byId('battle-panel-title').textContent = matchup ? titles[mode] : {batting:'Batting leaderboard',bowling:'Bowling leaderboard',fielding:'Fielding leaderboard'}[view];
+    if(careerView) byId('battle-panel-title').textContent='All-time batting records';
+    if(data){
+      status.textContent=careerView?'Career records · top 50 per format · verified '+(careerRecords?.verified||'unavailable'):archiveStatus;
+      byId('battle-method').textContent=careerView?'Career totals are verified snapshots for the top 50 men’s run-scorers in each format. Career rankings include matches outside the ball-by-ball archive.':archiveMethod;
+      byId('battle-hint').textContent=careerView?'Search the verified career leaders, or click a row for career details.':matchup?'Select two players. Click a player row to explore their archived performance.':'Click a player row to explore their archived performance.';
+      const source=byId('battle-source');source.replaceChildren();const link=document.createElement('a');
+      link.href=careerView?'https://www.cricbuzz.com/cricket-stats':'https://cricsheet.org/';link.textContent=careerView?'Cricbuzz career records':'Cricsheet ball-by-ball data';link.target='_blank';link.rel='noopener noreferrer';source.append('Source: ',link);
+      if(!careerView){const licence=document.createElement('a');licence.href='https://cricsheet.org/licensing/';licence.textContent='ODC Attribution License';source.append(' · ',licence,' · Archive coverage varies; totals may be incomplete.');}
+    }
     byId('battle-panel-label').textContent = matchup ? 'MATCHUP EXPLORER' : 'PLAYER EXPLORER';
     byId('battle-players').hidden = !matchup;
     byId('battle-clear').hidden = !matchup;
@@ -331,6 +349,7 @@ function venueLabel(name) {
     byId('battle-phase-label').hidden = matchup && mode === 'teams';
     result.hidden = !data || (matchup && selected.some(value => value === null));
     if (result.hidden) return;
+    if(careerView){renderCareerRecords();return;}
     const formats = competition === 'international' ? ['Test','ODI','T20I'] : [null];
     for (const format of formats) {
       if (matchup && mode === 'teams') {
@@ -344,10 +363,34 @@ function venueLabel(name) {
     }
   }
 
+  function renderCareerRecords() {
+    const notice=document.createElement('p');notice.className='battle-coverage-warning';
+    notice.textContent='Full career totals · Top 50 men’s run-scorers per format. Verified '+(careerRecords?.verified||'—')+'. Season, venue and phase filters switch to archived match analysis.';result.appendChild(notice);
+    if(!careerRecords){notice.textContent='Career records could not load. Reselect International to retry, or choose Archived match analysis. Partial archive totals are not shown as career records.';return;}
+    for(const format of ['Test','ODI','T20I']){
+      const source=careerRecords.formats[format];const query=searchKey(byId('battle-search').value);
+      const rows=source.map((row,i)=>[i+1,...row]).filter(row=>!query||searchKey(row[1]).includes(query));
+      makeRows(format,['Rank','Player','Matches','Innings','Runs','Average'],rows.map(row=>row.map(value=>typeof value==='number'?number(value):value)),index=>{
+        const row=rows[index],detail=byId('battle-detail');detail.hidden=false;detail.replaceChildren();
+        const panel=document.createElement('section');panel.className='panel';
+        const h=document.createElement('h2');h.textContent=row[1];
+        const summary=document.createElement('p');summary.textContent=format+' · Full career: '+number(row[4])+' runs in '+number(row[2])+' matches ('+number(row[3])+' innings), average '+row[5]+'.';
+        const note=document.createElement('p');note.className='hint';note.textContent='Verified '+careerRecords.verified+'. Phase and matchup analysis uses a separate, incomplete ball-by-ball archive; it cannot be inferred from career totals.';
+        const link=document.createElement('a');link.href=careerRecords.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Career records source ↗';panel.append(h,summary,note,link);detail.appendChild(panel);
+      });
+      if(!rows.length){const note=document.createElement('p');note.className='hint';note.textContent='No match among the verified top 50 '+format+' run-scorers. Use Archived match analysis to search the ball-by-ball dataset.';result.appendChild(note);}
+    }
+  }
+
   function renderPlayers(format) {
     const matchup = view === 'matchups';
     const bowling = view === 'bowling' || (matchup && mode === 'bowlers');
     const fielding = view === 'fielding';
+    if(competition==='international'){
+      const scope=document.createElement('p');scope.className='battle-coverage-warning';
+      scope.textContent=(format?format+' · ':'')+'Archived ball-by-ball subset — these runs cover available matches only, not complete career totals. Missing matches and early career innings are excluded.';
+      result.appendChild(scope);
+    }
     const filtered = data.rows.filter(row => rowIncluded(row, format));
     const map = new Map();
     const playerRows = new Map();
@@ -495,7 +538,7 @@ function venueLabel(name) {
         }
       }
     });
-    text('Based on available archived match data.',82,1665,24,'#B7CCBA');
+    text('Archived matches only · not full career totals',82,1665,24,'#B7CCBA');
     text('Cricsheet · ODC Attribution License',82,1705,24,'#B7CCBA');
     text('mstmayank.github.io/player-battle.html',82,1770,28,'#F6C453');
     text('Full comparison: use the shared link',82,1820,24,'#B7CCBA');
@@ -608,6 +651,9 @@ function venueLabel(name) {
       ? ['tests', 'odis', 't20s'].map(format => format + '_' + byId('battle-gender').value)
       : [competition];
     try {
+      const careerPromise=international && byId('battle-gender').value==='male'
+        ? fetch('career-batting-records.json',{signal:loadingController.signal}).then(response=>response.ok?response.json():null).catch(()=>null)
+        : Promise.resolve(null);
       const datasets = await Promise.all(keys.map(async key => {
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
@@ -624,16 +670,20 @@ function venueLabel(name) {
       }));
       if (current !== requestNumber) return;
       data = international ? combineFormats(datasets) : datasets[0];
+      careerRecords=await careerPromise;
+      if(current!==requestNumber)return;
       const seasons = [...new Set(data.matches.map(match => match[0]))].sort().reverse();
       seasons.forEach(season => { byId('battle-season').add(new Option(season, season)); });
       [...new Set(data.venues.map(venueLabel))].sort().forEach(venue => { byId('battle-venue').add(new Option(venue, venue)); });
       const dates = data.matches.map(match => match[2]).sort();
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
+      archiveStatus=status.textContent;
       byId('battle-method').textContent = international
         ? 'Results are grouped by Test, ODI and T20I. Click a player row for phase charts and dismissal breakdown. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
         : data.format === 'Test'
         ? 'Test comparisons show overall figures. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
         : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
+      archiveMethod=byId('battle-method').textContent;
       inputs.forEach(input => { input.disabled = false; });
       if (restoreLink) {
         restoreLink = false;
@@ -646,6 +696,7 @@ function venueLabel(name) {
         if (initialLink.get('gender')==='female') byId('battle-gender').value='female';
         [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
       }
+      if(initialLink.get('view')==='batting' && !initialLink.has('first')){view='batting';document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));}
       updateChoices();
       render();
     } catch (error) {
@@ -691,14 +742,20 @@ function venueLabel(name) {
     render();
   }));
   byId('battle-search').addEventListener('input', render);
-  byId('battle-phase').addEventListener('change', render);
+  function filterChanged(){careerScope='archive';render();}
+  byId('battle-phase').addEventListener('change', filterChanged);
   byId('battle-reset').addEventListener('click', () => {
     for (const id of ['battle-season','battle-venue','battle-phase','battle-search']) byId(id).value = '';
     clearSelections();
     render();
   });
   byId('battle-gender').addEventListener('change', loadData);
-  for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', render);
+  for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', filterChanged);
+  byId('battle-career-scope').addEventListener('change',()=>{
+    careerScope=byId('battle-career-scope').value;
+    if(careerScope==='career')for(const id of ['battle-season','battle-venue','battle-phase'])byId(id).value='';
+    render();
+  });
   byId('battle-clear').addEventListener('click', clearSelections);
   if(initialLink.get('gender')==='female') byId('battle-gender').value='female';
   loadData();
