@@ -180,3 +180,9 @@ body.v2 { margin:0; padding:0; max-width:none; background:var(--bg); color:var(-
 @media(max-width:600px) { .v2 header.hero { padding-left:20px; padding-right:20px; } }
 .v2 .page.wrap { padding-left:28px; padding-right:28px; }
 @media(max-width:600px) { .v2 .page.wrap { padding-left:20px; padding-right:20px; } }
+/* Keep the cricket ball and its glow inside the hero's visual composition. */
+.v2 header.hero { overflow:visible; }
+.v2 .hero .ball { right:clamp(20px,2.5vw,40px); width:min(43vw,520px); }
+@media(max-width:600px) {
+ .v2 .hero .ball { right:12px; width:min(42vw,200px); top:38%; }
+}
