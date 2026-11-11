@@ -275,6 +275,11 @@
 .battle-card-actions{position:sticky;top:0;z-index:1;background:#0c3022;padding:10px 0}
 .battle-card-sheet img{max-height:45vh}
 @media(max-width:600px){.battle-card-dialog{padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom));place-items:start center}.battle-card-sheet{width:100%;padding:16px;max-height:94vh;max-height:94dvh;overscroll-behavior:contain}.battle-card-actions button,.battle-card-actions a{flex:1 1 120px;text-align:center;font-size:14px}.battle-card-sheet img{max-height:40vh}#ipl-lens .battle-share-tools{gap:8px}#ipl-lens .battle-share-tools button,#ipl-lens .battle-share-tools a{font-size:14px}}
+</style><style>
+#ipl-lens .battle-workspace{grid-template-columns:minmax(0,1fr)}
+#ipl-lens .battle-workspace.has-detail{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+#ipl-lens #battle-detail[hidden]{display:none!important}
+@media(max-width:850px){#ipl-lens .battle-workspace.has-detail{grid-template-columns:minmax(0,1fr)}}
 </style></head>
 <body class="v2 cricket-feel">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
@@ -348,5 +353,5 @@
 <label>Link to this comparison<input id="battle-card-link" readonly></label>
 <p>Instagram: upload the card, then add the battle link using a Link sticker. WhatsApp: share the image and link; for Status, add the URL in a separate text status. PNG images do not contain tappable links.</p><p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=league-profiles-3"></script>
-<script defer src="player-battle.js?v=league-profiles-3"></script>
+<script defer src="player-battle.js?v=click-detail-layout-4"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

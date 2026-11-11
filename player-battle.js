@@ -66,6 +66,7 @@
     result.hidden = true;
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
+    document.querySelector('.battle-workspace').classList.remove('has-detail');
     detailKey = '';
   }
 
@@ -239,6 +240,7 @@ function venueLabel(name) {
     const detail = byId('battle-detail');
     detail.replaceChildren();
     detail.hidden = false;
+    document.querySelector('.battle-workspace').classList.add('has-detail');
     detailKey = String(id) + ':' + format;
     const panel = document.createElement('section');
     panel.className = 'panel';
@@ -324,6 +326,7 @@ function venueLabel(name) {
     byId('battle-card-dialog').hidden = true;
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
+    document.querySelector('.battle-workspace').classList.remove('has-detail');
     detailKey = '';
     const profiles=view==='careers';
     byId('career-view-button').hidden=false;
@@ -384,7 +387,7 @@ function venueLabel(name) {
       const source=careerRecords.formats[format];const query=searchKey(byId('battle-search').value);
       const rows=source.map((row,i)=>[i+1,...row]).filter(row=>!query||searchKey(row[1]).includes(query));
       makeRows(format,['Rank','Player','Matches','Innings','Runs','Average'],rows.map(row=>row.map(value=>typeof value==='number'?number(value):value)),index=>{
-        const row=rows[index],detail=byId('battle-detail');detail.hidden=false;detail.replaceChildren();
+        const row=rows[index],detail=byId('battle-detail');detail.hidden=false;document.querySelector('.battle-workspace').classList.add('has-detail');detail.replaceChildren();
         const panel=document.createElement('section');panel.className='panel';
         const h=document.createElement('h2');h.textContent=row[1];
         const summary=document.createElement('p');summary.textContent=format+' · Full career: '+number(row[4])+' runs in '+number(row[2])+' matches ('+number(row[3])+' innings), average '+row[5]+'.';
