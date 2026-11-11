@@ -248,7 +248,25 @@
 #ipl-lens .battle-suggestions button:hover, #ipl-lens .battle-suggestions button:focus-visible { background:#f1d8c9; color:#26201c; }
 #ipl-lens .battle-players { align-items:end; }
 #ipl-lens .battle-result:empty { display:none; }
-</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=2"></head>
+</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=2"><style>
+#ipl-lens .batting-insights { margin-top:28px; padding-top:20px; border-top:1px solid var(--line); }
+#ipl-lens .batting-insights summary { cursor:pointer; color:var(--gold); font-weight:700; font-size:20px; }
+#ipl-lens .batting-insights h3 { font:700 25px/1.2 "Big Shoulders Display",sans-serif; margin:26px 0 12px; }
+#ipl-lens .batting-insights .table-wrap { max-width:100%; overflow-x:auto; }
+#ipl-lens .batting-insights table { min-width:650px; }
+.battle-share-tools { display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin-top:24px; }
+.battle-share-tools[hidden],.battle-card-dialog[hidden] { display:none!important; }
+.battle-share-tools p { flex-basis:100%; }
+.battle-card-dialog { position:fixed; inset:0; z-index:100; background:#000c; display:grid; place-items:center; padding:20px; overflow-y:auto; }
+.battle-card-sheet { background:#0c3022; color:#f2f5ef; border:1px solid #315b44; padding:24px; border-radius:12px; width:min(100%,650px); max-height:90vh; overflow-y:auto; }
+.battle-card-sheet h2 { margin-top:0; font-family:"Big Shoulders Display",sans-serif; }
+.battle-card-sheet img { display:block; max-width:100%; max-height:55vh; margin:20px auto; }
+.battle-card-sheet button,.battle-card-sheet a { display:inline-block; cursor:pointer; padding:10px 15px; border:1px solid #72967b; border-radius:6px; color:#f2f5ef; background:#17432d; font:inherit; }
+.battle-card-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.battle-card-sheet label { display:block; margin-top:20px; }
+.battle-card-sheet input { display:block; width:100%; background:#07241a; color:#f2f5ef; padding:12px; border:1px solid #72967b; font:inherit; }
+.battle-card-sheet p { color:#b7ccba; font-size:14px; }
+</style></head>
 <body class="v2 cricket-feel">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#D6252E"/><path d="M6 8c6 4 6 12 0 16M26 8c-6 4-6 12 0 16" fill="none" stroke="#F2F5EF" stroke-width="1.6" stroke-dasharray="2.5 2.5"/></svg>tcs.</a>
@@ -297,6 +315,11 @@
 
 <p class="hint" id="battle-hint">Select two players. Click a player row to explore their performance.</p>
 <div class="battle-result" id="battle-result" aria-live="polite" hidden></div>
+<div id="battle-share-tools" class="battle-share-tools" hidden>
+<label>Card format<select id="battle-card-format" aria-label="Battle card format"></select></label>
+<button type="button" id="battle-card-preview">Preview / Share battle card ↗</button>
+<button type="button" id="battle-copy-link">Copy battle link</button>
+<p id="battle-share-status" role="status"></p></div>
 </section>
 <aside class="detail" id="battle-detail" aria-live="polite" hidden></aside>
 </div>
@@ -304,5 +327,11 @@
 <p class="lens-source">Based on available <a href="https://cricsheet.org/">Cricsheet</a> ball-by-ball data under the <a href="https://cricsheet.org/licensing/">ODC Attribution License</a>. Coverage varies by competition and format.</p>
 </section>
 </main>
-<script defer src="player-battle.js?v=matchup-average"></script>
+<div id="battle-card-dialog" class="battle-card-dialog" role="dialog" aria-modal="true" aria-labelledby="battle-card-heading" hidden>
+<div class="battle-card-sheet"><h2 id="battle-card-heading">Your battle card</h2><button type="button" id="battle-card-close">Close ×</button>
+<img id="battle-card-image" alt="The Cricket Space battle statistics card">
+<div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><button type="button" id="battle-card-copy">Copy battle link</button></div>
+<label>Link to this comparison<input id="battle-card-link" readonly></label>
+<p>Instagram: upload the card, then add the battle link using a Link sticker. WhatsApp: share the image and link; for Status, add the URL in a separate text status. PNG images do not contain tappable links.</p><p id="battle-card-feedback" role="status"></p></div></div>
+<script defer src="player-battle.js?v=batting-insights-1"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

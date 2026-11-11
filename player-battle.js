@@ -15,6 +15,9 @@
   let view = 'matchups';
   let detailKey = '';
   let data = null;
+  let cardTables = [];
+  let restoreLink = true;
+  const initialLink = new URLSearchParams(location.search);
   let availablePlayers = [[], []];
   let loadingController = null;
   let requestNumber = 0;
@@ -53,6 +56,9 @@
       setExpanded(index, false);
     });
     result.replaceChildren();
+    cardTables = [];
+    byId('battle-share-tools').hidden = true;
+    byId('battle-card-dialog').hidden = true;
     result.hidden = true;
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
@@ -274,6 +280,7 @@ function venueLabel(name) {
     wickets.forEach(wicket => counts.set(wicket[3], (counts.get(wicket[3]) || 0) + 1));
     addBars(breakdown, fielding ? 'Fielding events' : 'Dismissal breakdown', [...counts].sort((a,b) => b[1] - a[1]), '');
     detail.appendChild(breakdown);
+    if (!bowling && !fielding && view !== 'matchups') appendInsights(detail, format, [id]);
   }
 
   function renderTeams(format) {
@@ -288,6 +295,8 @@ function venueLabel(name) {
     }
     const labels = ['Matches', selected[0] + ' wins', selected[1] + ' wins', 'No result', 'Ties', 'Draws'];
     const values = [counts.reduce((sum, value) => sum + value, 0), ...counts];
+    cardTables.push({format:format||data.format,headers:['Team','Wins','Ties','No result','Draws','Matches'],rows:selected.map((team,i)=>[team,counts[i],counts[3],counts[2],counts[4],values[0]])});
+    updateShareTools();
     const list = document.createElement('dl');
     labels.forEach((label, index) => {
       const term = document.createElement('dt');
@@ -305,6 +314,9 @@ function venueLabel(name) {
 
   function render() {
     result.replaceChildren();
+    cardTables = [];
+    byId('battle-share-tools').hidden = true;
+    byId('battle-card-dialog').hidden = true;
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
     detailKey = '';
@@ -394,12 +406,137 @@ function venueLabel(name) {
     note.className = 'table-foot';
     note.textContent = matchup ? 'Historical matchup · Small samples may not represent ability.' : map.size + ' players · Showing ' + entries.length;
     result.appendChild(note);
+    if (matchup) {
+      cardTables.push({format:format || data.format,headers,rows});
+      updateShareTools();
+      if (!bowling) appendInsights(result,format,entries.map(([id])=>id));
+    }
   }
 
+  function appendInsights(parent, format, ids) {
+    const block=document.createElement('details');
+    block.className='batting-insights'; block.open=true;
+    const title=document.createElement('summary'); title.textContent=(format?format+' · ':'')+'Batting insights'; block.appendChild(title);
+    if(data.insightsUnavailable){const note=document.createElement('p');note.textContent='Batting insights could not load. Reselect the competition to retry; the main comparison is still available.';block.appendChild(note);parent.appendChild(block);return;}
+    const eligible=(data.insights||[]).filter(row=>rowIncluded(row,format) && ids.includes(row[1]) &&
+      (view!=='matchups'||mode!=='direct'||row[2]===selected[1]));
+    function sum(rows) { const totals=Array(10).fill(0); rows.forEach(row=>totals.forEach((_,i)=>totals[i]+=row[6+i])); return totals; }
+    function table(title,headers,rows) {
+      const h=document.createElement('h3'); h.textContent=title; block.appendChild(h);
+      const wrap=document.createElement('div');wrap.className='table-wrap';wrap.tabIndex=0;wrap.setAttribute('aria-label',title+'; scroll horizontally for more columns');
+      const t=document.createElement('table'); const head=t.createTHead().insertRow();headers.forEach(label=>{const th=document.createElement('th');th.scope='col';th.textContent=label;head.appendChild(th);});
+      const body=t.createTBody(); rows.forEach(values=>{const tr=body.insertRow();values.forEach(value=>tr.insertCell().textContent=value);});wrap.appendChild(t);block.appendChild(wrap);
+    }
+    if((format||data.format)!=='Test') {
+      const rows=[];
+      for(const id of ids) for(const [order,label] of [[1,'Bat first'],[2,'Chase']]) {
+        const filtered=eligible.filter(r=>r[1]===id&&r[4]===order);const a=sum(filtered);
+        rows.push([data.players[id],label,new Set(filtered.map(r=>r[0]+':'+r[4])).size,number(a[0]),number(a[1]),divide(a[0],a[1],100),divide(a[0],view==='matchups'&&mode==='direct'?a[9]:a[8])]);
+      }
+      table('Chase vs Bat First',['Player','Situation','Innings','Runs','Balls','SR','Average'],rows);
+    }
+    const windows=[];
+    for(const id of ids) for(const [mask,label] of [[1,'First 10'],[2,'Last 10']]) {
+      const filtered=eligible.filter(r=>r[1]===id&&(r[5]&mask));const a=sum(filtered);
+      windows.push([data.players[id],label,number(a[0]),number(a[1]),divide(a[0],a[1],100),divide(a[2],a[1],100)]);
+    }
+    table('First 10 vs Last 10 Balls',['Player','Window','Runs','Balls','SR','Dot %'],windows);
+    const scoring=ids.map(id=>{const a=sum(eligible.filter(r=>r[1]===id));return [data.players[id],number(a[0]),number(a[3]),divide(a[3],a[0],100),number(a[4]+a[5]+a[6]),number(a[4]),number(a[5]),number(a[6]),number(a[7])];});
+    table('Boundary vs Rotation',['Player','Runs','Boundary runs','Boundary %','Rotation runs','Singles runs','Doubles runs','Triples runs','Other runs'],scoring);
+    const note=document.createElement('p');note.className='hint';note.textContent='First/last 10 are each batter’s first/last 10 balls faced in each innings, including not-outs. Wides excluded; no-balls included. Short innings can overlap. Windows are fixed before bowler/phase filters. Rotation = runs from 1s, 2s and 3s; extras excluded. Splits follow the selected filters.';
+    if((format||data.format)==='Test')note.textContent+=' Chase vs Bat First is shown only for limited-overs formats.';
+    block.appendChild(note);parent.appendChild(block);
+  }
+
+  function battleLink() {
+    const url=new URL('player-battle.html',location.href);
+    const params={competition,compare:mode,gender:byId('battle-gender').value,first:inputs[0].value,second:inputs[1].value,
+      season:byId('battle-season').value,venue:byId('battle-venue').value,phase:byId('battle-phase').value};
+    for(const [key,value] of Object.entries(params)) if(value)url.searchParams.set(key,value);
+    return url.href;
+  }
+  function updateShareTools() {
+    const tools=byId('battle-share-tools');tools.hidden=!cardTables.length;
+    const select=byId('battle-card-format'); const previous=select.value;
+    select.replaceChildren(...cardTables.map((table,i)=>new Option(table.format,String(i))));
+    if([...select.options].some(o=>o.value===previous))select.value=previous;
+    byId('battle-share-status').textContent='';
+  }
+  let cardBlob=null,cardObjectURL='';
+  function drawBattleCard() {
+    const table=cardTables[+byId('battle-card-format').value||0]; if(!table)return;
+    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
+    const c=canvas.getContext('2d');c.fillStyle='#07241A';c.fillRect(0,0,1080,1920);
+    c.strokeStyle='#315B44';c.lineWidth=3;c.strokeRect(38,38,1004,1844);
+    function text(value,x,y,size=30,color='#F2F5EF',weight=600){c.font=weight+' '+size+'px Arial, sans-serif';c.fillStyle=color;c.fillText(String(value),x,y);}
+    function wrap(value,x,y,maxWidth,size=40){c.font='700 '+size+'px Arial, sans-serif';let line='';for(const word of value.split(' ')){if(c.measureText(line+word).width>maxWidth&&line){text(line,x,y,size);line='';y+=size*1.25;}line+=word+' ';}text(line,x,y,size);return y+size*1.25;}
+    text('tcs. / THE CRICKET SPACE',82,115,30,'#F6C453');
+    text('PLAYER BATTLE',82,205,66);
+    text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,82,265,30,'#B7CCBA');
+    let y=wrap(inputs[0].value+' vs '+inputs[1].value,82,355,910,48)+35;
+    y=wrap((byId('battle-season').value||'All seasons')+' · '+(byId('battle-phase').selectedOptions[0]?.textContent||'All overs'),82,y,900,25)+10;
+    y=wrap(byId('battle-venue').value||'All venues',82,y,900,25)+20;
+    const rows=table.rows.slice(0,2);const columns=rows.length===2?2:1;const columnWidth=916/columns;
+    rows.forEach((row,index)=>{
+      if(rows.length===1){
+        text(row[0],82,y,36,'#F6C453');
+        table.headers.slice(1).forEach((label,i)=>{
+          const x=82+(i%2)*470, yy=y+45+Math.floor(i/2)*215;
+          c.fillStyle='#123C2A';c.fillRect(x,yy,442,190);
+          text(label.toUpperCase(),x+24,yy+45,25,'#B7CCBA');text(row[i+1],x+24,yy+125,64);
+        });
+      }else{
+        const x=82+index*columnWidth;
+        let yy=wrap(row[0],x,y,columnWidth-28,34)+12;
+        for(let i=1;i<table.headers.length;i++){
+          c.fillStyle='#123C2A';c.fillRect(x,yy-24,columnWidth-24,93);
+          text(table.headers[i].toUpperCase(),x+16,yy+2,22,'#B7CCBA');
+          text(row[i],x+16,yy+48,40,i===1?'#F6C453':'#F2F5EF');yy+=105;
+        }
+      }
+    });
+    text('Based on available archived match data.',82,1665,24,'#B7CCBA');
+    text('Cricsheet · ODC Attribution License',82,1705,24,'#B7CCBA');
+    text('mstmayank.github.io/player-battle.html',82,1770,28,'#F6C453');
+    text('Full comparison: use the shared link',82,1820,24,'#B7CCBA');
+    canvas.toBlob(blob=>{
+      if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
+      cardBlob=blob;if(cardObjectURL)URL.revokeObjectURL(cardObjectURL);cardObjectURL=URL.createObjectURL(blob);
+      byId('battle-card-image').src=cardObjectURL;byId('battle-card-download').href=cardObjectURL;
+      byId('battle-card-link').value=battleLink();byId('battle-card-dialog').hidden=false;
+      byId('battle-card-close').focus();
+    },'image/png');
+  }
+  byId('battle-card-dialog').addEventListener('keydown',event=>{
+    if(event.key!=='Tab')return;
+    const items=[...byId('battle-card-dialog').querySelectorAll('button,a[href],input')];
+    const first=items[0],last=items[items.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  });
+  byId('battle-card-preview').addEventListener('click',drawBattleCard);
+  byId('battle-card-close').addEventListener('click',()=>{byId('battle-card-dialog').hidden=true;byId('battle-card-preview').focus();});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')byId('battle-card-dialog').hidden=true;});
+  async function copyBattleLink(){
+    try{await navigator.clipboard.writeText(battleLink());byId('battle-share-status').textContent='Battle link copied.';byId('battle-card-feedback').textContent='Battle link copied. Paste it into a Story Link sticker or WhatsApp text status.';}
+    catch{byId('battle-card-dialog').hidden=false;byId('battle-card-link').value=battleLink();byId('battle-card-link').focus();byId('battle-card-link').select();byId('battle-card-feedback').textContent='Select and copy the battle link above.';}
+  }
+  byId('battle-copy-link').addEventListener('click',copyBattleLink);
+  byId('battle-card-copy').addEventListener('click',copyBattleLink);
+  byId('battle-card-native').addEventListener('click',async()=>{
+    if(!cardBlob)return;
+    const file=new File([cardBlob],'thecricketspace-battle.png',{type:'image/png'});
+    try{
+      if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'The Cricket Space · Player Battle',text:battleLink()});}
+      else{byId('battle-card-feedback').textContent='Use Download PNG, then upload the image in Instagram or WhatsApp. Copy the battle link separately.';}
+    }catch(error){if(error.name!=='AbortError')byId('battle-card-feedback').textContent='Sharing is unavailable here. Download the PNG and copy the link.';}
+  });
+
   function combineFormats(datasets) {
-    const combined = { players: [], venues: [], matches: [], rows: [], dismissals: [], format: 'International' };
+    const combined = { players: [], venues: [], matches: [], rows: [], insights: [], dismissals: [], format: 'International' };
     const playerIds = new Map();
     const venueIds = new Map();
+    combined.insightsUnavailable=datasets.some(dataset=>dataset.insightsUnavailable);
     for (const dataset of datasets) {
       const players = dataset.players.map(name => {
         if (!playerIds.has(name)) {
@@ -430,6 +567,13 @@ function venueLabel(name) {
         merged[2] = players[wicket[2]];
         merged[5] = wicket[5].map(id => players[id]);
         combined.dismissals.push(merged);
+      }
+      for (const row of dataset.insights || []) {
+        const merged = row.slice();
+        merged[0] += matchOffset;
+        merged[1] = players[row[1]];
+        merged[2] = players[row[2]];
+        combined.insights.push(merged);
       }
       for (const row of dataset.rows) {
         const merged = row.slice();
@@ -467,7 +611,16 @@ function venueLabel(name) {
       const datasets = await Promise.all(keys.map(async key => {
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
-        return response.json();
+        const dataset = await response.json();
+        try {
+          const insights = await fetch('battle-insights-' + key + '.json', {signal:loadingController.signal});
+          if (!insights.ok) throw new Error('Batting insights download failed');
+          dataset.insights = (await insights.json()).rows;
+        } catch(error) {
+          if(error.name==='AbortError') throw error;
+          dataset.insightsUnavailable = true;
+        }
+        return dataset;
       }));
       if (current !== requestNumber) return;
       data = international ? combineFormats(datasets) : datasets[0];
@@ -482,6 +635,17 @@ function venueLabel(name) {
         ? 'Test comparisons show overall figures. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
         : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
       inputs.forEach(input => { input.disabled = false; });
+      if (restoreLink) {
+        restoreLink = false;
+        const linkedMode = initialLink.get('compare');
+        if (['direct','batters','bowlers','teams'].includes(linkedMode)) { mode=linkedMode; byId('battle-compare').value=mode; }
+        for (const [param,id] of [['season','battle-season'],['venue','battle-venue'],['phase','battle-phase']]) {
+          const value=initialLink.get(param);
+          if (value!==null && [...byId(id).options].some(option=>option.value===value)) byId(id).value=value;
+        }
+        if (initialLink.get('gender')==='female') byId('battle-gender').value='female';
+        [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
+      }
       updateChoices();
       render();
     } catch (error) {
@@ -536,5 +700,6 @@ function venueLabel(name) {
   byId('battle-gender').addEventListener('change', loadData);
   for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', render);
   byId('battle-clear').addEventListener('click', clearSelections);
+  if(initialLink.get('gender')==='female') byId('battle-gender').value='female';
   loadData();
 })();
