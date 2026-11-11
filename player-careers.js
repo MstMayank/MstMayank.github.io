@@ -1,19 +1,21 @@
 /* The Cricket Space · free, source-labelled player records. No API keys or paid services. */
 (() => {
  'use strict';
- let indexPromise=null,recordsPromise=null,mounted=false;
+ let indexPromise=null,recordsPromise=null,mounted=null,mountRevision=0,outsideHandler=null;
  const clean=s=>String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const text=(tag,value,className)=>{const e=document.createElement(tag);e.textContent=value;if(className)e.className=className;return e;};
  async function json(url){const response=await fetch(url);if(!response.ok)throw new Error('Download failed');return response.json();}
  function sourceLink(url,label){const a=text('a',label);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;}
  const fmt=value=>value===null||value===undefined||value===''?'—':typeof value==='number'?value.toLocaleString('en-IN',{maximumFractionDigits:2}):String(value);
  window.TCSPlayerCareers={mount};
- async function mount(host,initialPlayer){
-  if(mounted)return;mounted=true;
-  host.replaceChildren();host.append(text('div','PLAYER PROFILES','eyebrow'),text('h2','One player. Every format.'));
-  host.append(text('p','Search by first name, surname or initials. Choose a player to see their published career records.','hint'));
+ async function mount(host,initialPlayer,competition='international'){
+  if(mounted===competition)return;mounted=competition;const revision=++mountRevision;
+  if(outsideHandler)document.removeEventListener('click',outsideHandler);
+  const league=competition==='international'?null:competition.toUpperCase();
+  host.replaceChildren();host.append(text('div','PLAYER PROFILES','eyebrow'),text('h2',league?league+' player profiles':'One player. Every format.'));
+  host.append(text('p',league?'Search by first name, surname or initials. Records cover the available '+league+' match archive.':'Search by first name, surname or initials. Choose a player to see their published career records.','hint'));
   const field=text('div','','career-search');const label=text('label','Player name');label.htmlFor='career-player-search';
-  const input=document.createElement('input');input.id='career-player-search';input.type='search';input.placeholder='e.g. Sachin Tendulkar, Harmanpreet Kaur';input.autocomplete='off';input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-expanded','false');input.setAttribute('aria-controls','career-player-options');
+  const input=document.createElement('input');input.id='career-player-search';input.type='search';input.placeholder=league==='WPL'?'e.g. Smriti Mandhana, Harmanpreet Kaur':league==='IPL'?'e.g. Virat Kohli, MS Dhoni':'e.g. Sachin Tendulkar, Harmanpreet Kaur';input.autocomplete='off';input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-expanded','false');input.setAttribute('aria-controls','career-player-options');
   const clear=text('button','Clear');clear.type='button';const suggestions=text('div','','career-suggestions');suggestions.id='career-player-options';suggestions.hidden=true;
   const line=text('p','Loading player catalogue…','hint');line.setAttribute('role','status');
   const result=text('div','','career-profile');result.id='career-profile';const tools=text('div','','career-profile-tools');tools.hidden=true;
@@ -44,13 +46,13 @@
   async function select(player){
    const request=++selectionNumber;selected=player;input.value=player.name;close();tools.hidden=true;result.replaceChildren(text('p','Loading stored records…','hint'));
    try{
-    if(!recordsPromise)recordsPromise=json('player-career-data.json?v=1').catch(e=>{recordsPromise=null;throw e;});
-    const records=await recordsPromise;if(request!==selectionNumber)return;
+    if(!recordsPromise)recordsPromise=json('player-career-data.json?v=2').catch(e=>{recordsPromise=null;throw e;});
+    const records=await recordsPromise;if(request!==selectionNumber||revision!==mountRevision)return;
     const profile=records.players[player.id];result.replaceChildren();
     const title=text('header','','career-profile-heading');title.append(text('h3',player.name),text('p',[player.country,player.gender==='female'?'Women':player.gender==='male'?'Men':''].filter(Boolean).join(' · '),'hint'));result.appendChild(title);
-    const formats=[['Test','Test'],['ODI','ODI'],['T20I','T20I'],['FC','First-class'],['List A','List A'],['IPL','IPL']];
-    const found=formats.filter(([key])=>profile?.formats?.[key]);line.textContent=found.length+' of 6 formats have stored records. Check source dates and coverage below.';
-    const grid=text('div','','career-format-grid');result.appendChild(grid);
+    const formats=league?[[league,league]]:[['Test','Test'],['ODI','ODI'],['T20I','T20I'],['FC','First-class'],['List A','List A'],[player.gender==='female'?'WPL':'IPL',player.gender==='female'?'WPL':'IPL']];
+    const found=formats.filter(([key])=>profile?.formats?.[key]);line.textContent=league?'Available '+league+' archive statistics. Check source dates and coverage below.':found.length+' of '+formats.length+' formats have stored records. Check source dates and coverage below.';
+    const grid=text('div','','career-format-grid');if(league)grid.dataset.league=league;result.appendChild(grid);
     for(const [key,label] of formats){
      const record=profile?.formats?.[key];const card=text('section','','career-format-card');card.dataset.format=key;card.append(text('h4',label));
      if(!record){card.append(text('p','Unavailable','career-availability'),text('p','A verified career record is not available in our free sources yet. This does not mean the player never played this format.','hint'));grid.appendChild(card);continue;}
@@ -66,21 +68,21 @@
      grid.appendChild(card);
     }
     tools.hidden=false;shareStatus.textContent='';whatsapp.href='https://wa.me/?text='+encodeURIComponent('The Cricket Space · '+player.name+'\n'+playerURL());
-   }catch(error){if(request!==selectionNumber)return;result.replaceChildren(text('p','Player records could not load. Your selection has not been replaced with zero statistics.','hint'));const retry=text('button','Retry records');retry.type='button';retry.addEventListener('click',()=>select(player));result.appendChild(retry);}
+   }catch(error){if(request!==selectionNumber||revision!==mountRevision)return;result.replaceChildren(text('p','Player records could not load. Your selection has not been replaced with zero statistics.','hint'));const retry=text('button','Retry records');retry.type='button';retry.addEventListener('click',()=>select(player));result.appendChild(retry);}
   }
   input.addEventListener('input',()=>{reset();shown=20;show();});input.addEventListener('focus',()=>{if(!selected&&input.value)show();});
   input.addEventListener('keydown',event=>{if(event.key==='Escape')close();if(event.key==='ArrowDown'){event.preventDefault();if(suggestions.hidden)show();suggestions.querySelector('button')?.focus();}if(event.key==='Enter'&&!suggestions.hidden&&queryResults.length){event.preventDefault();select(queryResults[0]);}});
   suggestions.addEventListener('keydown',event=>{if(event.key==='Escape'){close();input.focus();}if(['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();const buttons=[...suggestions.querySelectorAll('button')],i=buttons.indexOf(document.activeElement),next=i+(event.key==='ArrowDown'?1:-1);if(next<0)input.focus();else buttons[Math.min(next,buttons.length-1)]?.focus();}});
-  document.addEventListener('click',event=>{if(!field.contains(event.target))close();});
+  outsideHandler=event=>{if(!field.contains(event.target))close();};document.addEventListener('click',outsideHandler);
   clear.addEventListener('click',()=>{reset();input.value='';line.textContent=catalogue.length.toLocaleString('en-IN')+' searchable player names. Select a player to view available records.';});
-  function playerURL(){const url=new URL('player-battle.html',location.href);url.searchParams.set('competition','international');url.searchParams.set('view','careers');url.searchParams.set('player',selected.id);return url.href;}
+  function playerURL(){const url=new URL('player-battle.html',location.href);url.searchParams.set('competition',competition);url.searchParams.set('view','careers');url.searchParams.set('player',selected.id);return url.href;}
   nativeShare.addEventListener('click',()=>{if(!selected)return;if(typeof navigator.share==='function'){navigator.share({title:'The Cricket Space · '+selected.name,url:playerURL()}).catch(error=>{if(error.name!=='AbortError')shareStatus.textContent='Use WhatsApp or Copy player link in this browser.';});}else shareStatus.textContent='Use WhatsApp or Copy player link in this browser.';});
   share.addEventListener('click',async()=>{if(!selected)return;const url=playerURL();try{await navigator.clipboard.writeText(url);shareStatus.textContent='Player link copied.';}catch{linkInput.value=url;linkInput.hidden=false;linkInput.focus();linkInput.select();shareStatus.textContent='Copy the selected player link.';}});
   try{
-   if(!indexPromise)indexPromise=json('player-career-index.json?v=1').catch(e=>{indexPromise=null;throw e;});const index=await indexPromise;
-   catalogue=index.players.map(([id,name,country,gender,aliases])=>({id,name,country,gender,keys:[name,...aliases].map(clean)}));
+   if(!indexPromise)indexPromise=json('player-career-index.json?v=2').catch(e=>{indexPromise=null;throw e;});const index=await indexPromise;if(revision!==mountRevision)return;
+   catalogue=index.players.filter(row=>!league||row[5]?.includes(league)).map(([id,name,country,gender,aliases])=>({id,name,country,gender,keys:[name,...aliases].map(clean)}));
    input.disabled=false;line.textContent=catalogue.length.toLocaleString('en-IN')+' searchable player names. Select a player to view available records.';
    if(initialPlayer){const player=catalogue.find(p=>p.id===initialPlayer);if(player)await select(player);else line.textContent='This player link is not in the stored catalogue. Search for the player by name.';}
-  }catch{input.disabled=true;line.textContent='The player catalogue could not load.';const retry=text('button','Retry catalogue');retry.type='button';retry.addEventListener('click',()=>{mounted=false;mount(host,initialPlayer);});host.appendChild(retry);}
+  }catch{if(revision!==mountRevision)return;input.disabled=true;line.textContent='The player catalogue could not load.';const retry=text('button','Retry catalogue');retry.type='button';retry.addEventListener('click',()=>{mounted=null;mount(host,initialPlayer,competition);});host.appendChild(retry);}
  }
 })();

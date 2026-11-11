@@ -28,13 +28,13 @@ Primary retired-player career table:
 BCCI Annual Report 2013–14 (Sachin Tendulkar List A):
 https://documents.bcci.tv/documents/bcci/documents/1638361890_BCCI%20Annual%20Report%202013-14.pdf
 
-IPL aggregates:
+IPL and WPL aggregates:
 Cricsheet — https://cricsheet.org/downloads/ — ODC Attribution Licence:
 https://cricsheet.org/licensing/
-Derived from regular innings in the downloaded IPL archive through 31 May 2026.
+Derived from regular innings in the downloaded IPL and WPL archives. Each league record shows its coverage end date.
 They are labelled ARCHIVED MATCHES, not guaranteed complete current careers.
 
 Transformations:
 Stable identifiers link source records. Name matching is unique and conservative.
 Null/absent values mean unavailable, not zero. No career totals are inferred from partial match coverage.
-First-class includes Tests; List A includes ODIs. IPL is not equivalent to all T20 cricket.
+First-class includes Tests; List A includes ODIs. IPL and WPL are separate leagues, neither equivalent to all T20 cricket.

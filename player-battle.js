@@ -12,7 +12,7 @@
   let competition = new URLSearchParams(location.search).get('competition') || 'ipl';
   if (!['ipl', 'wpl', 'international'].includes(competition)) competition = 'ipl';
   let mode = 'direct';
-  let view = competition==='international' && !new URLSearchParams(location.search).has('first') ? 'careers' : 'matchups';
+  let view = new URLSearchParams(location.search).get('view')==='careers' || (competition==='international' && !new URLSearchParams(location.search).has('first')) ? 'careers' : 'matchups';
   let detailKey = '';
   let data = null;
   let careerRecords = null;
@@ -325,17 +325,17 @@ function venueLabel(name) {
     byId('battle-detail').replaceChildren();
     byId('battle-detail').hidden = true;
     detailKey = '';
-    const profiles=competition==='international'&&view==='careers';
-    byId('career-view-button').hidden=competition!=='international';
+    const profiles=view==='careers';
+    byId('career-view-button').hidden=false;
     byId('player-career-shell').hidden=!profiles;
     document.querySelector('.battle-workspace').hidden=profiles;
     document.querySelector('.battle-filters').hidden=profiles;
     for(const id of ['battle-status','battle-method','battle-source'])byId(id).hidden=profiles;
     document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
     if(profiles){
-      byId('battle-title').textContent='International Lens';
+      byId('battle-title').textContent=competition==='international'?'International Lens':competition.toUpperCase()+' Lens';
       byId('battle-compare-label').hidden=true;byId('battle-career-scope-label').hidden=true;
-      window.TCSPlayerCareers.mount(byId('player-career-shell'),initialLink.get('player'));
+      window.TCSPlayerCareers.mount(byId('player-career-shell'),competition===(initialLink.get('competition')||'ipl')?initialLink.get('player'):null,competition);
       return;
     }
     const matchup = view === 'matchups';
@@ -672,8 +672,8 @@ function venueLabel(name) {
     clearSelections();
     inputs.forEach(input => { input.disabled = true; });
     const international = competition === 'international';
-    byId('career-view-button').hidden=!international;
-    if(international && view==='careers' && !forceArchive){
+    byId('career-view-button').hidden=false;
+    if(view==='careers' && !forceArchive){
       document.querySelectorAll('[data-competition]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.competition===competition)));
       render();return;
     }
@@ -762,7 +762,7 @@ function venueLabel(name) {
   });
   document.querySelectorAll('[data-competition]').forEach(button => button.addEventListener('click', () => {
     competition = button.dataset.competition;
-    view=competition==='international'?'careers':view==='careers'?'matchups':view;
+    view=competition==='international'?'careers':view;
     loadData();
   }));
   byId('battle-compare').addEventListener('change', () => {
@@ -776,7 +776,7 @@ function venueLabel(name) {
     document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active',item === button));
     byId('battle-search').value = '';
     clearSelections();
-    if(competition==='international' && view!=='careers' && !data){loadData(true);return;}
+    if(view!=='careers' && !data){loadData(true);return;}
     updateChoices();
     render();
   }));
