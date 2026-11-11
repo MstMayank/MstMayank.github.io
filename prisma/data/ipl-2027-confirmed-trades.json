@@ -1,0 +1,106 @@
+{
+  "checkedAt": "2026-11-11",
+  "scope": "Officially announced transfers and fees, applied over the unchanged historical 2026 reference roster. Not a final 2027 retained squad.",
+  "rows": [
+    {
+      "playerId": "ipl-7ab8f25f-7187-45ca-b6cc-f3e966d7bf54",
+      "name": "Rishabh Pant",
+      "fromTeamId": "lsg",
+      "toTeamId": "dc",
+      "salaryLakh": 1500,
+      "contractYear": 2027,
+      "announcedAt": "2026-06-23",
+      "sourceUrl": "https://www.iplt20.com/news/article/rishabh-pant-and-kuldeep-yadav-complete-high-profile-trade-between-dc-and-lsg"
+    },
+    {
+      "playerId": "ipl-a4d693fd-c189-41df-a59c-544032c2bea6",
+      "name": "Kuldeep Yadav",
+      "fromTeamId": "dc",
+      "toTeamId": "lsg",
+      "salaryLakh": 1350,
+      "contractYear": 2027,
+      "announcedAt": "2026-06-23",
+      "sourceUrl": "https://www.iplt20.com/news/article/rishabh-pant-and-kuldeep-yadav-complete-high-profile-trade-between-dc-and-lsg"
+    },
+    {
+      "playerId": "ipl-522a8cae-88a4-4ba1-8f83-d386da8ba5dc",
+      "name": "Thangarasu Natarajan",
+      "fromTeamId": "dc",
+      "toTeamId": "srh",
+      "salaryLakh": 500,
+      "contractYear": 2027,
+      "announcedAt": "2026-10-14",
+      "sourceUrl": "https://www.iplt20.com/news/article/t-natarajan-returns-to-sunrisers-hyderabad-zeeshan-ansari-moves-to-delhi-capitals"
+    },
+    {
+      "playerId": "ipl-488fa07d-645e-4761-b5ca-00bd1bfcff2b",
+      "name": "Zeeshan Ansari",
+      "fromTeamId": "srh",
+      "toTeamId": "dc",
+      "salaryLakh": 40,
+      "contractYear": 2027,
+      "announcedAt": "2026-10-14",
+      "sourceUrl": "https://www.iplt20.com/news/article/t-natarajan-returns-to-sunrisers-hyderabad-zeeshan-ansari-moves-to-delhi-capitals"
+    },
+    {
+      "playerId": "ipl-f94106d3-b3a3-424f-a3b6-d5f697d080de",
+      "name": "Liam Livingstone",
+      "fromTeamId": "srh",
+      "toTeamId": "csk",
+      "salaryLakh": 600,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-05",
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-and-srh-agree-to-four-player-trade"
+    },
+    {
+      "playerId": "ipl-39a82b0e-badb-4e3d-8136-ac254087fc9e",
+      "name": "Jack Edwards",
+      "fromTeamId": "srh",
+      "toTeamId": "csk",
+      "salaryLakh": 300,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-05",
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-and-srh-agree-to-four-player-trade"
+    },
+    {
+      "playerId": "ipl-ab6e7d3c-2ef9-4f52-ac08-426500e51556",
+      "name": "Khaleel Ahmed",
+      "fromTeamId": "csk",
+      "toTeamId": "srh",
+      "salaryLakh": 480,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-05",
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-and-srh-agree-to-four-player-trade"
+    },
+    {
+      "playerId": "ipl-2a4ea20f-3aaf-4714-9d90-79fdff333f70",
+      "name": "Nathan Ellis",
+      "fromTeamId": "csk",
+      "toTeamId": "srh",
+      "salaryLakh": 200,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-05",
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-and-srh-agree-to-four-player-trade"
+    },
+    {
+      "playerId": "ipl-007f3aa9-7d73-43c3-9283-92870cb454c0",
+      "name": "Hardik Pandya",
+      "fromTeamId": "mi",
+      "toTeamId": "pbks",
+      "salaryLakh": 1800,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-11",
+      "sourceUrl": "https://www.iplt20.com/news/article/hardik-pandya-and-arshdeep-singh-complete-major-trade-between-pbks-and-mi"
+    },
+    {
+      "playerId": "ipl-9421928e-793b-488e-8b97-c5746ecef946",
+      "name": "Arshdeep Singh",
+      "fromTeamId": "pbks",
+      "toTeamId": "mi",
+      "salaryLakh": 1800,
+      "contractYear": 2027,
+      "announcedAt": "2026-11-11",
+      "sourceUrl": "https://www.iplt20.com/news/article/hardik-pandya-and-arshdeep-singh-complete-major-trade-between-pbks-and-mi"
+    }
+  ]
+}

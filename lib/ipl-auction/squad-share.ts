@@ -6,7 +6,7 @@ export function squadShareModel(session:SessionView,scope:ShareScope='ALL'){
  return {team:session.team.name,shortName:session.team.shortName,year:session.season.year,state:session.state==='CONFIRMED'?'CONFIRMED':'DRAFT',title:scope==='ALL'?'FULL SQUAD & DECISIONS':'MY RETAINED SQUAD',players,remainingLakh:session.totals.remainingLakh,spentLakh:session.totals.spentLakh,retained:session.totals.retained,released:session.totals.released,undecided:session.totals.undecided};
 }
 export type SquadShareModel=ReturnType<typeof squadShareModel>;
-export function squadShareText(model:SquadShareModel){return [`THE CRICKET SPACE · IPL ${model.year}`,`${model.team} · ${model.title} · ${model.state}`,`Purse left: ${shareMoney(model.remainingLakh)} | Committed: ${shareMoney(model.spentLakh)}`,`${model.retained} retained · ${model.released} released · ${model.undecided} undecided`,'',...model.players.map((p,i)=>`${i+1}. ${p.name} — ${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`),'','Fan-made simulation. 2026 reference squad/contracts; not official 2027 decisions.'].join('\n');}
+export function squadShareText(model:SquadShareModel){return [`THE CRICKET SPACE · IPL ${model.year}`,`${model.team} · ${model.title} · ${model.state}`,`Purse left: ${shareMoney(model.remainingLakh)} | Committed: ${shareMoney(model.spentLakh)}`,`${model.retained} retained · ${model.released} released · ${model.undecided} undecided`,'',...model.players.map((p,i)=>`${i+1}. ${p.name} — ${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`),'','Fan-made simulation. 2026 baseline + confirmed 2027 trades; not official 2027 decisions.'].join('\n');}
 export async function renderSquadCard(model:SquadShareModel){
  if(!model.players.length)throw new Error('No retained players to share yet. Choose Full squad or retain a player.');
  await document.fonts.ready;
@@ -28,7 +28,7 @@ export async function renderSquadCard(model:SquadShareModel){
   const statusColor=p.status==='RETAINED'?'#f6c453':p.status==='RELEASED'?'#edb1a1':'#b4cbb9';
   text(`${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`,x+15,y+75,17,statusColor);
  });
- text('FAN SIMULATION · NOT OFFICIAL 2027 DECISIONS',60,height-92,21,'#f6c453',true);text('2026 reference squad/contracts · Snapshot of saved decisions',60,height-53,20,'#b4cbb9');
+ text('FAN SIMULATION · NOT OFFICIAL 2027 DECISIONS',60,height-92,21,'#f6c453',true);text('2026 baseline + confirmed 2027 trades · Snapshot of saved decisions',60,height-53,20,'#b4cbb9');
  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Could not generate the squad image.')),'image/png'));
  return new File([blob],`${model.shortName.toLowerCase()}-ipl-${model.year}-squad.png`,{type:'image/png'});
 }
