@@ -213,3 +213,32 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
 .logo.d span {
   color: #eac568;
 }
+
+@media (max-width: 860px) {
+  .v2 .site-nav .bar {
+    height: auto;
+    min-height: 64px;
+    gap: 8px;
+    padding-block: 8px;
+  }
+
+  .v2 .site-nav .logo.d {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: clamp(17px, 4.6vw, 25px);
+    white-space: normal;
+  }
+
+  .v2 .site-nav .nav-toggle,
+  .v2 .site-nav .bar > .btn {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .v2 .site-nav .links {
+    top: 100%;
+  }
+}
