@@ -201,3 +201,5 @@
  .mock-squad-home .tm{width:32px;height:32px;font-size:9px;margin-right:-5px}
 }
 @media(prefers-reduced-motion:reduce){.mock-squad-home *{transition:none!important}}
+
+.auction-nav .auction-brand{font-size:clamp(18px,4vw,26px);letter-spacing:.02em;line-height:1.1}
