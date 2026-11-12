@@ -1,10 +1,13 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useState, type CSSProperties} from 'react';
 import type {SessionView} from '@/lib/ipl-auction/types';
 import type {buildRating} from '@/browser-auction/squad-rating-data';
 import {categories, type Category} from '@/lib/ipl-auction/rating/expert-config';
 
+import {money, TeamLogo} from './shared';
+
+const labels = ['Batting', 'Bowling', 'Balance', 'Bench', 'Phase coverage', 'Fielding'];
 type Report = ReturnType<typeof buildRating>;
 const keys = Object.keys(categories) as Category[];
 
@@ -39,21 +42,32 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
       : <button className="button" disabled={disabled} onClick={() => setAttempt(n => n + 1)}>Rate your squad</button>)}
     {report && <>
       {report.playerCount ? <div aria-live="polite">
-        <div className="rating-result">
-          <strong>{report.overallRating.toFixed(2)}<small> / 100</small></strong>
-          <span className="expert-tier">Tier {report.tier}</span>
-          {change != null && <span>{change > 0 ? '+' : ''}{change.toFixed(2)} since last squad change</span>}
+        <div className="rating-card" style={{'--rating-accent': session.team.color} as CSSProperties}>
+          <header className="rating-card-header">
+            <TeamLogo team={session.team} />
+            <div>
+              <span>{session.team.shortName} · IPL {session.season.year}</span>
+              <strong>{report.overallRating.toFixed(2)} / 100</strong>
+              <b>{report.tier} Tier</b>
+            </div>
+            {change != null && change !== 0 && <span className="rating-card-change" data-direction={change > 0 ? 'up' : 'down'} aria-label={`Rating change: ${change.toFixed(2)}`}>{change > 0 ? '+' : ''}{change.toFixed(2)}</span>}
+          </header>
+          <div className="rating-card-bars">
+            {keys.map((key, index) => <div className="rating-card-row" key={key}>
+              <span>{labels[index]}</span>
+              <progress max={100} value={report[key]} aria-label={categories[key][0]} />
+              <span>{Number(report[key].toFixed(1))}</span>
+            </div>)}
+          </div>
+          <dl className="rating-card-footer">
+            <div><dt>Retained players</dt><dd>{session.totals.retained} / {session.squad.filter(player => player.eligible).length}</dd></div>
+            <div><dt>Purse remaining</dt><dd>{money(session.totals.remainingLakh)}</dd></div>
+          </dl>
         </div>
-        <p>{report.approvedReference ? 'Approved expert reference' : 'Expert rubric assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
-        <div className="rating-breakdown">
-          {keys.map(key => <section className="expert-category" key={key}>
-            <details>
-              <summary><span>{categories[key][0]} <small>{categories[key][1]}% weight</small></span><strong>{report[key].toFixed(1)}/100</strong></summary>
-              <p>{report.categoryExplanations[key]}</p>
-            </details>
-            <progress max={100} value={report[key]} aria-label={categories[key][0]} />
-          </section>)}
-        </div>
+        <details>
+          <summary>Assessment details</summary>
+          <p>{report.approvedReference ? 'Approved expert reference' : 'Expert rubric assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
+          <ul>{keys.map(key => <li key={key}><strong>{categories[key][0]} · {categories[key][1]}%</strong> {report.categoryExplanations[key]}</li>)}</ul>
         <div className="expert-rating-columns">
           <div>
             <h3>Best Playing XI</h3>
@@ -69,6 +83,7 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
             {!!report.weaknesses.length && <><h3>Weaknesses</h3><ul>{report.weaknesses.map(item => <li key={item}>{item}</li>)}</ul></>}
           </div>
         </div>
+        </details>
       </div> : <p role="status">Retain a player to start your squad assessment.</p>}
       <details>
         <summary>Rankings across all ten teams</summary>
