@@ -520,6 +520,17 @@ function venueLabel(name) {
       const wrap=document.createElement('div');wrap.className='table-wrap';wrap.tabIndex=0;wrap.setAttribute('aria-label',title+'; scroll horizontally for more columns');
       const t=document.createElement('table'); const head=t.createTHead().insertRow();headers.forEach(label=>{const th=document.createElement('th');th.scope='col';th.textContent=label;head.appendChild(th);});
       const body=t.createTBody(); rows.forEach(values=>{const tr=body.insertRow();values.forEach(value=>tr.insertCell().textContent=value);});wrap.appendChild(t);block.appendChild(wrap);
+      const mobile=document.createElement('div');mobile.className='insight-mobile';
+      for(const values of rows){
+        const card=document.createElement('dl');
+        values.forEach((value,index)=>{
+          const metric=document.createElement('div'), label=document.createElement('dt'), number=document.createElement('dd');
+          label.textContent=headers[index];number.textContent=value;
+          metric.append(label,number);card.appendChild(metric);
+        });
+        mobile.appendChild(card);
+      }
+      block.appendChild(mobile);
     }
     if((format||data.format)!=='Test') {
       const rows=[];

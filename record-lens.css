@@ -60,3 +60,16 @@ background:radial-gradient(800px 480px at 90% 0%,rgba(232,196,104,.12),transpare
 @media(max-width:480px){
  .cricket-tools #battle-title{font-size:clamp(30px,9vw,44px)}
 }
+
+.insight-mobile{display:none}
+@media(max-width:600px){
+ #ipl-lens .batting-insights .table-wrap{display:none}
+ .insight-mobile{display:grid;gap:10px}
+ .insight-mobile dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:12px;border:1px solid var(--line);border-radius:12px;background:#ffffff08}
+ .insight-mobile dt{font-size:.75rem;color:var(--muted)}
+ .insight-mobile dd{margin:2px 0 0;font-weight:700;overflow-wrap:anywhere}
+ #ipl-lens .battle-share-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #ipl-lens .battle-share-tools label,#battle-card-preview,#battle-share-status{grid-column:1/-1}
+ #ipl-lens .battle-share-tools :is(button,a){min-width:0;min-height:44px;text-align:center;overflow-wrap:normal}
+ #ipl-lens .battle-share-tools label select{flex:1;min-width:0}
+}
