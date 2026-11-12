@@ -18,7 +18,6 @@
   let careerRecords = null;
   let careerScope = 'career';
   let archiveStatus='';
-  let archiveMethod='';
   let cardTables = [];
   let restoreLink = true;
   const initialLink = new URLSearchParams(location.search);
@@ -333,7 +332,7 @@ function venueLabel(name) {
     byId('player-career-shell').hidden=!profiles;
     document.querySelector('.battle-workspace').hidden=profiles;
     document.querySelector('.battle-filters').hidden=profiles;
-    for(const id of ['battle-status','battle-method','battle-source'])byId(id).hidden=profiles;
+    for(const id of ['battle-status','battle-source'])byId(id).hidden=profiles;
     document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
     if(profiles){
       byId('battle-compare-label').hidden=true;byId('battle-career-scope-label').hidden=true;
@@ -350,7 +349,6 @@ function venueLabel(name) {
     if(careerView) byId('battle-panel-title').textContent='All-time batting records';
     if(data){
       status.textContent=careerView?'Career records · top 50 per format · verified '+(careerRecords?.verified||'unavailable'):archiveStatus;
-      byId('battle-method').textContent=careerView?'Career totals are verified snapshots for the top 50 men’s run-scorers in each format. Career rankings include matches outside the ball-by-ball archive.':archiveMethod;
       byId('battle-hint').textContent=careerView?'Search the verified career leaders, or click a row for career details.':matchup?'Select two players. Click a player name to explore their archived performance.':'Click a player name to explore their archived performance.';
       byId('battle-source').hidden=true;
     }
@@ -990,12 +988,6 @@ function venueLabel(name) {
       const dates = data.matches.map(match => match[2]).sort();
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
       archiveStatus=status.textContent;
-      byId('battle-method').textContent = international
-        ? 'Results are grouped by Test, ODI and T20I. Click a player row for phase charts and dismissal breakdown. Regular innings only. — means no dismissals, wickets or balls to calculate the rate.'
-        : data.format === 'Test'
-        ? 'Test comparisons show overall figures. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.'
-        : 'Regular innings only. Phase boundaries use the scheduled over number, including shortened matches. Average is runs per dismissal or runs conceded per wicket. — means no dismissals, wickets or balls to calculate the rate.';
-      archiveMethod=byId('battle-method').textContent;
       inputs.forEach(input => { input.disabled = false; });
       if (restoreLink) {
         restoreLink = false;
