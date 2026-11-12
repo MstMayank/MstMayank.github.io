@@ -679,6 +679,14 @@ function venueLabel(name) {
     c.fillStyle=background;
     c.fillRect(0,0,1080,1920);
 
+    for (const [x, color] of [[180, '#f5c93a55'], [900, '#4c8dff55']]) {
+      const glow = c.createRadialGradient(x, 540, 0, x, 540, 620);
+      glow.addColorStop(0, color);
+      glow.addColorStop(1, '#00000000');
+      c.fillStyle = glow;
+      c.fillRect(0, 0, 1080, 1920);
+    }
+
     function label(value,x,y,size,maxWidth,color=cream,display=false){
       c.fillStyle=color;
       c.font=display?'italic 900 '+size+'px "Big Shoulders Display", "Arial Narrow", Arial, sans-serif':
@@ -694,7 +702,10 @@ function venueLabel(name) {
     label((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,1018,94,27,430,gold);
     rule(116);
     c.textAlign='center';
-    label('PLAYER BATTLE',540,290,154,956,cream,true);
+    const titleGradient = c.createLinearGradient(0, 145, 0, 290);
+    titleGradient.addColorStop(0, '#fffbe8');
+    titleGradient.addColorStop(1, '#d9b04d');
+    label('PLAYER BATTLE',540,290,154,956,titleGradient,true);
 
     names.forEach((name,index)=>{
       const x=46+index*495, y=345, width=490, height=690;
@@ -717,16 +728,35 @@ function venueLabel(name) {
       }else{
         label(name.split(/\s+/).slice(0,2).map(word=>word[0]).join(''),x+width/2,y+390,166,300,cream,true);
       }
+      const shade = c.createLinearGradient(0, y + height * .62, 0, y + height);
+      shade.addColorStop(0, '#07100c00');
+      shade.addColorStop(1, '#07100c99');
+      c.fillStyle = shade;
+      c.fillRect(x, y, width, height);
       c.restore();
-      label(name.toUpperCase(),x+width/2,1115,62,425,cream,true);
+      label(name.toUpperCase(),x+width/2,1098,59,425,cream,true);
+      if (mode === 'direct') {
+        c.beginPath();
+        c.roundRect(x+width/2-78, 1114, 156, 36, 18);
+        c.fillStyle = index === 0 ? '#f5c93a' : '#2f6df6';
+        c.fill();
+        label(index === 0 ? 'BATTER' : 'BOWLER',x+width/2,1139,20,130,index === 0 ? '#2a2006' : '#fff');
+      }
     });
-    label('/',540,1115,62,48,gold,true);
+    c.beginPath();
+    c.arc(540,690,58,0,Math.PI*2);
+    c.fillStyle=gold;
+    c.fill();
+    c.strokeStyle='#07100c';
+    c.lineWidth=8;
+    c.stroke();
+    label('VS',540,709,53,90,'#1b1405',true);
     const filters=[
       byId('battle-season').value||'All seasons',
       byId('battle-phase').selectedOptions[0]?.textContent||'All overs',
       byId('battle-venue').value||'All venues',
     ];
-    label(filters.join(' · '),540,1170,24,936,muted);
+    label(filters.join(' · '),540,1183,24,936,muted);
     rule(1196);
 
     const [first,second]=table.rows;
@@ -736,8 +766,19 @@ function venueLabel(name) {
       const expanded={'SR':'Strike rate','4s':'Fours','6s':'Sixes'};
       table.headers.slice(3).forEach((header,index)=>{
         const x=222+(index%3)*318, y=1510+Math.floor(index/3)*130;
-        label(first[index+3],x,y,76,290,cream,true);
-        label((expanded[header]||header).toUpperCase(),x,y+45,24,290,gold);
+        const bowler = /dot|dismissal/i.test(header);
+        const accent = bowler ? '#7fb0ff' : '#f5c93a';
+        c.beginPath();
+        c.roundRect(x-149, y-75, 298, 119, 22);
+        c.fillStyle='#ffffff0c';
+        c.fill();
+        c.strokeStyle='#ffffff20';
+        c.lineWidth=2;
+        c.stroke();
+        c.fillStyle=accent;
+        c.fillRect(x-116, y-75, 232, 4);
+        label(first[index+3],x,y-9,70,275,accent,true);
+        label((expanded[header]||header).toUpperCase(),x,y+26,22,275,muted);
       });
     }else{
       table.headers.slice(1).forEach((header,index)=>{
