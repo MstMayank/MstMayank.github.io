@@ -1,6 +1,6 @@
 export const RATING_CONFIG={
- version:'IPL-2027-v3',seasonWeights:{2024:.2,2025:.3,2026:.5} as Record<number,number>,
- teamWeights:{batting:20,bowling:20,balance:15,form:10,death:10,depth:8,experience:5,powerplay:5,spinPace:5,value:2},
+ version:'IPL-2027-v4',seasonWeights:{2025:.3,2026:.7} as Record<number,number>,
+ teamWeights:{batting:40,bowling:40,balance:10,form:0,death:0,depth:10,experience:0,powerplay:0,spinPace:0,value:0},
  sample:{battingBalls:180,bowlingBalls:120,phaseBalls:48,innings:12,cohortBalls:36,minCohort:5},
  neutralPrior:50,experienceMatches:40,
  balanceWeights:{batting:.25,bowling:.35,keeper:.2,openers:.1,finishers:.1},targets:{openers:2,finishers:1,pace:3,spin:1,bench:5},
