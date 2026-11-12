@@ -10,9 +10,9 @@ export default function SquadShare({session,disabled}:{session:SessionView;disab
  // Prepare privately so the eventual click can invoke native sharing synchronously.
  // No canvas/image preview, object URL, or download link is attached to the page.
  useEffect(()=>{let active=true;
-  async function prepare(){try{if(!navigator.share||!navigator.canShare)throw new Error('Image sharing is not supported by this browser.');if(!model.players.length)return;const file=await renderSquadCard(model);if(active){setPrepared({signature,file});setGenerationError('');}}catch(error){if(active)setGenerationError((error as Error).message);}}
+  async function prepare(){try{if(!navigator.share||!navigator.canShare)throw new Error('Image sharing is not supported by this browser.');if(!model.players.length)return;const rating=model.retained?await import('@/browser-auction/squad-rating-data').then(({buildRating})=>buildRating(session).overallRating):null;const file=await renderSquadCard(model,rating);if(active){setPrepared({signature,file});setGenerationError('');}}catch(error){if(active)setGenerationError((error as Error).message);}}
   void prepare();return()=>{active=false;};
- },[model,signature]);
+ },[model,session,signature]);
  const file=prepared?.signature===signature?prepared.file:null;
  const preparing=model.players.length>0&&!file&&!generationError;
  async function share(){if(generationError){setStatus(generationError);return;}if(!file)return;setSharing(true);setStatus('');const message=await shareSquadFile(file);setStatus(message);setSharing(false);}

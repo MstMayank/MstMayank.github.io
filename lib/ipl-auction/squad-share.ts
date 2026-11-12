@@ -7,7 +7,7 @@ export function squadShareModel(session:SessionView,scope:ShareScope='ALL'){
 }
 export type SquadShareModel=ReturnType<typeof squadShareModel>;
 export function squadShareText(model:SquadShareModel){return [`THE CRICKET SPACE · IPL ${model.year}`,`${model.team} · ${model.title} · ${model.state}`,`Purse left: ${shareMoney(model.remainingLakh)} | Committed: ${shareMoney(model.spentLakh)}`,`${model.retained} retained · ${model.released} released · ${model.undecided} undecided`,'',...model.players.map((p,i)=>`${i+1}. ${p.name} — ${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`),'','Fan-made simulation. 2026 baseline + confirmed 2027 trades; not official 2027 decisions.'].join('\n');}
-export async function renderSquadCard(model:SquadShareModel){
+export async function renderSquadCard(model:SquadShareModel,rating:number|null=null){
  if(!model.players.length)throw new Error('Make a retention decision before sharing.');
  const retained=model.players.filter(p=>p.status==='RETAINED').sort((a,b)=>(b.costLakh??0)-(a.costLakh??0));
  const featured=retained.slice(0,4), others=retained.slice(4);
@@ -51,7 +51,8 @@ export async function renderSquadCard(model:SquadShareModel){
  text(model.shortName,42,217,155,title,630);
  text('RETENTION',850,141,21,muted,180);
  text(String(model.year),850,204,58,'#f2f5f1',180);
- text(model.team,48,267,33,accent);
+ text(model.team,48,267,33,accent,rating===null?970:740);
+ if(rating!==null)text(String(rating),850,267,40,accent,180);
  const tiles=[['Purse left',shareMoney(model.remainingLakh),370],['Retention cost',shareMoney(model.spentLakh),292],['Undecided',String(model.undecided),292]] as const;
  let x=48;
  for(const [label,value,w] of tiles){
