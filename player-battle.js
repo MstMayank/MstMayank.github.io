@@ -593,7 +593,26 @@ function venueLabel(name) {
     byId('battle-share-status').textContent='';
   }
   let cardBlob=null,cardObjectURL='';
-  function drawBattleCard() {
+  const portraitInputs=['battle-photo-first','battle-photo-second'].map(byId);
+  let cardRender=0;
+
+  async function loadPortrait(file) {
+    if(!file)return null;
+    const url=URL.createObjectURL(file);
+    try {
+      const image=new Image();
+      image.src=url;
+      await image.decode();
+      return image;
+    } catch {
+      return null;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  async function drawBattleCard() {
+    const render=++cardRender;
     byId('battle-card-feedback').textContent='';
     try {
     const table=cardTables[+byId('battle-card-format').value||0]; if(!table)return;
@@ -605,7 +624,37 @@ function venueLabel(name) {
     text('tcs. / THE CRICKET SPACE',82,115,30,'#F6C453');
     text('PLAYER BATTLE',82,205,66);
     text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,82,265,30,'#B7CCBA');
-    let y=wrap(inputs[0].value+' vs '+inputs[1].value,82,355,910,48)+35;
+    const names=inputs.map(input=>input.value);
+    const roles=mode==='direct'?['BATTER','BOWLER']:mode==='bowlers'?['BOWLER','BOWLER']:mode==='teams'?['TEAM','TEAM']:['BATTER','BATTER'];
+    const photos=await Promise.all(portraitInputs.map(input=>loadPortrait(input.files[0])));
+    if(render!==cardRender)return;
+    c.textAlign='center';
+    names.forEach((name,index)=>{
+      const x=index===0?310:770;
+      const portrait=photos[index];
+      c.save();
+      c.beginPath();
+      c.arc(x,390,94,0,2*Math.PI);
+      c.fillStyle='#245640';
+      c.fill();
+      c.clip();
+      if(portrait){
+        const size=Math.min(portrait.naturalWidth,portrait.naturalHeight);
+        c.drawImage(portrait,(portrait.naturalWidth-size)/2,(portrait.naturalHeight-size)/2,size,size,x-94,296,188,188);
+      }else{
+        text(name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase(),x,410,58);
+      }
+      c.restore();
+      c.strokeStyle='#F6C453';
+      c.stroke();
+      c.font='700 38px Arial, sans-serif';
+      c.fillStyle='#F2F5EF';
+      c.fillText(name,x,537,420);
+      text(roles[index],x,578,24,'#F6C453');
+    });
+    text('VS',540,405,42,'#F6C453');
+    c.textAlign='left';
+    let y=632;
     y=wrap((byId('battle-season').value||'All seasons')+' · '+(byId('battle-phase').selectedOptions[0]?.textContent||'All overs'),82,y,900,25)+10;
     y=wrap(byId('battle-venue').value||'All venues',82,y,900,25)+20;
     const rows=table.rows.slice(0,2);const columns=rows.length===2?2:1;const columnWidth=916/columns;
@@ -613,31 +662,31 @@ function venueLabel(name) {
       if(rows.length===1){
         text(row[0],82,y,36,'#F6C453');
         table.headers.slice(1).forEach((label,i)=>{
-          const x=82+(i%2)*470, yy=y+45+Math.floor(i/2)*215;
-          c.fillStyle='#123C2A';c.fillRect(x,yy,442,190);
-          text(label.toUpperCase(),x+24,yy+45,25,'#B7CCBA');text(row[i+1],x+24,yy+125,64);
+          const x=82+(i%2)*470, yy=y+45+Math.floor(i/2)*170;
+          c.fillStyle='#123C2A';c.fillRect(x,yy,442,150);
+          text(label.toUpperCase(),x+24,yy+45,25,'#B7CCBA');text(row[i+1],x+24,yy+112,60);
         });
       }else{
         const x=82+index*columnWidth;
         let yy=wrap(row[0],x,y,columnWidth-28,34)+12;
         for(let i=1;i<table.headers.length;i++){
-          c.fillStyle='#123C2A';c.fillRect(x,yy-24,columnWidth-24,93);
+          c.fillStyle='#123C2A';c.fillRect(x,yy-24,columnWidth-24,74);
           text(table.headers[i].toUpperCase(),x+16,yy+2,22,'#B7CCBA');
-          text(row[i],x+16,yy+48,40,i===1?'#F6C453':'#F2F5EF');yy+=105;
+          text(row[i],x+16,yy+36,32,i===1?'#F6C453':'#F2F5EF');yy+=81;
         }
       }
     });
     text('Archived matches only · not full career totals',82,1665,24,'#B7CCBA');
     text('Cricsheet · ODC Attribution License',82,1705,24,'#B7CCBA');
     text('mstmayank.github.io/player-battle.html',82,1770,28,'#F6C453');
-    text('Full comparison: use the shared link',82,1820,24,'#B7CCBA');
     canvas.toBlob(blob=>{
+      if(render!==cardRender)return;
       if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
       cardBlob=blob;if(cardObjectURL)URL.revokeObjectURL(cardObjectURL);cardObjectURL=URL.createObjectURL(blob);
       byId('battle-card-image').src=cardObjectURL;byId('battle-card-download').href=cardObjectURL;
       byId('battle-card-open').href=cardObjectURL;
-      byId('battle-card-dialog').hidden=false;
-      byId('battle-card-close').focus();
+      const dialog=byId('battle-card-dialog');
+      if(dialog.hidden){dialog.hidden=false;byId('battle-card-close').focus();}
     },'image/png');
     }catch(error){byId('battle-share-status').textContent='Image preview is unavailable in this browser.';}
   }
@@ -649,8 +698,12 @@ function venueLabel(name) {
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
   });
-  byId('battle-card-preview').addEventListener('click',drawBattleCard);
-  byId('battle-card-close').addEventListener('click',()=>{byId('battle-card-dialog').hidden=true;byId('battle-card-preview').focus();});
+  byId('battle-card-preview').addEventListener('click',()=>{
+    portraitInputs.forEach(input=>{input.value='';});
+    drawBattleCard();
+  });
+  portraitInputs.forEach(input=>input.addEventListener('change',drawBattleCard));
+  byId('battle-card-close').addEventListener('click',()=>{cardRender++;byId('battle-card-dialog').hidden=true;byId('battle-card-preview').focus();});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')byId('battle-card-dialog').hidden=true;});
   byId('battle-card-native').addEventListener('click',()=>{
     if(!cardBlob){byId('battle-card-feedback').textContent='Generate a battle card first.';return;}

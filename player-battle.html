@@ -248,6 +248,9 @@
 #ipl-lens .battle-suggestions button:hover, #ipl-lens .battle-suggestions button:focus-visible { background:#f1d8c9; color:#26201c; }
 #ipl-lens .battle-players { align-items:end; }
 #ipl-lens .battle-result:empty { display:none; }
+ .battle-photo-fields{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}
+.battle-photo-fields label{flex:1 1 220px;min-width:0}
+.battle-photo-fields input{display:block;width:100%;margin-top:4px}
 </style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=layout1"><style>
 #ipl-lens .batting-insights { margin-top:28px; padding-top:20px; border-top:1px solid var(--line); }
 #ipl-lens .batting-insights summary { cursor:pointer; color:var(--gold); font-weight:700; font-size:20px; }
@@ -380,8 +383,12 @@
 <div id="battle-card-dialog" class="battle-card-dialog" role="dialog" aria-modal="true" aria-labelledby="battle-card-heading" hidden>
 <div class="battle-card-sheet"><h2 id="battle-card-heading">Your battle card</h2><button type="button" id="battle-card-close">Close ×</button>
 <div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><a id="battle-card-open" target="_blank" rel="noopener noreferrer">Open image ↗</a></div>
+<div class="battle-photo-fields">
+<label>First player photo <input id="battle-photo-first" type="file" accept="image/*"></label>
+<label>Second player photo <input id="battle-photo-second" type="file" accept="image/*"></label>
+</div>
 <img id="battle-card-image" alt="The Cricket Space battle statistics card">
 <p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=league-profiles-3"></script>
-<script defer src="player-battle.js?v=direct-stats1"></script>
+<script defer src="player-battle.js?v=share-portraits1"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
