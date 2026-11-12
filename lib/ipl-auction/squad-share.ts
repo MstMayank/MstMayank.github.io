@@ -26,7 +26,8 @@ export async function renderSquadCard(model:SquadShareModel,rating:number|null=n
   : featured.length ? featuredTop+featuredHeight : 508;
  // Canvas text uses a baseline. Leave room above it for the heading itself.
  const releasedY=retainedBottom+28+36;
- const height=releasedY+128+Math.max(1,Math.ceil(released.length/3))*55;
+ const height=1920;
+ const contentHeight=releasedY+128+Math.max(1,Math.ceil(released.length/3))*55;
  const canvas=document.createElement('canvas');
  canvas.width=width;canvas.height=height;
  const context=canvas.getContext('2d');
@@ -40,6 +41,10 @@ export async function renderSquadCard(model:SquadShareModel,rating:number|null=n
  const glow=c.createRadialGradient(35,15,0,35,15,820);
  glow.addColorStop(0,accent+'63');glow.addColorStop(1,accent+'00');
  c.fillStyle=glow;c.fillRect(0,0,width,height);
+ const scale=Math.min(1,height/contentHeight);
+ c.save();
+ c.translate((width-width*scale)/2,0);
+ c.scale(scale,scale);
  const gold='#e8c468',green='#7df4bd',red='#ffc0ba',muted='#b4c7bd';
  function text(value:string,x:number,y:number,size:number,color:string|CanvasGradient='#f2f5f1',maxWidth=970){
   c.fillStyle=color;c.font=`700 ${size}px system-ui, sans-serif`;c.fillText(value,x,y,maxWidth);
@@ -101,6 +106,7 @@ export async function renderSquadCard(model:SquadShareModel,rating:number|null=n
   panel(x,y,318,44,'#ef44441b','#ef444466',22);
   text(p.name,x+14,y+29,22,red,290);
  });
+ c.restore();
  c.fillStyle='#ffffff24';c.fillRect(48,height-62,984,1);
  text('THE CRICKET SPACE  /  IPL FAN SIMULATION',48,height-26,20,gold);
  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Could not generate the squad image.')),'image/png'));
