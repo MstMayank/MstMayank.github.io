@@ -67,7 +67,7 @@ function profile(member: Member, records: IPLRecord[], metadata?: PlayerMetadata
   const role = metadata?.playingRole ?? member.role;
   const keeper = role === 'WICKETKEEPER' || member.role === 'WICKETKEEPER';
   const batRole = review?.batRole ?? (position[0] > position[1] && position[0] >= position[2] ? 'OPENER' : position[2] > position[1] ? 'FINISHER' : 'MIDDLE');
-  const battingOption = keeper || role !== 'BOWLER' || balls >= 180 && position[0] + position[1] > position[2];
+  const battingOption = keeper || role !== 'BOWLER' || records.some(r => [6, 7, 8].reduce((count, slot) => count + (r.battingPositions[slot] ?? 0), 0) >= 3);
   const bowlingOption = deliveries >= 36 || role === 'BOWLER';
   const allRounder = battingOption && bowlingOption && balls >= 80 && deliveries >= 60;
   const bat = battingOption ? blend(records, r => {
@@ -123,9 +123,9 @@ function lineupScores(xi: Rated[], impact?: Rated) {
   const keepers = batters.filter(p => p.rating.keeper);
   const provenBowls = bowlers.filter(p => p.rating.bowling !== null && p.rating.confidence >= 30);
   const roleFit = .31 * withSlots(openers.map(batQuality), 2, 56) + .32 * withSlots(middle.map(batQuality), 3, 58)
-    + .27 * withSlots(finishers.map(batQuality), 2, 56) + .10 * withSlots(best(batters, batQuality, 7).slice(5).map(batQuality), 2, 56);
-  const topSix = withSlots(best(batters, batQuality, 6).map(batQuality), 6, 56);
-  const batting = .65 * topSix + .35 * roleFit;
+    + .27 * withSlots(finishers.map(batQuality), 2, 56) + .10 * withSlots(best(batters, batQuality, 8).slice(6).map(batQuality), 2, 56);
+  const topEight = withSlots(best(batters, batQuality, 8).map(batQuality), 8, 56);
+  const batting = .65 * topEight + .35 * roleFit;
   const bowling = .44 * withSlots(best(pace, bowlQuality, 2).map(bowlQuality), 2, 55)
     + .24 * withSlots(best(spin, bowlQuality, 1).map(bowlQuality), 1, 55)
     + .32 * withSlots(best(bowlers, bowlQuality, 5).slice(2).map(bowlQuality), 3, 54);
@@ -238,7 +238,7 @@ export function createExpertEngine(dataset: RatingDataset) {
     const scores = reference ? Object.fromEntries(keys.map((key, index) => [key, reference.scores[index]])) as Scores : general;
     const overallRating = overall(scores);
     const categoryExplanations: Record<Category, string> = {
-      battingStrength: 'Quality of the strongest six batters plus opening, middle-order, finishing and depth coverage. Strike rate, dismissal average and contribution frequency use IPL evidence. Pace and spin scoring splits contribute where both samples are sufficient.',
+      battingStrength: 'Quality of the strongest eight batting options plus opening, middle-order, finishing and depth coverage. Strike rate, dismissal average and contribution frequency use IPL evidence. Pace and spin scoring splits contribute where both samples are sufficient.',
       bowlingStrength: 'Lead pace pair, best spin option and supporting bowlers. Economy and balls per wicket measure control and threat.',
       playingXIBalance: 'Keeper, batting depth, proven bowling options, genuine all-rounders, pace and spin, and a legal Impact option. Left/right evidence uses verified profile metadata where available.',
       benchStrength: 'Quality of the strongest backup per role outside the XI. Unproven or uncovered roles receive a conservative assessment.',
