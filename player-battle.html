@@ -307,28 +307,28 @@
 @media(max-width:650px){#ipl-lens .battle-players{grid-template-columns:1fr 1fr}#ipl-lens .battle-picker{grid-column:1/-1}#ipl-lens .duel-bars{gap:12px}#ipl-lens .duel-row{padding:12px}#ipl-lens .duel-name{padding:18px 12px}#ipl-lens .duel-side{gap:6px}#ipl-lens .duel-side strong{font-size:21px;min-width:50px}}
 @media(prefers-reduced-motion:reduce){#ipl-lens .duel-bar{animation:none}}
 </style>
-</head>
-<body class="v2 cricket-feel">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css"></head>
+<body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#D6252E"/><path d="M6 8c6 4 6 12 0 16M26 8c-6 4-6 12 0 16" fill="none" stroke="#F2F5EF" stroke-width="1.6" stroke-dasharray="2.5 2.5"/></svg>tcs.</a>
 <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="./#about">About</a></div>
 <a class="btn d" href="./#contact">Let’s talk</a>
 </div></nav>
 <main>
-<section class="section" id="ipl-lens" aria-labelledby="battle-title">
+<section class="section tool-page" id="ipl-lens" aria-labelledby="battle-title">
 <span class="label">THE CRICKET SPACE / COMPARISONS</span>
-<h1 id="battle-title">Player Battle</h1>
-<div class="battle-competitions" role="group" aria-label="Competition">
+<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="ipl-lens.html" aria-current="page">IPL Lens</a></nav><h1 class="tool-heading" id="battle-title">Player <span>Battle</span></h1>
+<div class="battle-competitions tool-pills" role="group" aria-label="Competition">
 <button type="button" data-competition="ipl" aria-pressed="true">IPL</button>
 <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
 <button type="button" data-competition="international" aria-pressed="false">International</button>
 </div>
-<div class="lens-tabs" role="group" aria-label="Cricket statistics">
+<div class="lens-tabs tool-pills" role="group" aria-label="Cricket statistics">
 <button type="button" data-view="careers" id="career-view-button" hidden>Player profiles</button>
 <button type="button" data-view="matchups" class="active">⇄ Head to head</button>
 </div>
 <section id="player-career-shell" class="panel" aria-label="Player career profiles" hidden></section>
-<div class="battle-filters">
+<div class="battle-filters tool-filter">
 <label id="gender-field" hidden>Category<select id="battle-gender"><option value="male">Men</option><option value="female">Women</option></select></label>
 
 <label>Season<select id="battle-season"><option value="">All seasons</option></select></label>
@@ -338,19 +338,19 @@
 </div>
 
 
-<label id="battle-compare-label">Compare<select id="battle-compare">
+<label class="tool-compare" id="battle-compare-label">Compare<select id="battle-compare">
 <option value="direct">Batter vs Bowler</option><option value="batters">Batter vs Batter</option>
 <option value="bowlers">Bowler vs Bowler</option><option value="teams">Team vs Team</option>
 </select></label>
 <label id="battle-career-scope-label" hidden>Batting records<select id="battle-career-scope"><option value="career">All-time career records</option><option value="archive">Archived match analysis</option></select></label>
 <p class="battle-status" id="battle-status" role="status">Loading match data…</p>
 <div class="workspace battle-workspace">
-<section class="panel main-panel">
+<section class="panel main-panel tool-panel">
 <div class="panel-head"><div><div class="eyebrow" id="battle-panel-label">MATCHUP EXPLORER</div><h2 id="battle-panel-title">Batter vs Bowler</h2></div>
 <label id="battle-search-label" hidden>Search player<input id="battle-search" type="search" placeholder="Search a player…" autocomplete="off"></label></div>
-<div class="battle-players" id="battle-players">
-<div class="battle-picker"><label><span id="battle-first-label">Batter</span><input id="battle-first" type="search" placeholder="Search batter" autocomplete="off" aria-controls="battle-first-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-first-results" hidden></div></div>
-<div class="battle-picker"><label><span id="battle-second-label">Bowler</span><input id="battle-second" type="search" placeholder="Search bowler" autocomplete="off" aria-controls="battle-second-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-second-results" hidden></div></div>
+<div class="battle-players tool-duel" id="battle-players">
+<div class="battle-picker tool-picker"><label><span id="battle-first-label">Batter</span><input id="battle-first" type="search" placeholder="Search batter" autocomplete="off" aria-controls="battle-first-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-first-results" hidden></div></div>
+<div class="battle-picker tool-picker"><label><span id="battle-second-label">Bowler</span><input id="battle-second" type="search" placeholder="Search bowler" autocomplete="off" aria-controls="battle-second-results" aria-expanded="false"></label><div class="battle-suggestions" id="battle-second-results" hidden></div></div>
 <button type="button" id="battle-swap" aria-label="Swap players">⇄ Swap</button>
 <button type="button" id="battle-clear">Clear players</button>
 </div>
