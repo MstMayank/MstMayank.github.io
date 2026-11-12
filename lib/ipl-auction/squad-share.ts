@@ -51,8 +51,13 @@ export async function renderSquadCard(model:SquadShareModel,rating:number|null=n
  text(model.shortName,42,217,155,title,630);
  text('RETENTION',850,141,21,muted,180);
  text(String(model.year),850,204,58,'#f2f5f1',180);
- text(model.team,48,267,33,accent,rating===null?970:740);
- if(rating!==null)text(String(rating),850,267,40,accent,180);
+ text(model.team,48,267,33,accent,rating===null?970:640);
+ if(rating!==null){
+  panel(704,226,328,54,'#111b17',accent,14);
+  c.textAlign='center';
+  text(`Squad rating · ${rating}/100`,868,261,25,'#f2f5f1',296);
+  c.textAlign='left';
+ }
  const tiles=[['Purse left',shareMoney(model.remainingLakh),370],['Retention cost',shareMoney(model.spentLakh),292],['Undecided',String(model.undecided),292]] as const;
  let x=48;
  for(const [label,value,w] of tiles){
