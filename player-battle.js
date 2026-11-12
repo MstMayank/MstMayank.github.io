@@ -724,10 +724,12 @@ function venueLabel(name) {
       const x=46+index*495, y=345, width=490, height=690;
       c.save();
       c.beginPath();
-      c.moveTo(x+82,y);
-      c.lineTo(x+width,y);
-      c.lineTo(x+width-82,y+height);
-      c.lineTo(x,y+height);
+      const cornerRadius = 24;
+      c.moveTo(x + 82 + cornerRadius, y);
+      c.arcTo(x + width, y, x + width - 82, y + height, cornerRadius);
+      c.arcTo(x + width - 82, y + height, x, y + height, cornerRadius);
+      c.arcTo(x, y + height, x + 82, y, cornerRadius);
+      c.arcTo(x + 82, y, x + width, y, cornerRadius);
       c.closePath();
       c.clip();
       c.fillStyle=index===0?'#665921':'#582826';
