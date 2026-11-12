@@ -306,6 +306,14 @@
 @keyframes duel-grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media(max-width:650px){#ipl-lens .battle-players{grid-template-columns:1fr 1fr}#ipl-lens .battle-picker{grid-column:1/-1}#ipl-lens .duel-bars{gap:12px}#ipl-lens .duel-row{padding:12px}#ipl-lens .duel-name{padding:18px 12px}#ipl-lens .duel-side{gap:6px}#ipl-lens .duel-side strong{font-size:21px;min-width:50px}}
 @media(prefers-reduced-motion:reduce){#ipl-lens .duel-bar{animation:none}}
+#ipl-lens .direct-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px}
+#ipl-lens .direct-stats section{padding:12px;border:1px solid var(--line);border-radius:12px}
+#ipl-lens .direct-stats h4{margin:0 0 8px;color:var(--gold)}
+#ipl-lens .direct-stats dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+#ipl-lens .direct-stats dt{font-size:.8rem;color:var(--muted)}
+#ipl-lens .direct-stats dd{margin:0;font-size:1.2rem;font-weight:700;overflow-wrap:anywhere}
+@media(max-width:760px){#ipl-lens .direct-stats{grid-template-columns:1fr}}
+
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=card-only1"></head>
 <body class="v2 cricket-feel cricket-tools">
@@ -375,5 +383,5 @@
 <img id="battle-card-image" alt="The Cricket Space battle statistics card">
 <p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=league-profiles-3"></script>
-<script defer src="player-battle.js?v=card-only1"></script>
+<script defer src="player-battle.js?v=direct-stats1"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

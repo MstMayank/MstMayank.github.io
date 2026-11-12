@@ -407,6 +407,37 @@ function venueLabel(name) {
       const small=document.createElement('small');small.textContent=mode==='direct'?(index?'BOWLER':'BATTER'):'PLAYER '+(index+1);
       const name=document.createElement('strong');name.textContent=data.players[id];button.append(small,name);
       button.addEventListener('click',()=>choose(mode==='direct'?0:index));names.appendChild(button);});board.appendChild(names);
+    if(mode==='direct'){
+      const groups=[
+        ['Batter', [['Runs','Runs'],['SR','Strike rate'],['4s','Fours'],['6s','Sixes']]],
+        ['Bowler', [['Dismissals','Dismissals'],['Dot %','Dot-ball %']]],
+        ['Matchup', [['Balls','Balls faced'],['Average','Batting average']]],
+      ];
+      const grid=document.createElement('div');
+      grid.className='direct-stats';
+      for(const [label,metrics] of groups){
+        const section=document.createElement('section');
+        const heading=document.createElement('h4');
+        heading.textContent=label;
+        const stats=document.createElement('dl');
+        for(const [key,title] of metrics){
+          const index=headers.indexOf(key);
+          if(index<0)continue;
+          const item=document.createElement('div');
+          const term=document.createElement('dt');
+          term.textContent=title;
+          const value=document.createElement('dd');
+          value.textContent=rows[0][index];
+          item.append(term,value);
+          stats.appendChild(item);
+        }
+        section.append(heading,stats);
+        grid.appendChild(section);
+      }
+      board.appendChild(grid);
+      result.appendChild(board);
+      return;
+    }
     let leads=[0,0],comparable=0;
     headers.slice(1).forEach((label,i)=>{
       const line=document.createElement('div');line.className='duel-row';
