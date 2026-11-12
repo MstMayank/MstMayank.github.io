@@ -553,20 +553,13 @@ function venueLabel(name) {
     block.appendChild(note);parent.appendChild(block);
   }
 
-  function battleLink() {
-    const url=new URL('player-battle.html',location.href);
-    const params={competition,compare:mode,gender:byId('battle-gender').value,first:inputs[0].value,second:inputs[1].value,
-      season:byId('battle-season').value,venue:byId('battle-venue').value,phase:byId('battle-phase').value};
-    for(const [key,value] of Object.entries(params)) if(value)url.searchParams.set(key,value);
-    return url.href;
-  }
   function updateShareTools() {
     const tools=byId('battle-share-tools');tools.hidden=!cardTables.length;
     const select=byId('battle-card-format'); const previous=select.value;
+    byId('battle-card-format-field').hidden=competition!=='international'||cardTables.length<2;
     select.replaceChildren(...cardTables.map((table,i)=>new Option(table.format,String(i))));
     if([...select.options].some(o=>o.value===previous))select.value=previous;
     byId('battle-share-status').textContent='';
-    byId('battle-whatsapp').href='https://wa.me/?text='+encodeURIComponent('The Cricket Space · Player Battle\n'+battleLink());
   }
   let cardBlob=null,cardObjectURL='';
   function drawBattleCard() {
@@ -612,10 +605,10 @@ function venueLabel(name) {
       cardBlob=blob;if(cardObjectURL)URL.revokeObjectURL(cardObjectURL);cardObjectURL=URL.createObjectURL(blob);
       byId('battle-card-image').src=cardObjectURL;byId('battle-card-download').href=cardObjectURL;
       byId('battle-card-open').href=cardObjectURL;
-      byId('battle-card-link').value=battleLink();byId('battle-card-dialog').hidden=false;
+      byId('battle-card-dialog').hidden=false;
       byId('battle-card-close').focus();
     },'image/png');
-    }catch(error){byId('battle-share-status').textContent='Image preview is unavailable in this browser. Use Share battle link or WhatsApp.';}
+    }catch(error){byId('battle-share-status').textContent='Image preview is unavailable in this browser.';}
   }
   byId('battle-card-format').addEventListener('change',()=>{cardBlob=null;byId('battle-card-dialog').hidden=true;});
   byId('battle-card-dialog').addEventListener('keydown',event=>{
@@ -628,23 +621,9 @@ function venueLabel(name) {
   byId('battle-card-preview').addEventListener('click',drawBattleCard);
   byId('battle-card-close').addEventListener('click',()=>{byId('battle-card-dialog').hidden=true;byId('battle-card-preview').focus();});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')byId('battle-card-dialog').hidden=true;});
-  async function copyBattleLink(){
-    try{await navigator.clipboard.writeText(battleLink());byId('battle-share-status').textContent='Battle link copied.';byId('battle-card-feedback').textContent='Battle link copied. Paste it into a Story Link sticker or WhatsApp text status.';}
-    catch{byId('battle-card-dialog').hidden=false;byId('battle-card-link').value=battleLink();byId('battle-card-link').focus();byId('battle-card-link').select();byId('battle-card-feedback').textContent='Select and copy the battle link above.';}
-  }
-  byId('battle-copy-link').addEventListener('click',copyBattleLink);
-  byId('battle-card-copy').addEventListener('click',copyBattleLink);
-  byId('battle-share-link').addEventListener('click',()=>{
-    const url=battleLink();
-    if(typeof navigator.share==='function'){
-      navigator.share({title:'The Cricket Space · Player Battle',url}).catch(error=>{
-        if(error.name!=='AbortError')byId('battle-share-status').textContent='Use WhatsApp or Copy battle link to share from this browser.';
-      });
-    }else{byId('battle-share-status').textContent='Use WhatsApp or Copy battle link to share from this browser.';}
-  });
   byId('battle-card-native').addEventListener('click',()=>{
     if(!cardBlob){byId('battle-card-feedback').textContent='Generate a battle card first.';return;}
-    const fallback=()=>{byId('battle-card-feedback').textContent='Save with Download PNG or Open image, then upload it in Instagram/WhatsApp. Use Copy battle link for a tappable link.';};
+    const fallback=()=>{byId('battle-card-feedback').textContent='Save with Download PNG or Open image, then upload it in Instagram/WhatsApp.';};
     try{
       if(typeof navigator.share!=='function'||typeof File!=='function'){fallback();return;}
       const file=new File([cardBlob],'thecricketspace-battle.png',{type:'image/png'});

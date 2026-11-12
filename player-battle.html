@@ -307,7 +307,7 @@
 @media(max-width:650px){#ipl-lens .battle-players{grid-template-columns:1fr 1fr}#ipl-lens .battle-picker{grid-column:1/-1}#ipl-lens .duel-bars{gap:12px}#ipl-lens .duel-row{padding:12px}#ipl-lens .duel-name{padding:18px 12px}#ipl-lens .duel-side{gap:6px}#ipl-lens .duel-side strong{font-size:21px;min-width:50px}}
 @media(prefers-reduced-motion:reduce){#ipl-lens .duel-bar{animation:none}}
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=mobile3"></head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=card-only1"></head>
 <body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#D6252E"/><path d="M6 8c6 4 6 12 0 16M26 8c-6 4-6 12 0 16" fill="none" stroke="#F2F5EF" stroke-width="1.6" stroke-dasharray="2.5 2.5"/></svg>tcs.</a>
@@ -356,11 +356,8 @@
 </div>
 
 <div id="battle-share-tools" class="battle-share-tools" hidden>
-<label>Card format<select id="battle-card-format" aria-label="Battle card format"></select></label>
+<label id="battle-card-format-field" hidden>Card format<select id="battle-card-format" aria-label="Battle card format"></select></label>
 <button type="button" id="battle-card-preview">Share battle card ↗</button>
-<button type="button" id="battle-share-link">Share battle link ↗</button>
-<a id="battle-whatsapp" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
-<button type="button" id="battle-copy-link">Copy battle link</button>
 <p id="battle-share-status" role="status"></p></div>
 <p class="hint" id="battle-hint">Select two players. Click a player row to explore their performance.</p>
 <div class="battle-result" id="battle-result" aria-live="polite" hidden></div>
@@ -374,10 +371,9 @@
 </main>
 <div id="battle-card-dialog" class="battle-card-dialog" role="dialog" aria-modal="true" aria-labelledby="battle-card-heading" hidden>
 <div class="battle-card-sheet"><h2 id="battle-card-heading">Your battle card</h2><button type="button" id="battle-card-close">Close ×</button>
-<div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><button type="button" id="battle-card-copy">Copy battle link</button><a id="battle-card-open" target="_blank" rel="noopener noreferrer">Open image ↗</a></div>
+<div class="battle-card-actions"><a id="battle-card-download" download="thecricketspace-battle.png">Download PNG ↓</a><button type="button" id="battle-card-native">Share image ↗</button><a id="battle-card-open" target="_blank" rel="noopener noreferrer">Open image ↗</a></div>
 <img id="battle-card-image" alt="The Cricket Space battle statistics card">
-<label>Link to this comparison<input id="battle-card-link" readonly></label>
-<p>Instagram: upload the card, then add the battle link using a Link sticker. WhatsApp: share the image and link; for Status, add the URL in a separate text status. PNG images do not contain tappable links.</p><p id="battle-card-feedback" role="status"></p></div></div>
+<p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=league-profiles-3"></script>
-<script defer src="player-battle.js?v=mobile-insights1"></script>
+<script defer src="player-battle.js?v=card-only1"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
