@@ -696,7 +696,6 @@ function venueLabel(name) {
     const cream='#fff3d7', gold='#eac357', muted='#b9c9bd';
     const background = c.createLinearGradient(0, 0, 0, 1920);
     background.addColorStop(0, '#102820');
-    background.addColorStop(0.38, '#091c16');
     background.addColorStop(1, '#061811');
     c.fillStyle = background;
     c.fillRect(0, 0, 1080, 1920);
