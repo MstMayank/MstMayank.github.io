@@ -656,7 +656,7 @@ function venueLabel(name) {
     if(!c)throw new Error('Canvas unavailable');
     const names=table.rows.length===2?table.rows.map(row=>row[0]):inputs.map(input=>input.value);
     const art={
-      ipl:{'MS Dhoni':'dhoni','DW Steyn':'steyn','Dale Steyn':'steyn'},
+      ipl:{'MS Dhoni':'dhoni','JJ Bumrah':'bumrah','Jasprit Bumrah':'bumrah','DW Steyn':'steyn','Dale Steyn':'steyn'},
       wpl:{'S Mandhana':'mandhana','H Kaur':'harmanpreet'},
     };
     const photos=await Promise.all(names.map(async name=>{
@@ -709,7 +709,9 @@ function venueLabel(name) {
       c.fillRect(x,y,width,height);
       const photo=photos[index];
       if(photo){
-        const scale=Math.max(width/photo.naturalWidth,height/photo.naturalHeight);
+        const scale=photo.credit
+          ? Math.max(width/photo.naturalWidth,height/photo.naturalHeight)
+          : Math.min((width-110)/photo.naturalWidth,(height-24)/photo.naturalHeight);
         const w=photo.naturalWidth*scale, h=photo.naturalHeight*scale;
         c.drawImage(photo,x+(width-w)/2,y+(height-h)/2,w,h);
       }else{
