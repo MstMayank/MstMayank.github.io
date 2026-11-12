@@ -263,3 +263,9 @@
 .game-retention .game-stats + .retention-layout{margin-block-start:var(--room-section-gap)}
 .game-retention :where(.retention-layout,.retention-role-filters,.squad-filters,.squad-tool-buttons)>*{min-inline-size:0}
 .game-retention :where(.button,.retention-role-filters button){overflow-wrap:anywhere}
+
+@media(max-width:600px){
+ .premium-retention .player-list,.premium-retention .squad-filters{grid-template-columns:minmax(0,1fr)}
+ .premium-retention .decision-buttons button{flex:1 0 auto;overflow-wrap:normal;white-space:nowrap;padding-inline:10px}
+ .premium-retention .squad-filters select{width:100%}
+}
