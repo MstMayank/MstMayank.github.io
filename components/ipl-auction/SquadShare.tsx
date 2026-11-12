@@ -4,7 +4,7 @@ import type {SessionView}from '@/lib/ipl-auction/types';
 import {renderSquadCard,squadShareModel}from '@/lib/ipl-auction/squad-share';
 import {shareSquadFile}from '@/lib/ipl-auction/native-share';
 export default function SquadShare({session,disabled}:{session:SessionView;disabled:boolean}){
- const model=useMemo(()=>squadShareModel(session,'RETAINED'),[session]);
+ const model=useMemo(()=>squadShareModel(session,'DECIDED'),[session]);
  const signature=JSON.stringify(model);
  const [prepared,setPrepared]=useState<{signature:string;file:File}|null>(null),[generationError,setGenerationError]=useState(''),[status,setStatus]=useState(''),[sharing,setSharing]=useState(false);
  // Prepare privately so the eventual click can invoke native sharing synchronously.
