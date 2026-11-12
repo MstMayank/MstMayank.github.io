@@ -77,3 +77,23 @@
  .premium-retention .player-main-name h3{font-size:15px}
  .retention-card-role{max-width:calc(100% - 54px);text-align:right}
 }
+
+.premium-retention {
+  isolation: isolate;
+  position: relative;
+}
+.premium-retention::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -16px calc(-1 * clamp(20px, 4vw, 72px)) 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 420px at 80% 0, var(--franchise-glow), transparent 90%),
+    linear-gradient(160deg, var(--franchise-tint), transparent 65%),
+    #0a1312;
+  border-radius: 24px;
+}
+.premium-retention .purse-tracker {
+  background: linear-gradient(120deg, var(--franchise-tint), transparent 80%), #0a1611f5;
+}
