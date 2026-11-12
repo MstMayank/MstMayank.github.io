@@ -278,3 +278,20 @@
  .rating-card-header{flex-wrap:wrap}
  .rating-card-header .rating-card-change{margin-left:0}
 }
+
+.player-card .decision-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.player-card .decision-buttons .button {
+  min-width: 0;
+  padding-inline: 6px;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.player-card .decision-buttons .retention-undo {
+  grid-column: 1 / -1;
+  justify-self: start;
+  white-space: nowrap;
+}
