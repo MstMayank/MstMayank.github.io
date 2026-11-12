@@ -660,9 +660,18 @@ function venueLabel(name) {
       ipl:{'V Kohli':'kohli-rcb','Virat Kohli':'kohli-rcb','AB de Villiers':'abd-rcb','HH Pandya':'hardik','Hardik Pandya':'hardik','RG Sharma':'rohit','Rohit Sharma':'rohit','MS Dhoni':'dhoni','JJ Bumrah':'bumrah','Jasprit Bumrah':'bumrah','DW Steyn':'steyn','Dale Steyn':'steyn'},
       wpl:{'S Mandhana':'mandhana','H Kaur':'harmanpreet'},
     };
-    const photos=await Promise.all(names.map(async name=>{
+    const portraitAssets = names.map(name => mode === 'teams' ? null : art[competition]?.[name]);
+    const portraitLighting = {
+      'abd-rcb': '239, 74, 84',
+      'kohli-rcb': '239, 74, 84',
+      bumrah: '96, 154, 255',
+      hardik: '96, 154, 255',
+      rohit: '96, 154, 255',
+      dhoni: '250, 204, 72',
+    };
+    const photos=await Promise.all(names.map(async (name, index)=>{
       if(mode==='teams')return null;
-      const asset=art[competition]?.[name];
+      const asset=portraitAssets[index];
       if(asset){
         const portrait=new Image();
         portrait.src='battle-art/'+asset+'.jpg';
@@ -681,13 +690,14 @@ function venueLabel(name) {
     c.fillRect(0, 0, 1080, 1920);
 
     // Mirror the portrait lighting and let it fade before the stats area.
-    for (const [x, rgb] of [[170, '250, 204, 72'], [910, '96, 154, 255']]) {
+    for (const [index, x] of [170, 910].entries()) {
+      const rgb = portraitLighting[portraitAssets[index]] ?? ['250, 204, 72', '96, 154, 255'][index];
       const glow = c.createRadialGradient(x, 630, 0, x, 630, 440);
       glow.addColorStop(0, `rgba(${rgb}, 0.25)`);
       glow.addColorStop(0.55, `rgba(${rgb}, 0.10)`);
       glow.addColorStop(1, `rgba(${rgb}, 0)`);
       c.fillStyle = glow;
-      c.fillRect(0, 190, 1080, 880);
+      c.fillRect(0, 0, 1080, 1920);
     }
 
     function label(value,x,y,size,maxWidth,color=cream,display=false){
@@ -724,10 +734,11 @@ function venueLabel(name) {
       c.fillRect(x,y,width,height);
       const photo=photos[index];
       if(photo){
-        const scale = Math.max(width / photo.naturalWidth, height / photo.naturalHeight);
+        const isAbd = portraitAssets[index] === 'abd-rcb';
+        const scale = Math.max(width / photo.naturalWidth, height / photo.naturalHeight) * (isAbd ? 1.24 : 1);
         const imageWidth = photo.naturalWidth * scale;
         const imageHeight = photo.naturalHeight * scale;
-        c.drawImage(photo, x + (width - imageWidth) / 2, y + (height - imageHeight) * 0.25, imageWidth, imageHeight);
+        c.drawImage(photo, x + (width - imageWidth) / 2, y + (height - imageHeight) * (isAbd ? 1 : 0.25), imageWidth, imageHeight);
       }else{
         label(name.split(/\s+/).slice(0,2).map(word=>word[0]).join(''),x+width/2,y+390,166,300,cream,true);
       }
