@@ -789,7 +789,6 @@ function venueLabel(name) {
       });
     }
     rule(1755);
-    label('mstmayank.github.io/player-battle.html',540,1800,24,956,gold);
     label('Archived matches · Cricsheet · ODC Attribution License',540,1834,20,956,muted);
     photos.filter(photo=>photo?.credit).forEach((photo,index)=>label(photo.credit,540,1863+index*24,17,956,muted));
     canvas.toBlob(blob=>{
