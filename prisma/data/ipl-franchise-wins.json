@@ -1,0 +1,142 @@
+{
+  "csk": {
+    "2024": {
+      "decided": 14,
+      "wins": 7
+    },
+    "2025": {
+      "decided": 14,
+      "wins": 4
+    },
+    "2026": {
+      "decided": 14,
+      "wins": 6
+    }
+  },
+  "dc": {
+    "2024": {
+      "decided": 14,
+      "wins": 7
+    },
+    "2025": {
+      "decided": 13,
+      "wins": 7
+    },
+    "2026": {
+      "decided": 14,
+      "wins": 7
+    }
+  },
+  "gt": {
+    "2024": {
+      "decided": 12,
+      "wins": 5
+    },
+    "2025": {
+      "decided": 15,
+      "wins": 9
+    },
+    "2026": {
+      "decided": 17,
+      "wins": 10
+    }
+  },
+  "kkr": {
+    "2024": {
+      "decided": 14,
+      "wins": 11
+    },
+    "2025": {
+      "decided": 12,
+      "wins": 5
+    },
+    "2026": {
+      "decided": 13,
+      "wins": 6
+    }
+  },
+  "lsg": {
+    "2024": {
+      "decided": 14,
+      "wins": 7
+    },
+    "2025": {
+      "decided": 14,
+      "wins": 6
+    },
+    "2026": {
+      "decided": 14,
+      "wins": 4
+    }
+  },
+  "mi": {
+    "2024": {
+      "decided": 14,
+      "wins": 4
+    },
+    "2025": {
+      "decided": 16,
+      "wins": 9
+    },
+    "2026": {
+      "decided": 14,
+      "wins": 4
+    }
+  },
+  "pbks": {
+    "2024": {
+      "decided": 14,
+      "wins": 5
+    },
+    "2025": {
+      "decided": 16,
+      "wins": 10
+    },
+    "2026": {
+      "decided": 13,
+      "wins": 7
+    }
+  },
+  "rcb": {
+    "2024": {
+      "decided": 15,
+      "wins": 7
+    },
+    "2025": {
+      "decided": 15,
+      "wins": 11
+    },
+    "2026": {
+      "decided": 16,
+      "wins": 11
+    }
+  },
+  "rr": {
+    "2024": {
+      "decided": 15,
+      "wins": 9
+    },
+    "2025": {
+      "decided": 14,
+      "wins": 4
+    },
+    "2026": {
+      "decided": 16,
+      "wins": 9
+    }
+  },
+  "srh": {
+    "2024": {
+      "decided": 16,
+      "wins": 9
+    },
+    "2025": {
+      "decided": 13,
+      "wins": 6
+    },
+    "2026": {
+      "decided": 15,
+      "wins": 9
+    }
+  }
+}

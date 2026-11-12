@@ -35,7 +35,7 @@ export function playerRatings(d:RatingDataset,config:RatingConfig=RATING_CONFIG)
   const prior=phase?config.sample.phaseBalls:kind==='batting'?config.sample.battingBalls:config.sample.bowlingBalls;
   let raw:number;
   if(kind==='batting'){const profile=config.battingProfiles[roles.get(row.playerId)??'MIDDLE'];const sr=c.runs/c.balls;const avg=c.runs/Math.max(1,c.outs);raw=profile.efficiency*percentile(sr,counters.map(x=>x.runs/x.balls))+profile.survival*percentile(avg,counters.map(x=>x.runs/Math.max(1,x.outs)));}
-  else{const profile=config.bowlingProfiles[meta.bowlingStyle];raw=profile.control*percentile(c.conceded/c.legalBalls,counters.map(x=>x.conceded/x.legalBalls),true)+profile.strike*percentile(c.wickets/c.legalBalls,counters.map(x=>x.wickets/x.legalBalls));}
+  else{raw=percentile(c.conceded/c.legalBalls,counters.map(x=>x.conceded/x.legalBalls),true);}
   // Both delivery and appearance evidence matter; two-match extremes shrink to the role-season prior.
   const reliability=sample/(sample+prior)*row.matches/(row.matches+config.sample.innings);
   return {score:config.neutralPrior+(raw-config.neutralPrior)*reliability,confidence:Math.min(1,sample/prior)*Math.min(1,row.matches/config.sample.innings)};

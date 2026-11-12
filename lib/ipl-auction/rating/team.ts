@@ -1,3 +1,4 @@
+import franchiseWins from '../../../prisma/data/ipl-franchise-wins.json';
 import type {SessionView} from '../types';
 import {RATING_CONFIG,type RatingConfig,type XIConstraints} from './config';
 import {known,mean,playerRatings,seasonWeighted,shrink} from './players';
@@ -23,17 +24,17 @@ function teamImpact(members:Candidate[],dataset:RatingDataset,config:RatingConfi
   const balls=batting?'balls':'legalBalls',runs=batting?'runs':'conceded',wickets=batting?'outs':'wickets';
   const sample=sum(squad,balls),baseline=sum(league,balls);
   const leagueRuns=sum(league,runs),leagueWickets=sum(league,wickets);
-  if(!sample||!baseline||!leagueRuns||!leagueWickets)return {year,value:null};
+  if(!sample||!baseline||!leagueRuns||(batting&&!leagueWickets))return {year,value:null};
   const runImpact=sum(squad,runs)/sample/(leagueRuns/baseline);
-  const wicketImpact=sum(squad,wickets)/sample/(leagueWickets/baseline);
-  const relative=batting?runImpact-wicketImpact:wicketImpact-runImpact;
+  const wicketImpact=batting?sum(squad,wickets)/sample/(leagueWickets/baseline):0;
+  const relative=batting?runImpact-wicketImpact:1-runImpact;
   const raw=Math.max(0,Math.min(100,50+50*relative));
   return {year,value:shrink(raw,sample,config.sample.phaseBalls)};
  });
  const result=seasonWeighted(seasons,config);
  return {score:result.score,coverage:result.coverage};
 }
-function assessment(members:Candidate[],all:Candidate[],xiIds:string[],scope:'XI'|'SQUAD',valueCohort:number[],config:RatingConfig,rules:XIConstraints,dataset:RatingDataset){
+function assessment(members:Candidate[],all:Candidate[],xiIds:string[],scope:'XI'|'SQUAD',valueCohort:number[],config:RatingConfig,rules:XIConstraints,dataset:RatingDataset,winScore:number|null){
  const bats=members.filter(p=>p.rating.battingOption),bowls=members.filter(p=>p.rating.bowlingOption);const form=weighted(members,p=>p.form),experience=weighted(members,p=>p.experience);
  const phaseScore=(phase:Phase)=>{const b=weighted(bats,p=>p.phase[phase].batting),w=weighted(bowls,p=>p.phase[phase].bowling);return {score:mean([b.score,w.score].filter(known)),coverage:(b.coverage+w.coverage)/2};};
  const meet=(n:number,target:number)=>target>0?Math.min(1,n/target):1;const bw=config.balanceWeights;
@@ -44,16 +45,16 @@ function assessment(members:Candidate[],all:Candidate[],xiIds:string[],scope:'XI
  const values=members.flatMap(m=>{const p=performance(m.rating);return !known(p)||!m.priceLakh?[]:[percentile(p/Math.sqrt(m.priceLakh),valueCohort)];}).filter(known);
  const value=mean(values);
  const defs=[['balance','Squad balance',{score:balance,coverage:members.length?1:0},'Configured keeper, batting, bowling, opener and finisher coverage; these balance targets are simulation assumptions.'],['form','Recent IPL form',form,'IPL contribution frequency with 2024/25/26 weights of 20/30/50; distinct from the rate-quality groups.'],['death','Death overs',phaseScore('DEATH'),'Verified scheduled overs 16–20; batting and bowling suitability shown separately per player.'],['depth','Squad depth',{score:depth,coverage:scope==='XI'?0:xiIds.length?bench.length?(.5+.5*benchCoverage):1:0},scope==='XI'?'Not applicable to Starting XI; its applicable 90 points are normalised to 100.':'Bench quantity (target five) and evidence-backed backup-role coverage outside the optimal XI; rate quality is not added a second time.'],['experience','IPL experience',experience,'Verified IPL appearances within 2025–2026 only; capped at 40. Not a full-career total.'],['powerplay','Powerplay performance',phaseScore('POWERPLAY'),'Verified scheduled overs 1–6; no inference from domestic or international matches.'],['spinPace','Spin/pace balance',{score:spinPace,coverage:bowls.length?classified.length/bowls.length:0},'Three pace and one spin option target; missing style classifications lower coverage.'],['value','Auction value',{score:value,coverage:members.length?values.length/members.length:0},'IPL role performance per square-root of published/verified acquisition cost; percentile against the roster cost cohort.']] as const;
- const phaseComponents=([true,false] as const).flatMap(batting=>Object.entries(config.phaseWeights).map(([key,weight])=>{
+ const phaseComponents=([true,false] as const).flatMap(batting=>Object.entries(batting?config.phaseWeights:config.bowlingPhaseWeights).map(([key,weight])=>{
   const phase=key as Phase;
   const discipline=batting?'Batting':'Bowling';
   const label={POWERPLAY:'Powerplay',MIDDLE:'Middle overs',DEATH:'Death overs'}[phase];
   const result=teamImpact(members,dataset,config,batting,phase);
   return {id:discipline+'-'+phase,name:discipline+' · '+label,weight,score:result.score,
    points:result.score===null?null:result.score*weight/100,coverage:Math.round(result.coverage*100),
-   explanation:batting?'Combined squad scoring rate and dismissals per ball against the season phase benchmark.':'Combined squad economy and wickets per legal ball against the season phase benchmark.'};
+   explanation:batting?'Combined squad scoring rate and dismissals per ball against the season phase benchmark.':'Combined squad economy against the season phase benchmark.'};
  }));
- const components=[...phaseComponents,...defs.filter(([id])=>config.teamWeights[id]>0).map(([id,name,value,explanation])=>({id,name,weight:config.teamWeights[id],score:value.score,points:value.score===null?null:value.score*config.teamWeights[id]/100,coverage:Math.round(value.coverage*100),explanation}))];
+ const components=[...phaseComponents,{id:"wins",name:"Franchise wins · 2024–2026",weight:config.teamWeights.wins,score:winScore,points:winScore===null?null:winScore*config.teamWeights.wins/100,coverage:winScore===null?0:100,explanation:"Wins divided by matches with a winner across IPL 2024–2026, including playoffs."},...defs.filter(([id])=>config.teamWeights[id]>0).map(([id,name,value,explanation])=>({id,name,weight:config.teamWeights[id],score:value.score,points:value.score===null?null:value.score*config.teamWeights[id]/100,coverage:Math.round(value.coverage*100),explanation}))];
  const applicableWeight=scope==='XI'||!xiIds.length?100-config.teamWeights.depth:100;const assessedWeight=components.reduce((n,c)=>n+(c.score===null?0:c.weight),0);const hasPerformance=members.some(m=>known(performance(m.rating)));
  const total=hasPerformance&&assessedWeight?Math.round(components.reduce((n,c)=>n+(c.points??0),0)/assessedWeight*100):null;
  const sourceConfidence=members.length?members.reduce((n,p)=>n+p.rating.confidence,0)/members.length:0;
@@ -64,13 +65,17 @@ export function createRatingEngine(dataset:RatingDataset,contracts:Contract[]=[]
  const ratings=playerRatings(dataset,config);const valueCohort=contracts.flatMap(c=>{const p=ratings.get(c.playerId);const score=p?performance(p):null;return known(score)&&c.salaryLakh>0?[score/Math.sqrt(c.salaryLakh)]:[];});
  return (session:SessionView)=>{
   const owned=ownedCandidates(session,ratings);const rules:XIConstraints={...config.xi,...session.rules.playingXI};const selection=selectLegalXI(owned,rules);const selected=owned.filter(c=>selection.ids.includes(c.id));
-  const fullSquad=assessment(owned,owned,selection.ids,'SQUAD',valueCohort,config,rules,dataset);const startingXI=selection.status==='LEGAL'?assessment(selected,owned,selection.ids,'XI',valueCohort,config,rules,dataset):null;
+  const winHistory=Object.entries((franchiseWins as Record<string,Record<string,{wins:number;decided:number}>>)[session.team.id.toLowerCase()]??{});
+  const wins=winHistory.reduce((sum,[,record])=>sum+record.wins,0);
+  const decided=winHistory.reduce((sum,[,record])=>sum+record.decided,0);
+  const winScore=decided?100*wins/decided:null;
+  const fullSquad=assessment(owned,owned,selection.ids,'SQUAD',valueCohort,config,rules,dataset,winScore);const startingXI=selection.status==='LEGAL'?assessment(selected,owned,selection.ids,'XI',valueCohort,config,rules,dataset,winScore):null;
   const weaknesses:string[]=[];if(selection.reason)weaknesses.push(selection.reason);if(selected.some(p=>!known(performance(p.rating))))weaknesses.push('The evaluated XI includes unrated players. A disclosed neutral prior of 50 is used only for selection utility, not as a player performance score.');if(!owned.some(p=>p.rating.keeper))weaknesses.push('No wicketkeeper in the owned squad.');
   for(const phase of ['POWERPLAY','DEATH'] as const){if(!owned.some(p=>p.rating.bowlingOption&&known(p.rating.phase[phase].bowling)))weaknesses.push(`No verified ${phase.toLowerCase()} bowling evidence.`);}
   if(owned.some(p=>p.rating.bowlingOption&&p.rating.style==='UNKNOWN'))weaknesses.push('Some bowling styles are unclassified; spin/pace balance is provisional.');
   if(fullSquad.covered<owned.length)weaknesses.push(`${owned.length-fullSquad.covered} owned players have no usable IPL performance sample; they are not assigned zero ability.`);
   for(const c of fullSquad.components)if(c.score!==null&&c.score<40&&c.coverage>=75)weaknesses.push(`${c.name} is below the model benchmark (${Math.round(c.score)}/100; ${c.coverage}% metric coverage).`);
-  return {version:config.version,seasonWeights:config.seasonWeights,seasons:dataset.seasons,source:dataset.source,checkedAt:dataset.checkedAt,fullSquad,startingXI,selection:{...selection,players:selected.map(p=>({id:p.id,name:p.rating.name,isOverseas:p.isOverseas}))},players:owned.map(p=>({...p.rating,isOverseas:p.isOverseas,priceLakh:p.priceLakh})),weaknesses,excludedMatches:dataset.excludedMatches,provenance:{licence:dataset.licence,normalisation:'Role and season cohorts; incomplete cohorts stay unavailable.',selection:'Exact maximum additive quality utility, not a greedy choice or a proven match-winning XI.'}};
+  return {winHistory,wins,decided,version:config.version,seasonWeights:config.seasonWeights,seasons:dataset.seasons,source:dataset.source,checkedAt:dataset.checkedAt,fullSquad,startingXI,selection:{...selection,players:selected.map(p=>({id:p.id,name:p.rating.name,isOverseas:p.isOverseas}))},players:owned.map(p=>({...p.rating,isOverseas:p.isOverseas,priceLakh:p.priceLakh})),weaknesses,excludedMatches:dataset.excludedMatches,provenance:{licence:dataset.licence,normalisation:'Role and season cohorts; incomplete cohorts stay unavailable.',selection:'Exact maximum additive quality utility, not a greedy choice or a proven match-winning XI.'}};
  };
 }
 export function rateSquad(session:SessionView,dataset:RatingDataset,contracts:Contract[]=[],config:RatingConfig=RATING_CONFIG){return createRatingEngine(dataset,contracts,config)(session);}
