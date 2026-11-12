@@ -654,6 +654,11 @@ function venueLabel(name) {
     const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
     const c=canvas.getContext('2d');
     if(!c)throw new Error('Canvas unavailable');
+    // Clip the entire PNG so its outer corners export as transparent.
+    c.beginPath();
+    c.roundRect(0, 0, canvas.width, canvas.height, 48);
+    c.clip();
+
     const names=table.rows.length===2?table.rows.map(row=>row[0]):inputs.map(input=>input.value);
     const art={
       international:{'V Kohli':'kohli-india','Virat Kohli':'kohli-india'},
