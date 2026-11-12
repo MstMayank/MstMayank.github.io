@@ -35,3 +35,45 @@
 .squad-tool-buttons .squad-share-status{flex-basis:100%;margin:4px 0;font-size:13px;color:var(--muted)}
 
 .rating-breakdown>details{margin:0;border-bottom:1px solid var(--line)}.rating-breakdown>details>summary{display:flex;justify-content:space-between;gap:14px;padding:12px 0;align-items:center;color:var(--text);min-height:44px}.rating-breakdown>details>summary strong{white-space:nowrap}.rating-breakdown>details p{font-size:13px;color:var(--muted);padding-bottom:12px}.squad-rating td small,.squad-rating th small{display:block;font-size:11px;font-weight:400;white-space:normal}.squad-rating details p{overflow-wrap:anywhere}.squad-rating .stat-table-wrap{max-width:100%}
+
+/* Retention room styling based on the supplied mockup. */
+.premium-retention{max-width:1180px;margin-inline:auto}
+.premium-retention .room-heading h1{font:800 clamp(30px,5vw,48px)/1.1 system-ui,sans-serif}
+.premium-retention .purse-tracker{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;overflow:hidden;border-radius:20px;background:#0a1611eb;backdrop-filter:blur(14px)}
+.premium-retention .retention-layout{display:block}
+.premium-retention .retention-layout aside{position:static;display:block;margin-top:24px}
+.retention-role-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.retention-role-filters button{min-height:44px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--text)}
+.retention-role-filters button[aria-pressed=true]{background:var(--gold);color:#1a1405;border-color:var(--gold)}
+.premium-retention .player-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:16px;align-items:start}
+.premium-retention .player-card{min-width:0;padding:0 0 14px;border:1px solid var(--line);border-radius:22px;background:#ffffff0b;overflow:hidden}
+.premium-retention .player-card.retain{border-color:#22c55e;box-shadow:0 12px 30px -18px #22c55e}
+.premium-retention .player-card.release{border-color:#ef4444}
+.retention-card-art{position:relative;display:grid;place-items:center;height:180px;background-color:#0b1511;color:#fff}
+.retention-card-art strong{font:800 clamp(40px,7vw,64px)/1 system-ui,sans-serif}
+.retention-card-team,.retention-card-role,.retention-card-state{position:absolute;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:800;background:#0009}
+.retention-card-team{top:10px;left:10px}.retention-card-role{top:10px;right:10px}.retention-card-state{bottom:10px;right:10px;background:#15803d}
+.release .retention-card-state{background:#b91c1c}
+.release .retention-card-art strong{opacity:.55}
+.premium-retention .player-main-row{display:block;padding:14px}
+.premium-retention .player-main-name h3{font:750 17px/1.25 system-ui,sans-serif;overflow-wrap:anywhere;margin:0 0 8px}
+.premium-retention .player-main-cost{display:inline-block;border:1px solid #e8c46866;border-radius:12px;padding:4px 8px;color:var(--gold)}
+.premium-retention .decision-buttons{display:flex;flex-wrap:wrap;justify-content:stretch;gap:6px;margin-top:12px}
+.premium-retention .decision-buttons button{flex:1;min-width:0;min-height:44px;padding:6px;border-radius:10px}
+.premium-retention .decision-buttons button:not(.ghost):first-of-type,.premium-retention .decision-buttons button[aria-pressed]:not(:last-child){background:#166534;color:#fff}
+.premium-retention .decision-buttons button[aria-pressed]:last-child{background:#991b1b;color:#fff}
+.premium-retention .decision-buttons button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #ffffff99}
+.premium-retention .stats-secondary{margin-inline:14px;min-height:44px}
+.premium-retention .player-card-expanded{padding-inline:14px}
+.premium-retention .player-card:has(.player-card-expanded){grid-column:1/-1}
+.premium-retention .auction-pool-section .player-card{padding-top:0}
+@media(max-width:720px){
+ .premium-retention .purse-tracker{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium-retention .purse-tracker>div{padding:8px 12px}
+ .premium-retention .purse-tracker strong{font-size:24px}
+ .premium-retention .player-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .retention-card-art{height:140px}
+ .premium-retention .player-main-row{padding:10px}
+ .premium-retention .player-main-name h3{font-size:15px}
+ .retention-card-role{max-width:calc(100% - 54px);text-align:right}
+}
