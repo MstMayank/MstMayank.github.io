@@ -269,3 +269,12 @@
  .premium-retention .decision-buttons button{flex:1 0 auto;overflow-wrap:normal;white-space:nowrap;padding-inline:10px}
  .premium-retention .squad-filters select{width:100%}
 }
+
+/* Give longer action labels room before they wrap. */
+.game-retention .squad-tool-buttons .button{flex:1 1 10rem;white-space:normal;overflow-wrap:normal;text-align:center}
+@media(max-width:600px){
+ .game-retention .squad-tool-buttons{display:grid;grid-template-columns:minmax(0,1fr)}
+ .game-retention .squad-tool-buttons .button{width:100%}
+ .rating-card-header{flex-wrap:wrap}
+ .rating-card-header .rating-card-change{margin-left:0}
+}

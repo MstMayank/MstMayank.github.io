@@ -55,3 +55,8 @@ background:radial-gradient(800px 480px at 90% 0%,rgba(232,196,104,.12),transpare
 
 .cricket-tools #battle-title{background:linear-gradient(100deg,var(--text) 0 8%,var(--gold) 30%,#fff3c9 60%);background-clip:text;-webkit-background-clip:text;color:transparent;width:fit-content}
 @media(max-width:480px){.cricket-tools .tool-heading{font-size:clamp(36px,11vw,56px)}}
+
+.cricket-tools #battle-title{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:480px){
+ .cricket-tools #battle-title{font-size:clamp(30px,9vw,44px)}
+}
