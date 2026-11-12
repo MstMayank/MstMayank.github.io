@@ -857,6 +857,11 @@ function venueLabel(name) {
       render();return;
     }
     byId('battle-title').textContent = international ? 'International Lens' : competition.toUpperCase() + ' Lens';
+    const toolLink = byId('battle-tool-link');
+    if (toolLink) {
+      toolLink.textContent = byId('battle-title').textContent;
+      toolLink.href = 'player-battle.html?competition=' + competition;
+    }
     byId('gender-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.competition === competition));
