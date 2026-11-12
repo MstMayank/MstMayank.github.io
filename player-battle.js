@@ -673,18 +673,21 @@ function venueLabel(name) {
     if(render!==cardRender)return;
 
     const cream='#fff3d7', gold='#eac357', muted='#b9c9bd';
-    const background=c.createLinearGradient(0,0,1080,1920);
-    background.addColorStop(0,'#102b21');
-    background.addColorStop(1,'#061811');
-    c.fillStyle=background;
-    c.fillRect(0,0,1080,1920);
+    const background = c.createLinearGradient(0, 0, 0, 1920);
+    background.addColorStop(0, '#102820');
+    background.addColorStop(0.38, '#091c16');
+    background.addColorStop(1, '#061811');
+    c.fillStyle = background;
+    c.fillRect(0, 0, 1080, 1920);
 
-    for (const [x, color] of [[180, '#f5c93a55'], [900, '#4c8dff55']]) {
-      const glow = c.createRadialGradient(x, 540, 0, x, 540, 620);
-      glow.addColorStop(0, color);
-      glow.addColorStop(1, '#00000000');
+    // Mirror the portrait lighting and let it fade before the stats area.
+    for (const [x, rgb] of [[170, '250, 204, 72'], [910, '96, 154, 255']]) {
+      const glow = c.createRadialGradient(x, 630, 0, x, 630, 440);
+      glow.addColorStop(0, `rgba(${rgb}, 0.25)`);
+      glow.addColorStop(0.55, `rgba(${rgb}, 0.10)`);
+      glow.addColorStop(1, `rgba(${rgb}, 0)`);
       c.fillStyle = glow;
-      c.fillRect(0, 0, 1080, 1920);
+      c.fillRect(0, 190, 1080, 880);
     }
 
     function label(value,x,y,size,maxWidth,color=cream,display=false){
