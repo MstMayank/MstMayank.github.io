@@ -656,12 +656,16 @@ function venueLabel(name) {
     const c=canvas.getContext('2d');
     if(!c)throw new Error('Canvas unavailable');
     const names=table.rows.length===2?table.rows.map(row=>row[0]):inputs.map(input=>input.value);
-    const art={'MS Dhoni':'dhoni','DW Steyn':'steyn','Dale Steyn':'steyn'};
+    const art={
+      ipl:{'MS Dhoni':'dhoni','DW Steyn':'steyn','Dale Steyn':'steyn'},
+      wpl:{'S Mandhana':'mandhana','H Kaur':'harmanpreet'},
+    };
     const photos=await Promise.all(names.map(async name=>{
       if(mode==='teams')return null;
-      if(competition==='ipl'&&art[name]){
+      const asset=art[competition]?.[name];
+      if(asset){
         const portrait=new Image();
-        portrait.src='battle-art/'+art[name]+'.jpg';
+        portrait.src='battle-art/'+asset+'.jpg';
         try{await portrait.decode();return portrait;}catch{}
       }
       return loadPortrait(name);
