@@ -85,18 +85,7 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
         </div>
         </details>
       </div> : <p role="status">Retain a player to start your squad assessment.</p>}
-      <details>
-        <summary>Rankings across all ten teams</summary>
-        <p>Your current squad is ranked alongside the other franchises’ baseline squads.</p>
-        <ol className="expert-team-rankings">{report.rankings.map(row => <li key={row.id}><strong>{row.team}</strong> {row.score === null ? 'Unrated' : `${row.score.toFixed(2)} · ${row.tier}`}{row.current ? ' · Your squad' : ''}</li>)}</ol>
-      </details>
-      <details>
-        <summary>Method and IPL evidence</summary>
-        <p>IPL 2025 contributes 40% and IPL 2026 contributes 60% when both seasons have evidence. Single-season evidence reduces confidence. Small samples are pulled toward a conservative rubric estimate. Category scores use provisional V6 baselines and player impacts. Squad changes are scored against the baseline after recalculating the XI and bench.</p>
-        <p>Fielding is provisional. Phase figures use regular innings and scheduled overs 1–6, 7–15 and 16–20. The Impact recommendation is a substitute outside the XI and uses the overseas limit of four.</p>
-        <ul>{report.seasons.map(s => <li key={s.year}><a href={s.completionSource}>IPL {s.year}</a> · {s.verifiedMatches}/{s.archiveMatches} archived matches passed verification</li>)}</ul>
-        <p>Ball-by-ball source <a href={report.source}>Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution 1.0</a>. Checked {report.checkedAt} · {report.version}</p>
-      </details>
+      <p className="fine-print">Ball-by-ball data from <a href={report.source}>Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution 1.0</a>.</p>
     </>}
   </section>;
 }
