@@ -255,14 +255,14 @@ function venueLabel(name) {
     rows.forEach(row => addStats(totals, row));
     summary.textContent = (format ? format + ' · ' : '') +
       (fielding ? 'Recorded successful fielding events' : number(bowling ? totals.legal : totals.balls) + (bowling ? ' legal balls bowled' : ' balls faced') +
-      ' · ' + new Set(rows.map(row => row[0])).size + ' matches' + (view === 'matchups' && mode === 'direct' ? ' vs ' + data.players[selected[1]] : ''));
+      ' · ' + new Set(rows.map(row => row[0])).size + ' matches' + (view === 'matchups' && mode === 'direct' ? ' vs ' + data.players[selected[bowling ? 0 : 1]] : ''));
     panel.append(eyebrow, name, summary);
     const wickets = (data.dismissals || []).filter(wicket => {
       const match = data.matches[wicket[0]];
       return (!format || match[7] === format) && matchIncluded(match) &&
         (!byId('battle-phase').value || (format || data.format) === 'Test' || wicket[4] === +byId('battle-phase').value) &&
         (fielding ? wicket[5].includes(id) || (wicket[3] === 'caught and bowled' && wicket[2] === id) : bowling ? wicket[2] === id && !['run out','retired hurt','retired out','obstructing the field'].includes(wicket[3]) : wicket[1] === id) &&
-        (view !== 'matchups' || mode !== 'direct' || wicket[2] === selected[1]);
+        (view !== 'matchups' || mode !== 'direct' || (wicket[1] === selected[0] && wicket[2] === selected[1]));
     });
     if ((format || data.format) !== 'Test') {
       const phases = groups(format || data.format).map((label, phase) => {
@@ -401,7 +401,7 @@ function venueLabel(name) {
     ids.forEach((id,index)=>{const button=document.createElement('button');button.type='button';button.className='duel-name';
       const small=document.createElement('small');small.textContent=mode==='direct'?(index?'BOWLER':'BATTER'):'PLAYER '+(index+1);
       const name=document.createElement('strong');name.textContent=data.players[id];button.append(small,name);
-      button.addEventListener('click',()=>choose(mode==='direct'?0:index));names.appendChild(button);});board.appendChild(names);
+      button.addEventListener('click',()=>choose(index));names.appendChild(button);});board.appendChild(names);
     if(mode==='direct'){
       const groups=[
         ['Batter', [['Runs','Runs'],['SR','Strike rate'],['4s','Fours'],['6s','Sixes']]],
@@ -516,6 +516,10 @@ function venueLabel(name) {
       return [data.players[id], ...values.map(value => typeof value === 'number' ? number(value) : value)];
     });
     if(matchup) renderBattleBoard(format,headers,rows,index=>{
+      if (mode === 'direct') {
+        showDetail(format, selected[index], playerRows.get(selected[0]) || [], index === 1);
+        return;
+      }
       const id=entries[index][0];showDetail(format,id,playerRows.get(id)||[],bowling,fielding);
     });
     makeRows(format || '', headers, rows, index => {
