@@ -1,14 +1,87 @@
 'use client';
-import {useEffect,useState} from 'react';
+
+import {useEffect, useState} from 'react';
 import type {SessionView} from '@/lib/ipl-auction/types';
-import type {rateSquad} from '@/lib/ipl-auction/rating';
-type Report=ReturnType<typeof rateSquad>;
-const number=(n:number|null|undefined)=>n==null?'Unavailable':n.toFixed(1);
-export default function SquadRating({session,disabled,autoRun=false}:{session:SessionView;disabled:boolean;autoRun?:boolean}){
- const signature=JSON.stringify({id:session.id,decisions:session.decisions,purchases:session.ratingPurchases,rules:session.rules,players:session.squad.map(m=>[m.playerId,m.isOverseas,m.salaryVerified,m.previousSalaryLakh,m.eligible])});
- const [result,setResult]=useState<{signature:string;attempt:number;report:Report}|null>(null),[failure,setFailure]=useState<{signature:string;attempt:number;message:string}|null>(null),[attempt,setAttempt]=useState(0),[view,setView]=useState<'SQUAD'|'XI'>('SQUAD');
- useEffect(()=>{if(!autoRun&&!attempt)return;let active=true;import('@/browser-auction/squad-rating-data').then(({buildRating})=>{const report=buildRating(session);if(active)setResult({signature,attempt,report});}).catch(error=>{if(active)setFailure({signature,attempt,message:error instanceof Error?error.message:'Rating data could not load.'});});return()=>{active=false;};},[autoRun,signature,attempt,session]);
- const report=result?.signature===signature&&result.attempt===attempt?result.report:null;const error=failure?.signature===signature&&failure.attempt===attempt?failure.message:'';const loading=(autoRun||attempt>0)&&!report&&!error;
- const assessment=view==='XI'&&report?.startingXI?report.startingXI:report?.fullSquad;
- return <section className="surface squad-rating" aria-label="IPL-only team rating"><button className="button" disabled={disabled||loading} onClick={()=>setAttempt(n=>n+1)}>{loading?'Updating IPL rating…':report?'Recalculate ↻':'Rate your squad →'}</button>{error&&<p role="alert">{error} <button className="text-link" onClick={()=>setAttempt(n=>n+1)}>Retry</button></p>}{report&&assessment&&<div aria-live="polite"><p className="fine-print">IPL only · 2025: 30% · 2026: 70% · {report.version}</p><div className="squad-tool-buttons"><button className="button secondary" aria-pressed={view==='SQUAD'||!report.startingXI} onClick={()=>setView('SQUAD')}>Full squad ({report.fullSquad.players})</button><button className="button secondary" aria-pressed={view==='XI'&&!!report.startingXI} disabled={!report.startingXI} onClick={()=>setView('XI')}>Starting XI</button></div><div className="rating-result"><strong>{assessment.total===null?'Unrated':`${assessment.total}/100`}</strong><span>{assessment.provisional?'Provisional · incomplete IPL evidence':'IPL model assessment'}</span></div><p>{assessment.covered}/{assessment.players} players have usable IPL ratings. Confidence: {assessment.confidence}%. Assessed weight: {assessment.assessedWeight}/{assessment.applicableWeight}. Available components are rescaled to 100; unavailable values are never scored as zero.</p>{!report.startingXI&&<p className="fine-print">{report.selection.reason}</p>}{report.winHistory.length>0&&<p>Franchise wins: {report.wins}/{report.decided} decided matches · {report.winHistory.map(([year,r])=>`${year}: ${r.wins}/${r.decided}`).join(" · ")}</p>}<div className="rating-breakdown">{assessment.components.map(c=><details key={c.id}><summary><span>{c.name} · {c.weight}%</span><strong>{c.points===null?'Unavailable':`${c.points.toFixed(1)} / ${c.weight}`}</strong></summary><p>{c.explanation} Metric coverage: {c.coverage}%. Component strength: {number(c.score)}/100.</p></details>)}</div><details><summary>Formula, verified coverage & sources</summary><p>Season and role cohorts are normalised separately. Samples shrink towards a cohort prior using balls and appearances, so tiny samples do not receive full-strength extreme scores. Missing seasons renormalise only available weights and reduce confidence. Inadequate role cohorts stay unavailable.</p><p>Only scoring efficiency and dismissal survival score batting; bowling scores economy. Boundary percentage, dot percentage and bowling average are diagnostics, avoiding a second award for correlated rate identities. Batting phases award 12/14/14 points and bowling economy phases award 9/10/11. Franchise win rate across 2024–2026 contributes 10 points. Dropped catches are outside the score because verified chance data is unavailable.</p><p>Team batting and bowling combine retained players’ recorded IPL deliveries within each season, then apply the season weights. Starting XI excludes the non-applicable 10% bench component and rescales its applicable 90 points. Depth counts bench quantity and evidence-backed backup roles only after a legal XI exists; it does not award the same performance rates twice. The model is not calibrated as a win probability or an official IPL rating.</p><p>Phases use scheduled overs 1–6, 7–15 and 16–20, including shortened games; super overs excluded. Regular innings totals/wickets/overs reconcile to checked official scorecards before a match enters this dataset.</p><ul>{report.seasons.map(s=><li key={s.year}><a href={s.completionSource} target="_blank" rel="noopener noreferrer">IPL {s.year} completed</a> · {s.verifiedMatches}/{s.archiveMatches} archive matches verified · {s.excludedMatches} excluded.</li>)}</ul><p>Data: <a href={report.source} target="_blank" rel="noopener noreferrer">Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/" target="_blank" rel="noopener noreferrer">ODC Attribution 1.0</a>, checked against official IPL scorecards. Profile metadata supplies bowling styles only; no domestic or international performance is imported. Checked {report.checkedAt}.</p>{report.excludedMatches.map(m=><p key={m.id}>Excluded IPL {m.year} match {m.id}: {m.reason}</p>)}</details></div>}</section>;
+import type {buildRating} from '@/browser-auction/squad-rating-data';
+import {categories, type Category} from '@/lib/ipl-auction/rating/expert-config';
+
+type Report = ReturnType<typeof buildRating>;
+const keys = Object.keys(categories) as Category[];
+
+export default function SquadRating({session, disabled, autoRun = false}: {session: SessionView; disabled: boolean; autoRun?: boolean}) {
+  const signature = JSON.stringify([session.id, session.decisions, session.ratingPurchases, session.squad.map(p => [p.playerId, p.eligible, p.isOverseas])]);
+  const [attempt, setAttempt] = useState(0);
+  const [result, setResult] = useState<{signature: string; report: Report; change: number | null} | null>(null);
+  const [failure, setFailure] = useState<{signature: string; message: string} | null>(null);
+  useEffect(() => {
+    if (!autoRun && !attempt) return;
+    let active = true;
+    import('@/browser-auction/squad-rating-data').then(({buildRating}) => {
+      const report = buildRating(session);
+      if (!active) return;
+      setFailure(null);
+      setResult(previous => ({
+        signature, report,
+        change: previous?.signature === signature ? previous.change : previous?.report.playerCount && report.playerCount
+          ? report.overallRating - previous.report.overallRating : null,
+      }));
+    }).catch(error => {
+      if (active) setFailure({signature, message: error instanceof Error ? error.message : 'Rating data could not load.'});
+    });
+    return () => {active = false;};
+  }, [autoRun, attempt, session, signature]);
+  const report = result?.signature === signature ? result.report : null;
+  const error = failure?.signature === signature ? failure.message : null;
+  const change = result?.change;
+  return <section className="surface squad-rating" aria-label="IPL expert squad rating">
+    {error && <p role="alert">{error} <button className="text-link" disabled={disabled} onClick={() => {setFailure(null); setAttempt(n => n + 1);}}>Retry</button></p>}
+    {!report && !error && (autoRun || attempt ? <p role="status">Updating squad assessment…</p>
+      : <button className="button" disabled={disabled} onClick={() => setAttempt(n => n + 1)}>Rate your squad</button>)}
+    {report && <>
+      {report.playerCount ? <div aria-live="polite">
+        <div className="rating-result">
+          <strong>{report.overallRating.toFixed(2)}<small> / 100</small></strong>
+          <span className="expert-tier">Tier {report.tier}</span>
+          {change != null && <span>{change > 0 ? '+' : ''}{change.toFixed(2)} since last squad change</span>}
+        </div>
+        <p>{report.approvedReference ? 'Approved expert reference' : 'Expert rubric assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
+        <div className="rating-breakdown">
+          {keys.map(key => <section className="expert-category" key={key}>
+            <details>
+              <summary><span>{categories[key][0]} <small>{categories[key][1]}% weight</small></span><strong>{report[key].toFixed(1)}/100</strong></summary>
+              <p>{report.categoryExplanations[key]}</p>
+            </details>
+            <progress max={100} value={report[key]} aria-label={categories[key][0]} />
+          </section>)}
+        </div>
+        <div className="expert-rating-columns">
+          <div>
+            <h3>Best Playing XI</h3>
+            {report.bestPlayingXI.length ? <ol>{report.bestPlayingXI.map(player =>
+              <li key={player.id}>{player.name} <small>{player.role}{player.isOverseas ? ' · Overseas' : ''}</small></li>)}</ol>
+              : <p>No XI meets the current selection rules.</p>}
+            <p><strong>Impact Player</strong> {report.impactPlayer?.name ?? 'No eligible option with sufficient IPL evidence'}</p>
+          </div>
+          <div>
+            <h3>Auction priorities</h3>
+            {report.auctionPriorities.length ? <ul>{report.auctionPriorities.map(item => <li key={item}>{item}</li>)}</ul> : <p>No immediate role gaps identified.</p>}
+            {!!report.strengths.length && <><h3>Strengths</h3><ul>{report.strengths.map(item => <li key={item}>{item}</li>)}</ul></>}
+            {!!report.weaknesses.length && <><h3>Weaknesses</h3><ul>{report.weaknesses.map(item => <li key={item}>{item}</li>)}</ul></>}
+          </div>
+        </div>
+      </div> : <p role="status">Retain a player to start your squad assessment.</p>}
+      <details>
+        <summary>Rankings across all ten teams</summary>
+        <p>Your current squad is ranked alongside the other franchises’ baseline squads.</p>
+        <ol className="expert-team-rankings">{report.rankings.map(row => <li key={row.id}><strong>{row.team}</strong> {row.score === null ? 'Unrated' : `${row.score.toFixed(2)} · ${row.tier}`}{row.current ? ' · Your squad' : ''}</li>)}</ol>
+      </details>
+      <details>
+        <summary>Method and IPL evidence</summary>
+        <p>IPL 2025 contributes 40% and IPL 2026 contributes 60% when both seasons have evidence. Single-season evidence reduces confidence. Small samples are pulled toward a conservative rubric estimate. Category scores are expert assessments.</p>
+        <p>Fielding is provisional. Phase figures use regular innings and scheduled overs 1–6, 7–15 and 16–20. The Impact recommendation is a substitute outside the XI and uses the overseas limit of four.</p>
+        <ul>{report.seasons.map(s => <li key={s.year}><a href={s.completionSource}>IPL {s.year}</a> · {s.verifiedMatches}/{s.archiveMatches} archived matches passed verification</li>)}</ul>
+        <p>Ball-by-ball source <a href={report.source}>Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution 1.0</a>. Checked {report.checkedAt} · {report.version}</p>
+      </details>
+    </>}
+  </section>;
 }

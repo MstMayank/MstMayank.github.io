@@ -8,6 +8,8 @@ import trades from '../prisma/data/ipl-2027-confirmed-trades.json';
 const tradeById=new Map(trades.rows.map(row=>[row.playerId,row]));
 const rosterFor=(teamId:string)=>Object.entries(roster.teams).flatMap(([originalTeam,team])=>team.players.filter(p=>(tradeById.get(p.id)?.toTeamId??originalTeam)===teamId));
 const replacementIds=new Set(replacements.rows.map(row=>row.playerId));
+export const baselineSquad=(teamId:string)=>rosterFor(teamId).filter(p=>!replacementIds.has(p.id));
+
 export const SAVE_KEY='tcs-auction-latest-v1';
 const updatedAt=roster.verifiedAt+'T00:00:00Z';
 const season={id:'ipl-2027-custom',year:2027,name:'IPL 2027 · Custom simulation',isSimulation:true};

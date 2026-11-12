@@ -31,7 +31,7 @@ for p in current:
  else:unmapped.append(p['name'])
 def player(cs,name):
  ref=cs_to_player.get(cs);m=metadata.get(cs,{});style=m.get('bowling_style','');profile_role=m.get('playing_role','');role='WICKETKEEPER'if'keeper'in profile_role.lower()else'ALL_ROUNDER'if'allround'in profile_role.lower().replace('-','').replace(' ','')else'BOWLER'if profile_role.lower()=='bowler'else'BATTER'if'batter'in profile_role.lower()else(ref['role']if ref else'BATTER');kind='SPIN' if re.search('break|orthodox|chinaman|spin',style,re.I)else'PACE' if re.search('fast|medium',style,re.I)else'UNKNOWN'
- return dict(id=ref['id']if ref else'cs:'+cs,name=ref['name']if ref else(m.get('name')or m.get('full_name')or name).strip(),rosterRole=ref['role']if ref else('ALL_ROUNDER'if'allround'in m.get('playing_role','').lower()else'WICKETKEEPER'if'keeper'in m.get('playing_role','').lower()else'BOWLER'if m.get('playing_role','').lower()=='bowler'else'BATTER'),playingRole=role,profileRole=profile_role or None,bowlingStyle=kind,styleDescription=style or None,metadataSource='https://www.espncricinfo.com/cricketers/'+re.sub('[^a-z0-9]+','-',(m.get('name')or m.get('full_name')or name).lower()).strip('-')+'-'+m['cricinfo_id']if m.get('cricinfo_id')else(ref['profileUrl']if ref else None),metadataStatus='EXISTING_PROFILE_SNAPSHOT',isOverseas=ref['isOverseas']if ref else None)
+ return dict(id=ref['id']if ref else'cs:'+cs,name=ref['name']if ref else(m.get('name')or m.get('full_name')or name).strip(),rosterRole=ref['role']if ref else('ALL_ROUNDER'if'allround'in m.get('playing_role','').lower()else'WICKETKEEPER'if'keeper'in m.get('playing_role','').lower()else'BOWLER'if m.get('playing_role','').lower()=='bowler'else'BATTER'),playingRole=role,profileRole=profile_role or None,bowlingStyle=kind,styleDescription=style or None,battingHand='LEFT' if 'left' in m.get('batting_style','').lower() else 'RIGHT' if 'right' in m.get('batting_style','').lower() else None,metadataSource='https://www.espncricinfo.com/cricketers/'+re.sub('[^a-z0-9]+','-',(m.get('name')or m.get('full_name')or name).lower()).strip('-')+'-'+m['cricinfo_id']if m.get('cricinfo_id')else(ref['profileUrl']if ref else None),metadataStatus='EXISTING_PROFILE_SNAPSHOT',isOverseas=ref['isOverseas']if ref else None)
 def empty():return dict(runs=0,balls=0,outs=0,fours=0,sixes=0,batDots=0,innings=0,contributions=0,legalBalls=0,conceded=0,wickets=0,bowlDots=0,bowlingInnings=0,bowlingContributions=0)
 # Only official scorecards that passed the existing independent checks are usable.
 official=json.loads((ROOT/'prisma/data/ipl-official-season-stats.json').read_text());index=json.loads((ROOT/'prisma/data/official-scorecards/index.json').read_text());official_by_date=collections.defaultdict(list)
@@ -66,7 +66,7 @@ for mid,d in sorted(raw):
   reg=info['registry']['people'];seen=set()
   def row(name):
    cs=reg[name];meta=player(cs,name);pid=meta['id'];match_players[pid]=meta
-   r=match_rows.setdefault((pid,year),dict(playerId=pid,year=year,competition='IPL',matches=0,battingPositions={},totals=empty(),phases={k:empty()for k in ['POWERPLAY','MIDDLE','DEATH']},matchIds=[]))
+   r=match_rows.setdefault((pid,year),dict(playerId=pid,year=year,competition='IPL',matches=0,battingPositions={},totals=empty(),phases={k:empty()for k in ['POWERPLAY','MIDDLE','DEATH']},matchIds=[],battingAgainst={},fielding=dict(catches=0,stumpings=0,runOuts=0)))
    if pid not in seen:r['matches']+=1;r['matchIds'].append(mid);seen.add(pid)
    return r
   for team in info['players'].values():
@@ -82,8 +82,17 @@ for mid,d in sorted(raw):
      for q in [br['totals'],br['phases'][phase]]:
       q['runs']+=runs;q['balls']+=faced;q['fours']+=runs==4;q['sixes']+=runs==6;q['batDots']+=int(faced and runs==0)
      for q in [wr['totals'],wr['phases'][phase]]:q['legalBalls']+=legal;q['conceded']+=conceded;q['bowlDots']+=int(legal and b['runs']['total']==0)
+     style=match_players[wr['playerId']]['bowlingStyle']
+     if style!='UNKNOWN':
+      split=br['battingAgainst'].setdefault(style,dict(runs=0,balls=0));split['runs']+=runs;split['balls']+=faced
      bats[b['batter']][0]+=runs;bats[b['batter']][1]+=faced;bowls[b['bowler']][0]+=conceded;bowls[b['bowler']][1]+=legal;phase_bats[phase].add(b['batter']);phase_bowls[phase].add(b['bowler'])
      for w in b.get('wickets',[]):
+      fielding_key={'caught':'catches','caught and bowled':'catches','stumped':'stumpings','run out':'runOuts'}.get(w['kind'])
+      fielders=[f['name'] for f in w.get('fielders',[]) if f.get('name')]
+      if w['kind']=='caught and bowled':fielders=[b['bowler']]
+      if fielding_key:
+       for fielder in set(fielders):
+        if fielder in reg:row(fielder)['fielding'][fielding_key]+=1
       if w['kind']not in ['retired hurt','retired not out']:
        out=row(w['player_out']);out['totals']['outs']+=1;out['phases'][phase]['outs']+=1
       if w['kind']not in ['run out','retired hurt','retired out','retired not out','obstructing the field']:
@@ -102,6 +111,10 @@ for mid,d in sorted(raw):
   for key,r in match_rows.items():
    if key not in rows:rows[key]=r;continue
    dest=rows[key];dest['matches']+=r['matches'];dest['matchIds']+=r['matchIds']
+   for k,v in r['fielding'].items():dest['fielding'][k]+=v
+   for style,q in r['battingAgainst'].items():
+    split=dest['battingAgainst'].setdefault(style,dict(runs=0,balls=0))
+    for k,v in q.items():split[k]+=v
    for pos,n in r['battingPositions'].items():dest['battingPositions'][pos]=dest['battingPositions'].get(pos,0)+n
    for k,v in r['totals'].items():dest['totals'][k]+=v
    for phase,q in r['phases'].items():
