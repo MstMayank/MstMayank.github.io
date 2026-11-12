@@ -14,12 +14,12 @@ export function ownedCandidates(session:SessionView,ratings:Map<string,PlayerRat
  return members.map(m=>{const rating=ratings.get(m.id);if(!rating)throw Error(`Player ${m.player.name} is not identified in the IPL rating catalogue.`);if(m.priceLakh!==null&&(!Number.isFinite(m.priceLakh)||m.priceLakh<=0))throw Error('Invalid purchase/contract cost.');return {id:m.id,isOverseas:m.isOverseas,rating,priceLakh:m.priceLakh};});
 }
 // Compare pooled team rates with the same season's IPL rates.
-function teamImpact(members:Candidate[],dataset:RatingDataset,config:RatingConfig,batting:boolean){
+function teamImpact(members:Candidate[],dataset:RatingDataset,config:RatingConfig,batting:boolean,phase:Phase){
  const ids=new Set(members.map(member=>member.id));
  const seasons=dataset.seasons.map(({year})=>{
   const league=dataset.records.filter(record=>record.year===year);
   const squad=league.filter(record=>ids.has(record.playerId));
-  const sum=(rows:typeof league,key:keyof typeof league[number]['totals'])=>rows.reduce((total,row)=>total+row.totals[key],0);
+  const sum=(rows:typeof league,key:keyof typeof league[number]['totals'])=>rows.reduce((total,row)=>total+row.phases[phase][key],0);
   const balls=batting?'balls':'legalBalls',runs=batting?'runs':'conceded',wickets=batting?'outs':'wickets';
   const sample=sum(squad,balls),baseline=sum(league,balls);
   const leagueRuns=sum(league,runs),leagueWickets=sum(league,wickets);
@@ -28,13 +28,13 @@ function teamImpact(members:Candidate[],dataset:RatingDataset,config:RatingConfi
   const wicketImpact=sum(squad,wickets)/sample/(leagueWickets/baseline);
   const relative=batting?runImpact-wicketImpact:wicketImpact-runImpact;
   const raw=Math.max(0,Math.min(100,50+50*relative));
-  return {year,value:shrink(raw,sample,batting?config.sample.battingBalls:config.sample.bowlingBalls)};
+  return {year,value:shrink(raw,sample,config.sample.phaseBalls)};
  });
  const result=seasonWeighted(seasons,config);
  return {score:result.score,coverage:result.coverage};
 }
 function assessment(members:Candidate[],all:Candidate[],xiIds:string[],scope:'XI'|'SQUAD',valueCohort:number[],config:RatingConfig,rules:XIConstraints,dataset:RatingDataset){
- const bats=members.filter(p=>p.rating.battingOption),bowls=members.filter(p=>p.rating.bowlingOption);const baseBat=teamImpact(members,dataset,config,true),baseBowl=teamImpact(members,dataset,config,false),form=weighted(members,p=>p.form),experience=weighted(members,p=>p.experience);
+ const bats=members.filter(p=>p.rating.battingOption),bowls=members.filter(p=>p.rating.bowlingOption);const form=weighted(members,p=>p.form),experience=weighted(members,p=>p.experience);
  const phaseScore=(phase:Phase)=>{const b=weighted(bats,p=>p.phase[phase].batting),w=weighted(bowls,p=>p.phase[phase].bowling);return {score:mean([b.score,w.score].filter(known)),coverage:(b.coverage+w.coverage)/2};};
  const meet=(n:number,target:number)=>target>0?Math.min(1,n/target):1;const bw=config.balanceWeights;
  const balance=members.length?100*(bw.batting*meet(bats.length,rules.minBattingOptions)+bw.bowling*meet(bowls.length,rules.minBowlingOptions)+bw.keeper*meet(members.filter(m=>m.rating.keeper).length,rules.minKeepers)+bw.openers*meet(bats.filter(m=>m.rating.batRole==='OPENER').length,config.targets.openers)+bw.finishers*meet(bats.filter(m=>m.rating.batRole==='FINISHER').length,config.targets.finishers)):null;
@@ -43,8 +43,17 @@ function assessment(members:Candidate[],all:Candidate[],xiIds:string[],scope:'XI
  const depth=scope==='XI'||!xiIds.length?null:bench.length?mean([quantity,backup].filter(known)):0;
  const values=members.flatMap(m=>{const p=performance(m.rating);return !known(p)||!m.priceLakh?[]:[percentile(p/Math.sqrt(m.priceLakh),valueCohort)];}).filter(known);
  const value=mean(values);
- const defs=[['batting','Batting strength',baseBat,'Combined squad scoring and dismissal rates against the IPL season baseline.'],['bowling','Bowling strength',baseBowl,'Combined squad economy and wicket-taking rates against the IPL season baseline.'],['balance','Squad balance',{score:balance,coverage:members.length?1:0},'Configured keeper, batting, bowling, opener and finisher coverage; these balance targets are simulation assumptions.'],['form','Recent IPL form',form,'IPL contribution frequency with 2024/25/26 weights of 20/30/50; distinct from the rate-quality groups.'],['death','Death overs',phaseScore('DEATH'),'Verified scheduled overs 16–20; batting and bowling suitability shown separately per player.'],['depth','Squad depth',{score:depth,coverage:scope==='XI'?0:xiIds.length?bench.length?(.5+.5*benchCoverage):1:0},scope==='XI'?'Not applicable to Starting XI; its applicable 90 points are normalised to 100.':'Bench quantity (target five) and evidence-backed backup-role coverage outside the optimal XI; rate quality is not added a second time.'],['experience','IPL experience',experience,'Verified IPL appearances within 2025–2026 only; capped at 40. Not a full-career total.'],['powerplay','Powerplay performance',phaseScore('POWERPLAY'),'Verified scheduled overs 1–6; no inference from domestic or international matches.'],['spinPace','Spin/pace balance',{score:spinPace,coverage:bowls.length?classified.length/bowls.length:0},'Three pace and one spin option target; missing style classifications lower coverage.'],['value','Auction value',{score:value,coverage:members.length?values.length/members.length:0},'IPL role performance per square-root of published/verified acquisition cost; percentile against the roster cost cohort.']] as const;
- const components=defs.filter(([id])=>config.teamWeights[id]>0).map(([id,name,value,explanation])=>({id,name,weight:config.teamWeights[id],score:value.score,points:value.score===null?null:value.score*config.teamWeights[id]/100,coverage:Math.round(value.coverage*100),explanation}));
+ const defs=[['balance','Squad balance',{score:balance,coverage:members.length?1:0},'Configured keeper, batting, bowling, opener and finisher coverage; these balance targets are simulation assumptions.'],['form','Recent IPL form',form,'IPL contribution frequency with 2024/25/26 weights of 20/30/50; distinct from the rate-quality groups.'],['death','Death overs',phaseScore('DEATH'),'Verified scheduled overs 16–20; batting and bowling suitability shown separately per player.'],['depth','Squad depth',{score:depth,coverage:scope==='XI'?0:xiIds.length?bench.length?(.5+.5*benchCoverage):1:0},scope==='XI'?'Not applicable to Starting XI; its applicable 90 points are normalised to 100.':'Bench quantity (target five) and evidence-backed backup-role coverage outside the optimal XI; rate quality is not added a second time.'],['experience','IPL experience',experience,'Verified IPL appearances within 2025–2026 only; capped at 40. Not a full-career total.'],['powerplay','Powerplay performance',phaseScore('POWERPLAY'),'Verified scheduled overs 1–6; no inference from domestic or international matches.'],['spinPace','Spin/pace balance',{score:spinPace,coverage:bowls.length?classified.length/bowls.length:0},'Three pace and one spin option target; missing style classifications lower coverage.'],['value','Auction value',{score:value,coverage:members.length?values.length/members.length:0},'IPL role performance per square-root of published/verified acquisition cost; percentile against the roster cost cohort.']] as const;
+ const phaseComponents=([true,false] as const).flatMap(batting=>Object.entries(config.phaseWeights).map(([key,weight])=>{
+  const phase=key as Phase;
+  const discipline=batting?'Batting':'Bowling';
+  const label={POWERPLAY:'Powerplay',MIDDLE:'Middle overs',DEATH:'Death overs'}[phase];
+  const result=teamImpact(members,dataset,config,batting,phase);
+  return {id:discipline+'-'+phase,name:discipline+' · '+label,weight,score:result.score,
+   points:result.score===null?null:result.score*weight/100,coverage:Math.round(result.coverage*100),
+   explanation:batting?'Combined squad scoring rate and dismissals per ball against the season phase benchmark.':'Combined squad economy and wickets per legal ball against the season phase benchmark.'};
+ }));
+ const components=[...phaseComponents,...defs.filter(([id])=>config.teamWeights[id]>0).map(([id,name,value,explanation])=>({id,name,weight:config.teamWeights[id],score:value.score,points:value.score===null?null:value.score*config.teamWeights[id]/100,coverage:Math.round(value.coverage*100),explanation}))];
  const applicableWeight=scope==='XI'||!xiIds.length?100-config.teamWeights.depth:100;const assessedWeight=components.reduce((n,c)=>n+(c.score===null?0:c.weight),0);const hasPerformance=members.some(m=>known(performance(m.rating)));
  const total=hasPerformance&&assessedWeight?Math.round(components.reduce((n,c)=>n+(c.points??0),0)/assessedWeight*100):null;
  const sourceConfidence=members.length?members.reduce((n,p)=>n+p.rating.confidence,0)/members.length:0;
