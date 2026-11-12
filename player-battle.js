@@ -336,7 +336,6 @@ function venueLabel(name) {
     for(const id of ['battle-status','battle-method','battle-source'])byId(id).hidden=profiles;
     document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
     if(profiles){
-      byId('battle-title').textContent=competition==='international'?'International Lens':competition.toUpperCase()+' Lens';
       byId('battle-compare-label').hidden=true;byId('battle-career-scope-label').hidden=true;
       window.TCSPlayerCareers.mount(byId('player-career-shell'),competition===(initialLink.get('competition')||'ipl')?initialLink.get('player'):null,competition);
       return;
@@ -855,12 +854,6 @@ function venueLabel(name) {
     if(view==='careers' && !forceArchive){
       document.querySelectorAll('[data-competition]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.competition===competition)));
       render();return;
-    }
-    byId('battle-title').textContent = international ? 'International Lens' : competition.toUpperCase() + ' Lens';
-    const toolLink = byId('battle-tool-link');
-    if (toolLink) {
-      toolLink.textContent = byId('battle-title').textContent;
-      toolLink.href = 'player-battle.html?competition=' + competition;
     }
     byId('gender-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
