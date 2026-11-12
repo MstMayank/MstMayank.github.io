@@ -198,3 +198,18 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
 .v2 main :where(img,video,canvas,iframe){max-inline-size:100%}
 .v2 main :where(.table,.tool-table,.battle-result){max-inline-size:100%;overflow-x:auto}
 .v2 main :where(.match-centre,.home-bento) + :where(.match-centre,.home-bento){padding-block-start:var(--section-gap)}
+
+/* Shared wordmark */
+.logo.d {
+  display: inline-block;
+  color: #f2f5ef;
+  font-size: clamp(17px, 4.6vw, 28px);
+  font-weight: 900;
+  letter-spacing: .02em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.logo.d span {
+  color: #eac568;
+}
