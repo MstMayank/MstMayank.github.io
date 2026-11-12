@@ -1,4 +1,4 @@
-export const EXPERT_VERSION = 'IPL-2027-expert-v1';
+export const EXPERT_VERSION = 'IPL-2027-expert-v2';
 export const seasonWeights = {2025: .4, 2026: .6} as const;
 export const categories = {
   battingStrength: ['Batting Strength', 30],
@@ -22,7 +22,7 @@ export const anchors = {
   phaseBat: [[110, 125, 140, 155, 175], [100, 120, 135, 150, 170], [115, 140, 160, 180, 205]],
   phaseEconomy: [[12, 10.5, 9.25, 8, 7], [11, 9.5, 8.5, 7.5, 6.5], [15, 13, 11.5, 10, 8.5]],
   scores: [55, 70, 80, 90, 97],
-  sample: {batting: 120, bowling: 90, phase: 42, consistency: 8},
+  sample: {batting: 120, battingScore: 55, bowling: 90, phase: 42, consistency: 8},
   limitedEvidencePrior: 65,
 } as const;
 

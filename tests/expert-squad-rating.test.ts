@@ -36,6 +36,8 @@ test('all ten baselines provide a legal practical XI, without oversaturating rat
     assert.ok(xi.filter(p => p.isOverseas).length <= 4);
     assert.ok(xi.some(p => p.role === 'Wicketkeeper'));
     assert.ok(report.overallRating < 95);
+    for (const key of Object.keys(categories) as Array<keyof typeof categories>) assert.ok(report[key] >= 0 && report[key] <= 100, key);
+
     assert.ok(report.ratingConfidence > 0);
     if (report.impactPlayer) assert.ok(canUseImpactPlayer(xi, report.impactPlayer));
   }

@@ -44,7 +44,7 @@ function batting(count: Counts, finisher: boolean, phase?: number) {
   const average = count.outs ? estimate(count.runs / count.outs, finisher ? anchors.finishAverage : anchors.batAverage) : null;
   const consistency = count.innings ? adjust(55 + 45 * count.contributions / count.innings, count.innings, anchors.sample.consistency) : prior;
   const quality = phase !== undefined ? rate : (average === null ? rate : rate * .55 + average * .45) * .9 + consistency * .1;
-  return adjust(quality, count.balls, phase === undefined ? anchors.sample.batting : anchors.sample.phase);
+  return adjust(quality, count.balls, phase === undefined ? anchors.sample.battingScore : anchors.sample.phase);
 }
 function bowling(count: Counts, phase?: number) {
   if (!count.legalBalls) return null;
@@ -122,13 +122,15 @@ function lineupScores(xi: Rated[], impact?: Rated) {
   const spin = bowlers.filter(p => p.rating.style === 'SPIN');
   const keepers = batters.filter(p => p.rating.keeper);
   const provenBowls = bowlers.filter(p => p.rating.bowling !== null && p.rating.confidence >= 30);
-  const batting = .31 * withSlots(openers.map(batQuality), 2, 56) + .32 * withSlots(middle.map(batQuality), 3, 58)
+  const roleFit = .31 * withSlots(openers.map(batQuality), 2, 56) + .32 * withSlots(middle.map(batQuality), 3, 58)
     + .27 * withSlots(finishers.map(batQuality), 2, 56) + .10 * withSlots(best(batters, batQuality, 7).slice(5).map(batQuality), 2, 56);
+  const topSix = withSlots(best(batters, batQuality, 6).map(batQuality), 6, 56);
+  const batting = .65 * topSix + .35 * roleFit;
   const bowling = .44 * withSlots(best(pace, bowlQuality, 2).map(bowlQuality), 2, 55)
     + .24 * withSlots(best(spin, bowlQuality, 1).map(bowlQuality), 1, 55)
     + .32 * withSlots(best(bowlers, bowlQuality, 5).slice(2).map(bowlQuality), 3, 54);
   const knownHands = new Set(batters.map(p => p.hand).filter(Boolean));
-  const balance = 46 + 8 * Number(keepers.length > 0) + Math.min(6, provenBowls.length) * 3
+  const balance = 40 + 8 * Number(keepers.length > 0) + Math.min(6, provenBowls.length) * 3
     + Math.min(2, xi.filter(p => p.rating.allRounder).length) * 5 + 6 * Number(pace.length >= 2 && spin.length >= 1)
     + Math.min(7, batters.length) + (knownHands.size === 2 ? 3 : 0) + (impact ? 4 : 0);
   const phase = phases.map(p => (roleCoverage(batters, p, 'batting') + roleCoverage(bowlers, p, 'bowling')) / 2);
@@ -228,7 +230,7 @@ export function createExpertEngine(dataset: RatingDataset) {
     const general: Scores = {
       battingStrength: round(lineup.batting),
       bowlingStrength: round(lineup.bowling),
-      playingXIBalance: round(incomplete ? Math.min(69, lineup.balance) : lineup.balance),
+      playingXIBalance: round(Math.min(incomplete ? 69 : 100, lineup.balance)),
       benchStrength: round(mean(backedUp.map(n => n ?? 55))),
       phaseCoverage: round(.27 * lineup.phase[0] + .28 * lineup.phase[1] + .45 * lineup.phase[2] - Math.max(0, 69 - deathBowling) * .24),
       fieldingWicketkeeping: round(fielding.length ? .55 * keeping + .45 * mean(fielding) : keeping),
@@ -236,7 +238,7 @@ export function createExpertEngine(dataset: RatingDataset) {
     const scores = reference ? Object.fromEntries(keys.map((key, index) => [key, reference.scores[index]])) as Scores : general;
     const overallRating = overall(scores);
     const categoryExplanations: Record<Category, string> = {
-      battingStrength: 'Opener, middle-order and finisher quality plus batting depth. Strike rate, dismissal average and contribution frequency use IPL evidence. Pace and spin scoring splits contribute where both samples are sufficient.',
+      battingStrength: 'Quality of the strongest six batters plus opening, middle-order, finishing and depth coverage. Strike rate, dismissal average and contribution frequency use IPL evidence. Pace and spin scoring splits contribute where both samples are sufficient.',
       bowlingStrength: 'Lead pace pair, best spin option and supporting bowlers. Economy and balls per wicket measure control and threat.',
       playingXIBalance: 'Keeper, batting depth, proven bowling options, genuine all-rounders, pace and spin, and a legal Impact option. Left/right evidence uses verified profile metadata where available.',
       benchStrength: 'Quality of the strongest backup per role outside the XI. Unproven or uncovered roles receive a conservative assessment.',
