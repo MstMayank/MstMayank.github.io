@@ -593,21 +593,44 @@ function venueLabel(name) {
     byId('battle-share-status').textContent='';
   }
   let cardBlob=null,cardObjectURL='';
-  const portraitInputs=['battle-photo-first','battle-photo-second'].map(byId);
   let cardRender=0;
+  const portraitCache=new Map();
+  const portraitTitles={
+    'MS Dhoni':'MS Dhoni', 'JJ Bumrah':'Jasprit Bumrah', 'V Kohli':'Virat Kohli',
+    'RG Sharma':'Rohit Sharma', 'SK Raina':'Suresh Raina', 'AB de Villiers':'AB de Villiers',
+    'SR Tendulkar':'Sachin Tendulkar', 'H Kaur':'Harmanpreet Kaur', 'S Mandhana':'Smriti Mandhana',
+    'EA Perry':'Ellyse Perry', 'MM Lanning':'Meg Lanning', 'SFM Devine':'Sophie Devine',
+  };
 
-  async function loadPortrait(file) {
-    if(!file)return null;
-    const url=URL.createObjectURL(file);
+  async function loadPortrait(name) {
+    const title=portraitTitles[name]||name;
+    if(portraitCache.has(title))return portraitCache.get(title);
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),3500);
+    let imageUrl;
     try {
+      const query=new URLSearchParams({action:'query',format:'json',formatversion:'2',origin:'*',
+        titles:title,redirects:'1',prop:'pageimages|pageterms',wbptterms:'description',
+        pithumbsize:'320',pilicense:'free'});
+      const response=await fetch('https://en.wikipedia.org/w/api.php?'+query,{signal:controller.signal});
+      if(!response.ok)return null;
+      const [page]= (await response.json()).query?.pages||[];
+      if(!page?.thumbnail?.source||!page.terms?.description?.some(description=>/cricket/i.test(description)))return null;
+      const source=new URL(page.thumbnail.source);
+      if(source.origin!=='https://upload.wikimedia.org'||!source.pathname.startsWith('/wikipedia/commons/'))return null;
+      const photo=await fetch(source,{signal:controller.signal});
+      if(!photo.ok)return null;
+      imageUrl=URL.createObjectURL(await photo.blob());
       const image=new Image();
-      image.src=url;
+      image.src=imageUrl;
       await image.decode();
+      portraitCache.set(title,image);
       return image;
     } catch {
       return null;
     } finally {
-      URL.revokeObjectURL(url);
+      clearTimeout(timeout);
+      if(imageUrl)URL.revokeObjectURL(imageUrl);
     }
   }
 
@@ -626,7 +649,7 @@ function venueLabel(name) {
     text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,82,265,30,'#B7CCBA');
     const names=inputs.map(input=>input.value);
     const roles=mode==='direct'?['BATTER','BOWLER']:mode==='bowlers'?['BOWLER','BOWLER']:mode==='teams'?['TEAM','TEAM']:['BATTER','BATTER'];
-    const photos=await Promise.all(portraitInputs.map(input=>loadPortrait(input.files[0])));
+    const photos=mode==='teams'?[]:await Promise.all(names.map(loadPortrait));
     if(render!==cardRender)return;
     c.textAlign='center';
     names.forEach((name,index)=>{
@@ -698,11 +721,7 @@ function venueLabel(name) {
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
   });
-  byId('battle-card-preview').addEventListener('click',()=>{
-    portraitInputs.forEach(input=>{input.value='';});
-    drawBattleCard();
-  });
-  portraitInputs.forEach(input=>input.addEventListener('change',drawBattleCard));
+  byId('battle-card-preview').addEventListener('click',drawBattleCard);
   byId('battle-card-close').addEventListener('click',()=>{cardRender++;byId('battle-card-dialog').hidden=true;byId('battle-card-preview').focus();});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')byId('battle-card-dialog').hidden=true;});
   byId('battle-card-native').addEventListener('click',()=>{
