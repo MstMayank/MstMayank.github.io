@@ -761,15 +761,19 @@ function venueLabel(name) {
 
     const [first,second]=table.rows;
     if(!second&&table.headers[1]==='Runs'&&table.headers[2]==='Balls'){
-      label(first[1]+' RUNS OFF '+first[2]+' BALLS',540,1370,118,956,cream,true);
+      label(first[1],250,1360,154,230,'#f5c93a',true);
+      label('RUNS',420,1360,54,112,cream,true);
+      label('OFF',540,1360,34,75,muted,true);
+      label(first[2],700,1360,154,230,cream,true);
+      label('BALLS',894,1360,54,140,cream,true);
       rule(1410);
       const expanded={'SR':'Strike rate','4s':'Fours','6s':'Sixes'};
       table.headers.slice(3).forEach((header,index)=>{
-        const x=222+(index%3)*318, y=1510+Math.floor(index/3)*130;
+        const x=222+(index%3)*318, y=1510+Math.floor(index/3)*140;
         const bowler = /dot|dismissal/i.test(header);
         const accent = bowler ? '#7fb0ff' : '#f5c93a';
         c.beginPath();
-        c.roundRect(x-149, y-75, 298, 119, 22);
+        c.roundRect(x-149, y-75, 298, 128, 22);
         c.fillStyle='#ffffff0c';
         c.fill();
         c.strokeStyle='#ffffff20';
@@ -779,6 +783,22 @@ function venueLabel(name) {
         c.fillRect(x-116, y-75, 232, 4);
         label(first[index+3],x,y-9,70,275,accent,true);
         label((expanded[header]||header).toUpperCase(),x,y+26,22,275,muted);
+        const value = Number(String(first[index+3]).replace(/,/g, ''));
+        if (!Number.isFinite(value)) return;
+        const markerCount = /^(4s|6s|dismissals)$/i.test(header);
+        c.fillStyle = accent;
+        if (markerCount) {
+          const count = Math.min(18, Math.max(0, value));
+          for (let mark = 0; mark < count; mark++) {
+            c.fillRect(x - (count * 12 - 7) / 2 + mark * 12, y + 36, 7, 8);
+          }
+        } else {
+          const max = /strike|^SR$/i.test(header) ? 200 : /dot/i.test(header) ? 100 : 50;
+          c.fillStyle = '#ffffff20';
+          c.fillRect(x-108,y+36,216,7);
+          c.fillStyle = accent;
+          c.fillRect(x-108,y+36,216*Math.max(0,Math.min(1,value/max)),7);
+        }
       });
     }else{
       table.headers.slice(1).forEach((header,index)=>{
