@@ -39,7 +39,7 @@
 /* Retention room styling based on the supplied mockup. */
 .premium-retention{max-width:1180px;margin-inline:auto}
 .premium-retention .room-heading h1{font:800 clamp(30px,5vw,48px)/1.1 system-ui,sans-serif}
-.premium-retention .purse-tracker{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;overflow:hidden;border-radius:20px;background:#0a1611eb;backdrop-filter:blur(14px)}
+.premium-retention .purse-tracker{overflow:hidden;border-radius:20px;background:#0a1611eb;backdrop-filter:blur(14px)}
 .premium-retention .retention-layout{display:block}
 .premium-retention .retention-layout aside{position:static;display:block;margin-top:24px}
 .retention-role-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
