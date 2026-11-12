@@ -653,114 +653,99 @@ function venueLabel(name) {
     try {
     const table=cardTables[+byId('battle-card-format').value||0]; if(!table)return;
     const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
-    const c=canvas.getContext('2d');if(!c)throw new Error('Canvas unavailable');c.fillStyle='#07241A';c.fillRect(0,0,1080,1920);
-    const background=c.createLinearGradient(0,0,1080,1920);
-    background.addColorStop(0,'#0c3628');
-    background.addColorStop(.55,'#09241c');
-    background.addColorStop(1,'#071510');
-    c.fillStyle=background;c.fillRect(0,0,1080,1920);
-    function panel(x,y,w,h,r,fill,stroke){
-      c.beginPath();
-      c.moveTo(x+r,y);
-      c.arcTo(x+w,y,x+w,y+h,r);
-      c.arcTo(x+w,y+h,x,y+h,r);
-      c.arcTo(x,y+h,x,y,r);
-      c.arcTo(x,y,x+w,y,r);
-      c.closePath();
-      c.fillStyle=fill;c.fill();
-      c.strokeStyle=stroke;c.lineWidth=2;c.stroke();
-    }
-    function text(value,x,y,size=30,color='#F2F5EF',weight=600){c.font=weight+' '+size+'px Arial, sans-serif';c.fillStyle=color;c.fillText(String(value),x,y);}
-    function wrap(value,x,y,maxWidth,size=40){c.font='700 '+size+'px Arial, sans-serif';let line='';for(const word of value.split(' ')){if(c.measureText(line+word).width>maxWidth&&line){text(line,x,y,size);line='';y+=size*1.25;}line+=word+' ';}text(line,x,y,size);return y+size*1.25;}
-    text('tcs. / THE CRICKET SPACE',82,115,30,'#F6C453');
-    panel(675,75,325,60,30,'#e8c468','#e8c468');
-    c.textAlign='center';
-    text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,837,114,24,'#23190b');
-    const gold=c.createLinearGradient(150,0,930,0);
-    gold.addColorStop(0,'#fff3c9');gold.addColorStop(.52,'#e8c468');gold.addColorStop(1,'#ba8839');
-    text('PLAYER BATTLE',540,237,92,gold,900);
-    c.textAlign='left';
-    const names=inputs.map(input=>input.value);
-    const roles=mode==='direct'?['BATTER','BOWLER']:mode==='bowlers'?['BOWLER','BOWLER']:mode==='teams'?['TEAM','TEAM']:['BATTER','BATTER'];
-    const photos=mode==='teams'?[]:await Promise.all(names.map(loadPortrait));
+    const c=canvas.getContext('2d');
+    if(!c)throw new Error('Canvas unavailable');
+    const names=table.rows.length===2?table.rows.map(row=>row[0]):inputs.map(input=>input.value);
+    const art={'MS Dhoni':'dhoni','DW Steyn':'steyn','Dale Steyn':'steyn'};
+    const photos=await Promise.all(names.map(async name=>{
+      if(mode==='teams')return null;
+      if(competition==='ipl'&&art[name]){
+        const portrait=new Image();
+        portrait.src='battle-art/'+art[name]+'.jpg';
+        try{await portrait.decode();return portrait;}catch{}
+      }
+      return loadPortrait(name);
+    }));
     if(render!==cardRender)return;
+
+    const cream='#fff3d7', gold='#eac357', muted='#b9c9bd';
+    const background=c.createLinearGradient(0,0,1080,1920);
+    background.addColorStop(0,'#102b21');
+    background.addColorStop(1,'#061811');
+    c.fillStyle=background;
+    c.fillRect(0,0,1080,1920);
+
+    function label(value,x,y,size,maxWidth,color=cream,display=false){
+      c.fillStyle=color;
+      c.font=display?'italic 900 '+size+'px "Big Shoulders Display", "Arial Narrow", Arial, sans-serif':
+        '700 '+size+'px Manrope, Arial, sans-serif';
+      c.fillText(String(value),x,y,maxWidth);
+    }
+    function rule(y){
+      c.fillStyle=gold;
+      c.fillRect(62,y,956,2);
+    }
+    label('THE CRICKET SPACE',62,94,27,420);
+    c.textAlign='right';
+    label((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,1018,94,27,430,gold);
+    rule(116);
     c.textAlign='center';
+    label('PLAYER BATTLE',540,290,154,956,cream,true);
+
     names.forEach((name,index)=>{
-      const x=index===0?310:770;
-      const portrait=photos[index];
+      const x=46+index*495, y=345, width=490, height=690;
       c.save();
       c.beginPath();
-      c.arc(x,390,94,0,2*Math.PI);
-      c.fillStyle='#245640';
-      c.fill();
+      c.moveTo(x+82,y);
+      c.lineTo(x+width,y);
+      c.lineTo(x+width-82,y+height);
+      c.lineTo(x,y+height);
+      c.closePath();
       c.clip();
-      if(portrait){
-        const size=Math.min(portrait.naturalWidth,portrait.naturalHeight);
-        c.drawImage(portrait,(portrait.naturalWidth-size)/2,(portrait.naturalHeight-size)/2,size,size,x-94,296,188,188);
+      c.fillStyle=index===0?'#665921':'#582826';
+      c.fillRect(x,y,width,height);
+      const photo=photos[index];
+      if(photo){
+        const scale=Math.max(width/photo.naturalWidth,height/photo.naturalHeight);
+        const w=photo.naturalWidth*scale, h=photo.naturalHeight*scale;
+        c.drawImage(photo,x+(width-w)/2,y+(height-h)/2,w,h);
       }else{
-        text(name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase(),x,410,58);
+        label(name.split(/\s+/).slice(0,2).map(word=>word[0]).join(''),x+width/2,y+390,166,300,cream,true);
       }
       c.restore();
-      c.strokeStyle=index===0?'#F6C453':'#f87670';
-      c.lineWidth=7;c.stroke();
-      c.font='700 38px Arial, sans-serif';
-      c.fillStyle='#F2F5EF';
-      c.fillText(name,x,537,420);
-      text(roles[index],x,578,24,'#F6C453');
+      label(name.toUpperCase(),x+width/2,1115,62,425,cream,true);
     });
-    panel(492,342,96,96,48,'#0a1812','#56725f');
-    text('VS',540,405,42,'#F6C453');
-    c.textAlign='left';
-    const context=[
-      (byId('battle-season').value||'All seasons')+' · '+(byId('battle-phase').selectedOptions[0]?.textContent||'All overs'),
+    label('/',540,1115,62,48,gold,true);
+    const filters=[
+      byId('battle-season').value||'All seasons',
+      byId('battle-phase').selectedOptions[0]?.textContent||'All overs',
       byId('battle-venue').value||'All venues',
     ];
-    context.forEach((label,index)=>{
-      const x=82+index*468;
-      c.font='600 24px Arial, sans-serif';
-      panel(x,615,Math.min(444,c.measureText(label).width+44),50,25,'#18362a','#466456');
-      c.fillStyle='#d3ddd6';c.fillText(label,x+22,648,400);
-    });
-    const y=732;
-    const rows=table.rows.slice(0,2);const columns=rows.length===2?2:1;const columnWidth=916/columns;
-    rows.forEach((row,index)=>{
-      if(rows.length===1){
-        text(row[0].toUpperCase(),82,y,31,'#F6C453');
-        c.fillStyle='#68583b';c.fillRect(82,y+15,912,2);
-        table.headers.slice(1).forEach((label,i)=>{
-          const x=82+(i%2)*470, yy=y+45+Math.floor(i/2)*185;
-          const hero=i<2;
-          panel(x,yy,442,166,30,hero?'#393927':i===6?'#302421':'#172d23',hero?'#8b743e':'#365147');
-          text(label.toUpperCase(),x+24,yy+42,25,'#b7ccba');
-          text(row[i+1],x+24,yy+113,hero?68:57,hero?'#f6c453':i===6?'#ff938c':'#f2f5ef');
-          const value=Number(String(row[i+1]).replace(/,/g,''));
-          if(!Number.isFinite(value))return;
-          if(i>=4&&i<=6){
-            const color=['#4bd890','#f6c453','#f87670'][i-4];
-            for(let mark=0;mark<Math.min(value,16);mark++){
-              panel(x+24+mark*19,yy+132,i===6?7:12,i===6?16:12,i===5?6:2,color,color);
-            }
-          }else{
-            const scale=[100,100,200,100,0,0,0,50][i];
-            if(!scale)return;
-            c.fillStyle='#405044';c.fillRect(x+24,yy+137,394,5);
-            c.fillStyle=gold;c.fillRect(x+24,yy+137,394*Math.min(1,Math.max(0,value/scale)),5);
-          }
-        });
-      }else{
-        const x=82+index*columnWidth;
-        let yy=wrap(row[0],x,y,columnWidth-28,34)+12;
-        for(let i=1;i<table.headers.length;i++){
-          panel(x,yy-24,columnWidth-24,74,12,'#123529','#315b44');
-          text(table.headers[i].toUpperCase(),x+16,yy+2,22,'#B7CCBA');
-          text(row[i],x+16,yy+36,32,i===1?'#F6C453':'#F2F5EF');yy+=81;
-        }
-      }
-    });
-    text('Archived matches only · not full career totals',82,1665,24,'#B7CCBA');
-    text('Cricsheet · ODC Attribution License',82,1705,24,'#B7CCBA');
-    text('mstmayank.github.io/player-battle.html',82,1755,28,'#F6C453');
-    photos.filter(Boolean).forEach((photo,index)=>text(photo.credit,82,1810+index*34,21,'#B7CCBA'));
+    label(filters.join(' · '),540,1170,24,936,muted);
+    rule(1196);
+
+    const [first,second]=table.rows;
+    if(!second&&table.headers[1]==='Runs'&&table.headers[2]==='Balls'){
+      label(first[1]+' RUNS OFF '+first[2]+' BALLS',540,1370,118,956,cream,true);
+      rule(1410);
+      const expanded={'SR':'Strike rate','4s':'Fours','6s':'Sixes'};
+      table.headers.slice(3).forEach((header,index)=>{
+        const x=222+(index%3)*318, y=1510+Math.floor(index/3)*130;
+        label(first[index+3],x,y,76,290,cream,true);
+        label((expanded[header]||header).toUpperCase(),x,y+45,24,290,gold);
+      });
+    }else{
+      table.headers.slice(1).forEach((header,index)=>{
+        const y=1250+index*53;
+        label(first[index+1],210,y,39,280,cream,true);
+        label(header.toUpperCase(),540,y,24,345,gold);
+        if(second)label(second[index+1],870,y,39,280,cream,true);
+      });
+    }
+    rule(1755);
+    label('mstmayank.github.io/player-battle.html',540,1800,24,956,gold);
+    label('Archived matches · Cricsheet · ODC Attribution License',540,1834,20,956,muted);
+    photos.filter(photo=>photo?.credit).forEach((photo,index)=>label(photo.credit,540,1863+index*24,17,956,muted));
     canvas.toBlob(blob=>{
       if(render!==cardRender)return;
       if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
