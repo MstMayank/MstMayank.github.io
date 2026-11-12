@@ -684,6 +684,13 @@ function venueLabel(name) {
       }
       return loadPortrait(name);
     }));
+    // Wait for the card typefaces before measuring or drawing any text.
+    if (document.fonts) {
+      await Promise.allSettled([
+        document.fonts.load('italic 900 154px "Big Shoulders Display"'),
+        document.fonts.load('700 27px Manrope'),
+      ]);
+    }
     if(render!==cardRender)return;
 
     const cream='#fff3d7', gold='#eac357', muted='#b9c9bd';
