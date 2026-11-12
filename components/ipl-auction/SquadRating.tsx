@@ -64,28 +64,7 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
             <div><dt>Purse remaining</dt><dd>{money(session.totals.remainingLakh)}</dd></div>
           </dl>
         </div>
-        <details>
-          <summary>Assessment details</summary>
-          <p>{report.approvedReference ? 'Approved expert reference' : 'V6 provisional expert assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
-          <ul>{keys.map(key => <li key={key}><strong>{categories[key][0]} · {categories[key][1]}%</strong> {report.categoryExplanations[key]}</li>)}</ul>
-        <div className="expert-rating-columns">
-          <div>
-            <h3>Best Playing XI</h3>
-            {report.bestPlayingXI.length ? <ol>{report.bestPlayingXI.map(player =>
-              <li key={player.id}>{player.name} <small>{player.role}{player.isOverseas ? ' · Overseas' : ''}</small></li>)}</ol>
-              : <p>No XI meets the current selection rules.</p>}
-            <p><strong>Impact Player</strong> {report.impactPlayer?.name ?? 'No eligible option with sufficient IPL evidence'}</p>
-          </div>
-          <div>
-            <h3>Auction priorities</h3>
-            {report.auctionPriorities.length ? <ul>{report.auctionPriorities.map(item => <li key={item}>{item}</li>)}</ul> : <p>No immediate role gaps identified.</p>}
-            {!!report.strengths.length && <><h3>Strengths</h3><ul>{report.strengths.map(item => <li key={item}>{item}</li>)}</ul></>}
-            {!!report.weaknesses.length && <><h3>Weaknesses</h3><ul>{report.weaknesses.map(item => <li key={item}>{item}</li>)}</ul></>}
-          </div>
-        </div>
-        </details>
       </div> : <p role="status">Retain a player to start your squad assessment.</p>}
-      <p className="fine-print">Ball-by-ball data from <a href={report.source}>Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution 1.0</a>.</p>
     </>}
   </section>;
 }
