@@ -290,8 +290,15 @@
   overflow-wrap: normal;
   word-break: normal;
 }
-.player-card .decision-buttons .retention-undo {
-  grid-column: 1 / -1;
-  justify-self: start;
+.retention-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.retention-card-footer .retention-undo {
+  padding: 0;
+  min-height: 0;
   white-space: nowrap;
 }
+
