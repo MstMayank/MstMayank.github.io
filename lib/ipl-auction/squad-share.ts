@@ -3,12 +3,18 @@ export type ShareScope='ALL'|'RETAINED'|'DECIDED';
 export const shareMoney=(lakh:number)=>`₹${(lakh/100).toLocaleString('en-IN',{maximumFractionDigits:2})} Cr`;
 export function squadShareModel(session:SessionView,scope:ShareScope='ALL'){
  const players=session.squad.filter(m=>scope==='ALL'||session.decisions[m.playerId]==='RETAIN'||(scope==='DECIDED'&&session.decisions[m.playerId]==='RELEASE')).map(m=>({name:m.player.name,role:m.player.role.replaceAll('_',' '),status:session.decisions[m.playerId]==='RETAIN'?'RETAINED':session.decisions[m.playerId]==='RELEASE'?'RELEASED':'UNDECIDED',costLakh:session.rules.costMode==='SALARY'&&session.decisions[m.playerId]==='RETAIN'?(m.salaryVerified?m.previousSalaryLakh:m.customSalaryLakh):null}));
- return {team:session.team.name,teamColor:session.team.color,shortName:session.team.shortName,year:session.season.year,state:session.state==='CONFIRMED'?'CONFIRMED':'DRAFT',title:scope==='ALL'?'FULL SQUAD & DECISIONS':scope==='DECIDED'?'RETENTION DECISIONS':'MY RETAINED SQUAD',players,remainingLakh:session.totals.remainingLakh,spentLakh:session.totals.spentLakh,retained:session.totals.retained,released:session.totals.released,undecided:session.totals.undecided};
+ return {teamId:session.team.id,team:session.team.name,teamColor:session.team.color,shortName:session.team.shortName,year:session.season.year,state:session.state==='CONFIRMED'?'CONFIRMED':'DRAFT',title:scope==='ALL'?'FULL SQUAD & DECISIONS':scope==='DECIDED'?'RETENTION DECISIONS':'MY RETAINED SQUAD',players,remainingLakh:session.totals.remainingLakh,spentLakh:session.totals.spentLakh,retained:session.totals.retained,released:session.totals.released,undecided:session.totals.undecided};
 }
 export type SquadShareModel=ReturnType<typeof squadShareModel>;
 export function squadShareText(model:SquadShareModel){return [`THE CRICKET SPACE · IPL ${model.year}`,`${model.team} · ${model.title} · ${model.state}`,`Purse left: ${shareMoney(model.remainingLakh)} | Committed: ${shareMoney(model.spentLakh)}`,`${model.retained} retained · ${model.released} released · ${model.undecided} undecided`,'',...model.players.map((p,i)=>`${i+1}. ${p.name} — ${p.status}${p.costLakh!==null?' · '+shareMoney(p.costLakh):''}`),'','Fan-made simulation. 2026 baseline + confirmed 2027 trades; not official 2027 decisions.'].join('\n');}
 export async function renderSquadCard(model:SquadShareModel,rating:number|null=null){
  if(!model.players.length)throw new Error('Make a retention decision before sharing.');
+ const logo=await new Promise<HTMLImageElement|null>(resolve=>{
+  const image=new Image();
+  image.onload=()=>resolve(image);
+  image.onerror=()=>resolve(null);
+  image.src=`/ipl-auction/logos/${encodeURIComponent(model.teamId)}.png`;
+ });
  const retained=model.players.filter(p=>p.status==='RETAINED').sort((a,b)=>(b.costLakh??0)-(a.costLakh??0));
  const featured=retained.slice(0,4), others=retained.slice(4);
  const released=model.players.filter(p=>p.status==='RELEASED');
@@ -48,7 +54,10 @@ export async function renderSquadCard(model:SquadShareModel,rating:number|null=n
  text('THE CRICKET SPACE',48,57,24,gold);
  panel(750,26,282,46,'#0004',model.state==='CONFIRMED'?green:gold,21);
  text(model.state==='CONFIRMED'?'RETENTIONS LOCKED':'RETENTION DRAFT',770,56,21,model.state==='CONFIRMED'?green:gold,242);
- text(model.shortName,42,217,155,title,630);
+ if(logo){
+  const scale=Math.min(180/logo.naturalWidth,160/logo.naturalHeight);
+  c.drawImage(logo,48,76+(160-logo.naturalHeight*scale)/2,logo.naturalWidth*scale,logo.naturalHeight*scale);
+ }else text(model.shortName,42,217,155,title,630);
  text('RETENTION',850,141,21,muted,180);
  text(String(model.year),850,204,58,'#f2f5f1',180);
  text(model.team,48,267,33,accent,rating===null?970:640);
