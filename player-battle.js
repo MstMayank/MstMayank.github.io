@@ -711,6 +711,18 @@ function venueLabel(name) {
       c.fillRect(0, 0, 1080, 1920);
     }
 
+    // Dither the background before drawing text and portraits to soften gradient bands.
+    const backdrop = c.getImageData(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < backdrop.data.length; i += 4) {
+      if (backdrop.data[i + 3] !== 255) continue;
+      const pixel = i / 4;
+      const adjustment = ((Math.imul(pixel ^ (pixel >>> 16), 1597334677) >>> 24) % 3) - 1;
+      backdrop.data[i] += adjustment;
+      backdrop.data[i + 1] += adjustment;
+      backdrop.data[i + 2] += adjustment;
+    }
+    c.putImageData(backdrop, 0, 0);
+
     function label(value,x,y,size,maxWidth,color=cream,display=false){
       c.fillStyle=color;
       c.font=display?'italic 900 '+size+'px "Big Shoulders Display", "Arial Narrow", Arial, sans-serif':
@@ -749,7 +761,7 @@ function venueLabel(name) {
         const scale = Math.max(width / photo.naturalWidth, height / photo.naturalHeight) * (isAbd ? 1.24 : 1);
         const imageWidth = photo.naturalWidth * scale;
         const imageHeight = photo.naturalHeight * scale;
-        c.drawImage(photo, x + (width - imageWidth) / 2, y + (height - imageHeight) * (isAbd ? 1 : 0.25), imageWidth, imageHeight);
+        c.drawImage(photo, x + (width - imageWidth) / 2, y + (height - imageHeight) * (isAbd ? 0.76 : 0.25), imageWidth, imageHeight);
       }else{
         label(name.split(/\s+/).slice(0,2).map(word=>word[0]).join(''),x+width/2,y+390,166,300,cream,true);
       }
