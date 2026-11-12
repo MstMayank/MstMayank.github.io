@@ -657,7 +657,7 @@ function venueLabel(name) {
     const names=table.rows.length===2?table.rows.map(row=>row[0]):inputs.map(input=>input.value);
     const art={
       international:{'V Kohli':'kohli-india','Virat Kohli':'kohli-india'},
-      ipl:{'HH Pandya':'hardik','Hardik Pandya':'hardik','RG Sharma':'rohit','Rohit Sharma':'rohit','MS Dhoni':'dhoni','JJ Bumrah':'bumrah','Jasprit Bumrah':'bumrah','DW Steyn':'steyn','Dale Steyn':'steyn'},
+      ipl:{'V Kohli':'kohli-rcb','Virat Kohli':'kohli-rcb','AB de Villiers':'abd-rcb','HH Pandya':'hardik','Hardik Pandya':'hardik','RG Sharma':'rohit','Rohit Sharma':'rohit','MS Dhoni':'dhoni','JJ Bumrah':'bumrah','Jasprit Bumrah':'bumrah','DW Steyn':'steyn','Dale Steyn':'steyn'},
       wpl:{'S Mandhana':'mandhana','H Kaur':'harmanpreet'},
     };
     const photos=await Promise.all(names.map(async name=>{
