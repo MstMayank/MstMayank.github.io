@@ -15,7 +15,6 @@ export default function AuctionHome(){const [seasons,setSeasons]=useState<Season
   <header className="hero">
    <h1>IPL Mock <span>Squad</span></h1>
    <p className="lead">10 franchises. One chair with your name on it. Retain your core, release the rest, then win the room.</p>
-   <div className="row">{campaignHref&&<Link className="btn" href={campaignHref}>Start a campaign</Link>}<a className="btn ghost" href="#war">Resume saved game</a></div>
   </header>
   <details className="note"><summary>Simulation, not a prediction <i>Tap to read</i></summary><Notice/></details>
   <section id="campaign">
