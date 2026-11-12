@@ -5,8 +5,15 @@ current roster and compares it with the nine other franchises' baseline squads.
 
 The six weights are 30% batting, 30% bowling, 15% Playing XI balance, 10% bench,
 10% phase coverage and 5% fielding and wicketkeeping. The score is the weighted
-sum. Scores are absolute expert-rubric estimates. The three approved references
-are selected by exact roster membership, regardless of franchise or price.
+sum. V6 uses the ten supplied expert baselines for the full simulator rosters.
+Current squads are rated with the same IPL model as the full roster and each
+category moves by the net difference. The legacy exact-squad references remain
+available in the uncalibrated evaluator.
+
+The 274 supplied impact records are indexed by player ID. Manual estimates
+take precedence in the listed discipline. Model estimates blend into existing
+IPL evidence; entries without season evidence do not invent performance.
+Impact estimates are provisional and do not increase IPL data confidence.
 
 The evidence uses completed IPL 2025 (40%) and IPL 2026 (60%). A missing season
 reduces evidence confidence and the available season supplies the estimate.

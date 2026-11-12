@@ -1,4 +1,4 @@
-export const EXPERT_VERSION = 'IPL-2027-expert-v3';
+export const EXPERT_VERSION = 'IPL-2027-expert-v6';
 export const seasonWeights = {2025: .4, 2026: .6} as const;
 export const categories = {
   battingStrength: ['Batting Strength', 30],

@@ -1,0 +1,122 @@
+[
+  {
+    "team": "rcb",
+    "battingStrength": 95,
+    "bowlingStrength": 93,
+    "playingXIBalance": 95,
+    "benchStrength": 91,
+    "phaseCoverage": 94,
+    "fieldingWicketkeeping": 87,
+    "overallRating": 93.5,
+    "rank": 1,
+    "tier": "S"
+  },
+  {
+    "team": "gt",
+    "battingStrength": 93,
+    "bowlingStrength": 95,
+    "playingXIBalance": 93,
+    "benchStrength": 88,
+    "phaseCoverage": 93,
+    "fieldingWicketkeeping": 85,
+    "overallRating": 92.7,
+    "rank": 2,
+    "tier": "S"
+  },
+  {
+    "team": "srh",
+    "battingStrength": 96,
+    "bowlingStrength": 87,
+    "playingXIBalance": 90,
+    "benchStrength": 85,
+    "phaseCoverage": 91,
+    "fieldingWicketkeeping": 85,
+    "overallRating": 90.25,
+    "rank": 3,
+    "tier": "S"
+  },
+  {
+    "team": "rr",
+    "battingStrength": 94,
+    "bowlingStrength": 89,
+    "playingXIBalance": 90,
+    "benchStrength": 83,
+    "phaseCoverage": 91,
+    "fieldingWicketkeeping": 86,
+    "overallRating": 90.1,
+    "rank": 4,
+    "tier": "S"
+  },
+  {
+    "team": "mi",
+    "battingStrength": 91,
+    "bowlingStrength": 89,
+    "playingXIBalance": 91,
+    "benchStrength": 87,
+    "phaseCoverage": 90,
+    "fieldingWicketkeeping": 86,
+    "overallRating": 89.65,
+    "rank": 5,
+    "tier": "A+"
+  },
+  {
+    "team": "kkr",
+    "battingStrength": 87,
+    "bowlingStrength": 90,
+    "playingXIBalance": 89,
+    "benchStrength": 84,
+    "phaseCoverage": 89,
+    "fieldingWicketkeeping": 84,
+    "overallRating": 87.95,
+    "rank": 6,
+    "tier": "A+"
+  },
+  {
+    "team": "pbks",
+    "battingStrength": 94,
+    "bowlingStrength": 82,
+    "playingXIBalance": 91,
+    "benchStrength": 86,
+    "phaseCoverage": 85,
+    "fieldingWicketkeeping": 85,
+    "overallRating": 87.8,
+    "rank": 7,
+    "tier": "A+"
+  },
+  {
+    "team": "dc",
+    "battingStrength": 88,
+    "bowlingStrength": 83,
+    "playingXIBalance": 87,
+    "benchStrength": 85,
+    "phaseCoverage": 85,
+    "fieldingWicketkeeping": 86,
+    "overallRating": 85.65,
+    "rank": 8,
+    "tier": "A+"
+  },
+  {
+    "team": "lsg",
+    "battingStrength": 86,
+    "bowlingStrength": 86,
+    "playingXIBalance": 86,
+    "benchStrength": 82,
+    "phaseCoverage": 85,
+    "fieldingWicketkeeping": 83,
+    "overallRating": 85.35,
+    "rank": 9,
+    "tier": "A+"
+  },
+  {
+    "team": "csk",
+    "battingStrength": 84,
+    "bowlingStrength": 85,
+    "playingXIBalance": 84,
+    "benchStrength": 78,
+    "phaseCoverage": 84,
+    "fieldingWicketkeeping": 84,
+    "overallRating": 83.7,
+    "rank": 10,
+    "tier": "A"
+  }
+]

@@ -66,7 +66,7 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
         </div>
         <details>
           <summary>Assessment details</summary>
-          <p>{report.approvedReference ? 'Approved expert reference' : 'Expert rubric assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
+          <p>{report.approvedReference ? 'Approved expert reference' : 'V6 provisional expert assessment'} · {report.ratingConfidence}% evidence confidence · {report.coveredPlayers}/{report.playerCount} players with IPL evidence</p>
           <ul>{keys.map(key => <li key={key}><strong>{categories[key][0]} · {categories[key][1]}%</strong> {report.categoryExplanations[key]}</li>)}</ul>
         <div className="expert-rating-columns">
           <div>
@@ -92,7 +92,7 @@ export default function SquadRating({session, disabled, autoRun = false}: {sessi
       </details>
       <details>
         <summary>Method and IPL evidence</summary>
-        <p>IPL 2025 contributes 40% and IPL 2026 contributes 60% when both seasons have evidence. Single-season evidence reduces confidence. Small samples are pulled toward a conservative rubric estimate. Category scores are expert assessments.</p>
+        <p>IPL 2025 contributes 40% and IPL 2026 contributes 60% when both seasons have evidence. Single-season evidence reduces confidence. Small samples are pulled toward a conservative rubric estimate. Category scores use provisional V6 baselines and player impacts. Squad changes are scored against the baseline after recalculating the XI and bench.</p>
         <p>Fielding is provisional. Phase figures use regular innings and scheduled overs 1–6, 7–15 and 16–20. The Impact recommendation is a substitute outside the XI and uses the overseas limit of four.</p>
         <ul>{report.seasons.map(s => <li key={s.year}><a href={s.completionSource}>IPL {s.year}</a> · {s.verifiedMatches}/{s.archiveMatches} archived matches passed verification</li>)}</ul>
         <p>Ball-by-ball source <a href={report.source}>Cricsheet</a> under <a href="https://opendatacommons.org/licenses/by/1-0/">ODC Attribution 1.0</a>. Checked {report.checkedAt} · {report.version}</p>

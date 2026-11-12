@@ -1,35 +1,46 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {assessSquad, buildRating} from '../browser-auction/squad-rating-data';
+import {assessFranchise, assessSquad, buildRating} from '../browser-auction/squad-rating-data';
 import {baselineSquad, createStore, players, teams} from '../browser-auction/store';
-import {canUseImpactPlayer, overall, squadMembers, tierFor} from '../lib/ipl-auction/rating/expert';
+import {canUseImpactPlayer, createExpertEngine, overall, squadMembers, tierFor} from '../lib/ipl-auction/rating/expert';
 import {categories, seasonWeights} from '../lib/ipl-auction/rating/expert-config';
 import {references} from '../lib/ipl-auction/rating/expert-references';
+import baselineRows from '../reference/team-ratings-v6.json';
+import impacts from '../reference/ipl-2027-season-impact.json';
+import data from '../prisma/data/ipl-rating-data.json';
+import {impactIndex, impactQuality} from '../lib/ipl-auction/rating/season-impact';
+import type {RatingDataset} from '../lib/ipl-auction/rating/types';
 import type {SessionView} from '../lib/ipl-auction/types';
 
 test('approved exact compositions return approved weights and ratings in any order', () => {
   assert.deepEqual(Object.values(categories).map(c => c[1]), [30,30,15,10,10,5]);
   assert.deepEqual(seasonWeights, {2025:.4, 2026:.6});
+  const legacyAssess = createExpertEngine(data as unknown as RatingDataset);
   for (const [index, reference] of references.entries()) {
     const squad = reference.names.split('|').map(name => {
       const player = players.find(p => p.name === name);
       assert.ok(player, name);
       return player;
     });
-    const report = assessSquad(squad);
+    const report = legacyAssess(squad);
     assert.equal(report.approvedReference, true);
     assert.equal(report.overallRating, [87.75,83.10,78.40][index]);
     assert.equal(report.overallRating, overall(report));
     assert.equal(report.tier, tierFor(report.overallRating));
-    assert.strictEqual(assessSquad([...squad].reverse()), report);
-    assert.equal(assessSquad(squad.slice(1)).approvedReference, false);
+    assert.strictEqual(legacyAssess([...squad].reverse()), report);
+    assert.equal(legacyAssess(squad.slice(1)).approvedReference, false);
   }
 });
 
 test('all ten baselines provide a legal practical XI, without oversaturating ratings', () => {
   for (const team of teams) {
     const squad = baselineSquad(team.id);
-    const report = assessSquad(squad);
+    const report = assessFranchise(team.id, squad);
+    const expected = baselineRows.find(row => row.team === team.id)!;
+    assert.equal(report.overallRating, expected.overallRating);
+    assert.equal(report.overallRating, overall(report));
+    assert.deepEqual(assessFranchise(team.id, [...squad].reverse()), report);
+    for (const key of Object.keys(categories) as Array<keyof typeof categories>) assert.equal(report[key], expected[key]);
     const xi = report.bestPlayingXI;
     assert.equal(xi.length, 11, team.id);
     assert.equal(new Set(xi.map(p => p.id)).size, 11);
@@ -75,4 +86,36 @@ test('Impact restriction excludes a fifth overseas player and an existing starte
   assert.equal(canUseImpactPlayer(xi, {...overseas,isOverseas:false}), true);
   assert.equal(canUseImpactPlayer(xi, xi[0]), false);
   assert.equal(canUseImpactPlayer(xi.map((p,i) => i===0 ? {...p,isOverseas:false} : p), overseas), true);
+});
+
+test('V6 indexes all 274 player IDs and preserves every manual impact', () => {
+  const index = impactIndex(impacts);
+  assert.equal(index.size, 274);
+  assert.ok(impacts.every(row => data.players.some(player => player.id === row.playerId)));
+  const manual = impacts.filter(row => row.basis === 'MANUAL_CALIBRATION');
+  assert.equal(manual.length, 9);
+  for (const row of manual) {
+    const discipline = row.category.endsWith('BOWLER') ? 'bowling' : 'batting';
+    const selected = index.get(row.playerId);
+    assert.equal(selected?.maxImpact, row.maxImpact);
+    assert.equal(impactQuality(52, selected, discipline), impactQuality(92, selected, discipline));
+  }
+  assert.throws(() => impactIndex([impacts[0], impacts[0]]), /Invalid V6/);
+});
+
+test('RCB V6 removal and replacement use one net change in the calibrated categories', () => {
+  const roster = baselineSquad('rcb');
+  const full = assessFranchise('rcb', roster);
+  assert.equal(full.overallRating, 93.5);
+  const remaining = roster.filter(player => player.name !== 'Virat Kohli');
+  const released = assessFranchise('rcb', remaining);
+  assert.ok(released.battingStrength < full.battingStrength);
+  const replacement = players.find(player => player.name === 'Jos Buttler')!;
+  const revised = [...remaining, replacement];
+  const purchased = assessFranchise('rcb', revised);
+  const rawOriginal = assessSquad(roster);
+  const rawRevised = assessSquad(revised);
+  assert.equal(purchased.battingStrength, Math.round((full.battingStrength + rawRevised.battingStrength - rawOriginal.battingStrength) * 100) / 100);
+  assert.equal(purchased.overallRating, overall(purchased));
+  assert.deepEqual(assessFranchise('rcb', [...remaining, roster.find(player => player.name === 'Virat Kohli')!]), full);
 });

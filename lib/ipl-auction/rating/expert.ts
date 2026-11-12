@@ -1,3 +1,4 @@
+import {impactIndex, impactQuality, type SeasonImpact} from './season-impact';
 import {anchors, categories, EXPERT_VERSION, expertProfiles, seasonWeights, type Category, type Scores} from './expert-config';
 import {references} from './expert-references';
 import {selectLegalXI, type Candidate} from './xi';
@@ -53,7 +54,7 @@ function bowling(count: Counts, phase?: number) {
   return adjust(.55 * control + .45 * strike, count.legalBalls, phase === undefined ? anchors.sample.bowling : anchors.sample.phase);
 }
 
-function profile(member: Member, records: IPLRecord[], metadata?: PlayerMetadata) {
+function profile(member: Member, records: IPLRecord[], metadata?: PlayerMetadata, impact?: SeasonImpact) {
   const review = expertProfiles.find(item => item.playerId === member.id);
   const position = [0, 0, 0];
   let balls = 0, deliveries = 0;
@@ -70,7 +71,7 @@ function profile(member: Member, records: IPLRecord[], metadata?: PlayerMetadata
   const battingOption = keeper || role !== 'BOWLER' || records.some(r => [6, 7, 8].reduce((count, slot) => count + (r.battingPositions[slot] ?? 0), 0) >= 3);
   const bowlingOption = deliveries >= 36 || role === 'BOWLER';
   const allRounder = battingOption && bowlingOption && balls >= 80 && deliveries >= 60;
-  const bat = battingOption ? blend(records, r => {
+  const rawBat = battingOption ? blend(records, r => {
     const base = batting(r.totals, batRole === 'FINISHER');
     if (base === null) return null;
     const pace = r.battingAgainst?.PACE, spin = r.battingAgainst?.SPIN;
@@ -80,7 +81,9 @@ function profile(member: Member, records: IPLRecord[], metadata?: PlayerMetadata
       adjust(estimate(100 * split.runs / split.balls, thresholds), split.balls, anchors.sample.phase)));
     return .9 * base + .1 * matchupFloor;
   }) : null;
-  const bowl = bowlingOption ? blend(records, r => bowling(r.totals)) : null;
+  const rawBowl = bowlingOption ? blend(records, r => bowling(r.totals)) : null;
+  const bat = battingOption ? impactQuality(rawBat, impact, 'batting') : null;
+  const bowl = bowlingOption ? impactQuality(rawBowl, impact, 'bowling') : null;
   const phase = Object.fromEntries(phases.map((p, i) => [p, {
     batting: battingOption ? blend(records, r => batting(r.phases[p], batRole === 'FINISHER', i)) : null,
     bowling: bowlingOption ? blend(records, r => bowling(r.phases[p], i)) : null,
@@ -179,7 +182,8 @@ export function squadMembers(session: SessionView): Member[] {
   }))];
 }
 
-export function createExpertEngine(dataset: RatingDataset) {
+export function createExpertEngine(dataset: RatingDataset, impacts?: readonly SeasonImpact[]) {
+  const impactById = impactIndex(impacts ?? []);
   const seasons = dataset.seasons.filter(s => s.completed && s.verified && s.year in seasonWeights);
   const years = new Set(seasons.map(s => s.year));
   const records = new Map<string, IPLRecord[]>();
@@ -204,8 +208,8 @@ export function createExpertEngine(dataset: RatingDataset) {
   }));
 
   function evaluate(members: Member[]) {
-    const pool = [...members].sort((a, b) => a.id.localeCompare(b.id)).map(member => profile(member, records.get(member.id) ?? [], metadata.get(member.id)));
-    const reference = approved.get(rosterKey(pool.map(p => p.id)));
+    const pool = [...members].sort((a, b) => a.id.localeCompare(b.id)).map(member => profile(member, records.get(member.id) ?? [], metadata.get(member.id), impactById.get(member.id)));
+    const reference = impacts ? undefined : approved.get(rosterKey(pool.map(p => p.id)));
     const {xi, reason} = practicalXI(pool);
     const incomplete = !xi.length;
     const core = incomplete ? best(pool, p => p.rating.selectionQuality, 11) : xi;
