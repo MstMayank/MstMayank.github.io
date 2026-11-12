@@ -352,9 +352,7 @@ function venueLabel(name) {
       status.textContent=careerView?'Career records · top 50 per format · verified '+(careerRecords?.verified||'unavailable'):archiveStatus;
       byId('battle-method').textContent=careerView?'Career totals are verified snapshots for the top 50 men’s run-scorers in each format. Career rankings include matches outside the ball-by-ball archive.':archiveMethod;
       byId('battle-hint').textContent=careerView?'Search the verified career leaders, or click a row for career details.':matchup?'Select two players. Click a player name to explore their archived performance.':'Click a player name to explore their archived performance.';
-      const source=byId('battle-source');source.replaceChildren();const link=document.createElement('a');
-      link.href=careerView?'https://www.cricbuzz.com/cricket-stats':'https://cricsheet.org/';link.textContent=careerView?'Cricbuzz career records':'Cricsheet ball-by-ball data';link.target='_blank';link.rel='noopener noreferrer';source.append('Source: ',link);
-      if(!careerView){const licence=document.createElement('a');licence.href='https://cricsheet.org/licensing/';licence.textContent='ODC Attribution License';source.append(' · ',licence,' · Archive coverage varies; totals may be incomplete.');}
+      byId('battle-source').hidden=true;
     }
     byId('battle-panel-label').textContent = matchup ? 'MATCHUP EXPLORER' : 'PLAYER EXPLORER';
     byId('battle-players').hidden = !matchup;
@@ -846,7 +844,7 @@ function venueLabel(name) {
       });
     }
     rule(1755);
-    label('Archived matches · Cricsheet · ODC Attribution License',540,1834,20,956,muted);
+    label('Archived matches',540,1834,20,956,muted);
     photos.filter(photo=>photo?.credit).forEach((photo,index)=>label(photo.credit,540,1863+index*24,17,956,muted));
     canvas.toBlob(blob=>{
       if(render!==cardRender)return;

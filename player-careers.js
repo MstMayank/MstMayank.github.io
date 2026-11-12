@@ -22,11 +22,6 @@
   const nativeShare=text('button','Share player ↗');nativeShare.type='button';const whatsapp=sourceLink('https://wa.me/','WhatsApp ↗');
   const share=text('button','Copy player link ↗');share.type='button';const linkInput=document.createElement('input');linkInput.readOnly=true;linkInput.hidden=true;linkInput.setAttribute('aria-label','Player profile link');const shareStatus=text('p','');shareStatus.setAttribute('role','status');tools.append(nativeShare,whatsapp,share,linkInput,shareStatus);
   const searchRow=text('div','','career-search-row');searchRow.append(input,clear);field.append(label,searchRow,suggestions);host.append(field,line,tools,result);
-  const credit=document.createElement('details');credit.className='career-data-notes';credit.append(text('summary','About these records'));
-  credit.append(text('p','This is a free, stored-data service. Names in the catalogue do not guarantee that full career statistics are available. Published record lists have eligibility thresholds. Missing data is never converted to zero.'));
-  credit.append(text('p','First-class totals include Tests; List A totals include ODIs. Do not add these categories together. IPL is kept separate from all T20 cricket.'));
-  credit.append(text('p','Some career snapshots are dated 6 October 2025, others were verified in November 2026. Each result shows its own source and date. A source access date is not a guarantee that statistics include the latest match.'));
-  const credits=text('p','Sources: ');credits.append(sourceLink('https://stats.acscricket.com/Records/index.html','ACS published records'),' · ',sourceLink('https://pkg.robjhyndman.com/weird/reference/cricket_batting.html','weird Test snapshots'),' · ',sourceLink('https://github.com/robjhyndman/cricketdata','cricketdata player names'),' · ',sourceLink('https://cricsheet.org/','Cricsheet'),' · ',sourceLink('player-career-sources.txt','Data credits / licences'));credit.append(credits);host.appendChild(credit);
   let catalogue=[],queryResults=[],shown=20,selected=null,selectionNumber=0;
   function close(){suggestions.hidden=true;input.setAttribute('aria-expanded','false');}
   function reset(){selectionNumber++;selected=null;result.replaceChildren();tools.hidden=true;shareStatus.textContent='';linkInput.hidden=true;close();}
@@ -51,7 +46,7 @@
     const profile=records.players[player.id];result.replaceChildren();
     const title=text('header','','career-profile-heading');title.append(text('h3',player.name),text('p',[player.country,player.gender==='female'?'Women':player.gender==='male'?'Men':''].filter(Boolean).join(' · '),'hint'));result.appendChild(title);
     const formats=league?[[league,league]]:[['Test','Test'],['ODI','ODI'],['T20I','T20I'],['FC','First-class'],['List A','List A'],[player.gender==='female'?'WPL':'IPL',player.gender==='female'?'WPL':'IPL']];
-    const found=formats.filter(([key])=>profile?.formats?.[key]);line.textContent=league?'Available '+league+' archive statistics. Check source dates and coverage below.':found.length+' of '+formats.length+' formats have stored records. Check source dates and coverage below.';
+    const found=formats.filter(([key])=>profile?.formats?.[key]);line.textContent=league?'Available '+league+' archive statistics. Check record dates and coverage below.':found.length+' of '+formats.length+' formats have stored records. Check record dates and coverage below.';
     const grid=text('div','','career-format-grid');if(league)grid.dataset.league=league;result.appendChild(grid);
     for(const [key,label] of formats){
      const record=profile?.formats?.[key];const card=text('section','','career-format-card');card.dataset.format=key;card.append(text('h4',label));
@@ -59,12 +54,12 @@
      card.append(text('p',record.status==='archive'?'Archived matches':record.status==='career_snapshot'?'Career snapshot':'Published career record','career-availability'));
      if(record.batting){const b=record.batting;metrics(card,[['Matches',b.matches],['Innings',b.innings],['Runs',b.runs],['Highest score',b.highest],['Average',b.average],['Strike rate',b.strikeRate],['100s / 50s',b.hundreds!==undefined||b.fifties!==undefined?fmt(b.hundreds)+' / '+fmt(b.fifties):null],['Not out',b.notOuts]]);}
      else card.append(text('p','Batting totals unavailable.','hint'));
-     if(record.bowling){const bowl=record.bowling;const detail=document.createElement('details');detail.append(text('summary','Bowling statistics'));metrics(detail,[['Wickets',bowl.wickets],['Balls bowled',bowl.balls],['Runs conceded',bowl.conceded],['Average',bowl.average],['Economy',bowl.economy],['Best figures',bowl.best]]);if(record.bowlingSource)detail.append(sourceLink(record.bowlingSource,'Bowling source ↗'),text('p','Source update date not published.','hint'));card.appendChild(detail);}
+     if(record.bowling){const bowl=record.bowling;const detail=document.createElement('details');detail.append(text('summary','Bowling statistics'));metrics(detail,[['Wickets',bowl.wickets],['Balls bowled',bowl.balls],['Runs conceded',bowl.conceded],['Average',bowl.average],['Economy',bowl.economy],['Best figures',bowl.best]]);card.appendChild(detail);}
      else card.append(text('p','Bowling statistics unavailable.','hint'));
      card.append(text('p',record.asOf?'Record date / coverage: '+record.asOf:'Source update date not published.','career-source-date'));
-     if(record.accessed)card.append(text('p','Source accessed: '+record.accessed,'career-source-date'));
+
      if(record.note)card.append(text('p',record.note,'hint'));
-     if(record.source)card.append(sourceLink(record.source,'Record source ↗'));
+
      grid.appendChild(card);
     }
     tools.hidden=false;shareStatus.textContent='';whatsapp.href='https://wa.me/?text='+encodeURIComponent('The Cricket Space · '+player.name+'\n'+playerURL());
