@@ -97,3 +97,38 @@
 .premium-retention .purse-tracker {
   background: linear-gradient(120deg, var(--franchise-tint), transparent 80%), #0a1611f5;
 }
+
+.retention-flow-picker{max-width:1180px;margin-inline:auto}
+.flow-step{display:inline-block;border-radius:999px;background:var(--gold);color:#1b1405;padding:6px 14px;font-weight:800}
+.retention-flow-picker .page-heading h1{text-transform:uppercase;font-size:clamp(40px,8vw,92px)}
+.retention-flow-picker .team-grid{grid-template-columns:repeat(auto-fit,minmax(min(195px,100%),1fr))}
+.retention-flow-picker .team-card{min-height:155px;border-radius:22px;background:linear-gradient(160deg,var(--team-color),#091411 88%)}
+.retention-flow-picker .team-card[aria-pressed=true]{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.flow-continue{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:22px 0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.retention-flow .retention-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:18px;align-items:start}
+.retention-flow .flow-purse{position:sticky;top:12px;margin-top:0}
+.retention-flow .purse-tracker{position:static;grid-template-columns:repeat(2,minmax(0,1fr));margin:0}
+.retention-flow .purse-tracker .purse-primary{grid-column:1/-1}
+.retention-flow .confirm-panel .button{width:100%}
+.retention-flow .player-list{grid-template-columns:minmax(0,1fr);gap:10px}
+.retention-flow .player-card{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:16px}
+.retention-flow .retention-card-art{height:46px;width:46px;border-radius:50%}
+.retention-flow .retention-card-art strong{font-size:14px}
+.retention-flow .retention-card-art span{display:none}
+.retention-flow .player-main-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:0}
+.retention-flow .decision-buttons{margin:0}
+.retention-flow .decision-buttons button{padding-inline:10px}
+.retention-flow .stats-secondary{margin:0;white-space:nowrap}
+.retention-flow .player-card-expanded{grid-column:1/-1;min-width:0}
+@media(max-width:860px){
+ .retention-flow .retention-layout{grid-template-columns:minmax(0,1fr)}
+ .retention-flow .flow-purse{position:static}
+}
+@media(max-width:520px){
+ .retention-flow .player-main-row{grid-template-columns:minmax(0,1fr)}
+ .retention-flow .player-card{grid-template-columns:40px minmax(0,1fr)}
+ .retention-flow .retention-card-art{width:40px;height:40px;align-self:start}
+ .retention-flow .stats-secondary{grid-column:2;justify-self:start}
+ .retention-flow-picker .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .retention-flow-picker .team-card{padding:12px}
+}
