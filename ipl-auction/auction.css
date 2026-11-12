@@ -312,3 +312,18 @@
   background: rgba(0, 0, 0, .16);
   overflow-x: auto;
 }
+
+.premium-retention .player-card { overflow: visible; }
+.premium-retention .retention-card-art { border-radius: 21px 21px 0 0; }
+.retention-card-footer { position: relative; }
+.premium-retention .retention-stats-anchor .player-card-expanded {
+  position: absolute;
+  z-index: 5;
+  inset-inline: 8px;
+  bottom: 100%;
+  margin: 0;
+  max-height: min(54vh, 360px);
+  overflow: auto;
+  background: #102a22;
+  box-shadow: 0 12px 30px #0008;
+}
