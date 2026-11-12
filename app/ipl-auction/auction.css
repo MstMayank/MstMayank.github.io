@@ -257,3 +257,5 @@
 .game-split{display:flex;overflow:hidden;height:10px;border-radius:99px}.game-split i:first-child{background:var(--game-team)}.game-split i:last-child{background:#f0cb6a}.game-stats .game-released{width:100%;accent-color:#ef4444}
 .game-retention .squad-tool-buttons{padding:12px;border:1px solid var(--line);border-radius:18px;background:#0a1611}
 @media(max-width:600px){.game-stat-grid{grid-template-columns:1fr}.game-stat{padding:16px}.game-retention .franchise-title{gap:10px}.game-retention .franchise-title .game-logo{width:60px;height:66px}.game-retention .room-heading h1 i{display:none}}
+
+.game-retention .game-stats{margin-bottom:clamp(24px,4vw,40px)}
