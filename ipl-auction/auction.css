@@ -229,3 +229,31 @@
 }
 
 .auction-shell>.auction-save-notice{position:relative;z-index:1;width:fit-content;max-width:100%;margin:16px 0 24px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);line-height:1.45;overflow-wrap:anywhere}
+
+.game-retention{max-width:1100px;padding:14px 0 34px;background:repeating-linear-gradient(135deg,#ffffff04 0 2px,transparent 2px 14px)}
+.game-retention .retention-hero{padding:18px;border-radius:22px;border-color:var(--franchise-glow);background:radial-gradient(520px 220px at 0% 0%,var(--franchise-glow),transparent 70%),linear-gradient(100deg,#141f2e,#0d1a14 70%);box-shadow:0 26px 54px -32px var(--game-team)}
+.game-retention .franchise-title{gap:18px}
+.game-retention .franchise-title .game-logo{display:grid;place-items:center;flex:none;width:92px;height:100px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#ffffff, var(--game-team))}
+.game-retention .game-logo .franchise-logo{width:70%;height:70%;padding:0;background:none;border-radius:0}
+.game-retention .room-heading h1{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font:900 clamp(24px,4.6vw,46px)/.95 "Big Shoulders Display",sans-serif;text-transform:uppercase}
+.game-retention .room-heading h1 span{color:var(--game-team);font-size:1.25em;text-shadow:0 0 20px var(--franchise-tint)}
+.game-retention .room-heading h1 i{width:3px;height:1em;background:linear-gradient(#f0cb6a,transparent);transform:skewX(-18deg)}
+.game-retention .save-state{border-radius:14px;background:#0005}
+.game-objective,.game-stat{min-width:0;border:1px solid var(--line);background:#0d1b16}
+.game-objective{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 16px;margin-bottom:12px;border-radius:14px;border-color:#f0cb6a55}
+.game-objective small,.game-stat small{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--muted)}
+.game-objective small,.game-stat-purse strong{color:#f0cb6a}
+.game-objective progress{flex:1 1 110px}
+.game-stats progress{height:10px;accent-color:#f0cb6a}
+.game-stat-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:12px}
+.game-stat{display:flex;flex-direction:column;gap:10px;padding:18px 20px;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);background:linear-gradient(160deg,#14241c,#0a1511)}
+.game-stat-purse{border-color:#f0cb6a88;background:linear-gradient(145deg,var(--franchise-tint),#0a1511 70%)}
+.game-stat strong{font:900 clamp(38px,7vw,76px)/.9 "Big Shoulders Display",sans-serif}
+.game-stat strong sub{font-size:.45em;color:var(--muted);vertical-align:baseline}
+.game-stat>span{margin-top:auto;color:var(--muted);font-size:13px}
+.game-segments,.game-slots{display:grid;gap:4px}.game-segments{grid-template-columns:repeat(20,minmax(0,1fr))}.game-slots{grid-template-columns:repeat(13,minmax(0,1fr))}
+.game-segments i,.game-slots i,.game-split{background:#ffffff14;border-radius:4px}.game-segments i{height:16px;transform:skewX(-14deg)}.game-segments i[data-active=true]{background:linear-gradient(#ffe49a,#b8903a);box-shadow:0 0 8px #f0cb6a60}
+.game-slots i{aspect-ratio:1;display:grid;place-items:center;font:700 10px system-ui;color:var(--muted)}.game-slots i[data-choice=RETAIN]{background:#15803d;color:white}.game-slots i[data-choice=RELEASE]{background:#b91c1c;color:white}
+.game-split{display:flex;overflow:hidden;height:10px;border-radius:99px}.game-split i:first-child{background:var(--game-team)}.game-split i:last-child{background:#f0cb6a}.game-stats .game-released{width:100%;accent-color:#ef4444}
+.game-retention .squad-tool-buttons{padding:12px;border:1px solid var(--line);border-radius:18px;background:#0a1611}
+@media(max-width:600px){.game-stat-grid{grid-template-columns:1fr}.game-stat{padding:16px}.game-retention .franchise-title{gap:10px}.game-retention .franchise-title .game-logo{width:60px;height:66px}.game-retention .room-heading h1 i{display:none}}
