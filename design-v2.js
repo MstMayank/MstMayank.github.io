@@ -67,6 +67,11 @@
   const day=document.getElementById('otd-d');
   if(day) {
     const moments={
+  '11-12': {
+    date: '2023-11-12',
+    title: 'KL Rahul hits India’s fastest World Cup hundred',
+    summary: 'KL Rahul scored 102 off 62 balls against the Netherlands in Bengaluru, setting the record for the fastest men’s ODI World Cup century by an Indian. India won by 160 runs.'
+  },
   '11-11': {
     date: '1994-11-11',
     title: 'Sanju Samson is born',
