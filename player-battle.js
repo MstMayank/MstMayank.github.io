@@ -602,6 +602,11 @@ function venueLabel(name) {
     'EA Perry':'Ellyse Perry', 'MM Lanning':'Meg Lanning', 'SFM Devine':'Sophie Devine',
   };
 
+  const verifiedPortraits = {
+    'MS Dhoni': ['c/c9/MS_Dhoni.jpg', 'Blnguyen · CC BY-SA 3.0'],
+    'Jasprit Bumrah': ['a/ac/Jasprit_Bumrah.jpg', 'CRICKETNEXT · CC BY 3.0'],
+  };
+
   async function loadPortrait(name) {
     const title=portraitTitles[name]||name;
     if(portraitCache.has(title))return portraitCache.get(title);
@@ -609,6 +614,11 @@ function venueLabel(name) {
     const timeout=setTimeout(()=>controller.abort(),3500);
     let imageUrl;
     try {
+      const known = verifiedPortraits[title];
+      let source;
+      if (known) {
+        source = new URL('https://upload.wikimedia.org/wikipedia/commons/' + known[0]);
+      } else {
       const query=new URLSearchParams({action:'query',format:'json',formatversion:'2',origin:'*',
         titles:title,redirects:'1',prop:'pageimages|pageterms',wbptterms:'description',
         pithumbsize:'320',pilicense:'free'});
@@ -616,7 +626,8 @@ function venueLabel(name) {
       if(!response.ok)return null;
       const [page]= (await response.json()).query?.pages||[];
       if(!page?.thumbnail?.source||!page.terms?.description?.some(description=>/cricket/i.test(description)))return null;
-      const source=new URL(page.thumbnail.source);
+      source=new URL(page.thumbnail.source);
+      }
       if(source.origin!=='https://upload.wikimedia.org'||!source.pathname.startsWith('/wikipedia/commons/'))return null;
       const photo=await fetch(source,{signal:controller.signal});
       if(!photo.ok)return null;
@@ -624,6 +635,7 @@ function venueLabel(name) {
       const image=new Image();
       image.src=imageUrl;
       await image.decode();
+      image.credit = known ? title + ' · ' + known[1] + ' · Wikimedia Commons · cropped' : title + ' · Wikimedia Commons · cropped';
       portraitCache.set(title,image);
       return image;
     } catch {
@@ -641,12 +653,30 @@ function venueLabel(name) {
     const table=cardTables[+byId('battle-card-format').value||0]; if(!table)return;
     const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
     const c=canvas.getContext('2d');if(!c)throw new Error('Canvas unavailable');c.fillStyle='#07241A';c.fillRect(0,0,1080,1920);
-    c.strokeStyle='#315B44';c.lineWidth=3;c.strokeRect(38,38,1004,1844);
+    const background=c.createLinearGradient(0,0,1080,1920);
+    background.addColorStop(0,'#0c3628');
+    background.addColorStop(.55,'#09241c');
+    background.addColorStop(1,'#071510');
+    c.fillStyle=background;c.fillRect(0,0,1080,1920);
+    function panel(x,y,w,h,r,fill,stroke){
+      c.beginPath();
+      c.moveTo(x+r,y);
+      c.arcTo(x+w,y,x+w,y+h,r);
+      c.arcTo(x+w,y+h,x,y+h,r);
+      c.arcTo(x,y+h,x,y,r);
+      c.arcTo(x,y,x+w,y,r);
+      c.closePath();
+      c.fillStyle=fill;c.fill();
+      c.strokeStyle=stroke;c.lineWidth=2;c.stroke();
+    }
     function text(value,x,y,size=30,color='#F2F5EF',weight=600){c.font=weight+' '+size+'px Arial, sans-serif';c.fillStyle=color;c.fillText(String(value),x,y);}
     function wrap(value,x,y,maxWidth,size=40){c.font='700 '+size+'px Arial, sans-serif';let line='';for(const word of value.split(' ')){if(c.measureText(line+word).width>maxWidth&&line){text(line,x,y,size);line='';y+=size*1.25;}line+=word+' ';}text(line,x,y,size);return y+size*1.25;}
     text('tcs. / THE CRICKET SPACE',82,115,30,'#F6C453');
-    text('PLAYER BATTLE',82,205,66);
-    text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,82,265,30,'#B7CCBA');
+    panel(675,75,325,60,30,'#122e24','#657d69');
+    c.textAlign='center';
+    text((competition==='international'?'INTERNATIONAL':competition.toUpperCase())+' · '+table.format,837,114,24,'#e6ce87');
+    text('PLAYER BATTLE',540,237,92);
+    c.textAlign='left';
     const names=inputs.map(input=>input.value);
     const roles=mode==='direct'?['BATTER','BOWLER']:mode==='bowlers'?['BOWLER','BOWLER']:mode==='teams'?['TEAM','TEAM']:['BATTER','BATTER'];
     const photos=mode==='teams'?[]:await Promise.all(names.map(loadPortrait));
@@ -668,16 +698,18 @@ function venueLabel(name) {
         text(name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase(),x,410,58);
       }
       c.restore();
-      c.strokeStyle='#F6C453';
-      c.stroke();
+      c.strokeStyle=index===0?'#f87670':'#F6C453';
+      c.lineWidth=7;c.stroke();
       c.font='700 38px Arial, sans-serif';
       c.fillStyle='#F2F5EF';
       c.fillText(name,x,537,420);
       text(roles[index],x,578,24,'#F6C453');
     });
+    panel(488,342,104,96,28,'#102d23','#56725f');
     text('VS',540,405,42,'#F6C453');
     c.textAlign='left';
-    let y=632;
+    panel(64,600,952,118,24,'#102e23','#315b44');
+    let y=643;
     y=wrap((byId('battle-season').value||'All seasons')+' · '+(byId('battle-phase').selectedOptions[0]?.textContent||'All overs'),82,y,900,25)+10;
     y=wrap(byId('battle-venue').value||'All venues',82,y,900,25)+20;
     const rows=table.rows.slice(0,2);const columns=rows.length===2?2:1;const columnWidth=916/columns;
@@ -686,14 +718,15 @@ function venueLabel(name) {
         text(row[0],82,y,36,'#F6C453');
         table.headers.slice(1).forEach((label,i)=>{
           const x=82+(i%2)*470, yy=y+45+Math.floor(i/2)*170;
-          c.fillStyle='#123C2A';c.fillRect(x,yy,442,150);
+          panel(x,yy,442,150,22,'#123529','#315b44');
+          c.fillStyle=i===6?'#f87670':'#F6C453';c.fillRect(x+24,yy+128,52,4);
           text(label.toUpperCase(),x+24,yy+45,25,'#B7CCBA');text(row[i+1],x+24,yy+112,60);
         });
       }else{
         const x=82+index*columnWidth;
         let yy=wrap(row[0],x,y,columnWidth-28,34)+12;
         for(let i=1;i<table.headers.length;i++){
-          c.fillStyle='#123C2A';c.fillRect(x,yy-24,columnWidth-24,74);
+          panel(x,yy-24,columnWidth-24,74,12,'#123529','#315b44');
           text(table.headers[i].toUpperCase(),x+16,yy+2,22,'#B7CCBA');
           text(row[i],x+16,yy+36,32,i===1?'#F6C453':'#F2F5EF');yy+=81;
         }
@@ -701,7 +734,8 @@ function venueLabel(name) {
     });
     text('Archived matches only · not full career totals',82,1665,24,'#B7CCBA');
     text('Cricsheet · ODC Attribution License',82,1705,24,'#B7CCBA');
-    text('mstmayank.github.io/player-battle.html',82,1770,28,'#F6C453');
+    text('mstmayank.github.io/player-battle.html',82,1755,28,'#F6C453');
+    photos.filter(Boolean).forEach((photo,index)=>text(photo.credit,82,1810+index*34,21,'#B7CCBA'));
     canvas.toBlob(blob=>{
       if(render!==cardRender)return;
       if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
