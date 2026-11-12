@@ -167,3 +167,25 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
 
 /* Hero social links */
 .v2 .hero-social{gap:12px}.v2 .hero-social a{min-height:48px;padding:10px 18px;font-size:16px;box-sizing:border-box}.v2 .hero-social svg{width:20px;height:20px}
+
+.home-page .site-nav .mobile-contact{display:none}
+.home-page .site-nav .logo svg{flex:none}
+@media(max-width:860px){
+ .home-page .site-nav .bar{height:auto;min-height:64px;padding-block:8px;gap:12px}
+ .home-page .site-nav .logo{font-size:clamp(19px,5.5vw,26px);gap:7px;white-space:nowrap}
+ .home-page .site-nav .logo svg{width:22px;height:22px}
+ .home-page .site-nav .nav-toggle{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;margin:0;padding:7px 9px;white-space:nowrap}
+ .home-page .site-nav .links{top:100%}
+ .home-page .site-nav .bar>.btn{display:none}
+ .home-page .site-nav .mobile-contact{display:block}
+}
+@media(max-width:480px){
+ .home-page .wrap,.home-page .match-wrap,.home-page .bento-wrap{padding-inline:16px}
+ .home-page .hero h1{font-size:clamp(44px,15vw,72px)}
+ .home-page .hero-social{gap:8px}
+ .home-page .hero-social a{padding:8px 12px;font-size:14px}
+ .home-page .match-in,.home-page .bento-card,.home-page .bento-cta{min-width:0;padding:18px}
+ .home-page .bento-bento{grid-template-columns:minmax(0,1fr)}
+ .home-page .bento-cta{grid-template-columns:minmax(0,1fr);gap:20px}
+ .home-page .bento-fm{min-width:0;padding:14px}
+}
