@@ -227,3 +227,5 @@
  .retention-hero{padding:14px;border-radius:22px}
  .premium-retention .retention-hero .purse-tracker>*{padding:12px}
 }
+
+.auction-shell>.auction-save-notice{position:relative;z-index:1;width:fit-content;max-width:100%;margin:16px 0 24px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);line-height:1.45;overflow-wrap:anywhere}
