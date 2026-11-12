@@ -189,3 +189,41 @@
 .rating-card-row progress::-webkit-progress-bar{background:#292929}.rating-card-row progress::-webkit-progress-value{background:var(--rating-accent);border-radius:999px}.rating-card-row progress::-moz-progress-bar{background:var(--rating-accent);border-radius:999px}
 .rating-card-footer{border-top:1px solid #414141;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;padding-top:20px}.rating-card-footer dd{margin:4px 0 0;font-weight:700}
 @media(max-width:520px){.rating-card-row{grid-template-columns:6.4rem minmax(0,1fr) 2.7rem;gap:8px;font-size:.85rem}.rating-card-header{gap:9px}.rating-card-change{padding-inline:6px}.rating-card-footer{font-size:.9rem}}
+
+.hot-seat,.premium-retention:has(.retention-hero){width:100%;max-width:1180px;margin-inline:auto}
+.hot-seat .crumb,.retention-hero .save-state{border:1px solid var(--line);border-radius:99px;background:#ffffff08;padding:8px 14px}
+.hot-seat .page-heading h1{font:900 clamp(52px,10vw,128px)/.88 "Big Shoulders Display",sans-serif;text-transform:uppercase}
+.hot-seat .page-heading h1 em{font-style:normal;background:linear-gradient(100deg,#e8c468,#fff3c9 55%,#b8903a);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hot-seat .page-heading p{max-width:620px}
+.hot-seat-note{margin:0 0 36px;border:1px solid var(--line);border-left:3px solid #e8c468;border-radius:14px;background:#ffffff0a;padding:14px 18px}
+.hot-seat-note summary{cursor:pointer;color:#e8c468;font-weight:800;font-size:13px}
+.hot-seat-note summary span{float:right;color:var(--muted)}
+.hot-seat-note p{margin:12px 0 0;color:var(--muted);font-size:14px}
+.hot-seat .team-grid{grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:16px}
+.hot-seat .team-card{position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--line);border-top:4px solid var(--team-color);border-radius:24px;padding:24px 22px 20px;background:linear-gradient(170deg,#ffffff12,#ffffff05);transition:transform .25s,border-color .25s,box-shadow .25s}
+.hot-seat .team-card::after{content:"";position:absolute;inset:-120px -110px auto auto;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--team-color),transparent 68%);opacity:.18;z-index:-1;pointer-events:none}
+.hot-seat .team-card:hover{transform:translateY(-5px);border-color:var(--team-color);box-shadow:0 28px 60px -30px var(--team-color)}
+.hot-seat .team-logo-title{gap:14px;margin:12px 0 8px}
+.hot-seat .team-logo-title strong{font-size:clamp(38px,5vw,60px)}
+.hot-seat .team-logo-title .franchise-logo{width:60px;height:60px;object-fit:contain;flex:none}
+.retention-hero{border:1px solid var(--line);border-radius:30px;padding:30px;margin:10px 0 24px;background:radial-gradient(640px 360px at 15% 0%,var(--franchise-glow),transparent 70%),linear-gradient(160deg,#1b2a21,#0d1712)}
+.retention-hero .room-heading{margin:0}
+.retention-hero .franchise-title .franchise-logo{width:96px;height:96px;padding:8px;object-fit:contain;background:#ffffff13;border-radius:26px;flex:none}
+.premium-retention .retention-hero .purse-tracker{display:grid;grid-template-columns:1.5fr repeat(3,minmax(0,1fr));gap:12px;overflow:visible;background:none;border:0;backdrop-filter:none;margin:20px 0 0}
+.premium-retention .retention-hero .purse-tracker>*{min-width:0;border:1px solid var(--line);border-radius:22px;padding:20px;background:#0005}
+.premium-retention .retention-hero .purse-tracker .purse-primary{background:linear-gradient(140deg,var(--franchise-tint),#0005);border-color:var(--franchise-glow)}
+@media(max-width:860px){
+ .retention-hero{padding:20px}
+ .retention-hero .franchise-title .franchise-logo{width:72px;height:72px;border-radius:20px}
+ .premium-retention .retention-hero .purse-tracker{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .premium-retention .retention-hero .purse-primary{grid-column:1/-1}
+}
+@media(max-width:480px){
+ .hot-seat .team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .hot-seat .team-card{padding:14px 10px}
+ .hot-seat .team-logo-title{gap:6px}
+ .hot-seat .team-logo-title .franchise-logo{width:36px;height:36px}
+ .hot-seat .team-logo-title strong{font-size:clamp(23px,7vw,38px)}
+ .retention-hero{padding:14px;border-radius:22px}
+ .premium-retention .retention-hero .purse-tracker>*{padding:12px}
+}
