@@ -710,11 +710,10 @@ function venueLabel(name) {
       c.fillRect(x,y,width,height);
       const photo=photos[index];
       if(photo){
-        const scale=photo.credit
-          ? Math.max(width/photo.naturalWidth,height/photo.naturalHeight)
-          : Math.min((width-110)/photo.naturalWidth,(height-24)/photo.naturalHeight);
-        const w=photo.naturalWidth*scale, h=photo.naturalHeight*scale;
-        c.drawImage(photo,x+(width-w)/2,y+(height-h)/2,w,h);
+        const scale = Math.max(width / photo.naturalWidth, height / photo.naturalHeight);
+        const imageWidth = photo.naturalWidth * scale;
+        const imageHeight = photo.naturalHeight * scale;
+        c.drawImage(photo, x + (width - imageWidth) / 2, y + (height - imageHeight) * 0.25, imageWidth, imageHeight);
       }else{
         label(name.split(/\s+/).slice(0,2).map(word=>word[0]).join(''),x+width/2,y+390,166,300,cream,true);
       }
