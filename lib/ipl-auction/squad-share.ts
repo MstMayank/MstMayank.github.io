@@ -12,7 +12,14 @@ export async function renderSquadCard(model:SquadShareModel){
  const retained=model.players.filter(p=>p.status==='RETAINED').sort((a,b)=>(b.costLakh??0)-(a.costLakh??0));
  const featured=retained.slice(0,4), others=retained.slice(4);
  const released=model.players.filter(p=>p.status==='RELEASED');
- const width=1080, releasedY=488+(featured.length?204:46)+Math.ceil(others.length/2)*58;
+ const width=1080;
+ const featuredTop=478, featuredHeight=182;
+ const listTop=678, rowStride=58, rowHeight=47;
+ const retainedBottom=others.length
+  ? listTop+(Math.ceil(others.length/2)-1)*rowStride+rowHeight
+  : featured.length ? featuredTop+featuredHeight : 508;
+ // Canvas text uses a baseline. Leave room above it for the heading itself.
+ const releasedY=retainedBottom+28+36;
  const height=releasedY+128+Math.max(1,Math.ceil(released.length/3))*55;
  const canvas=document.createElement('canvas');
  canvas.width=width;canvas.height=height;
@@ -56,7 +63,7 @@ export async function renderSquadCard(model:SquadShareModel){
  if(!featured.length)text('None yet',48,502,23,muted);
  featured.forEach((p,i)=>{
   const x=48+i*249;
-  panel(x,478,237,182,'#22c55e17','#22c55e65');
+  panel(x,featuredTop,237,featuredHeight,'#22c55e17','#22c55e65');
   const avatar=c.createLinearGradient(x+90,493,x+146,558);
   avatar.addColorStop(0,accent);avatar.addColorStop(1,shade);
   panel(x+84,493,69,69,avatar,'#ffffff36',34);
@@ -67,8 +74,8 @@ export async function renderSquadCard(model:SquadShareModel){
   c.textAlign='left';
  });
  others.forEach((p,i)=>{
-  const x=48+(i%2)*499,y=678+Math.floor(i/2)*58;
-  panel(x,y,485,47,'#ffffff0b','#ffffff18',12);
+  const x=48+(i%2)*499,y=listTop+Math.floor(i/2)*rowStride;
+  panel(x,y,485,rowHeight,'#ffffff0b','#ffffff18',12);
   text(p.name,x+13,y+31,22,'#f2f5f1',p.costLakh===null?455:330);
   if(p.costLakh!==null)text(shareMoney(p.costLakh),x+354,y+31,21,green,118);
  });
