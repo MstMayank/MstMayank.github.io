@@ -65,7 +65,7 @@
 .premium-retention .decision-buttons button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #ffffff99}
 .premium-retention .stats-secondary{margin-inline:14px;min-height:44px}
 .premium-retention .player-card-expanded{padding-inline:14px}
-.premium-retention .player-card:has(.player-card-expanded){grid-column:1/-1}
+
 .premium-retention .auction-pool-section .player-card{padding-top:0}
 @media(max-width:720px){
  .premium-retention .purse-tracker{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -302,3 +302,13 @@
   white-space: nowrap;
 }
 
+
+.premium-retention .player-card-expanded {
+  min-width: 0;
+  margin: 8px 14px 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .16);
+  overflow-x: auto;
+}
