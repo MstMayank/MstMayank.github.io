@@ -189,3 +189,12 @@ body.v2 { max-width:none; margin:0; padding:0; background:var(--bg); color:var(-
  .home-page .bento-cta{grid-template-columns:minmax(0,1fr);gap:20px}
  .home-page .bento-fm{min-width:0;padding:14px}
 }
+
+
+/* Shared layout defaults for the public pages. Keep scrolling inside wide tables. */
+.v2{--page-gutter:clamp(16px,4vw,80px);--section-gap:clamp(24px,4vw,40px)}
+.v2 .wrap{padding-inline:var(--page-gutter)}
+.v2 :where(main,.wrap,.grid,.bento-bento,.match-in,.tool-filter,.battle-workspace)>*{min-inline-size:0}
+.v2 main :where(img,video,canvas,iframe){max-inline-size:100%}
+.v2 main :where(.table,.tool-table,.battle-result){max-inline-size:100%;overflow-x:auto}
+.v2 main :where(.match-centre,.home-bento) + :where(.match-centre,.home-bento){padding-block-start:var(--section-gap)}
