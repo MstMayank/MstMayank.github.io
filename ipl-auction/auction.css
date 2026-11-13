@@ -327,3 +327,14 @@
   background: #102a22;
   box-shadow: 0 12px 30px #0008;
 }
+
+@media (max-width: 600px) {
+  .premium-retention .retention-stats-anchor .player-card-expanded {
+    position: fixed;
+    inset: auto 12px 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    max-height: 65vh;
+    z-index: 100;
+    overscroll-behavior: contain;
+  }
+}
