@@ -1,6 +1,8 @@
-import React,{useEffect,useRef,useState} from 'react';
+import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {start,players,teams,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
+import {start,teams,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
+import {auctionCard} from './share';
+import StaticImage from '../image';
 import './room.css';
 
 function read():Game|null {
@@ -11,28 +13,45 @@ function read():Game|null {
   return {...saved,paused:true};
 }
 function Logo({id}:{id:string}){
-  return <img src={'/ipl-auction/logos/'+id+'.png'} alt={id.toUpperCase()} width="48" height="48"/>;
+  return <StaticImage src={'/ipl-auction/logos/'+id+'.png'} alt={id.toUpperCase()} width="48" height="48"/>;
+}
+function restore(){
+  try {
+    const game=read();
+    const saved=JSON.parse(localStorage.getItem('tcs-auction-latest-v1')||'null');
+    const retention=saved?.state==='CONFIRMED'?{teamId:saved.teamId as string,ids:Object.keys(saved.decisions).filter(id=>saved.decisions[id]==='RETAIN')}:null;
+    return {game,retention,error:''};
+  }catch(e){return {game:null,retention:null,error:(e as Error).message};}
 }
 function App(){
-  const [game,setGame]=useState<Game|null>(null),[error,setError]=useState(''),[selected,setSelected]=useState('rcb');
-  const [rating,setRating]=useState<{overallRating:number;tier:string}|null>(null);
-  const [ready,setReady]=useState(false),[tab,setTab]=useState('squad'),[sound,setSound]=useState(false),[notice,setNotice]=useState('');
-  const [retention,setRetention]=useState<{teamId:string;ids:string[]}|null>(null);
+  const [initial]=useState(restore);
+  const [game,setGame]=useState<Game|null>(initial.game),[error,setError]=useState(initial.error),[selected,setSelected]=useState('rcb');
+  const [assessment,setAssessment]=useState<{key:string;overallRating:number;tier:string}|null>(null);
+  const [tab,setTab]=useState('squad'),[sound,setSound]=useState(false),[notice,setNotice]=useState('');
+  const retention=initial.retention;
+  const ratingKey=JSON.stringify(game?{teamId:game.teamId,members:game.squads[game.teamId]}:null);
+  const rating=assessment?.key===ratingKey?assessment:null;
+  const [card,setCard]=useState<{key:string;file:File}|null>(null);
+  const cardKey=JSON.stringify([ratingKey,game?.purses[game.teamId],rating?.overallRating??null]);
+  useEffect(()=>{
+    if(!navigator.canShare)return;
+    let active=true;
+    const data=JSON.parse(cardKey) as [string,number,number|null];
+    const request=JSON.parse(data[0]) as {teamId:string;members:Game['squads'][string]}|null;
+    if(!request?.members.length)return;
+    const snapshot={teamId:request.teamId,squads:{[request.teamId]:request.members},purses:{[request.teamId]:data[1]}};
+    auctionCard(snapshot,data[2]).then(file=>{if(active)setCard({key:cardKey,file});}).catch(()=>{});
+    return()=>{active=false;};
+  },[cardKey]);
   const audio=useRef<AudioContext|null>(null),previousStage=useRef('');
   const owner=useRef(crypto.randomUUID());
   const leaseKey=KEY+'-owner';
   useEffect(()=>{
-    try{
-      setGame(read());
-      const saved=JSON.parse(localStorage.getItem('tcs-auction-latest-v1')||'null');
-      if(saved?.state==='CONFIRMED')setRetention({teamId:saved.teamId,ids:Object.keys(saved.decisions).filter(id=>saved.decisions[id]==='RETAIN')});
-    }catch(e){setError((e as Error).message);}
-    setReady(true);
     const sync=(e:StorageEvent)=>{if(e.key===KEY)try{setGame(read());setNotice('Auction updated in another tab. Resume here to take control.');}catch(err){setError((err as Error).message);}};
     addEventListener('storage',sync);
     return()=>removeEventListener('storage',sync);
   },[]);
-  function update(action:(g:Game)=>Game){
+  const update=useCallback((action:(g:Game)=>Game)=>{
     try{
       setGame(current=>{
         if(!current)return current;
@@ -48,20 +67,21 @@ function App(){
         }catch(e){setError((e as Error).message);return {...current,paused:true};}
       });
     }catch(e){setError((e as Error).message);}
-  }
+  },[leaseKey]);
   useEffect(()=>{
-    if(!game||!game.squads[game.teamId].length){setRating(null);return;}
+    const request=JSON.parse(ratingKey) as {teamId:string;members:Game['squads'][string]}|null;
+    if(!request?.members.length)return;
     let active=true;
     const ratingModule='./chunks/squad-rating-data-VNOJQCWV.js';
     import(/* webpackIgnore: true */ ratingModule).then(module=>{
       const report=module.buildRating({
-        team:{id:game.teamId},squad:[],decisions:{},
-        ratingPurchases:game.squads[game.teamId].map(m=>({player:findPlayer(m.id),isOverseas:findPlayer(m.id).isOverseas,priceLakh:m.price,salaryVerified:false}))
+        team:{id:request.teamId},squad:[],decisions:{},
+        ratingPurchases:request.members.map(m=>({player:findPlayer(m.id),isOverseas:findPlayer(m.id).isOverseas,priceLakh:m.price,salaryVerified:false}))
       });
-      if(active)setRating({overallRating:report.overallRating,tier:report.tier});
-    }).catch(()=>{if(active)setRating(null);});
+      if(active)setAssessment({key:ratingKey,overallRating:report.overallRating,tier:report.tier});
+    }).catch(()=>{if(active)setAssessment(null);});
     return()=>{active=false;};
-  },[game?.teamId,game?.squads]);
+  },[ratingKey]);
   function begin(teamId:string,ids:string[]=[]){
     try{
       const lease=JSON.parse(localStorage.getItem(leaseKey)||'null');
@@ -90,7 +110,7 @@ function App(){
     const hidden=()=>{if(document.hidden)update(g=>g.paused?g:{...g,paused:true,revision:g.revision+1});};
     document.addEventListener('visibilitychange',hidden);
     return()=>{clearInterval(interval);document.removeEventListener('visibilitychange',hidden);};
-  },[]);
+  },[update]);
   useEffect(()=>{
     if(game?.stage==='SOLD'&&previousStage.current!=='SOLD'&&sound&&audio.current){
       const ctx=audio.current,osc=ctx.createOscillator(),gain=ctx.createGain();
@@ -103,7 +123,9 @@ function App(){
   async function share(){
     if(!game)return;
     const text=teams.find(t=>t.id===game.teamId)!.name+' · My auction squad\n'+game.squads[game.teamId].map(m=>findPlayer(m.id).name+' — '+money(m.price)).join('\n')+'\nPurse left '+money(game.purses[game.teamId]);
-    try{if(navigator.share)await navigator.share({title:'My IPL auction squad',text});else{await navigator.clipboard.writeText(text);setNotice('Squad copied.');}}catch(e){if((e as Error).name!=='AbortError')setNotice('Sharing could not open. Please try again.');}
+    try{const image=card?.key===cardKey?card.file:null;
+      if(image&&navigator.share&&navigator.canShare?.({files:[image]}))await navigator.share({title:'My IPL auction squad',files:[image]});
+      else if(navigator.share)await navigator.share({title:'My IPL auction squad',text});else{await navigator.clipboard.writeText(text);setNotice('Squad copied.');}}catch(e){if((e as Error).name!=='AbortError')setNotice('Sharing could not open. Please try again.');}
   }
   const team=teams.find(t=>t.id===(game?.teamId||selected))!;
   const player=game&&game.stage!=='COMPLETE'?findPlayer(game.queue[game.index]):null;
@@ -114,7 +136,7 @@ function App(){
       <div className="room-heading"><div><span className="eyebrow">IPL 2027 · FAN SIMULATION</span><h1>THE AUCTION ROOM<span>.</span></h1></div><span className="live-label"><i/> {game?.paused?'PAUSED':'SINGLE PLAYER'}</span></div>
       {error&&<p className="alert" role="alert">{error}</p>}
       {notice&&<p className="notice" role="status">{notice}</p>}
-      {!ready?<p>Opening the room…</p>:!game?<section className="setup">
+      {!game?<section className="setup">
         <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Outbid nine computer franchises. Build an 18–25 player squad with up to eight overseas players.</p><p className="muted">₹130 Cr purse · Simulation base prices · Saves on this browser</p></div>
         <div className="team-picker">{teams.map(t=><button key={t.id} aria-pressed={selected===t.id} onClick={()=>setSelected(t.id)}><Logo id={t.id}/>{t.id.toUpperCase()}</button>)}</div>
         <button className="primary" onClick={()=>begin(selected)}>Start fresh auction ↗</button>
