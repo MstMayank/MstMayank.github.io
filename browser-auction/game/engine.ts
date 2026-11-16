@@ -123,3 +123,12 @@ export function validate(g:Game):boolean{
   }
   return new Set(ids).size===ids.length;
 }
+
+export function finishLot(game:Game):Game {
+  if(game.paused||game.stage!=='BIDDING'||game.leader===game.teamId)return game;
+  let current=pass(game);
+  for(let step=0;step<5000&&current.stage==='BIDDING';step++){
+    current=tick(computerBid(current));
+  }
+  return current;
+}
