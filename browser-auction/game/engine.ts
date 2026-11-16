@@ -87,10 +87,10 @@ export function advance(g:Game):Game{
   const index=g.index+1;
   return {...g,index,bid:0,leader:null,passed:[],seconds:10,stage:index>=g.queue.length?'COMPLETE':'BIDDING',revision:g.revision+1,message:index>=g.queue.length?'Auction complete. Your squad is ready.':'A new player enters the room.'};
 }
-export function computerBid(g:Game):Game{
+export function computerBid(g:Game,humanTeams:string[]=[g.teamId]):Game{
   if(g.paused||g.stage!=='BIDDING')return g;
   const p=findPlayer(g.queue[g.index]),price=nextBid(g);
-  const candidates=teams.filter(t=>t.id!==g.teamId&&canBid(g,t.id,price)).map(t=>{
+  const candidates=teams.filter(t=>!humanTeams.includes(t.id)&&canBid(g,t.id,price)).map(t=>{
     const sameRole=g.squads[t.id].filter(m=>findPlayer(m.id).role===p.role).length;
     const target=p.role==='WICKETKEEPER'?2:p.role==='BOWLER'?7:5;
     const need=Math.max(.55,1.35-sameRole/target);
