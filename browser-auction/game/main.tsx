@@ -131,7 +131,7 @@ function App(){
   const player=game&&game.stage!=='COMPLETE'?findPlayer(game.queue[game.index]):null;
   const squad=game?.squads[game.teamId]||[];
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
-    <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><a href="/ipl-auction/#/teams">Retention room ↗</a></header>
+    <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="/ipl-auction/#/teams">Retention room ↗</a><a href="multiplayer.html">Play with friends ↗</a></div></header>
     <main>
       <div className="room-heading"><div><span className="eyebrow">IPL 2027 · FAN SIMULATION</span><h1>THE AUCTION ROOM<span>.</span></h1></div><span className="live-label"><i/> {game?.paused?'PAUSED':'SINGLE PLAYER'}</span></div>
       {error&&<p className="alert" role="alert">{error}</p>}
