@@ -44,7 +44,7 @@ function App(){
     return()=>{active=false;};
   },[cardKey]);
   const audio=useRef<AudioContext|null>(null),previousStage=useRef('');
-  const owner=useRef(crypto.randomUUID());
+  const owner=useRef(Array.from(crypto.getRandomValues(new Uint8Array(16)),value=>value.toString(16).padStart(2,'0')).join(''));
   const leaseKey=KEY+'-owner';
   useEffect(()=>{
     const sync=(e:StorageEvent)=>{if(e.key===KEY)try{setGame(read());setNotice('Auction updated in another tab. Resume here to take control.');}catch(err){setError((err as Error).message);}};
