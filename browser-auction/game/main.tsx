@@ -18,17 +18,14 @@ function Logo({id}:{id:string}){
 function restore(){
   try {
     const game=read();
-    const saved=JSON.parse(localStorage.getItem('tcs-auction-latest-v1')||'null');
-    const retention=saved?.state==='CONFIRMED'?{teamId:saved.teamId as string,ids:Object.keys(saved.decisions).filter(id=>saved.decisions[id]==='RETAIN')}:null;
-    return {game,retention,error:''};
-  }catch(e){return {game:null,retention:null,error:(e as Error).message};}
+    return {game,error:''};
+  }catch(e){return {game:null,error:(e as Error).message};}
 }
 function App(){
   const [initial]=useState(restore);
   const [game,setGame]=useState<Game|null>(initial.game),[error,setError]=useState(initial.error),[selected,setSelected]=useState('rcb');
   const [assessment,setAssessment]=useState<{key:string;overallRating:number;tier:string}|null>(null);
   const [tab,setTab]=useState('squad'),[sound,setSound]=useState(false),[notice,setNotice]=useState('');
-  const retention=initial.retention;
   const ratingKey=JSON.stringify(game?{teamId:game.teamId,members:game.squads[game.teamId]}:null);
   const rating=assessment?.key===ratingKey?assessment:null;
   const [card,setCard]=useState<{key:string;file:File}|null>(null);
@@ -82,11 +79,11 @@ function App(){
     }).catch(()=>{if(active)setAssessment(null);});
     return()=>{active=false;};
   },[ratingKey]);
-  function begin(teamId:string,ids:string[]=[]){
+  function begin(teamId:string){
     try{
       const lease=JSON.parse(localStorage.getItem(leaseKey)||'null');
       if(lease?.owner!==owner.current&&lease?.expires>Date.now())throw Error('Pause the auction in your other tab before starting a new game.');
-      const fresh=start(teamId,ids);
+      const fresh=start(teamId);
       localStorage.setItem(KEY,JSON.stringify(fresh));
       setGame(fresh);setError('');setNotice('');
     }catch(e){setError((e as Error).message);}
@@ -131,7 +128,7 @@ function App(){
   const player=game&&game.stage!=='COMPLETE'?findPlayer(game.queue[game.index]):null;
   const squad=game?.squads[game.teamId]||[];
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
-    <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="/ipl-auction/#/teams">Retention room ↗</a><a href="multiplayer.html">Play with friends ↗</a></div></header>
+    <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="multiplayer.html">Play with friends ↗</a></div></header>
     <main>
       <div className="room-heading"><div><span className="eyebrow">IPL 2027 · FAN SIMULATION</span><h1>THE AUCTION ROOM<span>.</span></h1></div><span className="live-label"><i/> {game?.paused?'PAUSED':'SINGLE PLAYER'}</span></div>
       {error&&<p className="alert" role="alert">{error}</p>}
@@ -140,7 +137,6 @@ function App(){
         <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Outbid nine computer franchises. Build an 18–25 player squad with up to eight overseas players.</p><p className="muted">₹130 Cr purse · Simulation base prices · Saves on this browser</p></div>
         <div className="team-picker">{teams.map(t=><button key={t.id} aria-pressed={selected===t.id} onClick={()=>setSelected(t.id)}><Logo id={t.id}/>{t.id.toUpperCase()}</button>)}</div>
         <button className="primary" onClick={()=>begin(selected)}>Start fresh auction ↗</button>
-        {retention&&<button onClick={()=>begin(retention.teamId,retention.ids)}>Continue {retention.teamId.toUpperCase()} retained squad ↗</button>}
       </section>:<>
         <div className="auction-layout">
           <section className={'player-stage '+(game.stage==='SOLD'?'sold-stage':'')}>
@@ -161,10 +157,10 @@ function App(){
         <section className="your-desk"><div className="desk-heading"><Logo id={game.teamId}/><div><span className="eyebrow">YOUR FRANCHISE</span><h2>{team.name}</h2></div><div className="desk-budget"><span>PURSE LEFT</span><strong>{money(game.purses[game.teamId])}</strong></div></div>
           <div className="squad-status"><span>{squad.length}/25 players · {squad.filter(m=>findPlayer(m.id).isOverseas).length}/8 overseas</span>{rating&&<strong>Squad rating {rating.overallRating.toFixed(1)}/100 · {rating.tier}{squad.length<11?' · Incomplete squad':''}</strong>}</div><div className="controls"><button className="primary" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start / resume':'Ⅱ Pause auction'}</button><button onClick={share}>Share squad ↗</button><button onClick={()=>{if(confirm('Replace this auction and start again?')){update(g=>({...g,paused:true}));setGame(null);}}}>New game</button></div>
           <nav className="desk-tabs" aria-label="Auction information">{['squad','queue','results'].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t==='squad'?'Your squad ('+squad.length+')':t==='queue'?'Coming up':'Auction results'}</button>)}</nav>
-          <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Retained':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
+          <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
         </section>
       </>}
-      <p className="footnote">Custom simulation · Base prices and computer bids are game assumptions. Progress saves on this device. Retention and auction saves are separate.</p>
+      <p className="footnote">Custom simulation · Base prices and computer bids are game assumptions. Progress saves on this device. Play solo or invite your friends.</p>
     </main>
   </div>;
 }
