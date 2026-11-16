@@ -8,3 +8,5 @@ await copyFile('app/ipl-auction/auction.css','ipl-auction/auction.css');
 const version=createHash('sha256').update(await readFile('ipl-auction/auction.js')).update(await readFile('ipl-auction/auction.css')).digest('hex').slice(0,12);
 await writeFile('ipl-auction/index.html',`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08110e"><title>IPL Auction · Build your team | The Cricket Space</title><meta name="description" content="Build your IPL 2027 simulation squad. Retain, release, save and share your team."><link rel="stylesheet" href="./auction.css?v=${version}"></head><body style="margin:0"><div id="auction-root"></div><script type="module" src="./auction.js?v=${version}"></script></body></html>`);
 console.log('Built static IPL Auction: no server, database or API hosting required.');
+
+await import('../browser-auction/game/build.mjs');
