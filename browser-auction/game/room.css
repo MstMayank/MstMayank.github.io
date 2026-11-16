@@ -8,3 +8,15 @@
 .squad-status{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin:20px 0 0;font-size:12px;color:#aac2b0}
 .squad-status strong{color:var(--gold)}
 .room .skip-lot{margin-top:14px;color:var(--gold)}
+.mp-label{display:grid;gap:10px;font-size:13px;color:#b7cabb}
+.mp-label input{width:100%;min-width:0;min-height:48px;border:1px solid #46604e;border-radius:9px;background:#071b12;color:#f4f1e6;padding:13px;font:inherit}
+.mp-label input:focus{outline:2px solid #efc660;outline-offset:2px}
+.mp-join{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end;border-top:1px solid #3a5144;padding-top:24px}
+.mp-invite{display:flex;flex-wrap:wrap;align-items:center;gap:16px;border:1px solid #3a5144;border-radius:12px;padding:18px;margin-bottom:24px;background:#10251a}
+.mp-invite>div{margin-right:auto}.mp-invite strong{display:block;font:700 25px monospace;letter-spacing:3px;margin-top:8px}
+.team-picker small{font-size:10px;max-width:100%;overflow-wrap:anywhere}
+@media(max-width:480px){.mp-join{grid-template-columns:1fr}.mp-invite strong{font-size:22px}.mp-invite>div{width:100%}}
+
+.room-nav-actions{display:flex;align-items:center;gap:18px;font-size:12px;color:#b4c7bd}
+.room-nav-actions a:last-child{color:#efc660}
+@media(max-width:480px){.room-nav-actions{flex-direction:column;align-items:flex-end;gap:6px;font-size:11px}}
