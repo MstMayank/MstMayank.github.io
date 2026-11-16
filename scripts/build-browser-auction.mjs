@@ -10,3 +10,5 @@ await writeFile('ipl-auction/index.html',`<!doctype html><html lang="en"><head><
 console.log('Built static IPL Auction: no server, database or API hosting required.');
 
 await import('../browser-auction/game/build.mjs');
+
+await import('../browser-auction/game/build-multiplayer.mjs');
