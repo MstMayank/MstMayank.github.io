@@ -32,7 +32,7 @@ export async function auctionCard(game:Pick<Game,'teamId'|'squads'|'purses'>,rat
     const x=60+(i%2)*490,y=630+Math.floor(i/2)*85;
     c.fillStyle='#ffffff0b';c.fillRect(x,y,470,74);
     text(findPlayer(member.id).name,x+14,y+29,22,'#f4f1e6',440);
-    text(money(member.price)+' · '+(member.retained?'Retained':'Auction buy'),x+14,y+57,17,team.color,440);
+    text(money(member.price)+' · '+(member.retained?'Starting squad':'Auction buy'),x+14,y+57,17,team.color,440);
   });
   c.fillStyle='#efc660';c.fillRect(60,1812,960,2);
   text('YOUR TEAM. YOUR CALL.',60,1860,24,'#efc660');
