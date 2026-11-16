@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {start,players,teams,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,tick,advance,computerBid,validate,type Game} from './engine';
+import {start,players,teams,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
 import './room.css';
 
 function read():Game|null {
@@ -128,6 +128,7 @@ function App(){
               <div className="bid-display"><span>{game.leader?'CURRENT BID':'OPENING PRICE'}</span><strong>{money(game.leader?game.bid:nextBid(game))}</strong><div>{game.leader?<><Logo id={game.leader}/>{game.leader.toUpperCase()} LEADS</>:'Waiting for the first paddle'}</div></div>
               {game.stage==='BIDDING'?<><div className={'timer '+(game.seconds<=3?'urgent':'')}><span>{game.paused?'Ready when you are':game.seconds<=2?'Going twice…':game.seconds<=4?'Going once…':'Bidding open'}</span><b>{game.seconds}s</b><progress max="10" value={game.seconds}/></div>
                 <div className="bid-actions"><button className="primary" disabled={game.paused||!canBid(game,game.teamId)} onClick={()=>update(g=>placeBid(g,g.teamId))}>{game.leader===game.teamId?'You lead':game.passed.includes(game.teamId)?'Passed':'BID '+money(nextBid(game))} ↑</button><button disabled={game.paused||game.leader===game.teamId||game.passed.includes(game.teamId)} onClick={()=>update(pass)}>Pass</button></div>
+                {game.passed.includes(game.teamId)&&<button className="small skip-lot" disabled={game.paused} onClick={()=>update(finishLot)}>Fast-forward this lot →</button>}
                 {!canBid(game,game.teamId)&&game.leader!==game.teamId&&!game.passed.includes(game.teamId)&&<p className="muted">Purse reserve or squad limit reached for this player.</p>}
               </>:<div className="sale-result" aria-live="assertive"><strong>{game.stage==='SOLD'?'SOLD!':'UNSOLD'}</strong><p>{game.message}</p><button className="primary" onClick={()=>update(advance)}>Next player →</button></div>}
             </>:<div className="finish"><span className="eyebrow">HAMMER DOWN</span><h2>Auction complete.</h2><p>You built a squad of {squad.length} players.</p>{squad.length<18&&<p>Your squad is short of the 18-player target.</p>}<button className="primary" onClick={share}>Share your squad ↗</button></div>}
