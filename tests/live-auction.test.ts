@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {start,players,teams,canBid,placeBid,pass,tick,advance,computerBid,validate,nextBid,findPlayer} from '../browser-auction/game/engine';
+import {start,players,teams,canBid,placeBid,pass,tick,advance,computerBid,finishLot,validate,nextBid,findPlayer} from '../browser-auction/game/engine';
 
 test('fresh auction has a unique pool, ten purses and starts paused',()=>{
   const g=start('rcb');
@@ -65,4 +65,12 @@ test('full simulated auction terminates with legal budgets and unique players',(
     assert.ok(g.squads[t.id].filter(m=>findPlayer(m.id).isOverseas).length<=8);
   }
   assert.equal(g.history.length,g.queue.length);
+});
+
+test('passing can fast-forward the remaining bidding without buying for the user',()=>{
+  const g=finishLot({...start('rcb'),paused:false});
+  assert.ok(['SOLD','UNSOLD'].includes(g.stage));
+  assert.notEqual(g.leader,'rcb');
+  assert.equal(g.squads.rcb.length,0);
+  assert.ok(validate(g));
 });
