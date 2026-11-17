@@ -1,0 +1,47 @@
+name: Refresh cricket records and history
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-cricket.yml'
+      - 'scripts/refresh-cricket.py'
+      - 'data/cricket-history-curated.json'
+      - 'tests/test_cricket_refresh.py'
+  schedule:
+    - cron: '17 0,12 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: cricket-data-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check archive calculations
+        run: python -m unittest discover -s tests -p 'test_cricket_refresh.py'
+      - name: Update completed international matches and history calendar
+        run: python scripts/refresh-cricket.py
+      - name: Publish updated data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add archive-players-Test.js archive-players-ODI.js archive-players-T20I.js cricket-history.json cricket-records-status.json data/cricket-history-match-events.json
+          if git diff --cached --quiet; then
+            echo 'Cricket data is already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh international cricket records and history calendar'
+          git push origin HEAD:main
+          # GITHUB_TOKEN commits do not trigger another Actions workflow. Ask Pages
+          # to rebuild explicitly so scheduled data changes reach the public site.
+          gh api --method POST repos/${{ github.repository }}/pages/builds

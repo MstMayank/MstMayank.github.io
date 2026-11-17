@@ -64,46 +64,4 @@
     location.href='mailto:infocricketspace@gmail.com?subject='+encodeURIComponent('Project idea for The Cricket Space')+'&body='+encodeURIComponent(idea);
     document.getElementById('idea-status').textContent='Your email app will open with your idea ready to send.';
   });
-  const day=document.getElementById('otd-d');
-  if(day) {
-    const moments={
-  '11-12': {
-    date: '2023-11-12',
-    title: 'KL Rahul hits India’s fastest World Cup hundred',
-    summary: 'KL Rahul scored 102 off 62 balls against the Netherlands in Bengaluru, setting the record for the fastest men’s ODI World Cup century by an Indian. India won by 160 runs.'
-  },
-  '11-11': {
-    date: '1994-11-11',
-    title: 'Sanju Samson is born',
-    summary: 'Indian wicketkeeper-batter Sanju Samson was born on 11 November 1994.'
-  },
-  '11-10': {
-    date: '1991-11-10',
-    title: 'South Africa Returns to International Cricket',
-    summary: 'After more than 21 years away, South Africa returned to international cricket in their first-ever ODI, against India at Eden Gardens, Kolkata. India won by three wickets.'
-  },
-  '04-18': {
-    date: '2008-04-18',
-    title: 'McCullum’s 158* opens the IPL',
-    url: 'https://www.iplt20.com/news/article/ipl-has-changed-the-way-the-game-is-played-mccullum'
-  }
-};
-    const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).formatToParts(new Date()).map(part=>[part.type,part.value]));
-    day.textContent=parts.day;
-    document.getElementById('otd-m').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',month:'long'}).format(new Date());
-    const container=document.getElementById('otd-b');
-    const moment=moments[parts.month+'-'+parts.day];
-    const label=document.createElement('span'); label.className='live';label.textContent='Today in cricket';
-    const heading=document.createElement('h3');heading.className='D';
-    const text=document.createElement('p');
-    if(moment) {
-      const year=document.createElement('span');year.className='yr D';year.textContent=moment.date.slice(0,4);
-      heading.textContent=moment.title;text.textContent=moment.summary || '';
-      container.replaceChildren(label,year,heading,text);
-    } else {
-      heading.textContent='A new day. More cricket.';
-      text.textContent='A cricket history moment for this date will appear here when published.';
-      container.replaceChildren(label,heading,text);
-    }
-  }
 })();
