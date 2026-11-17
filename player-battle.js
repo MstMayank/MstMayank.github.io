@@ -22,6 +22,13 @@
   let restoreLink = true;
   const initialLink = new URLSearchParams(location.search);
   let availablePlayers = [[], []];
+  let playerWeights = [new Map(), new Map()];
+  // Full names for scorecard names ("V Kohli" -> "Virat Kohli"); built by scripts/build-battle-aliases.py.
+  let nameAliases = {};
+  fetch('battle-name-aliases.json?v=1').then(response => response.ok ? response.json() : {}).then(aliases => {
+    nameAliases = aliases || {};
+    inputs.forEach((input, index) => { if (document.activeElement === input && input.value.trim()) showSuggestions(index); });
+  }).catch(() => {});
   let loadingController = null;
   let requestNumber = 0;
 
@@ -113,14 +120,40 @@ function venueLabel(name) {
     if (mode === 'teams') {
       const teams = [...new Set(data.matches.flatMap(match => match[3]))].sort();
       availablePlayers = [teams, teams];
+      playerWeights = [new Map(), new Map()];
       return;
     }
+    playerWeights = [new Map(), new Map()];
     availablePlayers = [0, 1].map(index => {
       const bowling = mode === 'bowlers' || (mode === 'direct' && index === 1);
       const column = bowling ? 2 : 1;
-      const ids = new Set(data.rows.filter(row => row[bowling ? 11 : 5] > 0).map(row => row[column]));
-      return [...ids].sort((a, b) => data.players[a].localeCompare(data.players[b]));
+      const weights = playerWeights[index];
+      for (const row of data.rows) {
+        const amount = row[bowling ? 11 : 5];
+        if (amount > 0) weights.set(row[column], (weights.get(row[column]) || 0) + amount);
+      }
+      return [...weights.keys()].sort((a, b) => data.players[a].localeCompare(data.players[b]));
     });
+  }
+
+  function searchNames(value) {
+    const name = nameFor(value);
+    return mode === 'teams' ? [name] : [name, ...(nameAliases[name] || [])];
+  }
+
+  // 0 = no match. Higher = better: exact name, then surname/first-name start, then any match.
+  function matchScore(value, query) {
+    const terms = query.split(/\s+/).map(searchKey).filter(Boolean);
+    const whole = searchKey(query);
+    let best = 0;
+    for (const name of searchNames(value)) {
+      const key = searchKey(name);
+      if (!terms.every(term => key.includes(term))) continue;
+      const words = name.toLowerCase().split(/\s+/).map(searchKey);
+      const score = key === whole ? 3 : terms.every(term => words.some(word => word.startsWith(term))) ? 2 : 1;
+      best = Math.max(best, score);
+    }
+    return best;
   }
 
   function nameFor(value) {
@@ -140,14 +173,25 @@ function venueLabel(name) {
     suggestions[index].replaceChildren();
     setExpanded(index, Boolean(query && data));
     if (!query || !data) return;
-    const candidates = availablePlayers[index].filter(value =>
-      (mode === 'direct' || value !== selected[1 - index]) &&
-      query.split(/\s+/).every(term => searchKey(nameFor(value)).includes(searchKey(term)))
-    ).slice(0, 30);
+    const weights = playerWeights[index];
+    const candidates = availablePlayers[index]
+      .filter(value => mode === 'direct' || value !== selected[1 - index])
+      .map(value => [value, matchScore(value, query)])
+      .filter(([, score]) => score > 0)
+      .sort((a, b) => b[1] - a[1] || (weights.get(b[0]) || 0) - (weights.get(a[0]) || 0))
+      .slice(0, 30)
+      .map(([value]) => value);
     for (const value of candidates) {
       const button = document.createElement('button');
       button.type = 'button';
       button.textContent = nameFor(value);
+      const fullName = mode === 'teams' ? '' : (nameAliases[nameFor(value)] || [])[0];
+      if (fullName) {
+        const hint = document.createElement('small');
+        hint.className = 'battle-suggestion-full';
+        hint.textContent = ' · ' + fullName;
+        button.appendChild(hint);
+      }
       // Keep input focus until click fires on Safari and touch browsers.
       button.addEventListener('mousedown', event => event.preventDefault());
       button.addEventListener('click', () => {
@@ -494,8 +538,9 @@ function venueLabel(name) {
         }
       }
     }
-    let entries = [...map].filter(([id]) => !byId('battle-search').value ||
-      data.players[id].toLowerCase().includes(byId('battle-search').value.toLowerCase()));
+    const profileQuery = byId('battle-search').value.trim();
+    let entries = [...map].filter(([id]) => !profileQuery || [data.players[id], ...(nameAliases[data.players[id]] || [])]
+      .some(name => profileQuery.split(/\s+/).every(term => searchKey(name).includes(searchKey(term)))));
     entries.sort((a,b) => fielding ? b[1].catches - a[1].catches : bowling ? b[1].wickets - a[1].wickets : b[1].runs - a[1].runs);
     if (!entries.length) {
       const note = document.createElement('p');
