@@ -112,14 +112,14 @@
     {
      "id": "ipl-51002682-300d-4a66-a753-92a7d8426015",
      "name": "Kartik Sharma",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": false,
      "nationality": "India"
     },
     {
      "id": "ipl-f94106d3-b3a3-424f-a3b6-d5f697d080de",
      "name": "Liam Livingstone",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "England"
     },
@@ -306,7 +306,7 @@
     {
      "id": "ipl-f302f614-dad3-4858-9d1c-520cfca262e6",
      "name": "Tristan Stubbs",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": true,
      "nationality": "South Africa"
     },
@@ -366,7 +366,7 @@
     {
      "id": "ipl-004f9901-2617-4c4e-9631-1920b062ffdf",
      "name": "Glenn Phillips",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": true,
      "nationality": "New Zealand"
     },
@@ -436,7 +436,7 @@
     {
      "id": "ipl-483bfe9a-e492-45b2-a374-0b1224e57f0f",
      "name": "Nishant Sindhu",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -450,7 +450,7 @@
     {
      "id": "ipl-9c8052c8-90e4-47a2-84fe-24987680f25d",
      "name": "Rahul Tewatia",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -527,7 +527,7 @@
     {
      "id": "ipl-d84722a9-7fee-4a25-a1f1-dbece7410e3a",
      "name": "Cameron Green",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "Australia"
     },
@@ -604,7 +604,7 @@
     {
      "id": "ipl-45c7b444-b5d8-433d-9aaa-9338694a46fa",
      "name": "Sunil Narine",
-     "role": "BOWLER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "West Indies"
     },
@@ -729,7 +729,7 @@
     {
      "id": "ipl-74998d14-9418-4452-8c45-91e706bfc9f2",
      "name": "Mitch Marsh",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "Australia"
     },
@@ -743,7 +743,7 @@
     {
      "id": "ipl-54396700-51d6-44c3-896d-e9356d504507",
      "name": "Mukul Choudhary",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -975,7 +975,7 @@
     {
      "id": "ipl-e8246a4c-0107-4a3d-91f0-e865826768f1",
      "name": "Marcus Stoinis",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "Australia"
     },
@@ -1031,7 +1031,7 @@
     {
      "id": "ipl-adc017ee-4c1d-4d49-9d39-c3a3aa55ac80",
      "name": "Vishnu Vinod",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -1086,7 +1086,7 @@
     {
      "id": "ipl-04ea76e2-4aa7-46f7-bc3f-dfde523e0374",
      "name": "Dasun Shanaka",
-     "role": "BATTER",
+     "role": "ALL_ROUNDER",
      "isOverseas": true,
      "nationality": "Sri Lanka"
     },
@@ -1114,7 +1114,7 @@
     {
      "id": "ipl-7095ef19-ef2b-4199-9f28-6beda5fa3792",
      "name": "Lhuan-dré Pretorius",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": true,
      "nationality": "South Africa"
     },
@@ -1229,7 +1229,7 @@
     {
      "id": "ipl-ee74cd78-7380-41f7-bea9-1b9c448f0cb8",
      "name": "Bhuvneshwar Kumar",
-     "role": "ALL_ROUNDER",
+     "role": "BOWLER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -1257,7 +1257,7 @@
     {
      "id": "ipl-9df2c53f-5eb8-43d3-b5bf-2bd1a7c87010",
      "name": "Jordan Cox",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": true,
      "nationality": "England"
     },
@@ -1292,7 +1292,7 @@
     {
      "id": "ipl-efe7c777-fac5-494b-ae47-f4f9dbed3e16",
      "name": "Phil Salt",
-     "role": "BATTER",
+     "role": "WICKETKEEPER",
      "isOverseas": true,
      "nationality": "England"
     },
@@ -1513,5 +1513,25 @@
    ],
    "note": "RS Ambrish released (ANI)."
   }
+ },
+ "roleNote": "Roles follow the IPL roster, corrected with ESPNcricinfo playing roles (keepers, specialist bowlers, all-rounders) and franchise/IPL profiles for Kartik Sharma, Mukul Choudhary and Lhuan-dré Pretorius.",
+ "roleOverrides": {
+  "Phil Salt": "WICKETKEEPER",
+  "Jordan Cox": "WICKETKEEPER",
+  "Tristan Stubbs": "WICKETKEEPER",
+  "Glenn Phillips": "WICKETKEEPER",
+  "Vishnu Vinod": "WICKETKEEPER",
+  "Kartik Sharma": "WICKETKEEPER",
+  "Mukul Choudhary": "WICKETKEEPER",
+  "Lhuan-dré Pretorius": "WICKETKEEPER",
+  "Bhuvneshwar Kumar": "BOWLER",
+  "Liam Livingstone": "ALL_ROUNDER",
+  "Cameron Green": "ALL_ROUNDER",
+  "Sunil Narine": "ALL_ROUNDER",
+  "Mitch Marsh": "ALL_ROUNDER",
+  "Marcus Stoinis": "ALL_ROUNDER",
+  "Rahul Tewatia": "ALL_ROUNDER",
+  "Nishant Sindhu": "ALL_ROUNDER",
+  "Dasun Shanaka": "ALL_ROUNDER"
  }
 }

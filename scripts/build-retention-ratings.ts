@@ -28,6 +28,13 @@ for (const {playerId, archiveId} of fixes) {
   data.players = data.players.filter(p => p.id !== archiveId);
   for (const record of data.records) if (record.playerId === archiveId) record.playerId = playerId;
 }
+// Keepers the archive metadata lists as batters (confirmed on IPL / franchise profiles).
+const retentionInput = JSON.parse(readFileSync('data/ipl-2027-retentions.json', 'utf8'));
+const roleById = new Map<string, string>();
+for (const team of Object.values(retentionInput.teams) as any[]) for (const p of team.retained) roleById.set(p.id, p.role);
+for (const p of data.players) {
+  if (roleById.get(p.id) === 'WICKETKEEPER' && p.playingRole !== 'WICKETKEEPER') { p.playingRole = 'WICKETKEEPER'; p.rosterRole = 'WICKETKEEPER'; }
+}
 const assessSquad = createExpertEngine(data, impacts as any);
 const keyList = Object.keys(categories) as Category[];
 
