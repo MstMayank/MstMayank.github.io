@@ -86,6 +86,63 @@ const teams = Object.entries(input.teams).map(([id, team]) => {
   };
 }).sort((a, b) => b.rating.overall - a.rating.overall || a.shortName.localeCompare(b.shortName));
 
+// ---- Scouting report: phase numbers from IPL 2025-26 ball-by-ball records of each retained squad,
+// ranked against the other nine squads, plus squad balance. Replaces the model's generic notes.
+const styleById = new Map(data.players.map(p => [p.id, p.bowlingStyle]));
+const recs = data.records.filter(r => r.year >= 2025);
+const PH = ['POWERPLAY', 'MIDDLE', 'DEATH'] as const;
+const phaseName = {POWERPLAY: 'powerplay', MIDDLE: 'middle overs', DEATH: 'death overs'};
+type Scout = Record<string, number>;
+const scout = new Map<string, Scout>();
+for (const t of teams) {
+  const ids = new Set(t.retained.map(p => p.id));
+  const m: Scout = {};
+  for (const ph of PH) {
+    let runs = 0, balls = 0, conceded = 0, legal = 0, wkts = 0;
+    for (const r of recs) if (ids.has(r.playerId)) {
+      const x = r.phases[ph]; runs += x.runs; balls += x.balls; conceded += x.conceded; legal += x.legalBalls; wkts += x.wickets;
+    }
+    m[`bat_${ph}`] = balls ? runs / balls * 100 : 0;      // strike rate
+    m[`bowl_${ph}`] = legal ? conceded / legal * 6 : 99;   // economy
+    m[`bpw_${ph}`] = wkts ? legal / wkts : 99;             // balls per wicket
+  }
+  const bowlers = t.retained.filter(p => p.role === 'BOWLER' || p.role === 'ALL_ROUNDER');
+  m.pace = bowlers.filter(p => styleById.get(p.id) === 'PACE').length;
+  m.spin = bowlers.filter(p => styleById.get(p.id) === 'SPIN').length;
+  m.keepers = t.retained.filter(p => p.role === 'WICKETKEEPER').length;
+  m.allRounders = t.retained.filter(p => p.role === 'ALL_ROUNDER').length;
+  scout.set(t.id, m);
+}
+const rankOf = (id: string, key: string, higherIsBetter: boolean) => {
+  const sorted = [...scout.entries()].sort((a, b) => higherIsBetter ? b[1][key] - a[1][key] : a[1][key] - b[1][key]);
+  return sorted.findIndex(([k]) => k === id) + 1;
+};
+const ord = (n: number) => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+for (const t of teams) {
+  const m = scout.get(t.id)!;
+  const areas = PH.flatMap(ph => [
+    {key: `bat_${ph}`, rank: rankOf(t.id, `bat_${ph}`, true), text: `${phaseName[ph][0].toUpperCase() + phaseName[ph].slice(1)} batting: strike rate ${m[`bat_${ph}`].toFixed(0)}`,
+     need: ph === 'POWERPLAY' ? 'Explosive opener' : ph === 'MIDDLE' ? 'Middle-order batter who handles spin' : 'Proven finisher'},
+    {key: `bowl_${ph}`, rank: rankOf(t.id, `bowl_${ph}`, false), text: `${phaseName[ph][0].toUpperCase() + phaseName[ph].slice(1)} bowling: ${m[`bowl_${ph}`].toFixed(1)} runs an over`,
+     need: ph === 'POWERPLAY' ? 'New-ball pacer who swings it' : ph === 'MIDDLE' ? 'Wicket-taking spinner' : 'Death-overs fast bowler'},
+  ]).sort((a, b) => b.rank - a.rank);
+  const catRanks = keys.map(k => ({k, rank: [...teams].sort((a, b) => b.rating.categories[k] - a.rating.categories[k]).findIndex(x => x.id === t.id) + 1}))
+    .sort((a, b) => b.rank - a.rank);
+  // Weak spots: the squad's three lowest-ranked phase numbers, plus its lowest-ranked rating category if bottom three.
+  const weak = areas.slice(0, 3).map(a => `${a.text} (${ord(a.rank)} of 10)`);
+  if (catRanks[0].rank >= 8) weak.push(`${categories[catRanks[0].k][0]}: ${t.rating.categories[catRanks[0].k].toFixed(0)} (${ord(catRanks[0].rank)} of 10)`);
+  // Shopping list: needs behind the two weakest phases, then squad-balance gaps.
+  const needs = [...new Set(areas.slice(0, 2).map(a => a.need))];
+  if (m.keepers < 2) needs.push('Backup wicketkeeper');
+  if (m.spin < 2 && !needs.includes('Wicket-taking spinner')) needs.push('Second frontline spinner');
+  if (m.pace < 5 && !needs.some(n => /pacer|fast/i.test(n))) needs.push('Pace-bowling depth');
+  if (m.allRounders < 3) needs.push('Seam-bowling all-rounder');
+  const slots = 25 - t.retained.length, overseasSlots = 8 - t.overseasCount;
+  (t as any).squadNeeds = {slots, overseasSlots, pace: m.pace, spin: m.spin, keepers: m.keepers, allRounders: m.allRounders};
+  t.rating.weaknesses = weak;
+  t.rating.auctionPriorities = needs.slice(0, Math.max(2, Math.min(4, slots)));
+}
+
 const {teams: _ignored, ...meta} = input;
 writeFileSync('ipl-retentions-data.json', JSON.stringify({
   ...meta,

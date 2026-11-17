@@ -125,8 +125,8 @@
         el('div', {}, el('b', {}, crore(team.purseRemainingLakh)), el('span', {}, 'purse left (reported)'))),
       bars,
       el('div', {className: 'rt-cols'},
-        el('div', {className: 'rt-notes'}, ...list('Auction shopping list', r.auctionPriorities.length ? r.auctionPriorities : ['No urgent gaps'])),
-        el('div', {className: 'rt-notes'}, ...list('Strengths', r.strengths), ...list('Weak spots', r.weaknesses))),
+        el('div', {className: 'rt-notes'}, ...list('Weak spots · IPL 2025–26 rank of 10', r.weaknesses), ...list('Strengths', r.strengths)),
+        el('div', {className: 'rt-notes'}, ...list('Auction shopping list · ' + team.squadNeeds.slots + ' slots, ' + team.squadNeeds.overseasSlots + ' overseas', r.auctionPriorities))),
       el('div', {className: 'rt-squad'}, ...groups,
         el('h4', {}, 'Released · ' + team.released.length), el('div', {className: 'rt-chips released'}, ...team.released.map(n => el('span', {}, n))),
         team.note ? el('p', {className: 'rt-note'}, team.note) : null)
@@ -134,7 +134,7 @@
     if (push) history.replaceState(null, '', '#' + team.id);
   }
 
-  fetch('ipl-retentions-data.json?v=2027-11-17f').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
+  fetch('ipl-retentions-data.json?v=2027-11-17g').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
     data = json;
     byId('rt-rank').replaceChildren(...data.teams.map(team => el('li', {},
       el('button', {type: 'button', 'aria-pressed': 'false', style: '--team:' + team.color, onclick: () => { showTeam(team.id, true); if (matchMedia('(max-width: 860px)').matches) byId('rt-team').scrollIntoView({behavior: 'smooth', block: 'start'}); }},
@@ -147,6 +147,7 @@
     const sources = data.sources.map((s, i) => [i ? ', ' : '', el('a', {href: s.url, rel: 'noopener'}, s.name)]).flat();
     byId('rt-method').replaceChildren(
       el('p', {}, el('b', {}, 'How the rating works. '), 'Same model as the original retention game: batting 30%, bowling 30%, Playing XI balance 15%, bench 10%, phase coverage 10% and fielding & wicketkeeping 5%. It uses IPL 2025 (40%) and IPL 2026 (60%) ball-by-ball evidence and picks the best legal XI from each retained squad. Squads will change at the 16 December auction, so these ratings describe the retained core only.'),
+      el('p', {}, el('b', {}, 'Weak spots and shopping lists. '), 'Each squad’s IPL 2025–26 strike rate and economy in the powerplay, middle overs and death overs, ranked against the other nine retained squads, plus gaps in keepers, pace, spin and all-rounders.'),
       el('p', {}, el('b', {}, 'Where the squads come from. '), data.note + ' Reports: ', ...sources, '. Trades: official IPL media advisories.'));
   }).catch(() => { byId('rt-rank').replaceChildren(el('li', {className: 'rt-note'}, 'Could not load the retention data. Reload the page to try again.')); });
   window.addEventListener('hashchange', () => data && showTeam(location.hash.slice(1), false));
