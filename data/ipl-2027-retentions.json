@@ -3,11 +3,15 @@
  "retentionDeadline": "2026-11-17",
  "compiledAt": "2026-11-17",
  "status": "REPORTED",
- "note": "Official IPL retention lists were not yet published on iplt20.com when compiled. Squads are the official 2026 rosters plus trades announced on iplt20.com, minus players reported released. Conflicts between reports were settled with ESPNcricinfo, then by agreement of at least two reports.",
+ "note": "Official IPL retention lists were not yet published on iplt20.com when compiled. Squads are the official 2026 rosters plus trades announced on iplt20.com, minus players reported released. Conflicts between reports were settled with franchise announcements reported by ANI and ESPNcricinfo, then by agreement of at least two reports and a check that each team's reported purse plus retained salaries adds up to the same cap.",
  "sources": [
   {
    "name": "ESPNcricinfo",
    "url": "https://www.espncricinfo.com/story/starc-head-bethell-released-by-dc-srh-rcb-ahead-of-the-2027-player-auction-1562958"
+  },
+  {
+   "name": "ANI via The Tribune",
+   "url": "https://www.tribuneindia.com/news/sports/ipl-2027-mumbai-indians-announce-retention-list-ahead-of-mini-auction"
   },
   {
    "name": "Wisden",
@@ -812,20 +816,6 @@
      "nationality": "India"
     },
     {
-     "id": "ipl-ec280c77-b2ea-428a-9863-69f71c25e788",
-     "name": "Krish Bhagat",
-     "role": "BATTER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
-     "id": "ipl-bd6945ff-904f-4e4b-af8b-7cb7b3e371a3",
-     "name": "Mahipal Lomror",
-     "role": "BATTER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
      "id": "ipl-1c0d13b3-03f8-4e10-af88-6deb0e7b4bef",
      "name": "Mitch Santner",
      "role": "ALL_ROUNDER",
@@ -861,22 +851,8 @@
      "nationality": "India"
     },
     {
-     "id": "ipl-7ab8ba6e-986e-4fd9-b149-fcfc6c816c36",
-     "name": "Robin Minz",
-     "role": "BATTER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
      "id": "ipl-b78c195f-b149-4136-9803-24209696c4c3",
      "name": "Rohit Sharma",
-     "role": "BATTER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
-     "id": "ipl-f4fba21e-0212-4637-8059-38b4d8cae682",
-     "name": "Ruchit Ahir",
      "role": "BATTER",
      "isOverseas": false,
      "nationality": "India"
@@ -930,11 +906,16 @@
     "Danish Malewar",
     "Deepak Chahar",
     "Keshav Maharaj",
+    "Krish Bhagat",
+    "Mahipal Lomror",
     "Mayank Markande",
     "Mayank Rawat",
     "Mohammed Izhar",
+    "Robin Minz",
+    "Ruchit Ahir",
     "Trent Boult"
-   ]
+   ],
+   "note": "MI announced 16 retained players (ANI); Robin Minz and 2026 replacement signings Krish Bhagat, Mahipal Lomror and Ruchit Ahir were released."
   },
   "pbks": {
    "purseRemainingLakh": 1860,
@@ -1121,13 +1102,6 @@
      "nationality": "South Africa"
     },
     {
-     "id": "ipl-02c3d48a-5f7d-4854-94c5-946bd48ea26b",
-     "name": "Emanjot Singh Chahal",
-     "role": "ALL_ROUNDER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
      "id": "ipl-748cc426-3e63-409d-8965-2c90e93f73f3",
      "name": "Jofra Archer",
      "role": "BOWLER",
@@ -1228,6 +1202,7 @@
    ],
    "released": [
     "Adam Milne",
+    "Emanjot Singh Chahal",
     "Kuldeep Sen",
     "Kwena Maphaka",
     "Ravi Singh",
@@ -1235,7 +1210,8 @@
     "Tushar Deshpande",
     "Vignesh Puthur",
     "Yudhvir Singh Charak"
-   ]
+   ],
+   "note": "RR announced a 19-player squad (Free Press Journal); Emanjot Singh Chahal is not in it."
   },
   "rcb": {
    "purseRemainingLakh": 1415,
@@ -1485,13 +1461,6 @@
      "nationality": "India"
     },
     {
-     "id": "ipl-8bbcc84c-f7cd-43ea-af3b-3ed0b400924d",
-     "name": "RS Ambrish",
-     "role": "BATTER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
      "id": "ipl-1bbc0f40-6802-4af3-bb36-034015a2aa2f",
      "name": "Ravichandran Smaran",
      "role": "BATTER",
@@ -1535,10 +1504,11 @@
     "Jaydev Unadkat",
     "Kamindu Mendis",
     "Onkar Tarmale",
+    "RS Ambrish",
     "Shivam Mavi",
     "Travis Head"
    ],
-   "note": "RS Ambrish is listed as retained by CREX and released by no report."
+   "note": "RS Ambrish released (ANI)."
   }
  }
 }
