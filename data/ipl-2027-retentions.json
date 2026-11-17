@@ -1556,6 +1556,12 @@
      "Finisher",
      "Pace bowlers"
     ]
+   },
+   "mi": {
+    "needs": [
+     "Spinner",
+     "New-ball pacer who swings it"
+    ]
    }
   }
  }
