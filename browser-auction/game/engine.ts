@@ -1,7 +1,17 @@
 import database from './players.json';
+import setData from './auction-sets.json';
 
 export type Player = typeof database[number];
 export const players: Player[] = database;
+const uncappedIds=new Set(setData.uncappedPlayerIds);
+export const auctionSets=['Wicketkeepers','Batters','All-rounders','Bowlers','Uncapped players'] as const;
+export function auctionSet(player:Player):typeof auctionSets[number]{
+  if(uncappedIds.has(player.id))return 'Uncapped players';
+  if(player.role==='WICKETKEEPER')return 'Wicketkeepers';
+  if(player.role==='ALL_ROUNDER')return 'All-rounders';
+  if(player.role==='BOWLER')return 'Bowlers';
+  return 'Batters';
+}
 export const teams = [
   ['csk','Chennai Super Kings','#f5cf4d'],['dc','Delhi Capitals','#499dff'],
   ['gt','Gujarat Titans','#a7bfff'],['kkr','Kolkata Knight Riders','#be94ff'],
@@ -49,7 +59,7 @@ export function start(teamId:string,retained:string[]=[]):Game{
     purses[t.id]=13000-cost;
   }
   const held=new Set(Object.values(squads).flat().map(m=>m.id));
-  const queue=players.filter(p=>!held.has(p.id)).sort((a,b)=>(b.salary??0)-(a.salary??0)||a.id.localeCompare(b.id)).map(p=>p.id);
+  const queue=players.filter(p=>!held.has(p.id)).sort((a,b)=>auctionSets.indexOf(auctionSet(a))-auctionSets.indexOf(auctionSet(b))||(b.salary??0)-(a.salary??0)||a.id.localeCompare(b.id)).map(p=>p.id);
   return {version:1,revision:0,teamId,squads,purses,queue,index:0,bid:0,leader:null,passed:[],seconds:10,stage:queue.length?'BIDDING':'COMPLETE',paused:true,history:[],message:'The room is ready. Press Start bidding.'};
 }
 export function placeBid(g:Game,teamId:string):Game{
