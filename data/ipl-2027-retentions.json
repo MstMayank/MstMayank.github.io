@@ -3,8 +3,12 @@
  "retentionDeadline": "2026-11-17",
  "compiledAt": "2026-11-17",
  "status": "REPORTED",
- "note": "Official IPL retention lists were not yet published on iplt20.com when compiled. Squads are the official 2026 rosters plus trades announced on iplt20.com, minus players reported released. Conflicts between reports were settled with franchise announcements reported by ANI and ESPNcricinfo, then by agreement of at least two reports and a check that each team's reported purse plus retained salaries adds up to the same cap.",
+ "note": "Squads, releases, purses and open slots match ESPNcricinfo's retention graphics for all 10 teams (17 Nov 2026), cross-checked with franchise announcements reported by ANI.",
  "sources": [
+  {
+   "name": "ESPNcricinfo retention graphics (Instagram)",
+   "url": "https://www.instagram.com/p/Df2byUuCbf9/"
+  },
   {
    "name": "ESPNcricinfo",
    "url": "https://www.espncricinfo.com/story/starc-head-bethell-released-by-dc-srh-rcb-ahead-of-the-2027-player-auction-1562958"
@@ -340,7 +344,7 @@
    "note": "Kyle Jamieson and Lungi Ngidi retained (ESPNcricinfo). Two reports list Jamieson as released, but with him retained the league totals match the reported 66 open slots, 25 overseas slots and ₹297.95 cr."
   },
   "gt": {
-   "purseRemainingLakh": 875,
+   "purseRemainingLakh": 375,
    "retained": [
     {
      "id": "ipl-4395eddf-c4f4-4c26-aa24-1be56d300316",
@@ -505,7 +509,7 @@
     "Shahrukh Khan",
     "Yarra Prithviraj"
    ],
-   "note": "22 retained confirmed by ANI. Purse left reported as ₹8.75 cr by most outlets and ₹3.75 cr by ANI; ₹8.75 cr matches the ₹4 cr Harshal Patel trade fee."
+   "note": "22 retained, ₹3.75 cr purse and 3 slots (2 overseas) per ESPNcricinfo and ANI, after the ₹4 cr Harshal Patel trade."
   },
   "kkr": {
    "purseRemainingLakh": 4165,
@@ -685,6 +689,13 @@
      "nationality": "India"
     },
     {
+     "id": "ipl-fe9c779d-8c1c-4e4d-bd4c-e0bd58f77973",
+     "name": "Arshin Kulkarni",
+     "role": "BATTER",
+     "isOverseas": false,
+     "nationality": "India"
+    },
+    {
      "id": "ipl-333fe44e-741f-4249-ace2-5401a6e7ebf7",
      "name": "Ayush Badoni",
      "role": "BATTER",
@@ -695,13 +706,6 @@
      "id": "ipl-1384dc42-5d8d-49f2-a4e4-4a545a34afba",
      "name": "Digvesh Singh Rathi",
      "role": "BOWLER",
-     "isOverseas": false,
-     "nationality": "India"
-    },
-    {
-     "id": "ipl-61761e27-5930-4284-a9b7-502207955b94",
-     "name": "Himmat Singh",
-     "role": "BATTER",
      "isOverseas": false,
      "nationality": "India"
     },
@@ -778,14 +782,14 @@
    ],
    "released": [
     "Anrich Nortje",
-    "Arshin Kulkarni",
     "Avesh Khan",
     "George Linde",
+    "Himmat Singh",
     "Matthew Breetzke",
     "Naman Tiwari",
     "Wanindu Hasaranga"
    ],
-   "note": "Most reports list Himmat Singh as retained and Arshin Kulkarni as released; ANI reports the reverse. Remaining purse reported as ₹47.45 cr (ANI, Wisden) and ₹47.05 cr (CREX)."
+   "note": "Arshin Kulkarni retained and Himmat Singh released (ESPNcricinfo retention graphic, ANI)."
   },
   "mi": {
    "purseRemainingLakh": 3260,
@@ -1067,7 +1071,7 @@
    ]
   },
   "rr": {
-   "purseRemainingLakh": 2705,
+   "purseRemainingLakh": 2205,
    "retained": [
     {
      "id": "ipl-aab29480-8454-48bf-a16f-12f79228a320",
@@ -1214,7 +1218,7 @@
     "Vignesh Puthur",
     "Yudhvir Singh Charak"
    ],
-   "note": "RR announced a 19-player squad (Free Press Journal); Emanjot Singh Chahal is not in it."
+   "note": "19 players and ₹22.05 cr purse per ESPNcricinfo, after the Shami, Siddharth and Curran trades; Emanjot Singh Chahal released."
   },
   "rcb": {
    "purseRemainingLakh": 1415,
