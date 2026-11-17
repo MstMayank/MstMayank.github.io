@@ -46,7 +46,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add archive-players-Test.js archive-players-ODI.js archive-players-T20I.js cricket-history.json cricket-records-status.json data/cricket-history-match-events.json data/recent-international-scorecards.json
+          git add archive-players-Test.bin archive-players-ODI.bin archive-players-T20I.bin cricket-history.json cricket-records-status.json data/cricket-history-match-events.json data/recent-international-scorecards.json
           if git diff --cached --quiet; then
             echo 'Cricket data is already current.'
             exit 0

@@ -7,6 +7,7 @@
   const inputs = [byId('battle-first'), byId('battle-second')];
   const suggestions = [byId('battle-first-results'), byId('battle-second-results')];
   const selected = [null, null];
+  let defaultMatchupShown = false;
   const number = value => Number(value).toLocaleString('en-IN');
   const metricKeys = ['runs', 'balls', 'dots', 'fours', 'sixes', 'wickets', 'conceded', 'legal', 'wides', 'noBalls', 'bowlingDots', 'outs'];
   let competition = new URLSearchParams(location.search).get('competition') || 'ipl';
@@ -1048,6 +1049,14 @@ function venueLabel(name) {
         }
         if (initialLink.get('gender')==='female') byId('battle-gender').value='female';
         [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
+      }
+      // First visit with no shared link: show a ready-made IPL matchup instead of an empty form.
+      if (!defaultMatchupShown && competition === 'ipl' && mode === 'direct' && !initialLink.has('first') && !initialLink.has('second') && selected[0] === null && selected[1] === null) {
+        defaultMatchupShown = true;
+        [['V Kohli', 0], ['JJ Bumrah', 1]].forEach(([name, index]) => {
+          const id = data.players.indexOf(name);
+          if (id >= 0) { selected[index] = id; inputs[index].value = name; }
+        });
       }
       updateChoices();
       render();

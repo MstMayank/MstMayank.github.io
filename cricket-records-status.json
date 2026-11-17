@@ -4,17 +4,17 @@
     "Test": {
       "matches": 926,
       "through": "2026-11-09",
-      "revision": "1a2bbc8e40f419af"
+      "revision": "1e5ff65e8dc70dd7"
     },
     "ODI": {
       "matches": 3243,
       "through": "2026-11-15",
-      "revision": "818c96f5f6449989"
+      "revision": "fc8f85101ff3c566"
     },
     "T20I": {
       "matches": 6176,
       "through": "2026-11-16",
-      "revision": "0a0a2903da7b30c4"
+      "revision": "03601114da808865"
     }
   },
   "pendingScorecards": 4

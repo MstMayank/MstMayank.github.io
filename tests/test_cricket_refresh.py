@@ -100,8 +100,8 @@ class RefreshTests(unittest.TestCase):
     def test_archive_roundtrip_and_corruption_detection(self):
         data = {'matches': 1, 'rows': [['sample']], 'aliases': {}}
         with tempfile.TemporaryDirectory() as temp:
-            p = Path(temp) / 'archive.js'
-            p.write_text(refresh.encode_archive('ODI', data))
+            p = Path(temp) / 'archive.bin'
+            p.write_bytes(refresh.encode_archive('ODI', data))
             self.assertEqual(refresh.load_archive(p), data)
             p.write_text('not a valid download')
             with self.assertRaises(ValueError):

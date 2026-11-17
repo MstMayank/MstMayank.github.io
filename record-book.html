@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cricket Record Book | The Cricket Space</title><meta name="description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space"><meta property="og:title" content="Cricket Record Book | The Cricket Space"><meta property="og:description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:url" content="https://mstmayank.github.io/record-book.html"><meta property="og:image" content="https://mstmayank.github.io/og-record-book.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Cricket Record Book | The Cricket Space"><meta name="twitter:card" content="summary_large_image">
+<title>Cricket Record Book | The Cricket Space</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="canonical" href="https://mstmayank.github.io/record-book.html"><meta name="description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space"><meta property="og:title" content="Cricket Record Book | The Cricket Space"><meta property="og:description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:url" content="https://mstmayank.github.io/record-book.html"><meta property="og:image" content="https://mstmayank.github.io/og-record-book.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Cricket Record Book | The Cricket Space"><meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
@@ -18,13 +18,14 @@
   td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
   .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
   button { margin-top: 16px; cursor: pointer; }
-</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=mobile2"></head><body class="v2 cricket-feel cricket-tools">
+</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=coverage1"></head><body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
-<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="./#about">About</a></div>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
 <a class="btn d" href="./#contact">Let’s talk</a>
 </div></nav><main class="wrap page tool-page archive-page">
 <nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html" aria-current="page">Record Book</a></nav><h1 class="tool-heading">Cricket<br><span>Record Book</span></h1>
+<p class="tool-coverage">Covers matches with ball-by-ball scorecards: Tests from December 2001, ODIs from June 2002 and T20Is from February 2005. Older matches are not included, so totals for players from earlier eras are incomplete.</p>
 <div class="filters tool-filter">
   <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
   <label>Year<select id="year"><option value="">All years</option></select></label>
@@ -54,7 +55,6 @@
   const results = document.getElementById('results');
   const more = document.getElementById('more');
   const datasets = new Map();
-  const archives = window.cricketArchives = new Map();
   const pending = new Map();
   const activeFormats = () => format.value === 'all' ? ['Test', 'ODI', 'T20I'] : [format.value];
   const needsData = () => activeFormats().some(key => !datasets.has(key));
@@ -92,22 +92,16 @@
 
   function loadDataset(key) {
     if (!pending.has(key)) {
-      pending.set(key, new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = './archive-players-' + key + '.js?v=' + (archiveVersions[key] || Date.now());
-        script.onload = async () => {
-          try {
-            const bytes = Uint8Array.from(atob(archives.get(key)), char => char.charCodeAt(0));
-            datasets.set(key, await readArchive(bytes));
-            archives.delete(key);
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        };
-        script.onerror = reject;
-        document.head.append(script);
-      }).finally(() => pending.delete(key)));
+      // Archives are gzip-compressed JSON served as binary (.bin) files.
+      const version = archiveVersions[key] || (key === 'T20' ? 'f7f5d6d9b77d7c29' : Date.now());
+      pending.set(key, fetch('./archive-players-' + key + '.bin?v=' + version)
+        .then(response => {
+          if (!response.ok) throw new Error('Archive ' + key + ' unavailable');
+          return response.arrayBuffer();
+        })
+        .then(buffer => readArchive(new Uint8Array(buffer)))
+        .then(data => { datasets.set(key, data); })
+        .finally(() => pending.delete(key)));
     }
     return pending.get(key);
   }

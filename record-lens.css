@@ -75,3 +75,5 @@ background:radial-gradient(800px 480px at 90% 0%,rgba(232,196,104,.12),transpare
 }
 
 #ipl-lens .battle-share-tools label[hidden]{display:none}
+
+.cricket-tools .tool-coverage{color:var(--muted);font-size:14px;line-height:1.55;max-width:68ch;margin:0 2px 22px}

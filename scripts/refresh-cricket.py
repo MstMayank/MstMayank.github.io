@@ -4,7 +4,6 @@ Inputs: Cricsheet JSON (ODC-BY); existing curated scorecards are preserved.
 Run from repo root. Outputs are staged in memory before atomic file replacement.
 """
 import argparse
-import base64
 from collections import defaultdict
 from datetime import date, datetime
 import gzip
@@ -25,19 +24,20 @@ BOWLER_WICKETS = {'bowled', 'caught', 'caught and bowled', 'lbw', 'stumped', 'hi
 
 
 def load_archive(path):
-    match = re.fullmatch(r'window\.cricketArchives\.set\("[^"]+",\s*"([A-Za-z0-9+/=]+)"\);\s*', path.read_text())
-    if not match:
-        raise ValueError(f'Invalid archive wrapper: {path}')
-    result = json.loads(gzip.decompress(base64.b64decode(match[1])))
-    if not result.get('rows') or not isinstance(result.get('aliases'), dict):
+    """Read a gzip-compressed JSON archive (archive-players-<format>.bin)."""
+    try:
+        result = json.loads(gzip.decompress(path.read_bytes()))
+    except (OSError, EOFError, ValueError) as error:
+        raise ValueError(f'Invalid archive: {path}') from error
+    if not isinstance(result, dict) or not result.get('rows') or not isinstance(result.get('aliases'), dict):
         raise ValueError(f'Empty or invalid archive: {path}')
     return result
 
 
 def encode_archive(key, data):
+    """Gzip bytes served as-is to the Record Book (no base64 wrapper)."""
     raw = json.dumps(data, separators=(',', ':'), ensure_ascii=True).encode()
-    packed = base64.b64encode(gzip.compress(raw, mtime=0)).decode()
-    return f'window.cricketArchives.set({json.dumps(key)}, {json.dumps(packed)});\n'
+    return gzip.compress(raw, mtime=0)
 
 
 def match_format(info):
@@ -192,7 +192,7 @@ def main():
     parser.add_argument('--recent-only', action='store_true', help='Refresh recent scorecards without redownloading historical ZIPs')
     parser.add_argument('--today', type=date.fromisoformat, default=datetime.now(ZoneInfo('Asia/Kolkata')).date())
     args = parser.parse_args()
-    archives = {key: load_archive(ROOT / f'archive-players-{key}.js') for key in FORMATS}
+    archives = {key: load_archive(ROOT / f'archive-players-{key}.bin') for key in FORMATS}
     events_path = ROOT / 'data/cricket-history-match-events.json'
     match_events = json.loads(events_path.read_text()) if events_path.exists() else {}
     if not args.history_only and not args.recent_only:
@@ -252,14 +252,16 @@ def main():
         outputs[recent_path] = json.dumps(recent_state, ensure_ascii=False, indent=2, sort_keys=True) + '\n'
         outputs[events_path] = json.dumps(match_events, ensure_ascii=False, indent=2, sort_keys=True) + '\n'
         for key, data in archives.items():
-            outputs[ROOT / f'archive-players-{key}.js'] = encode_archive(key, data)
-    metadata = {'version': 1, 'formats': {key: {'matches': data['matches'], 'through': max(r[6] for r in data['rows']), 'revision': hashlib.sha256(encode_archive(key, data).encode()).hexdigest()[:16]} for key, data in archives.items()}}
+            outputs[ROOT / f'archive-players-{key}.bin'] = encode_archive(key, data)
+    metadata = {'version': 1, 'formats': {key: {'matches': data['matches'], 'through': max(r[6] for r in data['rows']), 'revision': hashlib.sha256(encode_archive(key, data)).hexdigest()[:16]} for key, data in archives.items()}}
     metadata['pendingScorecards'] = len(recent_state.get('pending', {})) + len(recent_state.get('discoveryPending', []))
     outputs[ROOT / 'cricket-records-status.json'] = json.dumps(metadata, indent=2) + '\n'
     for path, content in outputs.items():
-        if not path.exists() or path.read_text() != content:
+        current = path.read_bytes() if path.exists() else None
+        encoded = content if isinstance(content, bytes) else content.encode()
+        if current != encoded:
             temporary = path.with_suffix(path.suffix + '.tmp')
-            temporary.write_text(content)
+            temporary.write_bytes(encoded)
             temporary.replace(path)
     print(json.dumps(metadata), flush=True)
     print(f'History calendar: {len(generated_history["days"])} dates', flush=True)
