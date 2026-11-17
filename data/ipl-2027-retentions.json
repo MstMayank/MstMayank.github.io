@@ -248,6 +248,13 @@
      "nationality": "India"
     },
     {
+     "id": "ipl-26e157d2-6e5f-4260-ac36-0759bbb00ea0",
+     "name": "Kyle Jamieson",
+     "role": "BOWLER",
+     "isOverseas": true,
+     "nationality": "New Zealand"
+    },
+    {
      "id": "ipl-d07bc8c4-60c3-4010-a171-9738f2532a26",
      "name": "Lungi Ngidi",
      "role": "BOWLER",
@@ -324,14 +331,13 @@
     "Ben Duckett",
     "Dushmantha Chameera",
     "Karun Nair",
-    "Kyle Jamieson",
     "Mitchell Starc",
     "Nitish Rana",
     "Pathum Nissanka",
     "Rehan Ahmed",
     "Sahil Parakh"
    ],
-   "note": "Kyle Jamieson released per Sportskeeda and Sunday Guardian; ESPNcricinfo and others list him as retained. Lungi Ngidi retained."
+   "note": "Kyle Jamieson and Lungi Ngidi retained (ESPNcricinfo). Two reports list Jamieson as released, but with him retained the league totals match the reported 66 open slots, 25 overseas slots and ₹297.95 cr."
   },
   "gt": {
    "purseRemainingLakh": 875,

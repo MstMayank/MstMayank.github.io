@@ -134,7 +134,7 @@
     if (push) history.replaceState(null, '', '#' + team.id);
   }
 
-  fetch('ipl-retentions-data.json?v=2027-11-17j').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
+  fetch('ipl-retentions-data.json?v=2027-11-17k').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
     data = json;
     byId('rt-rank').replaceChildren(...data.teams.map(team => el('li', {},
       el('button', {type: 'button', 'aria-pressed': 'false', style: '--team:' + team.color, onclick: () => { showTeam(team.id, true); if (matchMedia('(max-width: 860px)').matches) byId('rt-team').scrollIntoView({behavior: 'smooth', block: 'start'}); }},
