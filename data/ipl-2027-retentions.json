@@ -1533,5 +1533,30 @@
   "Rahul Tewatia": "ALL_ROUNDER",
   "Nishant Sindhu": "ALL_ROUNDER",
   "Dasun Shanaka": "ALL_ROUNDER"
+ },
+ "editorial": {
+  "note": "Shopping lists set by The Cricket Space where our own read differs from the automatic list.",
+  "teams": {
+   "gt": {
+    "needs": [
+     "Middle-order batters"
+    ],
+    "weakSpots": [
+     "Top-order reliance: Gill, Sudharsan and Buttler made 68% of the squad's IPL 2026 runs (2nd-highest of 10)"
+    ]
+   },
+   "rcb": {
+    "needs": [
+     "Another finisher",
+     "Another spinner"
+    ]
+   },
+   "csk": {
+    "needs": [
+     "Finisher",
+     "Pace bowlers"
+    ]
+   }
+  }
  }
 }

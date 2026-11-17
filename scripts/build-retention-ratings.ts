@@ -57,7 +57,7 @@ function assessFranchise(teamId: string, members: Member[]) {
 type Retained = {id: string; name: string; role: string; isOverseas: boolean; nationality?: string};
 type TeamInput = {purseRemainingLakh: number; retained: Retained[]; released: string[]; note?: string};
 const input = JSON.parse(readFileSync('data/ipl-2027-retentions.json', 'utf8')) as {
-  teams: Record<string, TeamInput>; [key: string]: unknown;
+  teams: Record<string, TeamInput>; editorial?: any; [key: string]: unknown;
 };
 
 const names: Record<string, [string, string, string]> = {
@@ -141,6 +141,10 @@ for (const t of teams) {
   (t as any).squadNeeds = {slots, overseasSlots, pace: m.pace, spin: m.spin, keepers: m.keepers, allRounders: m.allRounders};
   t.rating.weaknesses = weak;
   t.rating.auctionPriorities = needs.slice(0, Math.max(2, Math.min(4, slots)));
+  // Editorial calls from The Cricket Space override the automatic list for that team.
+  const editorial = input.editorial?.teams?.[t.id];
+  if (editorial?.needs) t.rating.auctionPriorities = editorial.needs;
+  if (editorial?.weakSpots) t.rating.weaknesses = [...editorial.weakSpots, ...t.rating.weaknesses].slice(0, 4);
 }
 
 const {teams: _ignored, ...meta} = input;
