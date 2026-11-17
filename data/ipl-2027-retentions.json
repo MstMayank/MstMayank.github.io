@@ -1563,8 +1563,25 @@
    },
    "mi": {
     "needs": [
-     "Spinner",
-     "New-ball pacer who swings it"
+     "Finisher"
+    ]
+   },
+   "dc": {
+    "needs": [
+     "Explosive opener",
+     "Wicket-taking spinner",
+     "Seam-bowling all-rounder"
+    ]
+   },
+   "srh": {
+    "needs": [
+     "Opener",
+     "Spinner"
+    ]
+   },
+   "rr": {
+    "needs": [
+     "Finisher"
     ]
    }
   }
