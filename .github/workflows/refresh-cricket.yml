@@ -5,10 +5,14 @@ on:
     paths:
       - '.github/workflows/refresh-cricket.yml'
       - 'scripts/refresh-cricket.py'
+      - 'scripts/recent_scorecards.py'
       - 'data/cricket-history-curated.json'
       - 'tests/test_cricket_refresh.py'
+      - 'tests/test_recent_scorecards.py'
   schedule:
     - cron: '17 0,12 * * *'
+    - cron: '2,32,47 * * * *'
+    - cron: '17 1-11,13-23 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -26,14 +30,23 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check archive calculations
+        run: python -m unittest discover -s tests -p 'test_*scorecards.py'
+      - name: Check historical archive calculations
         run: python -m unittest discover -s tests -p 'test_cricket_refresh.py'
       - name: Update completed international matches and history calendar
-        run: python scripts/refresh-cricket.py
+        env:
+          REFRESH_SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "schedule" ] || [ "$REFRESH_SCHEDULE" = "17 0,12 * * *" ]; then
+            python scripts/refresh-cricket.py
+          else
+            python scripts/refresh-cricket.py --recent-only
+          fi
       - name: Publish updated data
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add archive-players-Test.js archive-players-ODI.js archive-players-T20I.js cricket-history.json cricket-records-status.json data/cricket-history-match-events.json
+          git add archive-players-Test.js archive-players-ODI.js archive-players-T20I.js cricket-history.json cricket-records-status.json data/cricket-history-match-events.json data/recent-international-scorecards.json
           if git diff --cached --quiet; then
             echo 'Cricket data is already current.'
             exit 0

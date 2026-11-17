@@ -12,6 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 import tempfile
 import time
 import urllib.request
@@ -118,7 +119,7 @@ def merge_archive(old, incoming):
         for name, identifier in people.items():
             aliases.setdefault(identifier, set()).add(name)
     rows.sort(key=lambda r: (r[6], r[2], r[3], str(r[12]) if len(r) > 12 else '', r[0], r[1], str(r[13]) if len(r) > 13 else ''))
-    known = {r[12] for r in rows if len(r) > 12}
+    known = {r[12] for r in rows if len(r) > 12} | incoming_ids
     legacy = {row_key(r) for r in rows if len(r) <= 12}
     return {'matches': max(old['matches'], len(known) + len(legacy)), 'rows': rows,
             'aliases': {k: sorted(v) for k, v in sorted(aliases.items())}}
@@ -188,12 +189,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--cache', type=Path, help='Reuse pre-downloaded JSON ZIPs for local checks')
     parser.add_argument('--history-only', action='store_true')
+    parser.add_argument('--recent-only', action='store_true', help='Refresh recent scorecards without redownloading historical ZIPs')
     parser.add_argument('--today', type=date.fromisoformat, default=datetime.now(ZoneInfo('Asia/Kolkata')).date())
     args = parser.parse_args()
     archives = {key: load_archive(ROOT / f'archive-players-{key}.js') for key in FORMATS}
     events_path = ROOT / 'data/cricket-history-match-events.json'
     match_events = json.loads(events_path.read_text()) if events_path.exists() else {}
-    if not args.history_only:
+    if not args.history_only and not args.recent_only:
         incoming = {key: {} for key in FORMATS}
         with tempfile.TemporaryDirectory() as temp:
             # T20 includes international T20 and IT20 naming variants; club matches are filtered out.
@@ -222,16 +224,37 @@ def main():
         if any(not incoming[key] for key in FORMATS):
             raise ValueError('Incomplete source refresh; previous archives left intact')
         archives = {key: merge_archive(archives[key], incoming[key]) for key in FORMATS}
+    recent_path = ROOT / 'data/recent-international-scorecards.json'
+    recent_state = json.loads(recent_path.read_text()) if recent_path.exists() else {'matches': {}, 'pending': {}}
+    if not args.history_only:
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from recent_scorecards import refresh_recent
+        covered = {key: {r[12] for r in data['rows'] if len(r) > 12 and not (len(r) > 15 and r[15] == 'recent-scorecard')} for key, data in archives.items()}
+        try:
+            recent_state = refresh_recent(args.today, recent_path, covered, args.cache)
+        except Exception as error:
+            print(f'Recent scorecard refresh unavailable; preserving previous records: {error}', flush=True)
+        for key in FORMATS:
+            supplements = {identifier: item for identifier, item in recent_state['matches'].items() if item['format'] == key and item['rows'] and identifier not in covered[key]}
+            # Merge row sets first, then register full names from the roster by player ID.
+            archives[key] = merge_archive(archives[key], {identifier: (item['rows'], {}) for identifier, item in supplements.items()})
+            aliases = archives[key]['aliases']
+            for item in supplements.values():
+                for identifier, names in item['aliases'].items():
+                    aliases[identifier] = sorted(set(aliases.get(identifier, [])) | set(names))
+            archives[key]['aliases'] = dict(sorted(aliases.items()))
     curated = json.loads((ROOT / 'data/cricket-history-curated.json').read_text())
     generated_history = history(archives, curated, args.today, match_events.values())
     if len(generated_history['days']) != 366:
         raise ValueError('History calendar is incomplete; previous files left intact')
     outputs = {ROOT / 'cricket-history.json': json.dumps(generated_history, ensure_ascii=False, indent=2, sort_keys=True) + '\n'}
     if not args.history_only:
+        outputs[recent_path] = json.dumps(recent_state, ensure_ascii=False, indent=2, sort_keys=True) + '\n'
         outputs[events_path] = json.dumps(match_events, ensure_ascii=False, indent=2, sort_keys=True) + '\n'
         for key, data in archives.items():
             outputs[ROOT / f'archive-players-{key}.js'] = encode_archive(key, data)
     metadata = {'version': 1, 'formats': {key: {'matches': data['matches'], 'through': max(r[6] for r in data['rows']), 'revision': hashlib.sha256(encode_archive(key, data).encode()).hexdigest()[:16]} for key, data in archives.items()}}
+    metadata['pendingScorecards'] = len(recent_state.get('pending', {})) + len(recent_state.get('discoveryPending', []))
     outputs[ROOT / 'cricket-records-status.json'] = json.dumps(metadata, indent=2) + '\n'
     for path, content in outputs.items():
         if not path.exists() or path.read_text() != content:

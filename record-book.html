@@ -59,6 +59,7 @@
   const activeFormats = () => format.value === 'all' ? ['Test', 'ODI', 'T20I'] : [format.value];
   const needsData = () => activeFormats().some(key => !datasets.has(key));
   let archiveVersions = {};
+  let pendingScorecards = 0;
   let checkingVersions = false;
   let request = 0;
   let limit = 25;
@@ -182,7 +183,7 @@
           remaining--;
         }
       }
-      status.textContent = filtered.length.toLocaleString() + ' results · ' + matches.toLocaleString() + (selectedFormat === 'all' ? ' international matches' : ' matches in this format’s archive') + (groups.length ? ' · Latest record: ' + groups[0][0][6] : '');
+      status.textContent = filtered.length.toLocaleString() + ' results · ' + matches.toLocaleString() + (selectedFormat === 'all' ? ' international matches' : ' matches in this format’s archive') + (groups.length ? ' · Latest record: ' + groups[0][0][6] : '') + (pendingScorecards ? ' · Recent scorecards updating' : '');
       more.hidden = filtered.length <= limit;
     } catch {
       if (current === request) status.textContent = 'Could not load the match archive. Reload the page to try again.';
@@ -208,11 +209,13 @@
     if (checkingVersions || pending.size) return;
     checkingVersions = true;
     try {
-      const response = await fetch('./cricket-records-status.json', {cache:'no-store'});
+      const response = await fetch('./cricket-records-status.json?v=' + Math.floor(Date.now() / 120000), {cache:'no-store'});
       if (!response.ok) throw new Error('Archive status unavailable');
       const manifest = await response.json();
       if (manifest.version !== 1 || !manifest.formats) throw new Error('Invalid archive status');
-      let changed = false;
+      const pendingCount = Number.isSafeInteger(manifest.pendingScorecards) ? manifest.pendingScorecards : 0;
+      let changed = pendingCount !== pendingScorecards;
+      pendingScorecards = pendingCount;
       for (const [key, info] of Object.entries(manifest.formats)) {
         if (!/^[a-f0-9]{16}$/.test(info.revision)) continue;
         if (archiveVersions[key] !== info.revision) {
@@ -229,7 +232,7 @@
     }
   }
   refreshArchives();
-  setInterval(refreshArchives, 15 * 60 * 1000);
+  setInterval(refreshArchives, 2 * 60 * 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshArchives(); });
 </script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

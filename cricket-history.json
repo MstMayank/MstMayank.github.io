@@ -9003,6 +9003,12 @@
     "11-01": [
       {
         "competition": "Men’s T20I",
+        "date": "2026-11-01",
+        "summary": "Noor Ahmad Lakanwal took 5 wickets for 13 runs for Afghanistan against Zimbabwe in T20I cricket.",
+        "title": "Noor Ahmad Lakanwal takes 5/13 against Zimbabwe"
+      },
+      {
+        "competition": "Men’s T20I",
         "date": "2025-11-01",
         "summary": "B Dugic took 5 wickets for 28 runs for Serbia against Bulgaria in T20I cricket.",
         "title": "B Dugic takes 5/28 against Bulgaria"
@@ -9024,12 +9030,6 @@
         "date": "2021-11-01",
         "summary": "Jos Buttler scored 101 for England against Sri Lanka in T20I cricket.",
         "title": "Jos Buttler scores 101 against Sri Lanka"
-      },
-      {
-        "competition": "Men’s ODI",
-        "date": "2023-11-01",
-        "summary": "Rassie van der Dussen scored 133 for South Africa against New Zealand in ODI cricket.",
-        "title": "Rassie van der Dussen scores 133 against New Zealand"
       }
     ],
     "11-02": [
@@ -9387,6 +9387,18 @@
         "title": "England win ICC Men's T20 World Cup"
       },
       {
+        "competition": "Men’s ODI",
+        "date": "2026-11-13",
+        "summary": "Mahli Beardman took 6 wickets for 24 runs for Australia against England in ODI cricket.",
+        "title": "Mahli Beardman takes 6/24 against England"
+      },
+      {
+        "competition": "Men’s ODI",
+        "date": "2026-11-13",
+        "summary": "Matthew James Henry took 6 wickets for 27 runs for New Zealand against India in ODI cricket.",
+        "title": "Matthew James Henry takes 6/27 against India"
+      },
+      {
         "competition": "Men’s T20I",
         "date": "2021-11-13",
         "summary": "D Heyliger took 5 wickets for 16 runs for Canada against Argentina in T20I cricket.",
@@ -9397,18 +9409,6 @@
         "date": "2014-11-13",
         "summary": "Rohit Sharma scored 264 for India against Sri Lanka in ODI cricket.",
         "title": "Rohit Sharma scores 264 against Sri Lanka"
-      },
-      {
-        "competition": "Men’s T20I",
-        "date": "2024-11-13",
-        "summary": "Tilak Varma scored 107 for India against South Africa in T20I cricket.",
-        "title": "Tilak Varma scores 107 against South Africa"
-      },
-      {
-        "competition": "Men’s ODI",
-        "date": "2024-11-13",
-        "summary": "Kusal Mendis scored 143 for Sri Lanka against New Zealand in ODI cricket.",
-        "title": "Kusal Mendis scores 143 against New Zealand"
       }
     ],
     "11-14": [
