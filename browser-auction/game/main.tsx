@@ -1,6 +1,6 @@
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {start,teams,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
+import {start,teams,auctionSet,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
 import {auctionCard} from './share';
 import StaticImage from '../image';
 import './room.css';
@@ -23,7 +23,8 @@ function restore(){
 }
 function App(){
   const [initial]=useState(restore);
-  const [game,setGame]=useState<Game|null>(initial.game),[error,setError]=useState(initial.error),[selected,setSelected]=useState('rcb');
+  const [savedGame,setSavedGame]=useState<Game|null>(initial.game);
+  const [game,setGame]=useState<Game|null>(null),[error,setError]=useState(initial.error),[selected,setSelected]=useState('rcb');
   const [assessment,setAssessment]=useState<{key:string;overallRating:number;tier:string}|null>(null);
   const [tab,setTab]=useState('squad'),[sound,setSound]=useState(false),[notice,setNotice]=useState('');
   const ratingKey=JSON.stringify(game?{teamId:game.teamId,members:game.squads[game.teamId]}:null);
@@ -44,7 +45,7 @@ function App(){
   const owner=useRef(Array.from(crypto.getRandomValues(new Uint8Array(16)),value=>value.toString(16).padStart(2,'0')).join(''));
   const leaseKey=KEY+'-owner';
   useEffect(()=>{
-    const sync=(e:StorageEvent)=>{if(e.key===KEY)try{setGame(read());setNotice('Auction updated in another tab. Resume here to take control.');}catch(err){setError((err as Error).message);}};
+    const sync=(e:StorageEvent)=>{if(e.key===KEY)try{const latest=read();setSavedGame(latest);setGame(current=>current?latest:null);setNotice('Auction updated in another tab. Resume here to take control.');}catch(err){setError((err as Error).message);}};
     addEventListener('storage',sync);
     return()=>removeEventListener('storage',sync);
   },[]);
@@ -85,8 +86,19 @@ function App(){
       if(lease?.owner!==owner.current&&lease?.expires>Date.now())throw Error('Pause the auction in your other tab before starting a new game.');
       const fresh=start(teamId);
       localStorage.setItem(KEY,JSON.stringify(fresh));
-      setGame(fresh);setError('');setNotice('');
+      setSavedGame(fresh);setGame(fresh);setError('');setNotice('');
     }catch(e){setError((e as Error).message);}
+  }
+  function resume(){
+    try{
+      const latest=read();
+      if(!latest)throw Error('No saved auction is available. Start a fresh game.');
+      setSavedGame(latest);setGame(latest);setError('');setNotice('');
+    }catch(e){setError((e as Error).message);}
+  }
+  function showStart(){
+    update(g=>({...g,paused:true,revision:g.revision+1}));
+    setSavedGame(game);setGame(null);
   }
   function toggle(){
     if(!game)return;
@@ -135,12 +147,13 @@ function App(){
       {notice&&<p className="notice" role="status">{notice}</p>}
       {!game?<section className="setup">
         <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Outbid nine computer franchises. Build an 18–25 player squad with up to eight overseas players.</p><p className="muted">₹130 Cr purse · Simulation base prices · Saves on this browser</p></div>
+        {savedGame&&<div className="resume-choice"><div><span className="eyebrow">SAVED AUCTION</span><h2>{savedGame.teamId.toUpperCase()} · Lot {Math.min(savedGame.index+1,savedGame.queue.length)}</h2><p>{savedGame.stage==='COMPLETE'?'Completed auction':'Continue where you left off.'}</p></div><button onClick={resume}>Resume last game →</button></div>}
         <div className="team-picker">{teams.map(t=><button key={t.id} aria-pressed={selected===t.id} onClick={()=>setSelected(t.id)}><Logo id={t.id}/>{t.id.toUpperCase()}</button>)}</div>
         <button className="primary" onClick={()=>begin(selected)}>Start fresh auction ↗</button>
       </section>:<>
         <div className="auction-layout">
           <section className={'player-stage '+(game.stage==='SOLD'?'sold-stage':'')}>
-            <div className="stage-top"><span>LOT {Math.min(game.index+1,game.queue.length)} / {game.queue.length}</span><div className="stage-controls"><button className="small" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start bidding':'Ⅱ Pause'}</button><button className="small" aria-pressed={sound} onClick={()=>{setSound(!sound);if(!sound){audio.current??=new AudioContext();void audio.current.resume();}}}>Sound {sound?'on':'off'}</button></div></div>
+            <div className="stage-top"><span>{player&&<b className="set-label">{auctionSet(player)}</b>}LOT {Math.min(game.index+1,game.queue.length)} / {game.queue.length}</span><div className="stage-controls"><button className="small" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start bidding':'Ⅱ Pause'}</button><button className="small" aria-pressed={sound} onClick={()=>{setSound(!sound);if(!sound){audio.current??=new AudioContext();void audio.current.resume();}}}>Sound {sound?'on':'off'}</button></div></div>
             {player?<><div className="player-art" aria-hidden="true"><div className="orbit"/><strong>{player.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</strong><span>{player.role.replaceAll('_',' ')}</span></div>
               <h2>{player.name}</h2><p className="player-meta">{player.nationality} <span>·</span> {player.isOverseas?'Overseas':'Indian'} <span>·</span> Base {money(nextBid({...game,leader:null}))}</p>
               <div className="bid-display"><span>{game.leader?'CURRENT BID':'OPENING PRICE'}</span><strong>{money(game.leader?game.bid:nextBid(game))}</strong><div>{game.leader?<><Logo id={game.leader}/>{game.leader.toUpperCase()} LEADS</>:'Waiting for the first paddle'}</div></div>
@@ -155,7 +168,7 @@ function App(){
           <aside className="team-board"><div className="section-label"><h2>The room</h2><span>10 franchises</span></div>{teams.map(t=><div key={t.id} className={'franchise '+(game.leader===t.id?'leading':'')} style={{'--franchise':t.color} as React.CSSProperties}><Logo id={t.id}/><div><b>{t.id.toUpperCase()} {t.id===game.teamId&&<small>YOU</small>}</b><span>{game.squads[t.id].length}/25 players</span></div><strong>{money(game.purses[t.id])}</strong>{game.leader===t.id&&<i/>}</div>)}</aside>
         </div>
         <section className="your-desk"><div className="desk-heading"><Logo id={game.teamId}/><div><span className="eyebrow">YOUR FRANCHISE</span><h2>{team.name}</h2></div><div className="desk-budget"><span>PURSE LEFT</span><strong>{money(game.purses[game.teamId])}</strong></div></div>
-          <div className="squad-status"><span>{squad.length}/25 players · {squad.filter(m=>findPlayer(m.id).isOverseas).length}/8 overseas</span>{rating&&<strong>Squad rating {rating.overallRating.toFixed(1)}/100 · {rating.tier}{squad.length<11?' · Incomplete squad':''}</strong>}</div><div className="controls"><button className="primary" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start / resume':'Ⅱ Pause auction'}</button><button onClick={share}>Share squad ↗</button><button onClick={()=>{if(confirm('Replace this auction and start again?')){update(g=>({...g,paused:true}));setGame(null);}}}>New game</button></div>
+          <div className="squad-status"><span>{squad.length}/25 players · {squad.filter(m=>findPlayer(m.id).isOverseas).length}/8 overseas</span>{rating&&<strong>Squad rating {rating.overallRating.toFixed(1)}/100 · {rating.tier}{squad.length<11?' · Incomplete squad':''}</strong>}</div><div className="controls"><button className="primary" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start / resume':'Ⅱ Pause auction'}</button><button onClick={share}>Share squad ↗</button><button onClick={()=>{showStart();}}>New game</button></div>
           <nav className="desk-tabs" aria-label="Auction information">{['squad','queue','results'].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t==='squad'?'Your squad ('+squad.length+')':t==='queue'?'Coming up':'Auction results'}</button>)}</nav>
           <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
         </section>
