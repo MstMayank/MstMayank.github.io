@@ -1,12 +1,5 @@
 {
-  "discoveryPending": [
-    "series 1561006 on 2026-11-09: HTTP Error 502: Bad Gateway",
-    "series 1561006 on 2026-11-11: HTTP Error 502: Bad Gateway",
-    "series 1561006 on 2026-11-15: HTTP Error 502: Bad Gateway",
-    "series 1561011: HTTP Error 502: Bad Gateway",
-    "series 24272 on 2026-11-13: HTTP Error 502: Bad Gateway",
-    "series 24463: HTTP Error 502: Bad Gateway"
-  ],
+  "discoveryPending": [],
   "matches": {
     "1528703": {
       "aliases": {
@@ -13781,6 +13774,6 @@
     }
   },
   "pending": {},
-  "scannedThrough": "2026-11-17",
+  "scannedThrough": "2026-11-18",
   "version": 1
 }
