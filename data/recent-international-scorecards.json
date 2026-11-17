@@ -1,7 +1,5 @@
 {
-  "discoveryPending": [
-    "series 1562322: HTTP Error 502: Bad Gateway"
-  ],
+  "discoveryPending": [],
   "matches": {
     "1528703": {
       "aliases": {
