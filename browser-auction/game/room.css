@@ -23,3 +23,7 @@
 .franchise>div{min-width:0}
 .franchise span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .franchise>strong{flex-shrink:0}
+
+.resume-choice{display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:20px;border:1px solid #efc66066;border-radius:12px;background:#efc6600b}
+.resume-choice>div{flex:1;min-width:160px}.resume-choice h2{font-size:25px;margin:8px 0}.resume-choice p{margin:0;font-size:12px}
+.set-label{display:block;color:var(--gold);font-size:12px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
