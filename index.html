@@ -6,7 +6,7 @@
   gtag('js', new Date());
   gtag('config', 'G-CT3F1MC8VS');
 </script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="match-centre.css"><link rel="stylesheet" href="home-bento.css"><style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><link rel="stylesheet" href="match-centre.css?v=auction-preview-1"><link rel="stylesheet" href="home-bento.css"><style>
 .hero-wheel { --shot-color:#fff1b8; }
 .hero-wheel .six { --shot-color:#ff6b6b; }
 .hero-wheel .wheel-trail { fill:none; stroke:var(--shot-color); stroke-width:3.2; stroke-linecap:round; stroke-dasharray:1; animation:hero-wheel-trail 10s var(--shot-delay) cubic-bezier(.3,.7,.2,1) infinite both; }
@@ -104,27 +104,36 @@
   <h2 class="match-heading" id="match-centre-title">Match centre</h2>
   <p class="match-sub">Your cricket tools, all in one place.</p>
 
-  <a class="match-feat" href="ipl-auction/play.html">
-    <div class="match-in">
-      <div>
-        <span class="match-pill"><i></i>IPL Auction Game · 2027</span>
-        <h3 class="match-title">Build your team.</h3>
-        <p class="match-copy">Choose your franchise. Bid against computer teams or invite friends. Build and share your squad.</p>
-        <ol class="match-steps">
-          <li><b>01</b><span>Choose franchise</span></li>
-          <li><b>02</b><span>Raise your paddle</span></li>
-          <li><b>03</b><span>Win the bid</span></li>
-          <li><b>04</b><span>Build your squad</span></li>
-        </ol>
-        <span class="match-cta">Enter Auction Room <em>↗</em></span>
-      </div>
-      <div class="match-art" aria-hidden="true">
-        <div class="match-mc match-m1" style="--t1:#ff7a1a;--t2:#c4400a"><div class="match-av">HK</div><div class="match-n">Heinrich Klaasen</div><div class="match-p">₹23 Cr</div><span class="match-tag match-tg">SOLD</span></div>
-        <div class="match-mc match-m2" style="--t1:#ff7a1a;--t2:#c4400a"><div class="match-av">HP</div><div class="match-n">Harshal Patel</div><div class="match-p">Up next</div><span class="match-tag match-tr">Next lot</span></div>
-        <div class="match-mc match-m3"><div class="match-l">Purse left</div><div class="match-big">₹23.95 Cr</div><div class="match-bar"><i></i></div></div>
-      </div>
+  <div class="auction-preview"><div class="ap-in">
+    <div>
+      <span class="ap-pill"><i></i>IPL Auction Game · 2027</span>
+      <h3 class="ap-title">Build your team.</h3>
+      <p class="ap-copy">Choose your franchise. Bid against computer teams or invite friends. Build and share your squad.</p>
+      <ol class="ap-steps">
+        <li><b>01<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg></b>Choose franchise</li>
+        <li><b>02<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="3" width="12" height="9" rx="2"></rect><path d="M12 12v9"></path></svg></b>Raise your paddle</li>
+        <li><b>03<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 6-3 3-6-6zM11 7L4 14l3 3 7-7M3 21h10"></path></svg></b>Win the bid</li>
+        <li><b>04<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.4"></circle><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 1.5 6 5"></path></svg></b>Build your squad</li>
+      </ol>
+      <a class="ap-cta" href="ipl-auction/play.html">Enter Auction Room <em>↗</em></a>
     </div>
-  </a>
+
+    <div class="ap-lot" id="ap-lot" aria-hidden="true">
+      <div class="ap-lt"><span class="ap-live"><i></i>LIVE LOT</span><span>AUCTION ROOM</span></div>
+      <div class="ap-pad">PADDLE UP</div>
+      <div class="ap-stamp" id="ap-stamp">SOLD<small id="ap-sc"></small></div>
+      <div class="ap-pg" id="ap-pa">
+        <div class="ap-pr"><div class="ap-phw ap-a"><div class="ap-ph"><img alt="MS Dhoni" src="battle-art/auction-preview-dhoni.jpg" width="330" height="466" decoding="async"></div></div>
+          <div class="ap-pi"><div class="ap-n">MS Dhoni</div><small>On the block</small><div class="ap-bid"><small>CURRENT BID</small><b id="ap-cur">₹20 Cr</b></div></div></div>
+        <div class="ap-lad" id="ap-lad"></div>
+      </div>
+      <div class="ap-pg ap-off" id="ap-pb">
+        <div class="ap-pr"><div class="ap-phw ap-b"><div class="ap-ph"><img alt="JJ Bumrah" src="battle-art/auction-preview-bumrah.jpg" width="330" height="467" decoding="async"></div></div>
+          <div class="ap-pi"><div class="ap-n">JJ Bumrah</div><small>Coming up</small><div class="ap-nx"><h4>Up next</h4><span class="ap-tg">Next lot</span></div><div class="ap-dots"><i></i><i></i><i></i></div></div></div>
+      </div>
+      <div class="ap-pu"><small>Purse left</small><b>₹23.95 Cr</b><div class="ap-bar"><i></i></div></div>
+    </div>
+  </div></div>
 
 </div></section>
 <div class="home-bento">
@@ -193,4 +202,4 @@
 <div class="wrap">
 <footer><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></footer>
 </div>
-</main><script defer src="design-v2.js?v=automatic-history-1"></script><script defer src="on-this-day.js?v=1"></script></body></html>
+</main><script defer src="design-v2.js?v=automatic-history-1"></script><script defer src="on-this-day.js?v=1"></script><script defer src="auction-preview.js?v=1"></script></body></html>
