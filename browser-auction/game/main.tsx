@@ -1,3 +1,4 @@
+import {miniReady,MINI_PENDING} from './mini-auction';
 import {PlayerPortrait} from './PlayerPortrait';
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -143,14 +144,15 @@ function App(){
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
     <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="multiplayer.html">Play with friends ↗</a></div></header>
     <main>
-      <div className="room-heading"><div><span className="eyebrow">IPL 2027 · FAN SIMULATION</span><h1>THE AUCTION ROOM<span>.</span></h1></div><span className="live-label"><i/> {game?.paused?'PAUSED':'SINGLE PLAYER'}</span></div>
+      <div className="room-heading"><div><span className="eyebrow">IPL 2027 · MINI AUCTION</span><h1>THE AUCTION ROOM<span>.</span></h1></div><span className="live-label"><i/> {game?.paused?'PAUSED':'SINGLE PLAYER'}</span></div>
       {error&&<p className="alert" role="alert">{error}</p>}
       {notice&&<p className="notice" role="status">{notice}</p>}
       {!game?<section className="setup">
-        <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Outbid nine computer franchises. Build an 18–25 player squad with up to eight overseas players.</p><p className="muted">₹130 Cr purse · Simulation base prices · Saves on this browser</p></div>
+        <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Keep your retained core. Bid against nine computer franchises for released and newly registered players.</p><p className="muted">Official remaining purses · Retained squads stay locked · Saves on this browser</p></div>
+        {!miniReady&&<p className="notice" role="status">{MINI_PENDING}</p>}
         {savedGame&&<div className="resume-choice"><div><span className="eyebrow">SAVED AUCTION</span><h2>{savedGame.teamId.toUpperCase()} · Lot {Math.min(savedGame.index+1,savedGame.queue.length)}</h2><p>{savedGame.stage==='COMPLETE'?'Completed auction':'Continue where you left off.'}</p></div><button onClick={resume}>Resume last game →</button></div>}
         <div className="team-picker">{teams.map(t=><button key={t.id} aria-pressed={selected===t.id} onClick={()=>setSelected(t.id)}><Logo id={t.id}/>{t.id.toUpperCase()}</button>)}</div>
-        <button className="primary" onClick={()=>begin(selected)}>Start fresh auction ↗</button>
+        <button className="primary" disabled={!miniReady} onClick={()=>begin(selected)}>Start mini auction ↗</button>
       </section>:<>
         <div className="auction-layout">
           <section className={'player-stage '+(game.stage==='SOLD'?'sold-stage':'')}>
@@ -174,7 +176,7 @@ function App(){
           <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
         </section>
       </>}
-      <p className="footnote">Custom simulation · Base prices and computer bids are game assumptions. Progress saves on this device. Play solo or invite your friends.</p>
+      <p className="footnote">Fan mini-auction simulation · Computer-controlled bids · Progress saves on this device. Play solo or invite friends.</p>
     </main>
   </div>;
 }
