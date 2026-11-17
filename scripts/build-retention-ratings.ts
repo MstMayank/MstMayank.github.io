@@ -4,8 +4,48 @@
 //
 // Run from the repository root:  npx tsx scripts/build-retention-ratings.ts
 import {readFileSync, writeFileSync} from 'node:fs';
-import {assessFranchise} from '../browser-auction/squad-rating-data';
+import dataset from '../prisma/data/ipl-rating-data.json';
+import impacts from '../reference/ipl-2027-season-impact.json';
+import {createExpertEngine, overall, tierFor, type Member} from '../lib/ipl-auction/rating/expert';
 import {categories, type Category} from '../lib/ipl-auction/rating/expert-config';
+import type {RatingDataset} from '../lib/ipl-auction/rating/types';
+import {expertBaselines} from '../browser-auction/expert-baselines';
+import {baselineSquad} from '../browser-auction/store';
+
+// Some roster players' IPL records sit under Cricsheet ids (listed in unmappedRosterNames), so the
+// model treated them as having no IPL evidence (e.g. Vaibhav Sooryavanshi, Rohit Sharma, Rashid Khan).
+// data/ipl-rating-identity-fixes.json links them; apply it to a copy of the dataset before rating.
+const fixes = JSON.parse(readFileSync('data/ipl-rating-identity-fixes.json', 'utf8')).rows as Array<{playerId: string; archiveId: string}>;
+const data = structuredClone(dataset) as unknown as RatingDataset & {players: any[]; records: any[]};
+for (const {playerId, archiveId} of fixes) {
+  const archive = data.players.find(p => p.id === archiveId);
+  const roster = data.players.find(p => p.id === playerId);
+  if (!archive || !roster) throw new Error(`Identity fix not found: ${playerId} -> ${archiveId}`);
+  Object.assign(roster, {
+    playingRole: archive.playingRole, profileRole: archive.profileRole, bowlingStyle: archive.bowlingStyle,
+    styleDescription: archive.styleDescription, battingHand: archive.battingHand, metadataStatus: 'IDENTITY_FIX',
+  });
+  data.players = data.players.filter(p => p.id !== archiveId);
+  for (const record of data.records) if (record.playerId === archiveId) record.playerId = playerId;
+}
+const assessSquad = createExpertEngine(data, impacts as any);
+const keyList = Object.keys(categories) as Category[];
+
+// Same calibration as browser-auction/squad-rating-data.ts assessFranchise (V6 expert baselines).
+function assessFranchise(teamId: string, members: Member[]) {
+  const current = assessSquad(members);
+  const anchor = expertBaselines[teamId];
+  const fullRoster = assessSquad(baselineSquad(teamId).map(({id, name, role, isOverseas}) => ({id, name, role, isOverseas})));
+  const coverage = Math.min(1, members.length / 11);
+  const scores = {...anchor};
+  for (const key of keyList) {
+    const calibration = (anchor[key] - fullRoster[key]) * coverage;
+    scores[key] = Math.round(Math.min(100, Math.max(0, current[key] + calibration)) * 100) / 100;
+  }
+  const overallRating = overall(scores);
+  return {...current, ...scores, overallRating, tier: tierFor(overallRating),
+    strengths: keyList.filter(key => scores[key] >= 85).map(key => categories[key][0])};
+}
 
 type Retained = {id: string; name: string; role: string; isOverseas: boolean; nationality?: string};
 type TeamInput = {purseRemainingLakh: number; retained: Retained[]; released: string[]; note?: string};

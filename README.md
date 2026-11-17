@@ -35,6 +35,9 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   npx tsx scripts/build-retention-ratings.ts
   ```
 
+  The script applies `data/ipl-rating-identity-fixes.json`, which links roster players whose
+  IPL records sit under Cricsheet ids (for example Vaibhav Sooryavanshi and Rohit Sharma).
+
 - **IPL Auction** is built from `browser-auction/` (shared with the Next.js source in `app/`,
   `components/` and `lib/`). Official 2027 lists go in `browser-auction/game/mini-auction.json`;
   the game stays locked until retentions and registrations are confirmed. Rebuild with:

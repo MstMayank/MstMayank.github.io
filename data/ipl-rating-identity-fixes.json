@@ -1,0 +1,156 @@
+{
+ "purpose": "Links IPL roster players to their Cricsheet archive records in prisma/data/ipl-rating-data.json. These players were listed as unmappedRosterNames, so their IPL 2024-26 evidence was ignored by the squad rating.",
+ "checkedAt": "2026-11-17",
+ "rows": [
+  {
+   "playerId": "ipl-573b5a8d-0c09-4d9c-b49f-efc0b34b6c1e",
+   "name": "Danish Malewar",
+   "archiveId": "cs:9e6032fa",
+   "archiveName": "DV Malewar"
+  },
+  {
+   "playerId": "ipl-7ab8ba6e-986e-4fd9-b149-fcfc6c816c36",
+   "name": "Robin Minz",
+   "archiveId": "cs:bafd0398",
+   "archiveName": "R Minz"
+  },
+  {
+   "playerId": "ipl-b78c195f-b149-4136-9803-24209696c4c3",
+   "name": "Rohit Sharma",
+   "archiveId": "cs:740742ef",
+   "archiveName": "Rohit Gurunath Sharma"
+  },
+  {
+   "playerId": "ipl-e7643ddf-c3b3-4531-845e-3395b0243e9b",
+   "name": "Raj Bawa",
+   "archiveId": "cs:ba6b2f91",
+   "archiveName": "RA Bawa"
+  },
+  {
+   "playerId": "ipl-ef35334a-1051-49b5-9788-0aeab3fd5c84",
+   "name": "Ramakrishna Ghosh",
+   "archiveId": "cs:dee07622",
+   "archiveName": "RS Ghosh"
+  },
+  {
+   "playerId": "ipl-c2692731-e575-4096-81d6-4fafef92043d",
+   "name": "Ayush Mhatre",
+   "archiveId": "cs:b2b4f545",
+   "archiveName": "A Mhatre"
+  },
+  {
+   "playerId": "ipl-cc58629c-af9d-4ee5-8bee-698bb6f7b4cb",
+   "name": "Sahil Parakh",
+   "archiveId": "cs:926c7443",
+   "archiveName": "SU Parakh"
+  },
+  {
+   "playerId": "ipl-2d8ae383-2d1b-4321-9ce5-86611b848cd7",
+   "name": "Madhav Tiwari",
+   "archiveId": "cs:fb5f69e4",
+   "archiveName": "M Tiwari"
+  },
+  {
+   "playerId": "ipl-8a2833b0-63de-40e2-b6b9-d155205e232f",
+   "name": "Arshad Khan",
+   "archiveId": "cs:12314277",
+   "archiveName": "Mohd Arshad Khan"
+  },
+  {
+   "playerId": "ipl-a724ac97-f4c9-4964-9846-c71d606fea0e",
+   "name": "Rashid Khan",
+   "archiveId": "cs:5f547c8b",
+   "archiveName": "Rashid Khan Arman"
+  },
+  {
+   "playerId": "ipl-1be100f0-4fa1-4264-81a6-097378c44f27",
+   "name": "Finn Allen",
+   "archiveId": "cs:bf74b130",
+   "archiveName": "Finnley Hugh Allen"
+  },
+  {
+   "playerId": "ipl-089308be-b88e-487b-a1bc-dbc5b0ffdedd",
+   "name": "Varun Chakaravarthy",
+   "archiveId": "cs:5b7ab5a9",
+   "archiveName": "Varun Chakravarthy Vinod"
+  },
+  {
+   "playerId": "ipl-2a9353ee-f76e-445c-ad2f-5fdfc0444c7f",
+   "name": "Tejasvi Dahiya",
+   "archiveId": "cs:f12fe2a1",
+   "archiveName": "T Dahiya"
+  },
+  {
+   "playerId": "ipl-54396700-51d6-44c3-896d-e9356d504507",
+   "name": "Mukul Choudhary",
+   "archiveId": "cs:1c84109e",
+   "archiveName": "MD Choudhary"
+  },
+  {
+   "playerId": "ipl-f7f8217f-56b7-43b5-893a-129e45e3d4be",
+   "name": "Abdul Samad",
+   "archiveId": "cs:8e514b4c",
+   "archiveName": "Abdul Samad Farooq"
+  },
+  {
+   "playerId": "ipl-32cacb25-f20c-4976-9fd4-ba420049932f",
+   "name": "Mohsin Khan",
+   "archiveId": "cs:c33d8116",
+   "archiveName": "Mohsin Khan"
+  },
+  {
+   "playerId": "ipl-1384dc42-5d8d-49f2-a4e4-4a545a34afba",
+   "name": "Digvesh Singh Rathi",
+   "archiveId": "cs:13fc5c6d",
+   "archiveName": "DS Rathi"
+  },
+  {
+   "playerId": "ipl-b91c2efe-3c0b-4f84-b5aa-c3f628414481",
+   "name": "Vignesh Puthur",
+   "archiveId": "cs:1e030637",
+   "archiveName": "V Puthur"
+  },
+  {
+   "playerId": "ipl-01e5004b-fa01-4450-8903-5009dbf1787b",
+   "name": "Vaibhav Sooryavanshi",
+   "archiveId": "cs:470f446b",
+   "archiveName": "V Suryavanshi"
+  },
+  {
+   "playerId": "ipl-416c2cf1-335b-4242-8185-e5411ca7980f",
+   "name": "Sushant Mishra",
+   "archiveId": "cs:92500ad5",
+   "archiveName": "SS Mishra"
+  },
+  {
+   "playerId": "ipl-9df2c53f-5eb8-43d3-b5bf-2bd1a7c87010",
+   "name": "Jordan Cox",
+   "archiveId": "cs:ff154ecd",
+   "archiveName": "Jordan Matthew Cox"
+  },
+  {
+   "playerId": "ipl-a86cf571-96f0-424f-b682-328e623c03cd",
+   "name": "Kamindu Mendis",
+   "archiveId": "cs:08548b13",
+   "archiveName": "Pasqual Handi Kamindu Dilanka Mendis"
+  },
+  {
+   "playerId": "ipl-1bbc0f40-6802-4af3-bb36-034015a2aa2f",
+   "name": "Ravichandran Smaran",
+   "archiveId": "cs:c1e53c3f",
+   "archiveName": "R Smaran"
+  },
+  {
+   "playerId": "ipl-535c4611-9054-4eab-86d0-f7fb31ea88ed",
+   "name": "Praful Hinge",
+   "archiveId": "cs:ece7b6b3",
+   "archiveName": "PP Hinge"
+  },
+  {
+   "playerId": "ipl-df1a272d-3e4d-4842-8f16-01ad80f8e10b",
+   "name": "Saurabh Dubey",
+   "archiveId": "cs:11061889",
+   "archiveName": "SR Dubey"
+  }
+ ]
+}
