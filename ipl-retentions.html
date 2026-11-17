@@ -109,7 +109,6 @@
       const value = r.categories[key];
       return el('div', {className: 'rt-bar'}, el('span', {}, w.label + ' · ' + w.weight + '%'), el('b', {}, value.toFixed(value % 1 ? 1 : 0)), el('i', {style: '--w:' + value + '%'}));
     }));
-    const xi = el('ol', {className: 'rt-xi'}, ...r.bestPlayingXI.map(p => el('li', {}, p.name + (p.isOverseas ? ' ✈' : '') + ' ', el('small', {}, p.role))));
     const list = (title, items) => items.length ? [el('h4', {}, title), el('ul', {}, ...items.map(i => el('li', {}, i)))] : [];
     const groups = Object.entries(roleLabel).map(([role, label]) => {
       const players = team.retained.filter(p => p.role === role);
@@ -126,9 +125,8 @@
         el('div', {}, el('b', {}, crore(team.purseRemainingLakh)), el('span', {}, 'purse left (reported)'))),
       bars,
       el('div', {className: 'rt-cols'},
-        el('div', {}, el('h4', {}, 'Best Playing XI'), xi,
-          r.impactPlayer ? el('p', {className: 'rt-note'}, 'Impact Player: ' + r.impactPlayer.name + ' (' + r.impactPlayer.role + ')') : null),
-        el('div', {className: 'rt-notes'}, ...list('Strengths', r.strengths), ...list('Weak spots', r.weaknesses), ...list('Auction shopping list', r.auctionPriorities))),
+        el('div', {className: 'rt-notes'}, ...list('Auction shopping list', r.auctionPriorities.length ? r.auctionPriorities : ['No urgent gaps'])),
+        el('div', {className: 'rt-notes'}, ...list('Strengths', r.strengths), ...list('Weak spots', r.weaknesses))),
       el('div', {className: 'rt-squad'}, ...groups,
         el('h4', {}, 'Released · ' + team.released.length), el('div', {className: 'rt-chips released'}, ...team.released.map(n => el('span', {}, n))),
         team.note ? el('p', {className: 'rt-note'}, team.note) : null)
@@ -136,7 +134,7 @@
     if (push) history.replaceState(null, '', '#' + team.id);
   }
 
-  fetch('ipl-retentions-data.json?v=2027-11-17d').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
+  fetch('ipl-retentions-data.json?v=2027-11-17e').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(json => {
     data = json;
     byId('rt-rank').replaceChildren(...data.teams.map(team => el('li', {},
       el('button', {type: 'button', 'aria-pressed': 'false', style: '--team:' + team.color, onclick: () => { showTeam(team.id, true); if (matchMedia('(max-width: 860px)').matches) byId('rt-team').scrollIntoView({behavior: 'smooth', block: 'start'}); }},
