@@ -1,3 +1,4 @@
+import {PlayerPortrait} from './PlayerPortrait';
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {start,teams,auctionSet,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
@@ -154,7 +155,7 @@ function App(){
         <div className="auction-layout">
           <section className={'player-stage '+(game.stage==='SOLD'?'sold-stage':'')}>
             <div className="stage-top"><span>{player&&<b className="set-label">{auctionSet(player)}</b>}LOT {Math.min(game.index+1,game.queue.length)} / {game.queue.length}</span><div className="stage-controls"><button className="small" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start bidding':'Ⅱ Pause'}</button><button className="small" aria-pressed={sound} onClick={()=>{setSound(!sound);if(!sound){audio.current??=new AudioContext();void audio.current.resume();}}}>Sound {sound?'on':'off'}</button></div></div>
-            {player?<><div className="player-art" aria-hidden="true"><div className="orbit"/><strong>{player.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</strong><span>{player.role.replaceAll('_',' ')}</span></div>
+            {player?<><PlayerPortrait player={player} orbit/>
               <h2>{player.name}</h2><p className="player-meta">{player.nationality} <span>·</span> {player.isOverseas?'Overseas':'Indian'} <span>·</span> Base {money(nextBid({...game,leader:null}))}</p>
               <div className="bid-display"><span>{game.leader?'CURRENT BID':'OPENING PRICE'}</span><strong>{money(game.leader?game.bid:nextBid(game))}</strong><div>{game.leader?<><Logo id={game.leader}/>{game.leader.toUpperCase()} LEADS</>:'Waiting for the first paddle'}</div></div>
               {game.stage==='BIDDING'?<><div className={'timer '+(game.seconds<=3?'urgent':'')}><span>{game.paused?'Ready when you are':game.seconds<=2?'Going twice…':game.seconds<=4?'Going once…':'Bidding open'}</span><b>{game.seconds}s</b><progress max="10" value={game.seconds}/></div>

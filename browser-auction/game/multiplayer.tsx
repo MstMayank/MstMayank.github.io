@@ -1,3 +1,4 @@
+import {PlayerPortrait} from './PlayerPortrait';
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import StaticImage from '../image';
@@ -114,7 +115,7 @@ function App(){
         </section>:<><div className="auction-layout">
           <section className={'player-stage '+(game.stage==='SOLD'?'sold-stage':'')}>
             <div className="stage-top"><span>{player&&<b className="set-label">{auctionSet(player)}</b>}LOT {Math.min(game.index+1,game.queue.length)} / {game.queue.length}</span>{host&&<button className="small" disabled={busy||!connected||game.stage==='COMPLETE'} onClick={()=>void act(game.paused?'RESUME':'PAUSE')}>{game.paused?'▶ Resume':'Ⅱ Pause'}</button>}</div>
-            {player?<><div className="player-art" aria-hidden="true"><strong>{player.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</strong><span>{player.role.replaceAll('_',' ')}</span></div><h2>{player.name}</h2><p className="player-meta">{player.nationality} · {player.role.replaceAll('_',' ')}</p>
+            {player?<><PlayerPortrait player={player}/><h2>{player.name}</h2><p className="player-meta">{player.nationality} · {player.role.replaceAll('_',' ')}</p>
               <div className="bid-display"><span>{game.leader?'CURRENT BID':'OPENING PRICE'}</span><strong>{money(game.leader?game.bid:nextBid(game))}</strong><div>{game.leader?<><Logo id={game.leader}/>{game.leader.toUpperCase()} LEADS</>:'Raise your paddle'}</div></div>
               {game.stage==='BIDDING'?<><div className={'timer '+(game.seconds<=3?'urgent':'')}><span>{game.paused?'Host paused the clock':game.seconds<=2?'Going twice…':game.seconds<=4?'Going once…':'Bidding open'}</span><b>{game.seconds}s</b><progress max="10" value={game.seconds}/></div><div className="bid-actions"><button className="primary" disabled={busy||!connected||game.paused||!canBid(game,game.teamId)} onClick={()=>void act('BID')}>{game.leader===game.teamId?'You lead':game.passed.includes(game.teamId)?'Passed':'BID '+money(nextBid(game))} ↑</button><button disabled={busy||!connected||game.paused||game.leader===game.teamId||game.passed.includes(game.teamId)} onClick={()=>void act('PASS')}>Pass</button></div></>:<div className="sale-result"><strong>{game.stage==='SOLD'?'SOLD!':'UNSOLD'}</strong><p>{game.message}</p>{host?<button className="primary" disabled={busy||!connected} onClick={()=>void act('NEXT')}>Next player →</button>:<p>Waiting for the host to bring in the next player.</p>}</div>}
             </>:<div className="finish"><h2>Auction complete.</h2><p>Your squad has {game.squads[game.teamId].length} players.</p></div>}
