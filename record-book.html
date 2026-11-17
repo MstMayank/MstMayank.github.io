@@ -28,7 +28,7 @@
 <div class="filters tool-filter">
   <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
   <label>Year<select id="year"><option value="">All years</option></select></label>
-  <label>Format<select id="format"><option>Test</option><option>ODI</option><option>T20I</option><option value="T20">Other T20</option></select></label>
+  <label>Format<select id="format"><option value="all">All international formats</option><option>Test</option><option>ODI</option><option>T20I</option><option value="T20">Other T20</option></select></label>
   <label>Category<select id="category"><option>Batting</option><option>Bowling</option><option>Team totals</option></select></label>
 </div>
 <p class="tool-count" id="status" role="status"></p>
@@ -56,6 +56,8 @@
   const datasets = new Map();
   const archives = window.cricketArchives = new Map();
   const pending = new Map();
+  const activeFormats = () => format.value === 'all' ? ['Test', 'ODI', 'T20I'] : [format.value];
+  const needsData = () => activeFormats().some(key => !datasets.has(key));
   let archiveVersions = {};
   let checkingVersions = false;
   let request = 0;
@@ -115,14 +117,22 @@
     const terms = query.value.trim().toLowerCase().split(/\s+/).filter(term => term && term !== 'in');
     const bowling = category.value === 'Bowling';
     try {
-      if (!datasets.has(selectedFormat)) {
+      const requested = activeFormats();
+      if (needsData()) {
         status.textContent = 'Loading match records…';
         results.replaceChildren();
         more.hidden = true;
-        await loadDataset(selectedFormat);
+        await Promise.all(requested.filter(key => !datasets.has(key)).map(loadDataset));
       }
       if (current !== request) return;
-      const { rows, matches, aliases } = datasets.get(selectedFormat);
+      const rowFormats = new WeakMap();
+      const rows = requested.flatMap(key => {
+        const data = datasets.get(key);
+        data.rows.forEach(row => rowFormats.set(row, key));
+        return data.rows;
+      });
+      const matches = requested.reduce((sum, key) => sum + datasets.get(key).matches, 0);
+      const aliases = Object.assign({}, ...requested.map(key => datasets.get(key).aliases));
       const selectedYear = year.value || (legacyQuery && !year.dataset.ready ? legacyQuery[2] : '');
       if (year.dataset.format !== selectedFormat) {
         const years = [...new Set(rows.map(row => row[6].slice(0, 4)))].sort().reverse();
@@ -141,12 +151,12 @@
       );
       const series = new Map();
       for (const row of filtered) {
-        const key = row[8] ? JSON.stringify([row[7], row[8], row[9]]) : JSON.stringify([row[7], row[6], ...[row[2], row[3]].sort()]);
+        const key = row[8] ? JSON.stringify([rowFormats.get(row), row[7], row[8], row[9]]) : JSON.stringify([rowFormats.get(row), row[7], row[6], ...[row[2], row[3]].sort()]);
         if (!series.has(key)) series.set(key, []);
         series.get(key).push(row);
       }
       const groups = [...series.values()];
-      for (const group of groups) group.sort((a, b) => a[6].localeCompare(b[6]));
+      for (const group of groups) group.sort((a, b) => b[6].localeCompare(a[6]));
       groups.sort((a, b) => b[0][6].localeCompare(a[0][6]));
       metric.textContent = bowling ? 'Wickets / runs' : 'Runs';
       results.replaceChildren();
@@ -157,7 +167,7 @@
         heading.colSpan = 6;
         heading.className = 'series-heading';
         const first = group[0];
-        heading.textContent = first[8] ? first[8] + (first[9] ? ' · ' + first[9] : '') : first[2] + ' vs ' + first[3] + ' · ' + first[6];
+        heading.textContent = (selectedFormat === 'all' ? rowFormats.get(first) + ' · ' : '') + (first[8] ? first[8] + (first[9] ? ' · ' + first[9] : '') : first[2] + ' vs ' + first[3] + ' · ' + first[6]);
         for (const row of group.slice(0, remaining)) {
           const tr = results.insertRow();
           for (const value of [playerNames.get(row[1]) || row[1], bowling ? row[4] + '/' + row[5] : row[4], row[2], row[3], row[6], row[8] || '—']) {
@@ -172,7 +182,7 @@
           remaining--;
         }
       }
-      status.textContent = filtered.length.toLocaleString() + ' results · ' + matches.toLocaleString() + ' matches in this format’s archive';
+      status.textContent = filtered.length.toLocaleString() + ' results · ' + matches.toLocaleString() + (selectedFormat === 'all' ? ' international matches' : ' matches in this format’s archive') + (groups.length ? ' · Latest record: ' + groups[0][0][6] : '');
       more.hidden = filtered.length <= limit;
     } catch {
       if (current === request) status.textContent = 'Could not load the match archive. Reload the page to try again.';
@@ -211,9 +221,9 @@
           changed = true;
         }
       }
-      if (changed || !datasets.has(format.value)) render();
+      if (changed || needsData()) render();
     } catch {
-      if (!datasets.has(format.value)) render();
+      if (needsData()) render();
     } finally {
       checkingVersions = false;
     }
