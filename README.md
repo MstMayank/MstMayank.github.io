@@ -9,6 +9,7 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `index.html` | Homepage: writing, On This Day, tools and contact |
 | `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, plus player profiles |
 | `record-book.html` | Searchable international batting, bowling and team-total records |
+| `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
 
@@ -24,6 +25,14 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 
   ```sh
   python scripts/build-battle-aliases.py
+  ```
+
+- **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
+  `data/ipl-2027-retentions.json` with the V6 squad rating (same weights as the original
+  retention game):
+
+  ```sh
+  npx tsx scripts/build-retention-ratings.ts
   ```
 
 - **IPL Auction** is built from `browser-auction/` (shared with the Next.js source in `app/`,
