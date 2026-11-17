@@ -74,3 +74,12 @@ test('passing can fast-forward the remaining bidding without buying for the user
   assert.equal(g.squads.rcb.length,0);
   assert.ok(validate(g));
 });
+
+test('fresh auctions progress through role sets without duplicate players',async()=>{
+  const {auctionSet,auctionSets}=await import('../browser-auction/game/engine');
+  const game=start('rcb');
+  const order=game.queue.map(id=>auctionSets.indexOf(auctionSet(findPlayer(id))));
+  assert.ok(order.every((value,index)=>index===0||value>=order[index-1]));
+  assert.ok(order.includes(4),'verified uncapped set exists');
+  assert.equal(new Set(game.queue).size,players.length);
+});
