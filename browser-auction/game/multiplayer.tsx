@@ -1,4 +1,4 @@
-import {miniReady,MINI_PENDING} from './mini-auction';
+import {miniReady,MINI_PENDING,MINI_LIST_NOTE} from './mini-auction';
 import {PlayerPortrait} from './PlayerPortrait';
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -102,7 +102,7 @@ function App(){
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
     <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><a href="play.html">Single player ↗</a></header>
     <main><div className="room-heading"><div><span className="eyebrow">IPL 2027 · MINI AUCTION WITH FRIENDS</span><h1>MULTIPLAYER ROOM<span>.</span></h1></div><span className="live-label"><i/>{credentials?(connected?'CONNECTED':'RECONNECTING'):'2–10 PLAYERS'}</span></div>
-      {!miniReady&&<p className="notice" role="status">{MINI_PENDING}</p>}
+      <p className="notice" role="status">{miniReady?MINI_LIST_NOTE:MINI_PENDING}</p>
       {error&&<p className="alert" role="alert">{error}</p>}{notice&&<p className="notice" role="status">{notice}</p>}
       {!credentials&&launch==='CHOOSE'?<section className="setup"><div><span className="eyebrow">MULTIPLAYER</span><h2>New game or last room?</h2><p>Start a new room with friends, join an invite, or reconnect to your saved auction.</p></div><div className="controls"><button className="primary" onClick={()=>{setLaunch('NEW');setError('');}}>New game / Join room ↗</button>{savedRoom&&<button onClick={resume}>Resume last room · {savedRoom.code} →</button>}</div></section>:!credentials?<section className="setup"><div><h2>Bring your rivals.</h2><p>Create a room, send the code and choose your franchises. Unclaimed teams are controlled by the computer.</p></div>
         <label className="mp-label">Your name<input value={name} onChange={e=>setName(e.target.value)} maxLength={24} placeholder="Name or nickname" autoComplete="nickname"/></label>
@@ -127,7 +127,7 @@ function App(){
           <aside className="team-board"><div className="section-label"><h2>The room</h2><span>{snapshot.members.length} friends</span></div>{teams.map(t=>{const human=snapshot.members.find(m=>m.teamId===t.id);return <div key={t.id} className={'franchise '+(game.leader===t.id?'leading':'')} style={{'--franchise':t.color} as React.CSSProperties}><Logo id={t.id}/><div><b>{t.id.toUpperCase()} {t.id===game.teamId&&<small>YOU</small>}</b><span>{human?.name||'Computer'} · {game.squads[t.id].length}/25</span></div><strong>{money(game.purses[t.id])}</strong></div>;})}</aside>
         </div><section className="your-desk"><div className="desk-heading"><Logo id={game.teamId}/><div><span className="eyebrow">YOUR FRANCHISE</span><h2>{team.name}</h2></div><div className="desk-budget"><span>PURSE LEFT</span><strong>{money(game.purses[game.teamId])}</strong></div></div><div className="desk-list">{game.squads[game.teamId].length?game.squads[game.teamId].map(m=><div key={m.id}><b>{findPlayer(m.id).name}</b><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting.</p>}</div></section></>}
       </>}
-      <p className="footnote">Private invite room · Mini auction · Retained squads and remaining purses · Released and registered players only.</p>
+      <p className="footnote">{MINI_LIST_NOTE}<br/>Private invite room · Mini auction · Retained squads and remaining purses · Released and registered players only.</p>
     </main>
   </div>;
 }

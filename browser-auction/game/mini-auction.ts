@@ -2,17 +2,18 @@ import roster from './players.json';
 import published from './mini-auction.json';
 export type Player = {id:string;name:string;role:string;isOverseas:boolean;nationality:string;teamId:string;salary:number|null};
 export type MiniAuction = {
-  season:number;status:'pending'|'ready';revision:string;retentionsConfirmed:boolean;registrationsConfirmed:boolean;sources:string[];
+  season:number;status:'pending'|'ready';revision:string;retentionsConfirmed:boolean;registrationsConfirmed:boolean;sources:string[];basePrices?:'simulation'|'official';
   teams:Record<string,{retained:Array<{id:string;salaryLakh:number}>;auctionPurseLakh:number}>;
   releasedPlayers:Array<{id:string;basePriceLakh:number}>;
   registeredPlayers:Array<{player:Player;basePriceLakh:number;uncapped:boolean}>;
 };
 export const miniAuction=published as MiniAuction;
-export const MINI_PENDING='The mini-auction opens after confirmed retentions, released players and registered players are added.';
+export const MINI_PENDING='The mini-auction list is being updated. Please reload shortly.';
 const teamIds=['csk','dc','gt','kkr','lsg','mi','pbks','rr','rcb','srh'];
 export const players:Player[]=[...roster,...miniAuction.registeredPlayers.map(r=>r.player).filter(p=>!roster.some(r=>r.id===p.id))];
 export function miniPlan(config:MiniAuction=miniAuction){
-  if(config.status!=='ready'||!config.retentionsConfirmed||!config.registrationsConfirmed)throw Error(MINI_PENDING);
+  if(config.status!=='ready'||!config.retentionsConfirmed)throw Error(MINI_PENDING);
+  if(!config.registrationsConfirmed&&config.registeredPlayers.length)throw Error('Unconfirmed registrations cannot enter the auction.');
   if(config.season!==2027||!config.revision||!config.sources.length)throw Error('Verified mini-auction list metadata is required.');
   const catalog=new Map<string,Player>(roster.map(p=>[p.id,p]));
   for(const {player} of config.registeredPlayers){
@@ -45,3 +46,5 @@ export function miniPlan(config:MiniAuction=miniAuction){
   return {squads,purses,budgets,prices,catalog};
 }
 export const miniReady=(()=>{try{miniPlan();return true;}catch{return false;}})();
+
+export const MINI_LIST_NOTE=miniAuction.registrationsConfirmed?'Released and registered players · '+(miniAuction.basePrices==='simulation'?'Simulation opening prices':'Published base prices'):'Released-player preview · Simulation opening prices · New registrations pending';
