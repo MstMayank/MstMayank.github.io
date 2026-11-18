@@ -7,15 +7,15 @@
       "revision": "790437bffc12b246"
     },
     "ODI": {
-      "matches": 3243,
-      "through": "2026-11-15",
-      "revision": "36c149570dcabca9"
+      "matches": 3244,
+      "through": "2026-11-18",
+      "revision": "7ef59c5d6992b4f8"
     },
     "T20I": {
-      "matches": 6177,
-      "through": "2026-11-17",
-      "revision": "16677ec26bb60adf"
+      "matches": 6179,
+      "through": "2026-11-18",
+      "revision": "7a82642fa9bbf882"
     }
   },
-  "pendingScorecards": 2
+  "pendingScorecards": 8
 }
