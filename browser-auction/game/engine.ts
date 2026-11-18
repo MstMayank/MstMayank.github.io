@@ -43,7 +43,7 @@ export function start(teamId:string,config:MiniAuction=miniAuction):Game{
   if(!teams.some(t=>t.id===teamId))throw Error('Choose a valid team.');
   const {squads,purses,budgets,prices,catalog}=miniPlan(config);
   const queue=Object.keys(prices).sort((a,b)=>auctionSets.indexOf(auctionSet(catalog.get(a)!))-auctionSets.indexOf(auctionSet(catalog.get(b)!))||prices[b]-prices[a]||a.localeCompare(b));
-  return {version:2,mode:'MINI',poolRevision:config.revision,budgets,entryPrices:prices,registeredPlayers:config.registeredPlayers.map(r=>r.player),revision:0,teamId,squads,purses,queue,index:0,bid:0,leader:null,passed:[],seconds:10,stage:'BIDDING',paused:true,history:[],message:'Retained squads are locked. Start bidding for released and registered players.'};
+  return {version:2,mode:'MINI',poolRevision:config.revision,budgets,entryPrices:prices,registeredPlayers:config.registeredPlayers.map(r=>r.player),revision:0,teamId,squads,purses,queue,index:0,bid:0,leader:null,passed:[],seconds:10,stage:'BIDDING',paused:true,history:[],message:'Retained squads are locked. Start bidding when you’re ready.'};
 }
 
 export function placeBid(g:Game,teamId:string):Game{

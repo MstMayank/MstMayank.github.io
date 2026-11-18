@@ -47,4 +47,4 @@ export function miniPlan(config:MiniAuction=miniAuction){
 }
 export const miniReady=(()=>{try{miniPlan();return true;}catch{return false;}})();
 
-export const MINI_LIST_NOTE=miniAuction.registrationsConfirmed?'Released and registered players · '+(miniAuction.basePrices==='simulation'?'Simulation opening prices':'Published base prices'):'Released-player preview · Simulation opening prices · New registrations pending';
+export const MINI_LIST_NOTE=miniAuction.registrationsConfirmed?'Released and registered players · '+(miniAuction.basePrices==='simulation'?'Simulation opening prices':'Published base prices'):`Bid on ${miniAuction.releasedPlayers.length} released players. Opening prices are simulated.`;

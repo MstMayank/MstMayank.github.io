@@ -6,7 +6,7 @@
   const lot = find('lot'), current = find('cur'), ladder = find('lad');
   const player = find('pa'), next = find('pb'), stamp = find('stamp'), sold = find('sc');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const bids = [['MI',20.5],['CSK',21],['RCB',21.5],['MI',22],['CSK',22.5],['RCB',23]];
+  const bids = [['MI',1.1],['CSK',1.2],['RCB',1.3],['MI',1.4],['CSK',1.5],['RCB',1.6]];
   const timers = new Set();
   let visible = !('IntersectionObserver' in window);
   const money = value => '₹' + value + ' Cr';
@@ -32,7 +32,7 @@
     clear();
     showCurrent();
     root.dataset.previewState = 'bidding';
-    current.textContent = money(20);
+    current.textContent = money(1);
     let delay = 900;
     for (const [team, price] of bids) {
       later(() => {
@@ -51,7 +51,7 @@
     }
     later(() => {
       root.dataset.previewState = 'sold';
-      sold.textContent = money(23);
+      sold.textContent = money(1.6);
       stamp.classList.add('ap-hit'); lot.classList.add('ap-shake');
       later(() => lot.classList.remove('ap-shake'),360);
     },delay + 300);
@@ -65,7 +65,7 @@
     clear();
     if (motion.matches) {
       showCurrent();
-      current.textContent = money(23); sold.textContent = money(23);
+      current.textContent = money(1.6); sold.textContent = money(1.6);
       stamp.classList.add('ap-hit'); stamp.style.opacity = '1';
       stamp.style.transform = 'translate(-50%,-50%) rotate(-12deg)';
       root.dataset.previewState = 'sold';

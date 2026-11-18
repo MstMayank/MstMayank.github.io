@@ -83,3 +83,6 @@
 @media(max-width:380px){.auction-preview .ap-cta{font-size:14px;padding:14px 18px}}
 
 .auction-preview .ap-note{margin:14px 0 0;max-width:34ch;font-size:13px;line-height:1.5;color:rgba(242,241,234,.62)}
+
+.ap-ph img{object-fit:contain;box-sizing:border-box;padding:14%}
+#writing{scroll-margin-top:6rem}

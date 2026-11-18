@@ -148,7 +148,7 @@ function App(){
       {error&&<p className="alert" role="alert">{error}</p>}
       {notice&&<p className="notice" role="status">{notice}</p>}
       {!game?<section className="setup">
-        <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Keep your retained core. Bid against nine computer franchises for released and newly registered players.</p><p className="muted">Official remaining purses · Retained squads stay locked · Saves on this browser</p></div>
+        <div><span className="eyebrow">TAKE YOUR SEAT</span><h2>Your team. Your bid.</h2><p>Take charge of your franchise and bid against nine computer teams.</p><p className="muted">Official remaining purses · Retained squads stay locked · Saves on this browser</p></div>
         <p className="notice" role="status">{miniReady?MINI_LIST_NOTE:MINI_PENDING}</p>
         {savedGame&&<div className="resume-choice"><div><span className="eyebrow">SAVED AUCTION</span><h2>{savedGame.teamId.toUpperCase()} · Lot {Math.min(savedGame.index+1,savedGame.queue.length)}</h2><p>{savedGame.stage==='COMPLETE'?'Completed auction':'Continue where you left off.'}</p></div><button onClick={resume}>Resume last game →</button></div>}
         <div className="team-picker">{teams.map(t=><button key={t.id} aria-pressed={selected===t.id} onClick={()=>setSelected(t.id)}><Logo id={t.id}/>{t.id.toUpperCase()}</button>)}</div>
@@ -176,7 +176,7 @@ function App(){
           <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
         </section>
       </>}
-      <p className="footnote">{MINI_LIST_NOTE}<br/>Fan mini-auction simulation · Computer-controlled bids · Progress saves on this device. Play solo or invite friends.</p>
+      <p className="footnote">Fan mini-auction simulation · Computer-controlled bids · Progress saves on this device. Play solo or invite friends.</p>
     </main>
   </div>;
 }

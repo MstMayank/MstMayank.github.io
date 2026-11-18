@@ -624,9 +624,7 @@ function venueLabel(name) {
     table('First 10 vs Last 10 Balls',['Player','Window','Runs','Balls','SR','Dot %'],windows);
     const scoring=ids.map(id=>{const a=sum(eligible.filter(r=>r[1]===id));return [data.players[id],number(a[0]),number(a[3]),divide(a[3],a[0],100),number(a[4]+a[5]+a[6]),number(a[4]),number(a[5]),number(a[6]),number(a[7])];});
     table('Boundary vs Rotation',['Player','Runs','Boundary runs','Boundary %','Rotation runs','Singles runs','Doubles runs','Triples runs','Other runs'],scoring);
-    const note=document.createElement('p');note.className='hint';note.textContent='First/last 10 are each batter’s first/last 10 balls faced in each innings, including not-outs. Wides excluded; no-balls included. Short innings can overlap. Windows are fixed before bowler/phase filters. Rotation = runs from 1s, 2s and 3s; extras excluded. Splits follow the selected filters.';
-    if((format||data.format)==='Test')note.textContent+=' Chase vs Bat First is shown only for limited-overs formats.';
-    block.appendChild(note);parent.appendChild(block);
+    parent.appendChild(block);
   }
 
   function updateShareTools() {

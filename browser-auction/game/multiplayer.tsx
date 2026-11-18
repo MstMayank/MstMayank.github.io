@@ -127,7 +127,7 @@ function App(){
           <aside className="team-board"><div className="section-label"><h2>The room</h2><span>{snapshot.members.length} friends</span></div>{teams.map(t=>{const human=snapshot.members.find(m=>m.teamId===t.id);return <div key={t.id} className={'franchise '+(game.leader===t.id?'leading':'')} style={{'--franchise':t.color} as React.CSSProperties}><Logo id={t.id}/><div><b>{t.id.toUpperCase()} {t.id===game.teamId&&<small>YOU</small>}</b><span>{human?.name||'Computer'} · {game.squads[t.id].length}/25</span></div><strong>{money(game.purses[t.id])}</strong></div>;})}</aside>
         </div><section className="your-desk"><div className="desk-heading"><Logo id={game.teamId}/><div><span className="eyebrow">YOUR FRANCHISE</span><h2>{team.name}</h2></div><div className="desk-budget"><span>PURSE LEFT</span><strong>{money(game.purses[game.teamId])}</strong></div></div><div className="desk-list">{game.squads[game.teamId].length?game.squads[game.teamId].map(m=><div key={m.id}><b>{findPlayer(m.id).name}</b><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting.</p>}</div></section></>}
       </>}
-      <p className="footnote">{MINI_LIST_NOTE}<br/>Private invite room · Mini auction · Retained squads and remaining purses · Released and registered players only.</p>
+      <p className="footnote">Private invite room · Mini auction · Retained squads and remaining purses.</p>
     </main>
   </div>;
 }
