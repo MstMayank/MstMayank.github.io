@@ -1,13 +1,7 @@
 {
   "discoveryPending": [
-    "series 24284: HTTP Error 502: Bad Gateway",
-    "series 24463: HTTP Error 502: Bad Gateway",
-    "series 24467 on 2026-11-10: HTTP Error 502: Bad Gateway",
-    "series 24467 on 2026-11-13: HTTP Error 502: Bad Gateway",
-    "series 24467 on 2026-11-15: HTTP Error 502: Bad Gateway",
-    "series 24558: HTTP Error 502: Bad Gateway",
-    "series 24651: HTTP Error 502: Bad Gateway",
-    "series 24753: HTTP Error 502: Bad Gateway"
+    "series 24704 on 2026-11-10: HTTP Error 502: Bad Gateway",
+    "series 24874: HTTP Error 502: Bad Gateway"
   ],
   "matches": {
     "1528703": {
