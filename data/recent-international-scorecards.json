@@ -1,6 +1,12 @@
 {
   "discoveryPending": [
-    "series 24282: HTTP Error 504: Gateway Timeout",
+    "series 24195: HTTP Error 502: Bad Gateway",
+    "series 24196: HTTP Error 502: Bad Gateway",
+    "series 24197: HTTP Error 502: Bad Gateway",
+    "series 24269: HTTP Error 502: Bad Gateway",
+    "series 24272: HTTP Error 502: Bad Gateway",
+    "series 24704 on 2026-11-20: HTTP Error 502: Bad Gateway",
+    "series 24797 on 2026-11-16: HTTP Error 502: Bad Gateway",
     "series 24874 on 2026-11-15: HTTP Error 502: Bad Gateway"
   ],
   "matches": {
@@ -17551,9 +17557,7 @@
       ]
     }
   },
-  "pending": {
-    "1525662": "24200"
-  },
+  "pending": {},
   "scannedThrough": "2026-11-20",
   "version": 1
 }
