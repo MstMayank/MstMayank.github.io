@@ -1,14 +1,14 @@
 {
   "discoveryPending": [
-    "series 1554058: HTTP Error 502: Bad Gateway",
-    "series 1561006: HTTP Error 502: Bad Gateway",
-    "series 1561011: HTTP Error 502: Bad Gateway",
-    "series 1562333: HTTP Error 502: Bad Gateway",
-    "series 24195: HTTP Error 502: Bad Gateway",
-    "series 24466 on 2026-11-19: HTTP Error 502: Bad Gateway",
-    "series 24466 on 2026-11-21: HTTP Error 502: Bad Gateway",
-    "series 24651: HTTP Error 502: Bad Gateway",
-    "series 24797 on 2026-11-16: HTTP Error 502: Bad Gateway"
+    "series 1561006 on 2026-11-10: HTTP Error 502: Bad Gateway",
+    "series 1561006 on 2026-11-15: HTTP Error 502: Bad Gateway",
+    "series 1561006 on 2026-11-16: HTTP Error 502: Bad Gateway",
+    "series 1561006 on 2026-11-17: HTTP Error 502: Bad Gateway",
+    "series 1561006 on 2026-11-18: HTTP Error 504: Gateway Timeout",
+    "series 1561011 on 2026-11-10: HTTP Error 502: Bad Gateway",
+    "series 1561011 on 2026-11-15: HTTP Error 502: Bad Gateway",
+    "series 1561011 on 2026-11-18: HTTP Error 502: Bad Gateway",
+    "series 1562333 on 2026-11-21: HTTP Error 502: Bad Gateway"
   ],
   "matches": {
     "1525662": {
@@ -19324,11 +19324,7 @@
       ]
     }
   },
-  "pending": {
-    "1562228": "24874",
-    "1562229": "24874",
-    "1562230": "24874"
-  },
+  "pending": {},
   "scannedThrough": "2026-11-20",
   "version": 1
 }
