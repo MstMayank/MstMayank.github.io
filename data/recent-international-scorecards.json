@@ -1,7 +1,6 @@
 {
   "discoveryPending": [
-    "series 1561011 on 2026-11-17: HTTP Error 502: Bad Gateway",
-    "series 1563430: HTTP Error 502: Bad Gateway"
+    "series 1561011 on 2026-11-17: HTTP Error 502: Bad Gateway"
   ],
   "matches": {
     "1525662": {
