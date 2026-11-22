@@ -52,6 +52,9 @@
   .pv-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
   .pv-share { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .pv-share button { cursor: pointer; font-weight: 700; }
+  .pv-card { display: grid; gap: 12px; justify-items: start; }
+  .pv-card img { width: min(360px, 100%); height: auto; border-radius: 14px; border: 1px solid var(--line, #ffffff26); }
+  .pv-card a { font-weight: 700; }
   @media (max-width: 760px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
@@ -77,7 +80,11 @@
   </div>
   <p class="tool-count" id="pv-status" role="status">Loading match data…</p>
   <div class="pv" id="pv-body" hidden>
-    <div class="pv-share"><button type="button" id="pv-share">Share preview ↗</button><span id="pv-share-status" role="status"></span></div>
+    <div class="pv-share"><button type="button" id="pv-share">Share link ↗</button><button type="button" id="pv-card">Make image card 🖼</button><span id="pv-share-status" role="status"></span></div>
+    <div class="pv-card" id="pv-card-box" hidden>
+      <img id="pv-card-img" alt="Match preview image card">
+      <div class="pv-share"><a id="pv-card-download" download="match-preview.png">Download PNG ↓</a><button type="button" id="pv-card-native" hidden>Share image ↗</button><button type="button" id="pv-card-close">Close ×</button></div>
+    </div>
     <section class="pv-section"><h2>Head to head</h2><p class="pv-sub" id="pv-h2h-sub"></p><div class="tiles" id="pv-h2h"></div>
       <div class="tool-table" style="margin-top:14px"><table><thead><tr><th scope="col">Date</th><th scope="col">Winner</th><th scope="col">Margin</th><th scope="col">Venue</th></tr></thead><tbody id="pv-recent"></tbody></table></div></section>
     <section class="pv-section" id="pv-venue-section"><h2 id="pv-venue-title">Venue</h2><p class="pv-sub" id="pv-venue-sub"></p><div class="tiles" id="pv-venue-tiles"></div></section>
@@ -241,7 +248,7 @@
       const card = document.createElement('article'); card.className = 'battle';
       const h = document.createElement('h3'); h.textContent = battle.players[item.batter] + ' vs ' + battle.players[item.bowler];
       const v = document.createElement('p'); v.className = 'verdict'; v.textContent = item.score > 0 ? battle.players[item.bowler] + ' has the edge' : battle.players[item.batter] + ' has the edge';
-      const s = document.createElement('p'); s.textContent = item.runs + ' runs off ' + item.balls + ' balls · SR ' + fixed(item.strikeRate) + ' · out ' + item.wickets + ' time' + (item.wickets === 1 ? '' : 's');
+      const s = document.createElement('p'); s.textContent = item.runs + ' runs off ' + item.balls + ' balls · SR ' + fixed(item.strikeRate) + ' · ' + (item.wickets ? 'out ' + item.wickets + ' time' + (item.wickets === 1 ? '' : 's') : 'never out');
       const link = document.createElement('a'); link.href = 'player-battle.html?' + new URLSearchParams({competition, first: battle.players[item.batter], second: battle.players[item.bowler]}); link.textContent = 'Full head to head ↗';
       card.append(h, v, s, link); return card;
     }));
@@ -289,6 +296,7 @@
   }
 
   function render(data) {
+    $('pv-card-box').hidden = true;
     const a = $('pv-a').value, b = $('pv-b').value, venue = $('pv-venue').value;
     $('pv-body').hidden = false;
     if (a === b) { $('pv-status').textContent = 'Pick two different teams.'; $('pv-body').hidden = true; return; }
@@ -336,6 +344,99 @@
       if (error.name !== 'AbortError') $('pv-share-status').textContent = url;
     }
   });
+
+  // Story-size image card (1080x1920), drawn from what the page is showing.
+  let cardUrl = '', cardBlob = null;
+  async function drawCard() {
+    const W = 1080, H = 1920, P = 72;
+    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    try { await Promise.all(['900 80px "Big Shoulders Display"', '700 32px Manrope', '400 28px Manrope'].map(font => document.fonts.load(font))); } catch (error) {}
+    const display = (size, weight = 900) => `${weight} ${size}px "Big Shoulders Display", Impact, sans-serif`;
+    const body = (size, weight = 600) => `${weight} ${size}px Manrope, system-ui, sans-serif`;
+    const gold = '#F6C453', chalk = '#F2F5EF', dim = '#9DB8A8', green = '#22c55e', red = '#ef4444';
+    const fit = (text, font, max) => { ctx.font = font; let t = text; while (ctx.measureText(t).width > max && t.length > 3) t = t.slice(0, -2); return t === text ? t : t.trimEnd() + '…'; };
+    const write = (text, x, y, font, color, max = W - 2 * P, align = 'left') => { ctx.textAlign = align; ctx.fillStyle = color; ctx.fillText(fit(text, font, max), x, y); };
+    const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#0C3022'); bg.addColorStop(1, '#07140f');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#ffffff14'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(W - 40, 260, 300, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(W - 40, 260, 190, 0, Math.PI * 2); ctx.stroke();
+    const rule = y => { ctx.fillStyle = '#ffffff22'; ctx.fillRect(P, y, W - 2 * P, 2); };
+    const a = $('pv-a').value, b = $('pv-b').value;
+    const venue = $('pv-venue').value ? $('pv-venue').selectedOptions[0].textContent.split(' · ')[0] : '';
+    let y = P + 40;
+    write('THE CRICKET SPACE · MATCH PREVIEW', P, y, body(26, 700), gold);
+    y += 110; write(a.toUpperCase(), P, y, display(a.length > 18 ? 84 : 96), chalk);
+    y += 80; write('VS', P, y, display(50), gold);
+    y += 100; write(b.toUpperCase(), P, y, display(b.length > 18 ? 84 : 96), chalk);
+    y += 56; write((competition.toUpperCase()) + (venue ? ' · ' + venue : ''), P, y, body(30, 600), dim);
+    y += 40; rule(y);
+    const tileText = id => [...$(id).querySelectorAll('.tile')].map(t => [t.querySelector('b').textContent, t.querySelector('span').textContent]);
+    const tileRow = (items, top) => {
+      const gap = 24, w = (W - 2 * P - gap * (items.length - 1)) / items.length;
+      items.forEach(([value, label], i) => {
+        const x = P + i * (w + gap);
+        ctx.fillStyle = '#ffffff0d'; ctx.beginPath(); ctx.roundRect(x, top, w, 130, 22); ctx.fill();
+        write(value, x + 24, top + 64, display(54, 800), gold, w - 48);
+        write(label, x + 24, top + 106, body(22, 600), dim, w - 48);
+      });
+    };
+    y += 64; write('HEAD TO HEAD', P, y, body(26, 800), dim);
+    const SHORT = {'Mumbai Indians': 'MI', 'Chennai Super Kings': 'CSK', 'Royal Challengers Bengaluru': 'RCB', 'Kolkata Knight Riders': 'KKR', 'Sunrisers Hyderabad': 'SRH',
+      'Delhi Capitals': 'DC', 'Punjab Kings': 'PBKS', 'Rajasthan Royals': 'RR', 'Gujarat Titans': 'GT', 'Lucknow Super Giants': 'LSG', 'UP Warriorz': 'UPW', 'Gujarat Giants': 'GG'};
+    const short = name => SHORT[name] || name.split(' ').map(w => w[0]).join('');
+    write('wins ' + short(a) + '–' + short(b), W - P, y, body(24, 600), dim, 400, 'right');
+    y += 26; tileRow(tileText('pv-h2h'), y); y += 130;
+    if (!$('pv-venue-section').hidden) {
+      y += 64; write(venue.toUpperCase() || 'VENUE', P, y, body(26, 800), dim);
+      const short = ['Avg 1st innings', 'Par after 6 overs', 'Chasing wins'];
+      y += 26; tileRow(tileText('pv-venue-tiles').slice(0, 3).map(([value], i) => [value, short[i]]), y); y += 130;
+    }
+    y += 64; write('KEY BATTLES', P, y, body(26, 800), dim);
+    for (const card of [...$('pv-battles').querySelectorAll('.battle')].slice(0, 3)) {
+      y += 22; ctx.fillStyle = '#ffffff0d'; ctx.beginPath(); ctx.roundRect(P, y, W - 2 * P, 118, 22); ctx.fill();
+      write(card.querySelector('h3').textContent, P + 28, y + 48, display(38, 800), chalk, W - 2 * P - 56);
+      write(card.querySelector('.verdict').textContent + ' · ' + card.querySelectorAll('p')[1].textContent, P + 28, y + 92, body(23, 600), gold, W - 2 * P - 56);
+      y += 118;
+    }
+    y += 64; write('IN FORM', P, y, body(26, 800), dim);
+    const cols = [...$('pv-form').children].slice(0, 2);
+    const colW = (W - 2 * P - 32) / 2;
+    let bottom = y;
+    cols.forEach((col, i) => {
+      const x = P + i * (colW + 32); let yy = y + 46;
+      write(col.querySelector('h3').textContent, x, yy, display(34, 800), chalk, colW);
+      for (const li of [...col.querySelectorAll('.form-list li')].filter((_, k) => k === 0 || k === 1 || k === 3 || k === 4)) {
+        yy += 42;
+        const badge = li.querySelector('small'); const text = li.textContent.replace(badge ? badge.textContent : '', '').replace(/ in last \d+/, '');
+        const name = text.split(' — ')[0], stat = text.split(' — ')[1] || '';
+        write(name, x, yy, body(25, 700), badge && badge.className === 'better' ? green : badge && badge.className === 'worse' ? red : chalk, colW * 0.5);
+        write(stat.replace(', econ', ' · econ').replace(', SR', ' · SR'), x + colW, yy, body(22, 600), dim, colW * 0.5, 'right');
+      }
+      bottom = Math.max(bottom, yy);
+    });
+    write('mstmayank.github.io/preview.html', P, H - P + 10, body(26, 700), gold);
+    write('Data: Cricsheet', W - P, H - P + 10, body(22, 600), dim, 400, 'right');
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  }
+
+  $('pv-card').addEventListener('click', async () => {
+    $('pv-card').disabled = true; $('pv-share-status').textContent = 'Making card…';
+    try {
+      cardBlob = await drawCard();
+      if (cardUrl) URL.revokeObjectURL(cardUrl);
+      cardUrl = URL.createObjectURL(cardBlob);
+      const name = ($('pv-a').value + '-vs-' + $('pv-b').value).toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-preview.png';
+      $('pv-card-img').src = cardUrl; $('pv-card-download').href = cardUrl; $('pv-card-download').download = name;
+      const file = new File([cardBlob], name, {type: 'image/png'});
+      $('pv-card-native').hidden = !(navigator.canShare && navigator.canShare({files: [file]}));
+      $('pv-card-native').onclick = () => navigator.share({files: [file]}).catch(() => {});
+      $('pv-card-box').hidden = false; $('pv-share-status').textContent = '';
+      $('pv-card-box').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    } catch (error) {
+      $('pv-share-status').textContent = 'The card could not be made in this browser.';
+    } finally { $('pv-card').disabled = false; }
+  });
+  $('pv-card-close').addEventListener('click', () => { $('pv-card-box').hidden = true; });
   start();
 })();
 </script>
