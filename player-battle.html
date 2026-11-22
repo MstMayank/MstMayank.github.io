@@ -110,6 +110,11 @@
 #ipl-lens button.active, #ipl-lens button:hover { color:#ff946f; border-color:#ff946f; }
 #ipl-lens label { display:grid; gap:6px; font-size:.85rem; min-width:0; }
 #ipl-lens [hidden] { display:none!important; }
+#ipl-lens .finder-controls { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:20px 0; }
+#ipl-lens .finder-controls[hidden] { display:none; }
+#ipl-lens .finder-summary { margin:8px 0 4px; font-weight:600; }
+#ipl-lens .finder-method { font-size:.85rem; color:var(--dim); margin:4px 0 0; }
+#ipl-lens .finder-empty { color:var(--dim); }
 #ipl-lens .metrics { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
 #ipl-lens .metrics > div, #ipl-lens .panel { background:#181817; border:1px solid var(--line); border-radius:14px; padding:clamp(12px,2vw,24px); }
 #ipl-lens .metrics > div { flex:1 1 140px; display:grid; gap:5px; }
@@ -335,6 +340,7 @@
 <div class="lens-tabs tool-pills" role="group" aria-label="Cricket statistics">
 <button type="button" data-view="careers" id="career-view-button" hidden>Player profiles</button>
 <button type="button" data-view="matchups" class="active">⇄ Head to head</button>
+<button type="button" data-view="finder">🎯 Match-ups</button>
 </div>
 <section id="player-career-shell" class="panel" aria-label="Player career profiles" hidden></section>
 <div class="battle-filters tool-filter">
@@ -351,6 +357,10 @@
 <option value="direct">Batter vs Bowler</option><option value="batters">Batter vs Batter</option>
 <option value="bowlers">Bowler vs Bowler</option><option value="teams">Team vs Team</option>
 </select></label>
+<div class="finder-controls" id="finder-controls" hidden>
+<label>Find match-ups for<select id="finder-role"><option value="batting">A batter</option><option value="bowling">A bowler</option></select></label>
+<label>Minimum balls<select id="finder-min"><option value="12">12</option><option value="30" selected>30</option><option value="60">60</option></select></label>
+</div>
 <label id="battle-career-scope-label" hidden>Batting records<select id="battle-career-scope"><option value="career">All-time career records</option><option value="archive">Archived match analysis</option></select></label>
 <p class="battle-status" id="battle-status" role="status">Loading match data…</p>
 <div class="workspace battle-workspace">
@@ -383,5 +393,6 @@
 <img id="battle-card-image" alt="The Cricket Space battle statistics card">
 <p id="battle-card-feedback" role="status"></p></div></div>
 <script defer src="player-careers.js?v=profiles-clean-credits"></script>
-<script defer src="player-battle.js?v=battle-insights"></script>
+<script defer src="matchup-core.js?v=1"></script>
+<script defer src="player-battle.js?v=matchup-finder"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

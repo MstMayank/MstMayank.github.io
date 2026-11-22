@@ -7,7 +7,7 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | Page | What it does |
 | --- | --- |
 | `index.html` | Homepage: writing, On This Day, tools and contact |
-| `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, plus player profiles |
+| `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, player profiles, and a match-up finder that ranks every opponent of one player |
 | `record-book.html` | Searchable international batting, bowling and team-total records |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
@@ -27,6 +27,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   python scripts/build-battle-aliases.py
   ```
 
+- **Match-up finder** (Player Battle, `?view=finder&player=V%20Kohli&role=batting`) ranks every
+  opponent of one player with `matchup-core.js`: strike rate and dismissal rate against the
+  player's own record for the selection, with small samples pulled toward that record (60 balls
+  of the player's average are added to each pair). Tests: `tests/matchup-core.test.ts`.
 - **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
   `data/ipl-2027-retentions.json` with the V6 squad rating (same weights as the original
   retention game):
