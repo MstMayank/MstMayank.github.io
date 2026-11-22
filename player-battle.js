@@ -813,6 +813,74 @@ function venueLabel(name) {
   }
   const signed = (value, digits = 1) => value === null || value === undefined ? '—' : (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value).toFixed(digits);
 
+  // Entry points (entry-<competition>.json, built by scripts/build-impact-stats.py). IPL and WPL batters.
+  const entryCache = new Map();
+  function loadEntry() {
+    if (!entryCache.has(competition)) entryCache.set(competition, fetch('entry-' + competition + '.json?v=1').then(r => r.ok ? r.json() : null).catch(() => null));
+    return entryCache.get(competition);
+  }
+
+  function entryCard(id) {
+    const card = document.createElement('section');
+    card.className = 'phase-profile entry-card';
+    const head = document.createElement('div'); head.className = 'phase-head';
+    const title = document.createElement('h3'); title.textContent = data.players[id] + ' · Batting position';
+    const chip = document.createElement('span'); chip.className = 'phase-chip'; chip.hidden = true;
+    head.append(title, chip);
+    const body = document.createElement('div'); body.textContent = 'Loading…';
+    card.append(head, body);
+    loadEntry().then(entry => {
+      body.replaceChildren();
+      const player = entry?.players?.[data.players[id]];
+      if (!player) { body.textContent = 'Needs 60+ balls faced in completed matches.'; return; }
+      const R = entry.rules;
+      if (player.role) {
+        chip.hidden = false; chip.textContent = player.role;
+        chip.title = 'Based on where his innings start: top order = ' + R.topOrderShare * 100 + '%+ in overs 1–' + R.topOrderBy + '; finisher = ' + R.finisherShare * 100 + '%+ from over ' + (R.finisherFrom + 1) + '; middle order = ' + R.middleShare * 100 + '%+ in overs ' + (R.topOrderBy + 1) + '–' + R.finisherFrom + '; otherwise floater. Needs ' + R.minInnings + '+ innings.';
+      }
+      const stat = cell => ({sr: cell[2] ? cell[1] / cell[2] * 100 : null, avg: cell[3] ? cell[1] / cell[3] : null});
+      const table = (label, labels, rows, league) => {
+        const wrap = document.createElement('div'); wrap.className = 'table-wrap'; wrap.tabIndex = 0;
+        wrap.setAttribute('aria-label', label + '; scroll horizontally for more columns');
+        const t = document.createElement('table');
+        const h = t.createTHead().insertRow();
+        [label, 'Inns', 'Runs', 'SR', 'Avg', 'League SR', 'League avg'].forEach(text => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; h.appendChild(th); });
+        const tb = t.createTBody();
+        rows.forEach((cell, i) => {
+          const mine = stat(cell), all = stat(league[i]);
+          const tr = tb.insertRow();
+          if (cell[0] < 3) tr.className = 'entry-thin';
+          [labels[i], number(cell[0]), number(cell[1]), fixed(mine.sr), fixed(mine.avg), fixed(all.sr), fixed(all.avg)].forEach(v => { tr.insertCell().textContent = v; });
+        });
+        wrap.appendChild(t); return wrap;
+      };
+      body.append(table('Came in', entry.overBuckets, player.byOver, entry.league.byOver), table('Wickets down', entry.wicketBuckets, player.byWickets, entry.league.byWickets));
+      const heat = document.createElement('div'); heat.className = 'entry-heat';
+      heat.setAttribute('role', 'img');
+      const cells = player.grid.map((cell, over) => ({over, cell: cell || [0, 0, 0, 0]}));
+      heat.setAttribute('aria-label', 'Strike rate by the over he came in: ' + cells.filter(c => c.cell[0]).map(c => 'over ' + (c.over + 1) + ' ' + fixed(stat(c.cell).sr, 0)).join(', '));
+      for (const {over, cell} of cells) {
+        const box = document.createElement('span');
+        const sr = stat(cell).sr;
+        box.textContent = over + 1;
+        if (cell[0] >= 2 && sr !== null) {
+          const t = Math.max(0, Math.min(1, (sr - 100) / 80));
+          box.style.background = `rgba(246, 196, 83, ${0.12 + t * 0.75})`;
+          box.style.color = t > 0.55 ? '#10100f' : '';
+        } else box.className = 'empty';
+        box.title = 'Came in during over ' + (over + 1) + ': ' + cell[0] + ' innings' + (cell[0] ? ', ' + cell[1] + ' runs, SR ' + fixed(sr) : '');
+        heat.appendChild(box);
+      }
+      const heatLabel = document.createElement('p'); heatLabel.className = 'finder-method';
+      heatLabel.textContent = 'Strike rate by the over he walked in (brighter = faster, from SR 100 to 180; blank = under 2 innings). Hover a box for details.';
+      body.append(heat, heatLabel);
+      const note = document.createElement('p'); note.className = 'finder-method';
+      note.textContent = 'Openers count as coming in at over 1 with 0 down. Rows with fewer than 3 innings are faded. Rain-reduced and no-result matches are left out.';
+      body.appendChild(note);
+    });
+    return card;
+  }
+
   function impactCard(id, role) {
     const card = document.createElement('section');
     card.className = 'phase-profile impact-card';
@@ -940,6 +1008,7 @@ function venueLabel(name) {
     if (hasPhases(format)) result.appendChild(phaseCard(format, selected[0], role));
     result.appendChild(formCard(format, selected[0], role));
     if (competition !== 'international') result.appendChild(impactCard(selected[0], role));
+    if (competition !== 'international' && role === 'batting') result.appendChild(entryCard(selected[0]));
     if (!ranked.opponents.length) {
       const empty = document.createElement('p');
       empty.className = 'finder-empty';

@@ -151,6 +151,11 @@
 #ipl-lens .battle-result .form-list button { background:none; border:0; padding:0; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 #ipl-lens .battle-result .form-list span { color:var(--dim); font-size:.9rem; }
 #ipl-lens .battle-result .form-list small { font-weight:700; font-size:.8rem; color:var(--dim); }
+#ipl-lens .battle-result .entry-card .table-wrap { margin:10px 0; }
+#ipl-lens .battle-result .entry-thin td { opacity:.5; }
+#ipl-lens .battle-result .entry-heat { display:grid; grid-template-columns:repeat(20,minmax(0,1fr)); gap:3px; margin:14px 0 4px; }
+#ipl-lens .battle-result .entry-heat span { aspect-ratio:1; display:grid; place-items:center; border-radius:4px; font-size:.7rem; font-weight:700; color:var(--ink); cursor:help; min-width:0; }
+#ipl-lens .battle-result .entry-heat span.empty { background:#ffffff0a; color:var(--dim); }
 @media (max-width:760px) { #ipl-lens .battle-result .phase-grid, #ipl-lens .battle-result .phase-compare { grid-template-columns:minmax(0,1fr); } }
 #ipl-lens .metrics { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
 #ipl-lens .metrics > div, #ipl-lens .panel { background:#181817; border:1px solid var(--line); border-radius:14px; padding:clamp(12px,2vw,24px); }
@@ -433,5 +438,5 @@
 <script defer src="matchup-core.js?v=1"></script>
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
-<script defer src="player-battle.js?v=impact"></script>
+<script defer src="player-battle.js?v=entry-points"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

@@ -46,6 +46,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   batting and bowling, and match-winning knocks from `impact-<competition>.json`, built by
   `scripts/build-impact-stats.py` (definitions at the top of the script; weekly workflow).
   Tests: `tests/test_impact_stats.py`.
+- **Batting position** (Match-ups tab, IPL and WPL batters): how a batter does by the over and
+  score he walks in at, a strike-rate strip by entry over, and a suggested role (top order,
+  middle order, finisher or floater). Data: `entry-<competition>.json`, written by the same
+  script (rules in `ENTRY_ROLES`).
 - **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
   ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
   weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in

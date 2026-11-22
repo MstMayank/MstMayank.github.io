@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build impact-<competition>.json: pressure and impact numbers per player, from Cricsheet.
+"""Build impact-<competition>.json (pressure and impact) and entry-<competition>.json (entry points) from Cricsheet.
 
     python scripts/build-impact-stats.py                  # IPL, downloads ipl_json.zip
     python scripts/build-impact-stats.py --competition wpl
@@ -18,6 +18,10 @@ Definitions (also shown on the page):
   bowler conceded. Shown per 24 balls (four overs). Wickets are not valued in either number.
   "Average" means the same period: all seasons for the all-time numbers, the last 3 seasons for
   the recent ones.
+- Entry point: the over and score when a batter first appears in an innings (openers arrive at
+  over 0, 0 down). Buckets: overs 1-6, 7-11, 12-16, 17-20, and wickets down 0, 1-2, 3-4, 5+.
+  Suggested role (ENTRY_ROLES): top order if 60%+ of innings start in overs 1-3, finisher if
+  50%+ start from over 12 on, middle order if 50%+ start in overs 4-11, otherwise floater.
 Rain-reduced (D/L) and no-result matches are left out; super overs are never counted.
 """
 import argparse
@@ -238,6 +242,101 @@ def build(zip_path, competition):
     }
 
 
+OVER_BUCKETS = ((0, 6, 'Overs 1–6'), (6, 11, 'Overs 7–11'), (11, 16, 'Overs 12–16'), (16, 20, 'Overs 17–20'))
+WICKET_BUCKETS = ((0, 0, '0 down'), (1, 2, '1–2 down'), (3, 4, '3–4 down'), (5, 10, '5+ down'))
+ENTRY_ROLES = {'topOrderBy': 3, 'topOrderShare': 0.6, 'finisherFrom': 11, 'finisherShare': 0.5, 'middleShare': 0.5, 'minInnings': 10}
+
+
+def entry_innings(matches):
+    """One record per batter innings: entry over (0-based), wickets down on arrival, runs, balls, out."""
+    for match_id, match in matches:
+        if not usable(match['info']):
+            continue
+        innings_list = [i for i in match.get('innings', []) if not i.get('super_over')]
+        for innings in innings_list:
+            seen = {}
+            wickets = legal_balls = 0
+            for over in innings.get('overs', []):
+                for delivery in over['deliveries']:
+                    for name in (delivery['batter'], delivery.get('non_striker')):
+                        if name and name not in seen:
+                            seen[name] = {'over': min(legal_balls // 6, 19), 'wickets': min(wickets, 9), 'runs': 0, 'balls': 0, 'out': False}
+                    record = seen[delivery['batter']]
+                    record['runs'] += delivery['runs']['batter']
+                    if 'wides' not in delivery.get('extras', {}):
+                        record['balls'] += 1
+                    for wicket in delivery.get('wickets', []):
+                        out = seen.setdefault(wicket['player_out'], {'over': min(legal_balls // 6, 19), 'wickets': min(wickets, 9), 'runs': 0, 'balls': 0, 'out': False})
+                        out['out'] = True
+                        wickets += 1
+                    legal_balls += legal(delivery)
+            for name, record in seen.items():
+                yield name, record
+
+
+def entry_role(by_over):
+    total = sum(cell[0] for cell in by_over.values())
+    rules = ENTRY_ROLES
+    if total < rules['minInnings']:
+        return None
+    share = lambda test: sum(cell[0] for over, cell in by_over.items() if test(over)) / total
+    if share(lambda o: o < rules['topOrderBy']) >= rules['topOrderShare']:
+        return 'Top order'
+    if share(lambda o: o >= rules['finisherFrom']) >= rules['finisherShare']:
+        return 'Finisher'
+    if share(lambda o: rules['topOrderBy'] <= o < rules['finisherFrom']) >= rules['middleShare']:
+        return 'Middle order'
+    return 'Floater'
+
+
+def build_entry(zip_path, competition):
+    matches = list(venue_stats.matches_from_zip(zip_path))
+    players = defaultdict(lambda: {'over': defaultdict(lambda: [0, 0, 0, 0]), 'wickets': defaultdict(lambda: [0, 0, 0, 0])})
+    league = {'over': defaultdict(lambda: [0, 0, 0, 0]), 'wickets': defaultdict(lambda: [0, 0, 0, 0])}
+    for name, record in entry_innings(matches):
+        over_key = next(label for start, end, label in OVER_BUCKETS if start <= record['over'] < end)
+        wicket_key = next(label for low, high, label in WICKET_BUCKETS if low <= record['wickets'] <= high)
+        for target in (players[name]['over'][record['over']], players[name]['wickets'][wicket_key],
+                       league['over'][over_key], league['wickets'][wicket_key]):
+            target[0] += 1
+            target[1] += record['runs']
+            target[2] += record['balls']
+            target[3] += record['out']
+
+    def bucket_rows(cells, buckets, key_of):
+        # Compact: one [innings, runs, balls, outs] per bucket, in the order of the bucket labels.
+        rows = []
+        for bucket in buckets:
+            total = [0, 0, 0, 0]
+            for key, cell in cells.items():
+                if key_of(key, bucket):
+                    total = [a + b for a, b in zip(total, cell)]
+            rows.append(total)
+        return rows
+
+    output = {}
+    for name, data in players.items():
+        innings = sum(cell[0] for cell in data['over'].values())
+        balls = sum(cell[2] for cell in data['over'].values())
+        if balls < MIN_BALLS:
+            continue
+        output[name] = {
+            'innings': innings,
+            'role': entry_role(data['over']),
+            'byOver': bucket_rows(data['over'], OVER_BUCKETS, lambda over, b: b[0] <= over < b[1]),
+            'byWickets': bucket_rows(data['wickets'], WICKET_BUCKETS, lambda label, b: label == b[2]),
+            'grid': [list(data['over'][over]) if over in data['over'] else 0 for over in range(20)],
+        }
+    league_rows = {
+        'byOver': bucket_rows(league['over'], OVER_BUCKETS, lambda label, b: label == b[2]),
+        'byWickets': bucket_rows(league['wickets'], WICKET_BUCKETS, lambda label, b: label == b[2]),
+    }
+    return {'version': 1, 'competition': competition, 'label': SOURCES[competition][1], 'generated': date.today().isoformat(),
+            'source': 'Cricsheet (cricsheet.org) ball-by-ball data', 'columns': ['innings', 'runs', 'balls', 'outs'],
+            'overBuckets': [label for _, _, label in OVER_BUCKETS], 'wicketBuckets': [label for _, _, label in WICKET_BUCKETS],
+            'rules': ENTRY_ROLES, 'league': league_rows, 'players': dict(sorted(output.items()))}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--competition', choices=sorted(SOURCES), default='ipl')
@@ -251,6 +350,10 @@ def main():
     out = ROOT / f'impact-{args.competition}.json'
     out.write_text(json.dumps(data, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     print(f'Wrote {out.name}: {len(data["all"])} players (all), {len(data["recent"])} (recent)')
+    entry = build_entry(zip_path, args.competition)
+    entry_out = ROOT / f'entry-{args.competition}.json'
+    entry_out.write_text(json.dumps(entry, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
+    print(f'Wrote {entry_out.name}: {len(entry["players"])} batters')
 
 
 if __name__ == '__main__':

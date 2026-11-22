@@ -77,6 +77,31 @@ class ImpactTests(unittest.TestCase):
         self.assertEqual(slow['pressure']['wickets'], 1)
         self.assertIsNotNone(slow['runsSavedPer24'])
 
+    def test_entry_points_track_arrival_over_and_wickets(self):
+        overs = []
+        for n in range(4):
+            deliveries = [ball('Opener', 'X', 1) for _ in range(6)]
+            overs.append({'over': n, 'deliveries': deliveries})
+        overs[2]['deliveries'][3] = ball('Opener', 'X', 0, wicket='bowled')   # 15th legal ball: 2.3 overs
+        for i in range(4, 6):
+            overs[2]['deliveries'][i] = ball('Three', 'X', 4)
+        for i in range(6):
+            overs[3]['deliveries'][i] = ball('Three', 'X', 1)
+        first = {'team': 'A', 'overs': overs}
+        second = innings('B', 'Chaser', 'Y', 6, overs=4, target=25)
+        records = dict((name, r) for name, r in impact.entry_innings([('1', match(first, second, {'winner': 'B', 'by': {'wickets': 10}}))]) if name != 'NS')
+        self.assertEqual((records['Opener']['over'], records['Opener']['wickets'], records['Opener']['out']), (0, 0, True))
+        self.assertEqual((records['Three']['over'], records['Three']['wickets']), (2, 1), 'arrives in the 3rd over with 1 down')
+        self.assertEqual((records['Three']['runs'], records['Three']['balls']), (14, 8))
+
+    def test_entry_roles(self):
+        role = impact.entry_role
+        self.assertEqual(role({0: [8, 0, 0, 0], 1: [2, 0, 0, 0], 12: [2, 0, 0, 0]}), 'Top order')
+        self.assertEqual(role({12: [6, 0, 0, 0], 16: [4, 0, 0, 0], 5: [3, 0, 0, 0]}), 'Finisher')
+        self.assertEqual(role({5: [7, 0, 0, 0], 8: [3, 0, 0, 0], 0: [2, 0, 0, 0]}), 'Middle order')
+        self.assertEqual(role({0: [4, 0, 0, 0], 6: [4, 0, 0, 0], 15: [4, 0, 0, 0]}), 'Floater')
+        self.assertIsNone(role({0: [5, 0, 0, 0]}), 'needs 10+ innings')
+
 
 if __name__ == '__main__':
     unittest.main()
