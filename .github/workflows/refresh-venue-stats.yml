@@ -19,28 +19,30 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check venue calculations
-        run: python -m unittest tests.test_venue_stats
-      - name: Build IPL and WPL venue stats
+        run: python -m unittest tests.test_venue_stats tests.test_impact_stats
+      - name: Build IPL and WPL venue, team and impact stats
         run: |
           python scripts/build-venue-stats.py --competition ipl
           python scripts/build-venue-stats.py --competition wpl
+          python scripts/build-impact-stats.py --competition ipl
+          python scripts/build-impact-stats.py --competition wpl
       - name: Publish updated data
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           # The generated date changes every run; only publish when the stats themselves change.
           changed=0
-          for file in venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json; do
+          for file in venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json impact-ipl.json impact-wpl.json; do
             if ! python -c "import json,subprocess,sys; f=sys.argv[1]; old=json.loads(subprocess.run(['git','show','HEAD:'+f],capture_output=True,text=True).stdout or '{}'); new=json.load(open(f)); old.pop('generated',None); new.pop('generated',None); sys.exit(0 if old==new else 1)" "$file"; then changed=1; fi
           done
           if [ "$changed" = 0 ]; then
-            git checkout -- venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json
+            git checkout -- venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json impact-ipl.json impact-wpl.json
             echo 'Venue stats are already current.'
             exit 0
           fi
-          git add venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json
+          git add venue-stats-ipl.json venue-stats-wpl.json team-stats-ipl.json team-stats-wpl.json impact-ipl.json impact-wpl.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Refresh IPL and WPL venue and team stats'
+          git commit -m 'Refresh IPL and WPL venue, team and impact stats'
           git push origin HEAD:main
           gh api --method POST repos/${{ github.repository }}/pages/builds

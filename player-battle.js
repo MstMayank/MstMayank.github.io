@@ -436,6 +436,7 @@ function venueLabel(name) {
       if (result.hidden) return;
       if (selected[0] === null) {
         (competition === 'international' ? ['T20I', 'ODI'] : [null]).forEach(renderFormLeaders);
+        if (competition !== 'international') renderImpactLeaders();
         return;
       }
       const finderFormats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
@@ -804,6 +805,103 @@ function venueLabel(name) {
     result.appendChild(block);
   }
 
+  // Impact & clutch (impact-<competition>.json, built by scripts/build-impact-stats.py). IPL and WPL only.
+  const impactCache = new Map();
+  function loadImpact() {
+    if (!impactCache.has(competition)) impactCache.set(competition, fetch('impact-' + competition + '.json?v=1').then(r => r.ok ? r.json() : null).catch(() => null));
+    return impactCache.get(competition);
+  }
+  const signed = (value, digits = 1) => value === null || value === undefined ? '—' : (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value).toFixed(digits);
+
+  function impactCard(id, role) {
+    const card = document.createElement('section');
+    card.className = 'phase-profile impact-card';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · Impact & clutch';
+    const body = document.createElement('div');
+    body.textContent = 'Loading…';
+    card.append(title, body);
+    const name = data.players[id];
+    loadImpact().then(impact => {
+      if (!card.isConnected && !document.body.contains(card)) return;
+      body.replaceChildren();
+      const pick = period => impact?.[period]?.[name]?.[role === 'bowling' ? 'bowling' : 'batting'];
+      const all = pick('all'), recent = pick('recent');
+      if (!all) { body.textContent = 'Needs ' + (impact?.minBalls || 60) + '+ balls in completed matches.'; return; }
+      const rows = role === 'bowling'
+        ? [['Runs saved per 4 overs', signed(all.runsSavedPer24), recent ? signed(recent.runsSavedPer24) : '—'],
+           ['Economy', fixed(all.economy, 2), recent ? fixed(recent.economy, 2) : '—'],
+           ['Death overs, close games: economy', fixed(all.pressure.economy, 2) + ' (' + overs(all.pressure.balls) + ' ov)', recent ? fixed(recent.pressure.economy, 2) + ' (' + overs(recent.pressure.balls) + ' ov)' : '—'],
+           ['Death overs, close games: wickets', String(all.pressure.wickets), recent ? String(recent.pressure.wickets) : '—']]
+        : [['Runs above expected per 100 balls', signed(all.aboveExpectedPer100), recent ? signed(recent.aboveExpectedPer100) : '—'],
+           ['Strike rate', fixed(all.strikeRate), recent ? fixed(recent.strikeRate) : '—'],
+           ['Under pressure: SR (balls)', fixed(all.pressure.strikeRate) + ' (' + number(all.pressure.balls) + ')', recent ? fixed(recent.pressure.strikeRate) + ' (' + number(recent.pressure.balls) + ')' : '—'],
+           ['Under pressure: average', fixed(all.pressure.average), recent ? fixed(recent.pressure.average) : '—'],
+           ['Match-winning knocks', String(all.winningKnocks), recent ? String(recent.winningKnocks) : '—']];
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      const table = document.createElement('table');
+      const head = table.createTHead().insertRow();
+      ['', 'All seasons', 'Last 3 seasons'].forEach(label => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = label; head.appendChild(th); });
+      const tbody = table.createTBody();
+      rows.forEach(values => { const tr = tbody.insertRow(); values.forEach(v => { tr.insertCell().textContent = v; }); });
+      wrap.appendChild(table);
+      body.appendChild(wrap);
+      if (role !== 'bowling' && all.bestKnocks.length) {
+        const best = document.createElement('p');
+        best.className = 'finder-summary';
+        best.textContent = 'Best match-winning knocks: ' + all.bestKnocks.map(k => k.runs + ' (' + k.balls + ') v ' + k.against + ', ' + k.date.slice(0, 4)).join(' · ');
+        body.appendChild(best);
+      }
+      const note = document.createElement('p');
+      note.className = 'finder-method';
+      note.textContent = role === 'bowling'
+        ? 'Runs saved = what an average bowler concedes off the same balls (by over and wickets down) minus what he conceded; wickets are not valued. Close games: won by under 15 runs or 2 wickets or fewer, or tied.'
+        : 'Runs above expected = runs scored minus what an average batter scores off the same balls (by over and wickets down). Under pressure = chasing at 10+ an over, or 3+ wickets down inside 8 overs. Match-winning knock = 30+ at SR 150+ in a winning chase, or the winning side’s top score (30+).';
+      body.appendChild(note);
+    });
+    return card;
+  }
+
+  function renderImpactLeaders() {
+    const block = document.createElement('section');
+    block.className = 'form-leaders';
+    result.appendChild(block);
+    loadImpact().then(impact => {
+      if (!impact) return;
+      const heading = document.createElement('h3');
+      heading.className = 'result-heading';
+      heading.textContent = 'Impact leaders · last 3 seasons (' + impact.recentSeasons[0] + '–' + impact.recentSeasons.at(-1) + ')';
+      const grid = document.createElement('div');
+      grid.className = 'phase-compare';
+      for (const [role, label, key, min, show] of [
+        ['batting', 'Batters: runs above expected per 100 balls', 'aboveExpectedPer100', 300, v => signed(v.aboveExpectedPer100) + ' · SR ' + fixed(v.strikeRate)],
+        ['bowling', 'Bowlers: runs saved per 4 overs', 'runsSavedPer24', 300, v => signed(v.runsSavedPer24) + ' · econ ' + fixed(v.economy, 2)]]) {
+        const list = Object.entries(impact.recent).map(([name, v]) => [name, v[role]]).filter(([, v]) => v && v.balls >= min)
+          .sort((a, b) => b[1][key] - a[1][key]).slice(0, 10);
+        const card = document.createElement('div');
+        card.className = 'phase-profile';
+        const h = document.createElement('h3'); h.textContent = label; card.appendChild(h);
+        const ol = document.createElement('ol'); ol.className = 'form-list';
+        for (const [name, v] of list) {
+          const li = document.createElement('li');
+          const id = data.players.indexOf(name);
+          const button = document.createElement('button'); button.type = 'button'; button.textContent = name;
+          button.disabled = id < 0;
+          button.addEventListener('click', () => { byId('finder-role').value = role; updateChoices(); selected[0] = id; inputs[0].value = name; render(); });
+          const stat = document.createElement('span'); stat.textContent = show(v);
+          li.append(button, stat); ol.appendChild(li);
+        }
+        card.appendChild(ol);
+        grid.appendChild(card);
+      }
+      const note = document.createElement('p');
+      note.className = 'finder-method';
+      note.textContent = 'Players with 300+ balls in the last 3 seasons. Compared with an average player facing (or bowling) the same balls, by over and wickets down.';
+      block.append(heading, note, grid);
+    });
+  }
+
   function renderFinder(format) {
     const role = finderRole();
     const bowling = role === 'bowling';
@@ -841,6 +939,7 @@ function venueLabel(name) {
     result.appendChild(method);
     if (hasPhases(format)) result.appendChild(phaseCard(format, selected[0], role));
     result.appendChild(formCard(format, selected[0], role));
+    if (competition !== 'international') result.appendChild(impactCard(selected[0], role));
     if (!ranked.opponents.length) {
       const empty = document.createElement('p');
       empty.className = 'finder-empty';
