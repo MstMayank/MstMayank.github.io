@@ -11,8 +11,7 @@ on:
       - 'tests/test_recent_scorecards.py'
   schedule:
     - cron: '17 0,12 * * *'
-    - cron: '2,32,47 * * * *'
-    - cron: '17 1-11,13-23 * * *'
+    - cron: '17 4,8,16,20 * * *'
   workflow_dispatch:
 permissions:
   contents: write

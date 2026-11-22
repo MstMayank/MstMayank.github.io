@@ -9,13 +9,15 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `index.html` | Homepage: writing, On This Day, tools and contact |
 | `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, player profiles, and a match-up finder that ranks every opponent of one player |
 | `record-book.html` | Searchable international batting, bowling and team-total records |
+| `venues.html` | IPL and WPL ground-by-ground stats: average scores, par scores, chasing record, toss trends, phase run rates, top performers and team records |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
 
 ## Data
 
-- **Record Book** loads `archive-players-<format>.bin` (gzip-compressed JSON). The
+- **Record Book** loads `archive-players-<format>.bin` (gzip-compressed JSON, rows stored
+  column by column to keep downloads small; see `pack_rows` in `scripts/refresh-cricket.py`). The
   `Refresh cricket records and history` GitHub Action runs `scripts/refresh-cricket.py`
   on a schedule, adds newly completed international matches and commits only when data
   changes. `cricket-records-status.json` holds each archive's revision for cache busting.
@@ -35,6 +37,17 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   powerplay, middle and death numbers against the average for that phase in the same selection,
   with role labels such as "Death finisher". Maths and label rules: `phase-core.js`
   (`LABEL_RULES`). Tests: `tests/phase-core.test.ts`. Not shown for Tests.
+- **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
+  ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
+  weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in
+  `player-battle.js`; a test keeps them in step). Averages leave out no-result and rain-reduced
+  matches. Tests: `tests/test_venue_stats.py`.
+
+  ```sh
+  python scripts/build-venue-stats.py                  # IPL
+  python scripts/build-venue-stats.py --competition wpl
+  ```
+
 - **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
   `data/ipl-2027-retentions.json` with the V6 squad rating (same weights as the original
   retention game):
@@ -54,6 +67,11 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   npm install
   npm run build:auction
   ```
+
+## Fonts
+
+Fonts are self-hosted from `fonts/` (`fonts/fonts.css`, latin and latin-ext subsets from the
+`@fontsource` packages, SIL Open Font License). Link `/fonts/fonts.css` instead of Google Fonts.
 
 ## Tests
 

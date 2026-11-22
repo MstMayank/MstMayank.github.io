@@ -80,7 +80,7 @@
 const venueAliases = [
   "Rajiv Gandhi International Stadium",
   "Narendra Modi Stadium|Sardar Patel Stadium",
-  "Maharashtra Cricket Association Stadium",
+  "Maharashtra Cricket Association Stadium|Subrata Roy Sahara Stadium",
   "M Chinnaswamy Stadium",
   "Wankhede Stadium",
   "Eden Gardens",
@@ -88,7 +88,7 @@ const venueAliases = [
   "Punjab Cricket Association IS Bindra Stadium|Punjab Cricket Association Stadium",
   "MA Chidambaram Stadium",
   "Sawai Mansingh Stadium",
-  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium",
+  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium|Andhra Cricket Association-Visakhapatnam District Cricket Association Stadium",
   "Sheikh Zayed Stadium|Zayed Cricket Stadium",
   "Brabourne Stadium",
   "Dr DY Patil Sports Academy",
@@ -1318,13 +1318,15 @@ function venueLabel(name) {
         ? fetch('career-batting-records.json',{signal:loadingController.signal}).then(response=>response.ok?response.json():null).catch(()=>null)
         : Promise.resolve(null);
       const datasets = await Promise.all(keys.map(async key => {
+        // Start both downloads together; insights no longer wait for the main dataset.
+        const insightsPromise = fetch('battle-insights-' + key + '.json', {signal:loadingController.signal})
+          .then(insights => { if (!insights.ok) throw new Error('Batting insights download failed'); return insights.json(); });
+        insightsPromise.catch(() => {});
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
         const dataset = await response.json();
         try {
-          const insights = await fetch('battle-insights-' + key + '.json', {signal:loadingController.signal});
-          if (!insights.ok) throw new Error('Batting insights download failed');
-          dataset.insights = (await insights.json()).rows;
+          dataset.insights = (await insightsPromise).rows;
         } catch(error) {
           if(error.name==='AbortError') throw error;
           dataset.insightsUnavailable = true;
