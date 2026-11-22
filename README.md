@@ -42,6 +42,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   last-10 vs career numbers and an In form / Steady / Out of form badge; with no player picked
   it lists the form leaders of the latest season. Maths and badge rules: `form-core.js`
   (`FORM_RULES`). Tests: `tests/form-core.test.ts`.
+- **Impact & clutch** (Match-ups tab, IPL and WPL): runs above expected, runs saved, pressure
+  batting and bowling, and match-winning knocks from `impact-<competition>.json`, built by
+  `scripts/build-impact-stats.py` (definitions at the top of the script; weekly workflow).
+  Tests: `tests/test_impact_stats.py`.
 - **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
   ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
   weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in
