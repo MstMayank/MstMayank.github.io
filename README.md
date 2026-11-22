@@ -31,6 +31,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   opponent of one player with `matchup-core.js`: strike rate and dismissal rate against the
   player's own record for the selection, with small samples pulled toward that record (60 balls
   of the player's average are added to each pair). Tests: `tests/matchup-core.test.ts`.
+- **Phase profiles** (Match-ups tab, and Batter vs Batter / Bowler vs Bowler) show each player's
+  powerplay, middle and death numbers against the average for that phase in the same selection,
+  with role labels such as "Death finisher". Maths and label rules: `phase-core.js`
+  (`LABEL_RULES`). Tests: `tests/phase-core.test.ts`. Not shown for Tests.
 - **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
   `data/ipl-2027-retentions.json` with the V6 squad rating (same weights as the original
   retention game):
