@@ -540,6 +540,129 @@ function venueLabel(name) {
   }
 
   // Match-up finder: rank every opponent of one player (ranking maths in matchup-core.js).
+  // Phase profile card (maths in phase-core.js). Limited-overs formats only; ignores the phase filter
+  // so all three phases are always shown, but respects season and venue.
+  const phaseAverageCache = new Map();
+  function phaseRows(format) {
+    return data.rows.filter(row => (!format || data.matches[row[0]][7] === format) && matchIncluded(data.matches[row[0]]));
+  }
+
+  function phaseProfile(format, id, role) {
+    const rows = phaseRows(format);
+    const key = [competition, byId('battle-gender').value, format, byId('battle-season').value, byId('battle-venue').value, role, data.rows.length].join('|');
+    if (!phaseAverageCache.has(key)) phaseAverageCache.set(key, window.TCSPhases.phaseAverages(rows, role));
+    const averages = phaseAverageCache.get(key);
+    const phases = window.TCSPhases.playerPhases(rows, id, role);
+    return { phases, averages, labels: window.TCSPhases.labels(phases, averages, role) };
+  }
+
+  // Small samples are left out so one extreme 14-ball phase cannot squash every other bar.
+  function phaseScale(playerPhaseSets, averages, main, role) {
+    const enough = playerPhaseSets.flat().filter(phase => phase.sample >= window.TCSPhases.SMALL_SAMPLE[role]);
+    return Math.max(...enough.map(phase => phase[main].value || 0), ...averages.map(phase => phase[main].value || 0)) || 1;
+  }
+
+  function hasPhases(format) {
+    return (format || data.format) !== 'Test';
+  }
+
+  // scaleTop: shared bar scale when cards are shown side by side.
+  function phaseCard(format, id, role, scaleTop) {
+    const P = window.TCSPhases;
+    const bowling = role === 'bowling';
+    const { phases, averages, labels } = phaseProfile(format, id, role);
+    const card = document.createElement('section');
+    card.className = 'phase-profile';
+    card.setAttribute('aria-label', data.players[id] + ' phase profile');
+    const head = document.createElement('div');
+    head.className = 'phase-head';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · ' + (bowling ? 'Bowling' : 'Batting') + ' by phase';
+    head.appendChild(title);
+    const chips = document.createElement('div');
+    chips.className = 'phase-labels';
+    const rules = P.LABEL_RULES;
+    const rulesText = bowling
+      ? 'Labels need ' + rules.minBalls + '+ balls in a phase: specialist = economy ' + Math.round(rules.tighterBy * 100) + '%+ better than the phase average; wicket-taker = strikes ' + Math.round(rules.strikesBy * 100) + '%+ more often.'
+      : 'Labels need ' + rules.minBalls + '+ balls in a phase: enforcer / accelerator / finisher = strike rate ' + Math.round(rules.fasterBy * 100) + '%+ above the phase average; anchor = lasts ' + Math.round(rules.stickierBy * 100) + '%+ longer at a normal strike rate.';
+    for (const label of labels) {
+      const chip = document.createElement('span');
+      chip.className = 'phase-chip';
+      chip.textContent = label.text;
+      chip.title = label.why + '. ' + rulesText;
+      chips.appendChild(chip);
+    }
+    if (!labels.length) {
+      const none = document.createElement('span');
+      none.className = 'phase-chip phase-chip-none';
+      none.textContent = 'No standout phase';
+      none.title = rulesText;
+      chips.appendChild(none);
+    }
+    head.appendChild(chips);
+    card.appendChild(head);
+    const keys = bowling
+      ? [['economy', 'Economy', 2], ['dotPct', 'Dot %', 1], ['ballsPerWicket', 'Balls / wicket', 1], ['boundaryPct', 'Boundary % conceded', 1]]
+      : [['strikeRate', 'Strike rate', 1], ['dotPct', 'Dot %', 1], ['boundaryPct', 'Boundary %', 1], ['ballsPerDismissal', 'Balls / dismissal', 1]];
+    const main = keys[0][0];
+    const top = scaleTop || phaseScale([phases], averages, main, role);
+    const grid = document.createElement('div');
+    grid.className = 'phase-grid';
+    const names = groups(format || data.format);
+    phases.forEach((phase, index) => {
+      const column = document.createElement('div');
+      column.className = 'phase-col';
+      const small = phase.sample < P.SMALL_SAMPLE[role];
+      if (small) column.classList.add('phase-small');
+      const name = document.createElement('h4');
+      name.textContent = names[index];
+      const sample = document.createElement('p');
+      sample.className = 'phase-sample';
+      sample.textContent = number(phase.sample) + (bowling ? ' balls bowled' : ' balls faced') + (small ? ' · small sample' : '');
+      column.append(name, sample);
+      const bar = document.createElement('div');
+      bar.className = 'phase-bar';
+      bar.setAttribute('role', 'img');
+      bar.setAttribute('aria-label', keys[0][1] + ' ' + fixed(phase[main].value, keys[0][2]) + ', phase average ' + fixed(averages[index][main].value, keys[0][2]));
+      const fill = document.createElement('span');
+      fill.className = 'phase-bar-fill';
+      fill.style.width = Math.min(100, (phase[main].value || 0) / top * 100) + '%';
+      const marker = document.createElement('span');
+      marker.className = 'phase-bar-avg';
+      marker.style.left = Math.min(100, (averages[index][main].value || 0) / top * 100) + '%';
+      marker.title = 'Phase average';
+      bar.append(fill, marker);
+      column.appendChild(bar);
+      const list = document.createElement('dl');
+      for (const [key, label, digits] of keys) {
+        const item = document.createElement('div');
+        const term = document.createElement('dt');
+        term.textContent = label;
+        const value = document.createElement('dd');
+        value.textContent = fixed(phase[key].value, digits);
+        const change = P.edge(phase[key], averages[index][key]);
+        if (change !== null && !small) {
+          const diff = document.createElement('small');
+          diff.className = change >= 0.03 ? 'phase-up' : change <= -0.03 ? 'phase-down' : 'phase-even';
+          const raw = (phase[key].value - averages[index][key].value) / averages[index][key].value;
+          diff.textContent = (raw > 0 ? '+' : raw < 0 ? '−' : '±') + Math.round(Math.abs(raw) * 100) + '%';
+          diff.title = 'Phase average ' + fixed(averages[index][key].value, digits) + (change >= 0.03 ? ' · better than average' : change <= -0.03 ? ' · worse than average' : ' · about average');
+          value.append(' ', diff);
+        }
+        item.append(term, value);
+        list.appendChild(item);
+      }
+      column.appendChild(list);
+      grid.appendChild(column);
+    });
+    card.appendChild(grid);
+    const foot = document.createElement('p');
+    foot.className = 'finder-method';
+    foot.textContent = '% = difference from the average of all ' + (bowling ? 'bowlers' : 'batters') + ' in the same phase, season and venue selection. Green is better, red is worse. Bar marker = phase average.';
+    card.appendChild(foot);
+    return card;
+  }
+
   function renderFinder(format) {
     const role = finderRole();
     const bowling = role === 'bowling';
@@ -575,6 +698,7 @@ function venueLabel(name) {
     method.className = 'finder-method';
     method.textContent = 'Ranked against ' + player + '’s own record for this selection (strike rate and dismissal rate). Small samples are pulled toward that record, and opponents with fewer than ' + minBalls + ' balls are left out.';
     result.appendChild(method);
+    if (hasPhases(format)) result.appendChild(phaseCard(format, selected[0], role));
     if (!ranked.opponents.length) {
       const empty = document.createElement('p');
       empty.className = 'finder-empty';
@@ -746,6 +870,21 @@ function venueLabel(name) {
       cardTables.push({format:format || data.format,headers,rows});
       updateShareTools();
       if (!bowling) appendInsights(result,format,entries.map(([id])=>id));
+      if ((mode === 'batters' || mode === 'bowlers') && hasPhases(format) && selected.every(id => id !== null)) {
+        const compare = document.createElement('details');
+        compare.className = 'phase-compare-wrap';
+        compare.open = true;
+        const label = document.createElement('summary');
+        label.textContent = (format ? format + ' · ' : '') + 'Compare phase profiles';
+        const grid = document.createElement('div');
+        grid.className = 'phase-compare';
+        const role = bowling ? 'bowling' : 'batting';
+        const profiles = selected.map(id => phaseProfile(format, id, role));
+        const scale = phaseScale(profiles.map(item => item.phases), profiles[0].averages, bowling ? 'economy' : 'strikeRate', role);
+        selected.forEach(id => grid.appendChild(phaseCard(format, id, role, scale)));
+        compare.append(label, grid);
+        result.appendChild(compare);
+      }
     }
   }
 
