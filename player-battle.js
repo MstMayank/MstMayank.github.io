@@ -1013,13 +1013,15 @@ function venueLabel(name) {
         ? fetch('career-batting-records.json',{signal:loadingController.signal}).then(response=>response.ok?response.json():null).catch(()=>null)
         : Promise.resolve(null);
       const datasets = await Promise.all(keys.map(async key => {
+        // Start both downloads together; insights no longer wait for the main dataset.
+        const insightsPromise = fetch('battle-insights-' + key + '.json', {signal:loadingController.signal})
+          .then(insights => { if (!insights.ok) throw new Error('Batting insights download failed'); return insights.json(); });
+        insightsPromise.catch(() => {});
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
         const dataset = await response.json();
         try {
-          const insights = await fetch('battle-insights-' + key + '.json', {signal:loadingController.signal});
-          if (!insights.ok) throw new Error('Batting insights download failed');
-          dataset.insights = (await insights.json()).rows;
+          dataset.insights = (await insightsPromise).rows;
         } catch(error) {
           if(error.name==='AbortError') throw error;
           dataset.insightsUnavailable = true;

@@ -27,16 +27,56 @@ def load_archive(path):
     """Read a gzip-compressed JSON archive (archive-players-<format>.bin)."""
     try:
         result = json.loads(gzip.decompress(path.read_bytes()))
-    except (OSError, EOFError, ValueError) as error:
+        if isinstance(result, dict) and isinstance(result.get('table'), dict):
+            result = {'matches': result.get('matches'), 'rows': unpack_rows(result['table']),
+                      'aliases': result.get('aliases')}
+    except (OSError, EOFError, ValueError, TypeError, KeyError, IndexError) as error:
         raise ValueError(f'Invalid archive: {path}') from error
     if not isinstance(result, dict) or not result.get('rows') or not isinstance(result.get('aliases'), dict):
         raise ValueError(f'Empty or invalid archive: {path}')
     return result
 
 
+def _pack_column(values):
+    """Dictionary-encode a column when that is smaller: {'d': distinct values, 'i': indexes}."""
+    index = {}
+    keys = [json.dumps(value, sort_keys=True) for value in values]
+    for key in keys:
+        index.setdefault(key, len(index))
+    if len(index) * 4 > len(values):
+        return {'v': values}
+    return {'d': [json.loads(key) for key in index], 'i': [index[key] for key in keys]}
+
+
+def _unpack_column(column):
+    if 'v' in column:
+        return column['v']
+    distinct = column['d']
+    return [distinct[i] for i in column['i']]
+
+
+def pack_rows(rows):
+    """Store rows column by column. Repeated strings (names, teams, dates) are kept once,
+    which makes the gzip download roughly three times smaller than row-by-row JSON."""
+    width = max((len(row) for row in rows), default=0)
+    columns = [_pack_column([row[i] if i < len(row) else None for row in rows]) for i in range(width)]
+    return {'count': len(rows), 'lengths': _pack_column([len(row) for row in rows]), 'columns': columns}
+
+
+def unpack_rows(table):
+    lengths = _unpack_column(table['lengths'])
+    columns = [_unpack_column(column) for column in table['columns']]
+    if len(lengths) != table['count'] or any(len(column) != table['count'] for column in columns):
+        raise ValueError('Archive table columns do not match its row count')
+    return [[columns[i][r] for i in range(length)] for r, length in enumerate(lengths)]
+
+
 def encode_archive(key, data):
-    """Gzip bytes served as-is to the Record Book (no base64 wrapper)."""
-    raw = json.dumps(data, separators=(',', ':'), ensure_ascii=True).encode()
+    """Gzip bytes served as-is to the Record Book (no base64 wrapper).
+
+    Rows are stored column by column (see pack_rows); record-book.html rebuilds them."""
+    payload = {'version': 2, 'matches': data['matches'], 'aliases': data['aliases'], 'table': pack_rows(data['rows'])}
+    raw = json.dumps(payload, separators=(',', ':'), ensure_ascii=True).encode()
     return gzip.compress(raw, mtime=0)
 
 

@@ -1,6 +1,8 @@
 import copy
 from datetime import date
+import gzip
 import importlib.util
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -103,6 +105,13 @@ class RefreshTests(unittest.TestCase):
             p = Path(temp) / 'archive.bin'
             p.write_bytes(refresh.encode_archive('ODI', data))
             self.assertEqual(refresh.load_archive(p), data)
+            rows = [['Batting', 'A', 'X', 'Y', 32, 0, '2005-02-17'], ['Bowling', 'B', 'X', 'Y', 1, 2, '2005-02-17', 'male'],
+                    ['Batting', 'A', 'X', 'Z', 0, 0, '2006-01-01']] * 5
+            mixed = {'matches': 3, 'rows': rows, 'aliases': {'abc': ['A']}}
+            p.write_bytes(refresh.encode_archive('ODI', mixed))
+            self.assertEqual(refresh.load_archive(p), mixed)
+            p.write_bytes(gzip.compress(json.dumps(data).encode()))
+            self.assertEqual(refresh.load_archive(p), data, 'older row-by-row archives still load')
             p.write_text('not a valid download')
             with self.assertRaises(ValueError):
                 refresh.load_archive(p)
