@@ -43,6 +43,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   last-10 vs career numbers and an In form / Steady / Out of form badge; with no player picked
   it lists the form leaders of the latest season. Maths and badge rules: `form-core.js`
   (`FORM_RULES`). Tests: `tests/form-core.test.ts`.
+- **Players most like X** (Match-ups tab, every competition): style matches from
+  `similarity-core.js` (phase strike rates or economies, dot %, boundary %, six share, balls per
+  dismissal or wicket; z-scores and cosine similarity; 300+ balls). Computed in the browser from
+  the battle data. Tests: `tests/similarity-core.test.ts`.
 - **Impact & clutch** (Match-ups tab, IPL and WPL): runs above expected, runs saved, pressure
   batting and bowling, and match-winning knocks from `impact-<competition>.json`, built by
   `scripts/build-impact-stats.py` (definitions at the top of the script; weekly workflow).
