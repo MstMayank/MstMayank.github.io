@@ -742,7 +742,15 @@ function venueLabel(name) {
       const values = bowling
         ? [match[2], match[3].join(' v '), entry.wickets + '/' + entry.conceded, overs(entry.legal), fixed(entry.legal ? entry.conceded / entry.legal * 6 : null, 2)]
         : [match[2], match[3].join(' v '), entry.runs + (entry.out ? '' : '*') + ' (' + entry.balls + ')', fixed(entry.balls ? entry.runs / entry.balls * 100 : null), entry.out ? entry.how : 'not out'];
-      values.forEach(value => { tr.insertCell().textContent = value; });
+      values.forEach((value, index) => {
+        const td = tr.insertCell();
+        if (index === 0 && competition !== 'international' && match[6]) {
+          const a = document.createElement('a');
+          a.href = 'match.html?' + new URLSearchParams(competition === 'ipl' ? {id: match[6]} : {c: competition, id: match[6]});
+          a.textContent = value; a.title = 'Worm, Manhattan and win probability';
+          td.appendChild(a);
+        } else td.textContent = value;
+      });
     }
     wrap.appendChild(table);
     card.appendChild(wrap);

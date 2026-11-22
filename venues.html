@@ -53,11 +53,11 @@
 <body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
-<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html">Match Preview</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html">Match Preview</a><a href="match.html">Match Charts</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
 <a class="btn d" href="./#contact">Let’s talk</a>
 </div></nav>
 <main class="wrap page tool-page archive-page">
-<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html" aria-current="page">Venues</a><a href="preview.html">Match Preview</a></nav>
+<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html" aria-current="page">Venues</a><a href="preview.html">Match Preview</a><a href="match.html">Match Charts</a></nav>
 <h1 class="tool-heading" id="venue-title">Venue<br><span>Stats</span></h1>
 <p class="tool-coverage" id="venue-coverage">Ground-by-ground numbers from every IPL and WPL match with ball-by-ball data (source: Cricsheet).</p>
 <div class="tool-pills" role="group" aria-label="Competition">
@@ -133,7 +133,8 @@
       const tr = document.createElement('tr');
       values.forEach(value => {
         const td = document.createElement('td');
-        if (value && typeof value === 'object') { td.textContent = value.text; if (value.num) td.className = 'num'; }
+        if (value && typeof value === 'object' && value.link) { const a = document.createElement('a'); a.href = value.link; a.textContent = value.text; a.title = 'Match charts'; td.appendChild(a); }
+        else if (value && typeof value === 'object') { td.textContent = value.text; if (value.num) td.className = 'num'; }
         else td.textContent = value;
         tr.appendChild(td);
       });
@@ -226,7 +227,7 @@
     rows($('venue-par'), ['6', '15'].filter(over => s.par[over].runs !== null).map(over => ['After ' + over + ' overs', n(fixed(s.par[over].runs, 0) + '/' + fixed(s.par[over].wickets, 0))])
       .concat(s.firstInnings.average !== null ? [['Final total', n(fixed(s.firstInnings.average, 0))]] : []));
     rows($('venue-phases'), s.phases.map((phase, i) => [phaseNames[i], n(fixed(phase.runRate, 2)), n(fixed(phase.wicketsPerInnings, 1)), n(pct(phase.boundaryPct))]));
-    const total = t => [t.runs + (t.wickets < 10 ? '/' + t.wickets : ''), t.team + ' v ' + t.opponent, when(t.date)];
+    const total = t => [t.runs + (t.wickets < 10 ? '/' + t.wickets : ''), t.team + ' v ' + t.opponent, {link: 'match.html?' + new URLSearchParams(competition === 'ipl' ? {id: t.matchId} : {c: competition, id: t.matchId}), text: when(t.date)}];
     rows($('venue-highest'), s.highest.map(total));
     rows($('venue-lowest'), s.lowest.map(total));
     rows($('venue-batters'), s.topBatters.map(b => [b.name, n(num(b.runs)), n(b.innings), n(fixed(b.strikeRate)), n(b.best)]));
