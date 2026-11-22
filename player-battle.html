@@ -152,6 +152,9 @@
 #ipl-lens .battle-result .form-list span { color:var(--dim); font-size:.9rem; }
 #ipl-lens .battle-result .form-list small { font-weight:700; font-size:.8rem; color:var(--dim); }
 #ipl-lens .battle-result .entry-card .table-wrap { margin:10px 0; }
+#ipl-lens .battle-result .similar-card .similar-self td { color:var(--gold,#F6C453); font-weight:700; }
+#ipl-lens .battle-result .similar-card .similar-name { background:none; border:0; padding:0; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+#ipl-lens .battle-result .similar-card td:last-child { white-space:normal; min-width:180px; color:var(--dim); }
 #ipl-lens .battle-result .entry-thin td { opacity:.5; }
 #ipl-lens .battle-result .entry-heat { display:grid; grid-template-columns:repeat(20,minmax(0,1fr)); gap:3px; margin:14px 0 4px; }
 #ipl-lens .battle-result .entry-heat span { aspect-ratio:1; display:grid; place-items:center; border-radius:4px; font-size:.7rem; font-weight:700; color:var(--ink); cursor:help; min-width:0; }
@@ -438,5 +441,6 @@
 <script defer src="matchup-core.js?v=1"></script>
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
-<script defer src="player-battle.js?v=match-links"></script>
+<script defer src="similarity-core.js?v=1"></script>
+<script defer src="player-battle.js?v=similarity"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
