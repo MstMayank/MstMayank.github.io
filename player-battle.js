@@ -432,8 +432,12 @@ function venueLabel(name) {
       byId('battle-compare-label').hidden = true;
       byId('battle-search-label').hidden = true;
       byId('battle-phase-label').hidden = false;
-      result.hidden = !data || selected[0] === null;
+      result.hidden = !data;
       if (result.hidden) return;
+      if (selected[0] === null) {
+        (competition === 'international' ? ['T20I', 'ODI'] : [null]).forEach(renderFormLeaders);
+        return;
+      }
       const finderFormats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
       finderFormats.forEach(renderFinder);
       updateFinderLink();
@@ -663,6 +667,143 @@ function venueLabel(name) {
     return card;
   }
 
+  // Recent form (maths in form-core.js). Uses every match in the competition/format, ignoring
+  // the season, venue and phase filters, because form is about the latest matches.
+  function formRows(format) {
+    return format ? data.rows.filter(row => data.matches[row[0]][7] === format) : data.rows;
+  }
+
+  function formSpark(list, role) {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const ordered = [...list].reverse();
+    const values = ordered.map(entry => role === 'bowling' ? entry.wickets : entry.runs);
+    const top = Math.max(...values, role === 'bowling' ? 3 : 50);
+    const width = 200, height = 48, gap = 4, bar = (width - gap * (ordered.length - 1)) / Math.max(ordered.length, 1);
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('class', 'form-spark');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', (role === 'bowling' ? 'Wickets' : 'Runs') + ' in the last ' + ordered.length + ', oldest to newest: ' + values.join(', '));
+    ordered.forEach((entry, index) => {
+      const rect = document.createElementNS(svgNS, 'rect');
+      const h = Math.max(2, values[index] / top * (height - 2));
+      rect.setAttribute('x', index * (bar + gap)); rect.setAttribute('y', height - h);
+      rect.setAttribute('width', bar); rect.setAttribute('height', h); rect.setAttribute('rx', 2);
+      if (role !== 'bowling' && !entry.out) rect.setAttribute('class', 'not-out');
+      svg.appendChild(rect);
+    });
+    return svg;
+  }
+
+  function formCard(format, id, role) {
+    const bowling = role === 'bowling';
+    const result = window.TCSForm.form(data, id, role, formRows(format));
+    const card = document.createElement('section');
+    card.className = 'phase-profile form-card';
+    const head = document.createElement('div');
+    head.className = 'phase-head';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · Recent form';
+    const chip = document.createElement('span');
+    chip.className = 'phase-chip form-' + result.badge.key;
+    chip.textContent = result.badge.label;
+    const R = window.TCSForm.FORM_RULES;
+    chip.title = bowling
+      ? 'Last ' + R.recent + ' matches vs whole career. In form: wickets per match ' + R.up * 100 + '%+ higher at a similar economy, or economy ' + R.econBetter * 100 + '%+ better. Out of form: economy ' + R.econWorse * 100 + '%+ worse, or ' + R.wicketsDown * 100 + '%+ fewer wickets.'
+      : 'Last ' + R.recent + ' innings vs whole career. In form: runs per innings ' + R.up * 100 + '%+ higher at a similar strike rate. Out of form: runs per innings ' + R.down * 100 + '%+ lower.';
+    head.append(title, chip);
+    card.appendChild(head);
+    if (!result.list.length) {
+      const empty = document.createElement('p'); empty.className = 'finder-empty'; empty.textContent = 'No recorded ' + (bowling ? 'bowling' : 'innings') + ' yet.';
+      card.appendChild(empty);
+      return card;
+    }
+    const r = result.recent, c = result.career;
+    const compare = document.createElement('p');
+    compare.className = 'finder-summary';
+    compare.textContent = bowling
+      ? 'Last ' + r.matches + ': ' + r.wickets + ' wickets · economy ' + fixed(r.economy, 2) + ' · ' + fixed(r.perMatch, 2) + ' per match  (career ' + fixed(c.economy, 2) + ' econ · ' + fixed(c.perMatch, 2) + ' per match)'
+      : 'Last ' + r.innings + ': ' + number(r.runs) + ' runs · SR ' + fixed(r.strikeRate) + ' · ' + fixed(r.perInnings) + ' per innings  (career SR ' + fixed(c.strikeRate) + ' · ' + fixed(c.perInnings) + ' per innings)';
+    card.append(compare, formSpark(result.list, role));
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.tabIndex = 0;
+    wrap.setAttribute('aria-label', 'Recent ' + (bowling ? 'matches' : 'innings') + '; scroll horizontally for more columns');
+    const table = document.createElement('table');
+    const header = table.createTHead().insertRow();
+    (bowling ? ['Date', 'Match', 'Figures', 'Overs', 'Econ'] : ['Date', 'Match', 'Runs', 'SR', 'How out']).forEach(label => {
+      const th = document.createElement('th'); th.scope = 'col'; th.textContent = label; header.appendChild(th);
+    });
+    const body = table.createTBody();
+    for (const entry of result.list) {
+      const match = data.matches[entry.match];
+      const tr = body.insertRow();
+      const values = bowling
+        ? [match[2], match[3].join(' v '), entry.wickets + '/' + entry.conceded, overs(entry.legal), fixed(entry.legal ? entry.conceded / entry.legal * 6 : null, 2)]
+        : [match[2], match[3].join(' v '), entry.runs + (entry.out ? '' : '*') + ' (' + entry.balls + ')', fixed(entry.balls ? entry.runs / entry.balls * 100 : null), entry.out ? entry.how : 'not out'];
+      values.forEach(value => { tr.insertCell().textContent = value; });
+    }
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+    const foot = document.createElement('p');
+    foot.className = 'finder-method';
+    foot.textContent = (bowling ? 'One row per match.' : '* not out. One row per match' + ((format || data.format) === 'Test' ? ' (both innings combined).' : '.')) + ' Form ignores the season, venue and phase filters.';
+    card.appendChild(foot);
+    return card;
+  }
+
+  function renderFormLeaders(format) {
+    const rows = formRows(format);
+    const block = document.createElement('section');
+    block.className = 'form-leaders';
+    const grid = document.createElement('div');
+    grid.className = 'phase-compare';
+    let season = '';
+    for (const role of ['batting', 'bowling']) {
+      const bowling = role === 'bowling';
+      const board = window.TCSForm.leaders(data, role, rows, 10);
+      season = board.season || season;
+      const card = document.createElement('div');
+      card.className = 'phase-profile';
+      const h = document.createElement('h3');
+      h.textContent = bowling ? 'Bowlers: most wickets in last 10' : 'Batters: most runs in last 10';
+      card.appendChild(h);
+      const list = document.createElement('ol');
+      list.className = 'form-list';
+      for (const item of board.players) {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = data.players[item.id];
+        button.addEventListener('click', () => {
+          byId('finder-role').value = role;
+          updateChoices();
+          selected[0] = item.id;
+          inputs[0].value = data.players[item.id];
+          render();
+        });
+        const stat = document.createElement('span');
+        stat.textContent = bowling ? item.recent.wickets + ' wkts · econ ' + fixed(item.recent.economy, 2) : number(item.recent.runs) + ' runs · SR ' + fixed(item.recent.strikeRate);
+        const badge = document.createElement('small');
+        badge.className = 'form-' + item.badge.key;
+        badge.textContent = item.badge.label;
+        li.append(button, stat, badge);
+        list.appendChild(li);
+      }
+      if (!board.players.length) { const none = document.createElement('p'); none.className = 'finder-empty'; none.textContent = 'Not enough matches yet.'; card.appendChild(none); }
+      card.appendChild(list);
+      grid.appendChild(card);
+    }
+    const heading = document.createElement('h3');
+    heading.className = 'result-heading';
+    heading.textContent = (format ? format + ' · ' : '') + 'In form now' + (season ? ' · players active in ' + season : '');
+    const note = document.createElement('p');
+    note.className = 'finder-method';
+    note.textContent = 'Players with 5+ ' + 'matches in the latest season, ranked by their last 10 innings or matches. Pick a name for their match-ups, phase profile and form.';
+    block.append(heading, note, grid);
+    result.appendChild(block);
+  }
+
   function renderFinder(format) {
     const role = finderRole();
     const bowling = role === 'bowling';
@@ -699,6 +840,7 @@ function venueLabel(name) {
     method.textContent = 'Ranked against ' + player + '’s own record for this selection (strike rate and dismissal rate). Small samples are pulled toward that record, and opponents with fewer than ' + minBalls + ' balls are left out.';
     result.appendChild(method);
     if (hasPhases(format)) result.appendChild(phaseCard(format, selected[0], role));
+    result.appendChild(formCard(format, selected[0], role));
     if (!ranked.opponents.length) {
       const empty = document.createElement('p');
       empty.className = 'finder-empty';
