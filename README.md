@@ -16,6 +16,15 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
 
+## Design system
+
+Every page loads `ds.css` last (body class `ds`). It holds the tokens (colours, radii, motion),
+type (Manrope for words, Big Shoulders Display for numbers and the logo), the shared header and
+footer, buttons, pills, inputs, cards, tables, focus rings and reduced-motion rules, and overrides
+older page styles where needed. The header and footer markup is identical on every page;
+`design-v2.js` marks the current section and runs the phone menu. Detail-page headings live in
+`tools.css`.
+
 ## Data
 
 - **Record Book** loads `archive-players-<format>.bin` (gzip-compressed JSON, rows stored

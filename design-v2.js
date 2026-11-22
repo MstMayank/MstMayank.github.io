@@ -4,14 +4,25 @@
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('site-links');
   function closeMenu() {
-    links.classList.remove('open');
-    toggle.setAttribute('aria-expanded','false');
+    links?.classList.remove('open');
+    toggle?.setAttribute('aria-expanded','false');
+    if (toggle) toggle.textContent = 'Menu';
+    document.body.classList.remove('menu-open');
   }
   toggle?.addEventListener('click', () => {
     const open = !links.classList.contains('open');
     links.classList.toggle('open',open);
     toggle.setAttribute('aria-expanded',String(open));
+    toggle.textContent = open ? 'Close' : 'Menu';
+    document.body.classList.toggle('menu-open', open);
   });
+  // Mark the current section in the header (one shared header on every page).
+  const here = location.pathname.replace(/\/index\.html$/, '/').split('/').pop() || '';
+  links?.querySelectorAll('a').forEach(link => {
+    const target = new URL(link.href, location.href);
+    if (!target.hash && target.pathname.split('/').pop() === here && here) link.setAttribute('aria-current', 'page');
+  });
+  matchMedia('(min-width: 961px)').addEventListener?.('change', event => { if (event.matches) closeMenu(); });
   links?.querySelectorAll('a').forEach(link => link.addEventListener('click',closeMenu));
   document.addEventListener('keydown',event => { if(event.key==='Escape') closeMenu(); });
   document.querySelectorAll('[data-year]').forEach(element => { element.textContent=new Date().getFullYear(); });
