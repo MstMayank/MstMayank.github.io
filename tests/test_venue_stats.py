@@ -103,6 +103,24 @@ class VenueStatsTests(unittest.TestCase):
         self.assertEqual(wankhede['recent']['matches'], 3)
         self.assertEqual(next(v for v in data['venues'] if v['slug'] == 'm-chinnaswamy-stadium')['recent'], None)
 
+    def test_team_stats_results_phases_and_squads(self):
+        first = match()
+        first['info']['players'] = {'Mumbai Indians': ['A', 'B'], 'Delhi Daredevils': ['X', 'Y']}
+        second = match(date='2025-04-03', outcome={'winner': 'Delhi Daredevils', 'by': {'wickets': 3}})
+        second['info']['players'] = {'Mumbai Indians': ['A', 'C'], 'Delhi Daredevils': ['X']}
+        washed = match(date='2025-04-05', outcome={'result': 'no result'})
+        records = [venue_stats.match_record(str(i), m) for i, m in enumerate([first, second, washed])]
+        data = venue_stats.build_teams(records, 'ipl')
+        mi = data['teams']['Mumbai Indians']
+        self.assertEqual(mi['squad'], ['A', 'B', 'C'])
+        season = mi['seasons']['2025']
+        self.assertEqual((season['played'], season['won'], season['lost']), (3, 1, 1))
+        self.assertEqual(season['batting'][0], {'runs': 2 * 216, 'balls': 72, 'wickets': 0, 'innings': 2}, 'no-result matches are left out of phase totals')
+        self.assertEqual(season['bowling'][2]['runs'], 2 * 150)
+        self.assertIn('Delhi Capitals', data['teams'])
+        self.assertEqual(data['matches'][1][5:], ['Delhi Capitals', 'win', '3 wickets'])
+        self.assertEqual(data['matches'][0][2], 'wankhede-stadium')
+
 
 if __name__ == '__main__':
     unittest.main()
