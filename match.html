@@ -55,7 +55,7 @@
   .mx-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
   @media (max-width: 760px) { .mx-cards { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } .mx-list th:nth-child(5), .mx-list td:nth-child(5) { display: none; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
 </head>
 <body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
@@ -99,6 +99,17 @@
   let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
   let matchId = params.get('id') || '';
   const cache = new Map();
+  // Heading: big poster style for section pages, quieter label + name for detail pages (tools.css).
+  function heading(el, detail, eyebrow, titleParts, sub) {
+    if (!detail) { el.className = 'tool-heading'; el.replaceChildren(titleParts[0], document.createElement('br')); const s = document.createElement('span'); s.textContent = titleParts[1]; el.appendChild(s); return; }
+    el.className = 'detail-head';
+    const e = document.createElement('span'); e.className = 'eyebrow'; e.textContent = eyebrow;
+    const t = document.createElement('span'); t.className = 'title';
+    titleParts.forEach(part => t.append(typeof part === 'string' ? part : part));
+    el.replaceChildren(e, t);
+    if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.append(...[].concat(sub)); el.appendChild(s); }
+  }
+  const vs = () => { const em = document.createElement('em'); em.textContent = 'vs'; return em; };
   const COLORS = ['#F6C453', '#7cc4ff'];
   const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
   const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
@@ -226,9 +237,9 @@
     const match = data.matches[matchId];
     $('mx-index').hidden = true; $('mx-detail').hidden = false;
     $('mx-back').href = link({season: row[2]});
-    $('mx-title').replaceChildren(match.teams[0], document.createElement('br'));
-    const span = document.createElement('span'); span.textContent = 'vs ' + match.teams[1]; $('mx-title').appendChild(span);
-    $('mx-status').textContent = idx.label + ' ' + match.season + (match.event ? ' · ' + match.event : '') + ' · ' + when(match.date);
+    heading($('mx-title'), true, idx.label + ' ' + match.season + (match.event ? ' · ' + match.event : '') + ' · ' + when(match.date), [match.teams[0], vs(), match.teams[1]]);
+    $('mx-status').textContent = '';
+    document.querySelector('.tool-pills').hidden = true;
     $('mx-result').textContent = match.result === 'win' ? match.winner + ' won by ' + match.margin : match.result === 'tie' ? 'Match tied' + (match.winner ? ' (' + match.winner + ' won the super over)' : '') : 'No result';
     $('mx-meta').replaceChildren();
     const venue = document.createElement('a'); venue.href = 'venues.html?' + new URLSearchParams(competition === 'ipl' ? {v: match.venueSlug} : {c: competition, v: match.venueSlug}); venue.textContent = match.venue.split(',')[0];
@@ -243,7 +254,8 @@
 
   function showIndex(idx, keepStatus) {
     $('mx-detail').hidden = true; $('mx-index').hidden = false;
-    $('mx-title').innerHTML = idx.label + '<br><span>Match Charts</span>';
+    heading($('mx-title'), false, '', [idx.label, 'Match Charts']);
+    document.querySelector('.tool-pills').hidden = false;
     document.title = idx.label + ' Match Charts: Worm, Manhattan, Win Probability | The Cricket Space';
     const seasons = [...new Set(idx.matches.map(m => m[2]))].sort().reverse();
     if (!$('mx-season').options.length || $('mx-season').dataset.c !== competition) {

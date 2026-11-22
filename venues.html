@@ -48,7 +48,7 @@
   .num { text-align: right; white-space: nowrap; }
   @media (max-width: 760px) { .venue-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
 </head>
 <body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
@@ -114,6 +114,17 @@
   let slug = params.get('v') || '';
   let period = params.get('period') === 'recent' ? 'recent' : 'all';
   const cache = new Map();
+  // Heading: big poster style for section pages, quieter label + name for detail pages (tools.css).
+  function heading(el, detail, eyebrow, titleParts, sub) {
+    if (!detail) { el.className = 'tool-heading'; el.replaceChildren(titleParts[0], document.createElement('br')); const s = document.createElement('span'); s.textContent = titleParts[1]; el.appendChild(s); return; }
+    el.className = 'detail-head';
+    const e = document.createElement('span'); e.className = 'eyebrow'; e.textContent = eyebrow;
+    const t = document.createElement('span'); t.className = 'title';
+    titleParts.forEach(part => t.append(typeof part === 'string' ? part : part));
+    el.replaceChildren(e, t);
+    if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.append(...[].concat(sub)); el.appendChild(s); }
+  }
+  const vs = () => { const em = document.createElement('em'); em.textContent = 'vs'; return em; };
   const phaseNames = ['Powerplay · overs 1–6', 'Middle · overs 7–15', 'Death · overs 16–20'];
   const num = value => value === null || value === undefined ? '—' : Number(value).toLocaleString('en-IN');
   const pct = value => value === null || value === undefined ? '—' : value.toFixed(1) + '%';
@@ -167,7 +178,9 @@
   function renderIndex(data) {
     $('venue-detail').hidden = true;
     $('venue-index').hidden = false;
-    $('venue-title').innerHTML = data.label + '<br><span>Venues</span>';
+    heading($('venue-title'), false, '', [data.label, 'Venues']);
+    document.querySelector('.tool-pills').hidden = false;
+    $('venue-coverage').hidden = false;
     $('venue-status').textContent = data.venues.length + ' grounds · ' + num(data.matches) + ' matches · data to ' + when(data.venues.reduce((a, v) => v.lastMatch > a ? v.lastMatch : a, ''));
     setMeta(data.label + ' Venue Stats and Pitch Reports | The Cricket Space',
       'Ground-by-ground ' + data.label + ' stats: average first-innings score, par scores, chasing record, toss trends and top performers at all ' + data.venues.length + ' venues.',
@@ -193,16 +206,17 @@
     $('venue-index').hidden = true;
     $('venue-detail').hidden = false;
     $('venue-back').href = link({});
-    $('venue-title').innerHTML = '';
-    $('venue-title').append(venue.name.split(',')[0], document.createElement('br'));
-    const span = document.createElement('span'); span.textContent = data.label + ' venue stats'; $('venue-title').appendChild(span);
+    $('venue-coverage').hidden = true;
+    document.querySelector('.tool-pills').hidden = true;
     const recentLabel = 'Last 3 seasons (' + data.recentSeasons[0] + '–' + data.recentSeasons.at(-1) + ')';
     $('venue-period').options[1].textContent = recentLabel;
     $('venue-period').options[1].disabled = !venue.recent;
     if (!venue.recent) period = 'all';
     $('venue-period').value = period;
     const s = period === 'recent' ? venue.recent : venue.all;
-    $('venue-meta').textContent = [venue.city, num(venue.all.matches) + ' ' + data.label + ' matches', venue.seasons[0] + (venue.seasons.length > 1 ? '–' + venue.seasons.at(-1) : '')].filter(Boolean).join(' · ');
+    heading($('venue-title'), true, data.label + ' · Venue report', [venue.name.split(',')[0]],
+      [venue.city, num(venue.all.matches) + ' ' + data.label + ' matches', venue.seasons[0] + (venue.seasons.length > 1 ? '–' + venue.seasons.at(-1) : '')].filter(Boolean).join(' · '));
+    $('venue-meta').hidden = true;
     const others = venue.names.filter(name => name.split(',')[0] !== venue.name.split(',')[0]);
     $('venue-names').hidden = !others.length;
     $('venue-names').textContent = 'Also listed as: ' + others.join('; ');

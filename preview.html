@@ -25,8 +25,9 @@
   .pv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .pv > * { min-width: 0; }
   .pv[hidden], .pv [hidden] { display: none !important; }
-  .pv-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
-  .pv-controls label { min-width: 0; flex: 1 1 200px; }
+  .cricket-tools .pv-controls.tool-filter { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+  .cricket-tools .pv-controls.tool-filter label { min-width: 0; width: auto; max-width: none; flex: none; }
+  .cricket-tools .pv-controls.tool-filter select { width: 100%; max-width: none; min-width: 0; }
   .pv-section h2 { margin: 0 0 6px; }
   .pv-sub { margin: 0 0 14px; font-size: .9rem; color: var(--dim, #9DB8A8); }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
@@ -57,7 +58,7 @@
   .pv-card a { font-weight: 700; }
   @media (max-width: 760px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
 </head>
 <body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
@@ -107,6 +108,17 @@
   const params = new URLSearchParams(location.search);
   let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
   const cache = new Map();
+  // Heading: big poster style for section pages, quieter label + name for detail pages (tools.css).
+  function heading(el, detail, eyebrow, titleParts, sub) {
+    if (!detail) { el.className = 'tool-heading'; el.replaceChildren(titleParts[0], document.createElement('br')); const s = document.createElement('span'); s.textContent = titleParts[1]; el.appendChild(s); return; }
+    el.className = 'detail-head';
+    const e = document.createElement('span'); e.className = 'eyebrow'; e.textContent = eyebrow;
+    const t = document.createElement('span'); t.className = 'title';
+    titleParts.forEach(part => t.append(typeof part === 'string' ? part : part));
+    el.replaceChildren(e, t);
+    if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.append(...[].concat(sub)); el.appendChild(s); }
+  }
+  const vs = () => { const em = document.createElement('em'); em.textContent = 'vs'; return em; };
   const PHASES = ['Powerplay (1–6)', 'Middle (7–15)', 'Death (16–20)'];
   const DEFAULTS = {ipl: ['Mumbai Indians', 'Chennai Super Kings', 'wankhede-stadium'], wpl: ['Mumbai Indians', 'Delhi Capitals', '']};
   const fixed = (v, d = 1) => v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(d);
@@ -301,8 +313,7 @@
     $('pv-body').hidden = false;
     if (a === b) { $('pv-status').textContent = 'Pick two different teams.'; $('pv-body').hidden = true; return; }
     const venueName = venue ? $('pv-venue').selectedOptions[0].textContent.split(' · ')[0] : '';
-    $('pv-title').replaceChildren(a, document.createElement('br'));
-    const span = document.createElement('span'); span.textContent = 'vs ' + b; $('pv-title').appendChild(span);
+    heading($('pv-title'), true, data.teams.label + ' match preview' + (venueName ? ' · ' + venueName : ''), [a, vs(), b]);
     $('pv-status').textContent = data.teams.label + ' · squads from the ' + data.teams.latestSeason + ' season' + (venueName ? ' · at ' + venueName : '');
     headToHead(data, a, b, venue);
     venueSummary(data, venue);
