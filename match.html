@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPL Match Charts: Worm, Manhattan, Win Probability | The Cricket Space</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mstmayank.github.io/match.html">
+<meta name="description" content="Every IPL and WPL match with a worm chart, Manhattan chart, ball-by-ball win probability for the chase, and the top batters and bowlers.">
+<meta name="theme-color" content="#07241A">
+<meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
+<meta property="og:title" content="IPL Match Charts | The Cricket Space">
+<meta property="og:description" content="Worm, Manhattan and win-probability charts for every IPL and WPL match.">
+<meta property="og:url" content="https://mstmayank.github.io/match.html">
+<meta property="og:image" content="https://mstmayank.github.io/og-record-book.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
+  a { color: #ff946f; }
+  p { color: #b7b6af; }
+  label { display: grid; gap: 6px; }
+  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  .mx { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .mx > * { min-width: 0; }
+  .mx[hidden], .mx [hidden] { display: none !important; }
+  .mx-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .mx-controls label { flex: 1 1 200px; min-width: 0; }
+  .cricket-tools .mx .tool-table table { min-width: 0; }
+  .cricket-tools .mx .tool-table :is(th, td) { padding: 11px 14px; }
+  .cricket-tools .tool-table th.num, .num { text-align: right; white-space: nowrap; }
+  .mx-list tbody tr { cursor: pointer; }
+  .mx-list tbody tr:hover { background: #ffffff10; }
+  .mx-list td:nth-child(2) a { font-weight: 700; text-decoration: none; }
+  .mx-result { font-size: 1.15rem; font-weight: 700; color: var(--gold, #F6C453); margin: 6px 0 0; }
+  .mx-meta { margin: 4px 0 0; }
+  .mx-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .mx-card { border: 1px solid var(--line, #ffffff26); border-radius: 16px; padding: 16px 18px; background: #ffffff08; min-width: 0; }
+  .mx-card h3 { margin: 0 0 4px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .mx-card h3 b { color: var(--gold, #F6C453); }
+  .mx-card.second h3 b { color: #7cc4ff; }
+  .mx-card p { margin: 0 0 10px; font-size: .9rem; }
+  .mx-card ul { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; }
+  .mx-card li { display: flex; justify-content: space-between; gap: 10px; font-size: .95rem; }
+  .mx-card li span:last-child { color: var(--dim, #9DB8A8); white-space: nowrap; }
+  .chart { border: 1px solid var(--line, #ffffff26); border-radius: 16px; padding: 16px; background: #ffffff06; }
+  .chart h2 { margin: 0 0 4px; }
+  .chart p { margin: 0 0 10px; font-size: .9rem; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart .axis text { fill: var(--dim, #9DB8A8); font-size: 11px; font-family: Manrope, system-ui, sans-serif; }
+  .chart .axis line, .chart .grid line { stroke: #ffffff1f; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--dim, #9DB8A8); margin-top: 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .mx-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
+  @media (max-width: 760px) { .mx-cards { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } .mx-list th:nth-child(5), .mx-list td:nth-child(5) { display: none; } }
+</style>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+</head>
+<body class="v2 cricket-feel cricket-tools">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
+<a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="/writing.html">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html">Match Preview</a><a href="match.html">Match Charts</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
+<a class="btn d" href="./#contact">Let’s talk</a>
+</div></nav>
+<main class="wrap page tool-page archive-page">
+<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html">Match Preview</a><a href="match.html" aria-current="page">Match Charts</a></nav>
+<h1 class="tool-heading" id="mx-title">Match<br><span>Charts</span></h1>
+<div class="tool-pills" role="group" aria-label="Competition">
+  <button type="button" data-competition="ipl" aria-pressed="true">IPL</button>
+  <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
+</div>
+<p class="tool-count" id="mx-status" role="status">Loading matches…</p>
+
+<section class="mx" id="mx-index" hidden aria-label="All matches">
+  <div class="mx-controls tool-filter">
+    <label>Season<select id="mx-season"></select></label>
+    <label>Team<select id="mx-team"><option value="">All teams</option></select></label>
+  </div>
+  <div class="tool-table"><table class="mx-list"><thead><tr><th scope="col">Date</th><th scope="col">Match</th><th scope="col">Winner</th><th scope="col">Margin</th><th scope="col">Venue</th></tr></thead><tbody id="mx-rows"></tbody></table></div>
+</section>
+
+<section class="mx" id="mx-detail" hidden aria-live="polite">
+  <div><a id="mx-back" href="match.html" style="font-weight:700;text-decoration:none">← All matches</a>
+    <p class="mx-result" id="mx-result"></p><p class="mx-meta" id="mx-meta"></p></div>
+  <div class="mx-cards" id="mx-cards"></div>
+  <section class="chart"><h2>Worm</h2><p>Runs as the overs go by (x-axis: overs). Dots mark wickets.</p><div id="mx-worm"></div><div class="legend" id="mx-worm-legend"></div></section>
+  <section class="chart"><h2>Manhattan</h2><p>Runs in each over. Dots above a bar mark wickets in that over.</p><div id="mx-manhattan"></div><div class="legend" id="mx-manhattan-legend"></div></section>
+  <section class="chart" id="mx-wp-box"><h2>Win probability</h2><p id="mx-wp-sub"></p><div id="mx-wp"></div>
+    <p class="mx-note" id="mx-wp-note"></p></section>
+  <p class="mx-note" id="mx-foot"></p>
+</section>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const params = new URLSearchParams(location.search);
+  let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
+  let matchId = params.get('id') || '';
+  const cache = new Map();
+  const COLORS = ['#F6C453', '#7cc4ff'];
+  const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
+  const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+  const once = (key, make) => { if (!cache.has(key)) cache.set(key, make().catch(e => { cache.delete(key); throw e; })); return cache.get(key); };
+  const index = () => once('index-' + competition, () => json('match-index-' + competition + '.json?v=1'));
+  const season = s => once('season-' + competition + '-' + s, () => json('matches/' + competition + '/' + s + '.json?v=1'));
+  const link = extra => { const q = new URLSearchParams(extra); if (competition !== 'ipl') q.set('c', competition); const t = q.toString(); return 'match.html' + (t ? '?' + t : ''); };
+  const el = (name, attrs = {}, parent) => { const node = document.createElementNS(svgNS, name); for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v); if (parent) parent.appendChild(node); return node; };
+  const tip = (node, text) => { el('title', {}, node).textContent = text; return node; };
+
+  function frame(width, height, xMax, yMax, yLabel, yTicks, yFormat = v => v) {
+    const m = {l: 40, r: 10, t: 10, b: 28};
+    const svg = el('svg', {viewBox: `0 0 ${width} ${height}`, role: 'img'});
+    const x = v => m.l + v / xMax * (width - m.l - m.r);
+    const y = v => height - m.b - v / yMax * (height - m.t - m.b);
+    const grid = el('g', {class: 'grid'}, svg), axis = el('g', {class: 'axis'}, svg);
+    for (const v of yTicks) {
+      el('line', {x1: m.l, x2: width - m.r, y1: y(v), y2: y(v)}, grid);
+      el('text', {x: m.l - 6, y: y(v) + 4, 'text-anchor': 'end'}, axis).textContent = yFormat(v);
+    }
+    for (let o = 0; o <= xMax; o += xMax > 10 ? 5 : 1) el('text', {x: x(o), y: height - 8, 'text-anchor': 'middle'}, axis).textContent = o;
+    return {svg, x, y, m, width, height};
+  }
+
+  // Per innings: cumulative runs by legal ball, runs per over, wickets by over.
+  function series(innings) {
+    const b = innings.balls, points = [[0, 0]], perOver = new Array(20).fill(0), wkts = new Array(20).fill(0), wicketPoints = [];
+    let legal = 0, runs = 0, wickets = 0;
+    for (let i = 0; i < b.length; i += 3) {
+      const over = Math.min(b[i], 19), r = b[i + 1], flags = b[i + 2];
+      runs += r; perOver[over] += r;
+      if (flags & 1) legal++;
+      if (flags & 2) { wickets++; wkts[over]++; wicketPoints.push([legal / 6, runs, wickets]); }
+      points.push([legal / 6, runs, wickets]);
+    }
+    return {points, perOver, wkts, wicketPoints, runs, wickets, legal};
+  }
+
+  function legend(box, innings) {
+    box.replaceChildren(...innings.map((inn, i) => { const s = document.createElement('span'); const k = document.createElement('i'); k.style.background = COLORS[i]; s.append(k, inn.team); return s; }));
+  }
+
+  function worm(match) {
+    const data = match.innings.map(series);
+    const top = Math.max(...data.map(d => d.runs), 50);
+    const yMax = Math.ceil(top / 50) * 50;
+    const f = frame(640, 300, 20, yMax, 'runs', Array.from({length: yMax / 50 + 1}, (_, i) => i * 50));
+    data.forEach((d, i) => {
+      el('polyline', {points: d.points.map(([o, r]) => f.x(o) + ',' + f.y(r)).join(' '), fill: 'none', stroke: COLORS[i], 'stroke-width': 3, 'stroke-linejoin': 'round'}, f.svg);
+      d.wicketPoints.forEach(([o, r, w]) => tip(el('circle', {cx: f.x(o), cy: f.y(r), r: 5, fill: '#10100f', stroke: COLORS[i], 'stroke-width': 2.5}, f.svg), match.innings[i].team + ': ' + r + '/' + w + ' after ' + Math.floor(o) + '.' + Math.round((o % 1) * 6) + ' overs'));
+    });
+    f.svg.setAttribute('aria-label', 'Worm chart: ' + match.innings.map((inn, i) => inn.team + ' ' + data[i].runs + '/' + data[i].wickets).join(', '));
+    $('mx-worm').replaceChildren(f.svg); legend($('mx-worm-legend'), match.innings);
+  }
+
+  function manhattan(match) {
+    const data = match.innings.map(series);
+    const top = Math.max(...data.flatMap(d => d.perOver), 12);
+    const yMax = Math.ceil(top / 6) * 6;
+    const f = frame(640, 280, 20, yMax, 'runs', Array.from({length: yMax / 6 + 1}, (_, i) => i * 6));
+    const slot = (f.x(1) - f.x(0)), bar = slot / (data.length + 0.8);
+    data.forEach((d, i) => d.perOver.forEach((runs, over) => {
+      const playedOver = match.innings[i].balls.some((_, k) => k % 3 === 0 && match.innings[i].balls[k] === over);
+      if (!playedOver) return;
+      const x = f.x(over) + slot * 0.1 + i * bar;
+      tip(el('rect', {x, y: f.y(runs), width: bar * 0.92, height: Math.max(0, f.y(0) - f.y(runs)), rx: 2, fill: COLORS[i]}, f.svg), match.innings[i].team + ' over ' + (over + 1) + ': ' + runs + ' runs' + (d.wkts[over] ? ', ' + d.wkts[over] + ' wicket' + (d.wkts[over] > 1 ? 's' : '') : ''));
+      for (let w = 0; w < d.wkts[over]; w++) el('circle', {cx: x + bar * 0.46, cy: f.y(runs) - 7 - w * 9, r: 3.5, fill: '#ef4444'}, f.svg);
+    }));
+    f.svg.setAttribute('aria-label', 'Manhattan chart of runs per over for ' + match.innings.map(inn => inn.team).join(' and '));
+    $('mx-manhattan').replaceChildren(f.svg); legend($('mx-manhattan-legend'), match.innings);
+  }
+
+  function probability(coef, need, left, wih) {
+    if (need <= 0) return 1;
+    if (left <= 0 || wih <= 0) return 0;
+    const rate = Math.min(36, need / left * 6), l = left / 120;
+    const z = coef[0] + coef[1] * rate + coef[2] * wih / 10 + coef[3] * l + coef[4] * rate * l;
+    return 1 / (1 + Math.exp(-Math.max(-30, Math.min(30, z))));
+  }
+
+  function winProbability(match, model) {
+    const chase = match.innings[1];
+    const usable = chase && chase.target && !match.reduced && (chase.targetOvers || 20) === 20;
+    $('mx-wp-box').hidden = !usable;
+    if (!usable) return;
+    const b = chase.balls, pts = [];
+    let legal = 0, runs = 0, wickets = 0;
+    for (let i = 0; i < b.length; i += 3) {
+      pts.push([legal / 6, probability(model.coef, chase.target - runs, 120 - legal, 10 - wickets)]);
+      runs += b[i + 1]; if (b[i + 2] & 1) legal++; if (b[i + 2] & 2) wickets++;
+    }
+    const won = match.winner === chase.team && match.result === 'win';
+    pts.push([legal / 6, match.result === 'tie' ? 0.5 : won ? 1 : 0]);
+    const f = frame(640, 280, 20, 100, '%', [0, 25, 50, 75, 100], v => v + '%');
+    el('line', {x1: f.x(0), x2: f.x(20), y1: f.y(50), y2: f.y(50), stroke: '#ffffff55', 'stroke-dasharray': '4 4'}, f.svg);
+    el('polyline', {points: pts.map(([o, p]) => f.x(o) + ',' + f.y(p * 100)).join(' '), fill: 'none', stroke: COLORS[1], 'stroke-width': 3, 'stroke-linejoin': 'round'}, f.svg);
+    const turning = pts.reduce((best, p, i) => i && Math.abs(p[1] - pts[i - 1][1]) > best.swing ? {swing: Math.abs(p[1] - pts[i - 1][1]), at: p, before: pts[i - 1]} : best, {swing: 0});
+    if (turning.at) tip(el('circle', {cx: f.x(turning.at[0]), cy: f.y(turning.at[1] * 100), r: 6, fill: '#ef4444'}, f.svg), 'Biggest swing: ' + Math.round(turning.before[1] * 100) + '% → ' + Math.round(turning.at[1] * 100) + '% around over ' + Math.ceil(turning.at[0] || 1));
+    f.svg.setAttribute('aria-label', chase.team + ' win probability: starts at ' + Math.round(pts[0][1] * 100) + '%, ends at ' + Math.round(pts.at(-1)[1] * 100) + '%');
+    $('mx-wp').replaceChildren(f.svg);
+    $('mx-wp-sub').textContent = 'Chance of ' + chase.team + ' chasing ' + chase.target + ', before every ball. The red dot marks the biggest single-ball swing.';
+    $('mx-wp-note').textContent = 'A simple model: required rate, wickets in hand and balls left, fitted on ' + model.samples.toLocaleString('en-IN') + ' chase balls from completed ' + competition.toUpperCase() + ' matches. It ignores who is batting, the ground and conditions, so treat it as a guide. Not shown for rain-reduced matches.';
+  }
+
+  function cards(match) {
+    $('mx-cards').replaceChildren(...match.innings.map((inn, i) => {
+      const d = series(inn);
+      const card = document.createElement('article'); card.className = 'mx-card' + (i ? ' second' : '');
+      const h = document.createElement('h3'); const name = document.createElement('span'); name.textContent = inn.team;
+      const score = document.createElement('b'); score.textContent = d.runs + '/' + d.wickets + ' (' + Math.floor(d.legal / 6) + (d.legal % 6 ? '.' + d.legal % 6 : '') + ' ov)';
+      h.append(name, score);
+      const sub = document.createElement('p'); sub.textContent = inn.target ? 'Target ' + inn.target + (inn.targetOvers && inn.targetOvers < 20 ? ' in ' + inn.targetOvers + ' overs' : '') : 'Batting first';
+      const list = (rows, fmt) => { const ul = document.createElement('ul'); rows.forEach(r => { const li = document.createElement('li'); const a = document.createElement('span'); const b2 = document.createElement('span'); [a.textContent, b2.textContent] = fmt(r); li.append(a, b2); ul.appendChild(li); }); return ul; };
+      card.append(h, sub,
+        list(inn.batters, ([n, r, bl, out]) => [n, r + (out ? '' : '*') + ' (' + bl + ')']),
+        list(inn.bowlers, ([n, bl, r, w]) => [n, w + '/' + r + ' (' + Math.floor(bl / 6) + (bl % 6 ? '.' + bl % 6 : '') + ')']));
+      return card;
+    }));
+  }
+
+  async function showMatch(idx) {
+    const row = idx.matches.find(m => m[0] === matchId);
+    if (!row) { $('mx-status').textContent = 'That match is not in the ' + idx.label + ' data. Showing all matches.'; matchId = ''; return showIndex(idx, true); }
+    const data = await season(row[2]);
+    const match = data.matches[matchId];
+    $('mx-index').hidden = true; $('mx-detail').hidden = false;
+    $('mx-back').href = link({season: row[2]});
+    $('mx-title').replaceChildren(match.teams[0], document.createElement('br'));
+    const span = document.createElement('span'); span.textContent = 'vs ' + match.teams[1]; $('mx-title').appendChild(span);
+    $('mx-status').textContent = idx.label + ' ' + match.season + (match.event ? ' · ' + match.event : '') + ' · ' + when(match.date);
+    $('mx-result').textContent = match.result === 'win' ? match.winner + ' won by ' + match.margin : match.result === 'tie' ? 'Match tied' + (match.winner ? ' (' + match.winner + ' won the super over)' : '') : 'No result';
+    $('mx-meta').replaceChildren();
+    const venue = document.createElement('a'); venue.href = 'venues.html?' + new URLSearchParams(competition === 'ipl' ? {v: match.venueSlug} : {c: competition, v: match.venueSlug}); venue.textContent = match.venue.split(',')[0];
+    $('mx-meta').append(venue, (match.city ? ', ' + match.city : '') + (match.toss[0] ? ' · ' + match.toss[0] + ' won the toss and chose to ' + match.toss[1] : ''));
+    cards(match); worm(match); manhattan(match); winProbability(match, idx.winModel);
+    $('mx-foot').textContent = 'Source: Cricsheet ball-by-ball data. Scorecards show the top 4 batters and top 3 bowlers. Super overs are not charted.';
+    const title = match.teams[0] + ' vs ' + match.teams[1] + ', ' + idx.label + ' ' + match.season + ': worm, Manhattan, win probability | The Cricket Space';
+    document.title = title;
+    document.querySelector('link[rel="canonical"]').href = 'https://mstmayank.github.io/' + link({id: matchId});
+    document.querySelector('meta[name="description"]').content = match.teams[0] + ' vs ' + match.teams[1] + ' (' + when(match.date) + '): ' + $('mx-result').textContent + '. Worm, Manhattan and ball-by-ball win-probability charts.';
+  }
+
+  function showIndex(idx, keepStatus) {
+    $('mx-detail').hidden = true; $('mx-index').hidden = false;
+    $('mx-title').innerHTML = idx.label + '<br><span>Match Charts</span>';
+    document.title = idx.label + ' Match Charts: Worm, Manhattan, Win Probability | The Cricket Space';
+    const seasons = [...new Set(idx.matches.map(m => m[2]))].sort().reverse();
+    if (!$('mx-season').options.length || $('mx-season').dataset.c !== competition) {
+      $('mx-season').replaceChildren(...seasons.map(s => new Option(s, s)));
+      $('mx-season').dataset.c = competition;
+      $('mx-season').value = seasons.includes(params.get('season')) ? params.get('season') : seasons[0];
+    }
+    const s = $('mx-season').value;
+    const teams = [...new Set(idx.matches.filter(m => m[2] === s).flatMap(m => [m[3], m[4]]))].sort();
+    const team = teams.includes($('mx-team').value) ? $('mx-team').value : '';
+    $('mx-team').replaceChildren(new Option('All teams', ''), ...teams.map(t => new Option(t, t)));
+    $('mx-team').value = team;
+    const rows = idx.matches.filter(m => m[2] === s && (!team || m[3] === team || m[4] === team));
+    if (!keepStatus) $('mx-status').textContent = rows.length + ' matches in ' + s + '. Pick one for its charts.';
+    $('mx-rows').replaceChildren(...rows.map(m => {
+      const tr = document.createElement('tr');
+      const a = document.createElement('a'); a.href = link({id: m[0]}); a.textContent = m[3] + ' v ' + m[4];
+      const cellsText = [when(m[1]), null, m[6] === 'win' ? m[5] : m[6] === 'tie' ? 'Tie' : 'No result', m[7] || '—', m[8].split(',')[0]];
+      cellsText.forEach((text, i) => { const td = document.createElement('td'); if (i === 1) td.appendChild(a); else td.textContent = text; tr.appendChild(td); });
+      tr.addEventListener('click', event => { if (event.target.tagName !== 'A') open(m[0]); });
+      return tr;
+    }));
+  }
+
+  function open(id) { matchId = id; history.pushState(null, '', link(id ? {id} : {season: $('mx-season').value})); render(); window.scrollTo({top: 0}); }
+
+  async function render() {
+    document.querySelectorAll('[data-competition]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.competition === competition)));
+    try {
+      const idx = await index();
+      if (matchId) await showMatch(idx); else showIndex(idx);
+    } catch (error) {
+      $('mx-status').textContent = 'Match data could not load. Refresh the page to try again.';
+    }
+  }
+
+  document.querySelectorAll('[data-competition]').forEach(b => b.addEventListener('click', () => { if (b.dataset.competition === competition) return; competition = b.dataset.competition; params.delete('season'); open(''); }));
+  $('mx-season').addEventListener('change', () => { history.replaceState(null, '', link({season: $('mx-season').value})); render(); });
+  $('mx-team').addEventListener('change', render);
+  window.addEventListener('popstate', () => { const p = new URLSearchParams(location.search); competition = p.get('c') === 'wpl' ? 'wpl' : 'ipl'; matchId = p.get('id') || ''; render(); });
+  render();
+})();
+</script>
+<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPL Match Preview: Stats, Venue, Key Battles | The Cricket Space</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mstmayank.github.io/preview.html">
+<meta name="description" content="Pick two IPL or WPL teams and a ground for a stats preview: head-to-head record, venue par scores, phase strengths, key player battles and who is in form.">
+<meta name="theme-color" content="#07241A">
+<meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
+<meta property="og:title" content="IPL Match Preview: Stats, Venue, Key Battles | The Cricket Space">
+<meta property="og:description" content="Head-to-head record, venue par scores, phase strengths, key player battles and who is in form, for any IPL or WPL fixture.">
+<meta property="og:url" content="https://mstmayank.github.io/preview.html">
+<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
+  a { color: #ff946f; }
+  p { color: #b7b6af; }
+  label { display: grid; gap: 6px; }
+  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  .pv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .pv > * { min-width: 0; }
+  .pv[hidden], .pv [hidden] { display: none !important; }
+  .pv-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .pv-controls label { min-width: 0; flex: 1 1 200px; }
+  .pv-section h2 { margin: 0 0 6px; }
+  .pv-sub { margin: 0 0 14px; font-size: .9rem; color: var(--dim, #9DB8A8); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .tile { border: 1px solid var(--line, #ffffff26); border-radius: 14px; padding: 14px 16px; min-width: 0; background: #ffffff08; }
+  .tile b { display: block; font-size: clamp(1.4rem, 4vw, 1.9rem); line-height: 1.1; color: var(--gold, #F6C453); }
+  .tile span { display: block; font-size: .85rem; color: var(--dim, #9DB8A8); margin-top: 4px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .cricket-tools .pv .tool-table table { min-width: 0; }
+  .cricket-tools .pv .tool-table :is(th, td) { padding: 12px 14px; }
+  .cricket-tools .tool-table th.num, .num { text-align: right; white-space: nowrap; }
+  .better { color: var(--green, #22c55e); }
+  .worse { color: var(--red, #ef4444); }
+  body.cricket-tools .pv .tool-table td.num { color: var(--chalk, #F2F5EF); }
+  body.cricket-tools .pv .tool-table td.num.better { color: var(--green, #22c55e); }
+  body.cricket-tools .pv .tool-table td.num.worse { color: var(--red, #ef4444); }
+  .battles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .battle { border: 1px solid var(--line, #ffffff26); border-radius: 14px; padding: 16px; background: #ffffff08; display: grid; gap: 6px; min-width: 0; }
+  .battle h3 { margin: 0; font-size: 1.05rem; }
+  .battle .verdict { font-weight: 700; color: var(--gold, #F6C453); }
+  .battle p { margin: 0; }
+  .form-list { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+  .form-list small { font-weight: 700; }
+  .pv-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
+  .pv-share { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .pv-share button { cursor: pointer; font-weight: 700; }
+  .pv-card { display: grid; gap: 12px; justify-items: start; }
+  .pv-card img { width: min(360px, 100%); height: auto; border-radius: 14px; border: 1px solid var(--line, #ffffff26); }
+  .pv-card a { font-weight: 700; }
+  @media (max-width: 760px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
+</style>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+</head>
+<body class="v2 cricket-feel cricket-tools">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
+<a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="/writing.html">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html">Match Preview</a><a href="match.html">Match Charts</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
+<a class="btn d" href="./#contact">Let’s talk</a>
+</div></nav>
+<main class="wrap page tool-page archive-page">
+<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="preview.html" aria-current="page">Match Preview</a><a href="match.html">Match Charts</a></nav>
+<h1 class="tool-heading" id="pv-title">Match<br><span>Preview</span></h1>
+<div class="tool-pills" role="group" aria-label="Competition">
+  <button type="button" data-competition="ipl" aria-pressed="true">IPL</button>
+  <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
+</div>
+<div class="pv">
+  <div class="pv-controls tool-filter">
+    <label>Team 1<select id="pv-a"></select></label>
+    <label>Team 2<select id="pv-b"></select></label>
+    <label>Venue<select id="pv-venue"><option value="">Any venue</option></select></label>
+  </div>
+  <p class="tool-count" id="pv-status" role="status">Loading match data…</p>
+  <div class="pv" id="pv-body" hidden>
+    <div class="pv-share"><button type="button" id="pv-share">Share link ↗</button><button type="button" id="pv-card">Make image card 🖼</button><span id="pv-share-status" role="status"></span></div>
+    <div class="pv-card" id="pv-card-box" hidden>
+      <img id="pv-card-img" alt="Match preview image card">
+      <div class="pv-share"><a id="pv-card-download" download="match-preview.png">Download PNG ↓</a><button type="button" id="pv-card-native" hidden>Share image ↗</button><button type="button" id="pv-card-close">Close ×</button></div>
+    </div>
+    <section class="pv-section"><h2>Head to head</h2><p class="pv-sub" id="pv-h2h-sub"></p><div class="tiles" id="pv-h2h"></div>
+      <div class="tool-table" style="margin-top:14px"><table><thead><tr><th scope="col">Date</th><th scope="col">Winner</th><th scope="col">Margin</th><th scope="col">Venue</th></tr></thead><tbody id="pv-recent"></tbody></table></div></section>
+    <section class="pv-section" id="pv-venue-section"><h2 id="pv-venue-title">Venue</h2><p class="pv-sub" id="pv-venue-sub"></p><div class="tiles" id="pv-venue-tiles"></div></section>
+    <section class="pv-section"><h2>Key battles</h2><p class="pv-sub">Current-squad match-ups with the clearest edge in ball-by-ball history (30+ balls), ranked like the Player Battle match-up finder.</p><div class="battles" id="pv-battles"></div></section>
+    <section class="pv-section"><h2>Phase strengths</h2><p class="pv-sub" id="pv-phase-sub"></p>
+      <div class="pv-grid">
+        <div class="tool-table"><table><thead><tr><th scope="col">Batting run rate</th><th scope="col" class="num" id="pv-bat-a"></th><th scope="col" class="num" id="pv-bat-b"></th><th scope="col" class="num">League</th></tr></thead><tbody id="pv-bat"></tbody></table></div>
+        <div class="tool-table"><table><thead><tr><th scope="col">Bowling economy</th><th scope="col" class="num" id="pv-bowl-a"></th><th scope="col" class="num" id="pv-bowl-b"></th><th scope="col" class="num">League</th></tr></thead><tbody id="pv-bowl"></tbody></table></div>
+      </div><p class="pv-note">Green = better than the league average for that phase, red = worse. Rain-reduced and no-result matches are left out.</p></section>
+    <section class="pv-section"><h2>In form</h2><p class="pv-sub">From each squad: most runs and wickets over their last 10 matches, with their form badge.</p><div class="pv-grid" id="pv-form"></div></section>
+    <p class="pv-note" id="pv-foot"></p>
+  </div>
+</div>
+</main>
+<script src="matchup-core.js?v=1"></script>
+<script src="form-core.js?v=1"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
+  const cache = new Map();
+  const PHASES = ['Powerplay (1–6)', 'Middle (7–15)', 'Death (16–20)'];
+  const DEFAULTS = {ipl: ['Mumbai Indians', 'Chennai Super Kings', 'wankhede-stadium'], wpl: ['Mumbai Indians', 'Delhi Capitals', '']};
+  const fixed = (v, d = 1) => v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(d);
+  const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+  const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
+
+  function load(key) {
+    if (!cache.has(key)) cache.set(key, Promise.all([json('team-stats-' + key + '.json?v=1'), json('venue-stats-' + key + '.json?v=1'), json('battle-' + key + '.json')])
+      .then(([teams, venues, battle]) => ({teams, venues, battle})).catch(error => { cache.delete(key); throw error; }));
+    return cache.get(key);
+  }
+
+  function cells(tbody, rows) {
+    tbody.replaceChildren(...rows.map(values => {
+      const tr = document.createElement('tr');
+      values.forEach(value => {
+        const td = document.createElement('td');
+        if (value && typeof value === 'object') { td.textContent = value.text; td.className = value.cls || ''; }
+        else td.textContent = value;
+        tr.appendChild(td);
+      });
+      return tr;
+    }));
+    if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 4; td.textContent = 'No matches yet.'; tr.appendChild(td); tbody.appendChild(tr); }
+  }
+
+  function tiles(box, items) {
+    box.replaceChildren(...items.map(([value, label]) => {
+      const tile = document.createElement('div'); tile.className = 'tile';
+      const b = document.createElement('b'); b.textContent = value;
+      const s = document.createElement('span'); s.textContent = label;
+      tile.append(b, s); return tile;
+    }));
+  }
+
+  function fillSelects(data) {
+    const current = Object.entries(data.teams.teams).filter(([, t]) => t.lastSeason === data.teams.latestSeason).map(([name]) => name).sort();
+    const want = [params.get('a'), params.get('b')];
+    const defaults = DEFAULTS[competition];
+    [$('pv-a'), $('pv-b')].forEach((select, i) => {
+      select.replaceChildren(...current.map(name => new Option(name, name)));
+      const pick = [want[i], defaults[i], current[i]].find(name => name && current.includes(name) && (i === 0 || name !== $('pv-a').value)) || current.find(name => name !== $('pv-a').value);
+      select.value = pick;
+    });
+    const venues = [...data.venues.venues].sort((a, b) => ((b.recent?.matches || 0) - (a.recent?.matches || 0)) || b.all.matches - a.all.matches);
+    $('pv-venue').replaceChildren(new Option('Any venue', ''), ...venues.map(v => new Option(v.name.split(',')[0] + (v.city ? ' · ' + v.city : ''), v.slug)));
+    const venue = params.has('venue') ? params.get('venue') : defaults[2];
+    $('pv-venue').value = venues.some(v => v.slug === venue) ? venue : '';
+  }
+
+  function headToHead(data, a, b, venue) {
+    const rows = data.teams.matches.filter(m => (m[3] === a && m[4] === b) || (m[3] === b && m[4] === a));
+    const seasons = [...new Set(data.teams.matches.map(m => m[1]))].sort().slice(-3);
+    const count = list => ({a: list.filter(m => m[5] === a && m[6] === 'win').length, b: list.filter(m => m[5] === b && m[6] === 'win').length, other: list.filter(m => m[6] !== 'win').length, n: list.length});
+    const all = count(rows), recent = count(rows.filter(m => seasons.includes(m[1]))), here = venue ? count(rows.filter(m => m[2] === venue)) : null;
+    const line = c => c.n ? c.a + '–' + c.b + (c.other ? ' (' + c.other + ' tied/NR)' : '') : '—';
+    $('pv-h2h-sub').textContent = 'Wins for ' + a + ' – ' + b + '.';
+    tiles($('pv-h2h'), [[line(all), 'All matches (' + all.n + ')'], [line(recent), 'Last 3 seasons (' + recent.n + ')'], ...(here ? [[line(here), 'At this venue (' + here.n + ')']] : [])]);
+    const venueName = slug => (data.venues.venues.find(v => v.slug === slug)?.name || slug).split(',')[0];
+    cells($('pv-recent'), rows.slice(-5).reverse().map(m => [when(m[0]), m[6] === 'win' ? m[5] : m[6] === 'tie' ? 'Tie' + (m[5] ? ' (' + m[5] + ' won super over)' : '') : 'No result', m[7] || '—', venueName(m[2])]));
+  }
+
+  function venueSummary(data, slug) {
+    const venue = data.venues.venues.find(v => v.slug === slug);
+    $('pv-venue-section').hidden = !venue;
+    if (!venue) return;
+    const s = venue.recent && venue.recent.counted >= 5 ? venue.recent : venue.all;
+    const period = s === venue.recent ? 'last 3 seasons, ' + s.counted + ' matches' : 'all seasons, ' + s.counted + ' matches';
+    $('pv-venue-title').textContent = venue.name.split(',')[0];
+    $('pv-venue-sub').innerHTML = '';
+    $('pv-venue-sub').append((venue.city ? venue.city + ' · ' : '') + period + ' · ');
+    const link = document.createElement('a'); link.href = 'venues.html?' + new URLSearchParams(competition === 'ipl' ? {v: slug} : {c: competition, v: slug}); link.textContent = 'Full venue report ↗';
+    $('pv-venue-sub').appendChild(link);
+    tiles($('pv-venue-tiles'), [
+      [fixed(s.firstInnings.average, 0), 'Average 1st-innings score'],
+      [s.par['6'].runs === null ? '—' : fixed(s.par['6'].runs, 0) + '/' + fixed(s.par['6'].wickets, 0), 'Par after 6 overs'],
+      [s.results.chaseWinPct === null ? '—' : fixed(s.results.chaseWinPct) + '%', 'Chasing team wins'],
+      [s.toss.fieldFirstPct === null ? '—' : fixed(s.toss.fieldFirstPct) + '%', 'Toss winners fielding first']
+    ]);
+  }
+
+  function phases(data, a, b) {
+    const seasons = [...new Set(data.teams.matches.map(m => m[1]))].sort().slice(-2);
+    const total = (name, key) => [0, 1, 2].map(i => seasons.reduce((acc, season) => {
+      const cell = data.teams.teams[name]?.seasons[season]?.[key][i];
+      if (cell) { acc.runs += cell.runs; acc.balls += cell.balls; }
+      return acc;
+    }, {runs: 0, balls: 0}));
+    const league = [0, 1, 2].map(i => Object.keys(data.teams.teams).reduce((acc, name) => {
+      for (const season of seasons) { const c = data.teams.teams[name].seasons[season]?.batting[i]; if (c) { acc.runs += c.runs; acc.balls += c.balls; } }
+      return acc;
+    }, {runs: 0, balls: 0}));
+    const rate = x => x.balls ? x.runs / x.balls * 6 : null;
+    $('pv-phase-sub').textContent = 'Seasons ' + seasons.join(' and ') + ', runs per over.';
+    for (const [key, body, higherBetter] of [['batting', 'pv-bat', true], ['bowling', 'pv-bowl', false]]) {
+      const ta = total(a, key), tb = total(b, key);
+      $(key === 'batting' ? 'pv-bat-a' : 'pv-bowl-a').textContent = a;
+      $(key === 'batting' ? 'pv-bat-b' : 'pv-bowl-b').textContent = b;
+      cells($(body), PHASES.map((label, i) => {
+        const avg = rate(league[i]);
+        const mark = value => {
+          if (value === null || avg === null) return {text: '—', cls: 'num'};
+          const better = higherBetter ? value > avg * 1.03 : value < avg * 0.97;
+          const worse = higherBetter ? value < avg * 0.97 : value > avg * 1.03;
+          return {text: fixed(value, 2), cls: 'num' + (better ? ' better' : worse ? ' worse' : '')};
+        };
+        return [label, mark(rate(ta[i])), mark(rate(tb[i])), {text: fixed(avg, 2), cls: 'num'}];
+      }));
+    }
+  }
+
+  function squadIds(data, name, role) {
+    const battle = data.battle;
+    const ids = (data.teams.teams[name]?.squad || []).map(player => battle.players.indexOf(player)).filter(id => id >= 0);
+    const col = role === 'bowling' ? 11 : 5, who = role === 'bowling' ? 2 : 1;
+    const volume = new Map();
+    for (const row of battle.rows) if (ids.includes(row[who])) volume.set(row[who], (volume.get(row[who]) || 0) + row[col]);
+    return ids.filter(id => (volume.get(id) || 0) > 0).sort((x, y) => volume.get(y) - volume.get(x)).slice(0, 8);
+  }
+
+  function battles(data, a, b) {
+    const battle = data.battle;
+    const found = [];
+    for (const [batSide, bowlSide] of [[a, b], [b, a]]) {
+      const bowlers = new Set(squadIds(data, bowlSide, 'bowling'));
+      for (const batter of squadIds(data, batSide, 'batting')) {
+        const ranked = window.TCSMatchups.rankMatchups(battle.rows, batter, 'batting', {minBalls: 30});
+        for (const item of ranked?.opponents || []) if (bowlers.has(item.id)) found.push({batter, bowler: item.id, batSide, bowlSide, ...item});
+      }
+    }
+    found.sort((x, y) => Math.abs(y.score) - Math.abs(x.score));
+    const picked = [];
+    for (const item of found) {
+      if (picked.length === 3) break;
+      if (picked.some(p => p.batter === item.batter || p.bowler === item.bowler)) continue;
+      picked.push(item);
+    }
+    $('pv-battles').replaceChildren(...picked.map(item => {
+      const card = document.createElement('article'); card.className = 'battle';
+      const h = document.createElement('h3'); h.textContent = battle.players[item.batter] + ' vs ' + battle.players[item.bowler];
+      const v = document.createElement('p'); v.className = 'verdict'; v.textContent = item.score > 0 ? battle.players[item.bowler] + ' has the edge' : battle.players[item.batter] + ' has the edge';
+      const s = document.createElement('p'); s.textContent = item.runs + ' runs off ' + item.balls + ' balls · SR ' + fixed(item.strikeRate) + ' · ' + (item.wickets ? 'out ' + item.wickets + ' time' + (item.wickets === 1 ? '' : 's') : 'never out');
+      const link = document.createElement('a'); link.href = 'player-battle.html?' + new URLSearchParams({competition, first: battle.players[item.batter], second: battle.players[item.bowler]}); link.textContent = 'Full head to head ↗';
+      card.append(h, v, s, link); return card;
+    }));
+    if (!picked.length) { const p = document.createElement('p'); p.textContent = 'No current-squad match-up has 30+ balls yet.'; $('pv-battles').appendChild(p); }
+  }
+
+  function inForm(data, a, b) {
+    const battle = data.battle;
+    $('pv-form').replaceChildren(...[a, b].map(name => {
+      const box = document.createElement('div');
+      const h = document.createElement('h3'); h.textContent = name; box.appendChild(h);
+      for (const role of ['batting', 'bowling']) {
+        const list = squadIds(data, name, role).map(id => ({id, ...window.TCSForm.form(battle, id, role)}))
+          .filter(p => p.list.length)
+          .sort(role === 'bowling' ? (x, y) => y.recent.wickets - x.recent.wickets : (x, y) => y.recent.runs - x.recent.runs).slice(0, 3);
+        const ol = document.createElement('ol'); ol.className = 'form-list';
+        for (const p of list) {
+          const li = document.createElement('li');
+          const badge = document.createElement('small'); badge.className = p.badge.key === 'up' ? 'better' : p.badge.key === 'down' ? 'worse' : '';
+          badge.textContent = ' · ' + p.badge.label;
+          li.append(battle.players[p.id] + ' — ' + (role === 'bowling' ? p.recent.wickets + ' wkts, econ ' + fixed(p.recent.economy, 2) : p.recent.runs + ' runs, SR ' + fixed(p.recent.strikeRate)) + ' in last ' + p.list.length, badge);
+          ol.appendChild(li);
+        }
+        const label = document.createElement('p'); label.className = 'pv-sub'; label.textContent = role === 'bowling' ? 'Bowlers' : 'Batters';
+        box.append(label, ol);
+      }
+      return box;
+    }));
+  }
+
+  function setMeta(a, b, venueName) {
+    const title = a + ' vs ' + b + ' Preview: Stats, Venue, Key Battles | The Cricket Space';
+    const description = a + ' vs ' + b + (venueName ? ' at ' + venueName : '') + ': head-to-head record, venue par scores, phase strengths, key player battles and who is in form.';
+    document.title = title;
+    document.querySelector('meta[name="description"]').content = description;
+    document.querySelector('meta[property="og:title"]').content = title;
+    document.querySelector('meta[property="og:description"]').content = description;
+  }
+
+  function link() {
+    const query = new URLSearchParams({a: $('pv-a').value, b: $('pv-b').value});
+    if ($('pv-venue').value) query.set('venue', $('pv-venue').value); else query.set('venue', '');
+    if (competition !== 'ipl') query.set('c', competition);
+    return 'preview.html?' + query;
+  }
+
+  function render(data) {
+    $('pv-card-box').hidden = true;
+    const a = $('pv-a').value, b = $('pv-b').value, venue = $('pv-venue').value;
+    $('pv-body').hidden = false;
+    if (a === b) { $('pv-status').textContent = 'Pick two different teams.'; $('pv-body').hidden = true; return; }
+    const venueName = venue ? $('pv-venue').selectedOptions[0].textContent.split(' · ')[0] : '';
+    $('pv-title').replaceChildren(a, document.createElement('br'));
+    const span = document.createElement('span'); span.textContent = 'vs ' + b; $('pv-title').appendChild(span);
+    $('pv-status').textContent = data.teams.label + ' · squads from the ' + data.teams.latestSeason + ' season' + (venueName ? ' · at ' + venueName : '');
+    headToHead(data, a, b, venue);
+    venueSummary(data, venue);
+    battles(data, a, b);
+    phases(data, a, b);
+    inForm(data, a, b);
+    $('pv-foot').textContent = 'Source: Cricsheet ball-by-ball data. Squads are the players who appeared for each team in ' + data.teams.latestSeason + '. Updated ' + when(data.teams.generated) + '.';
+    setMeta(a, b, venueName);
+    history.replaceState(null, '', link());
+  }
+
+  async function start() {
+    document.querySelectorAll('[data-competition]').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.competition === competition)));
+    $('pv-status').textContent = 'Loading match data…';
+    $('pv-body').hidden = true;
+    try {
+      const data = await load(competition);
+      fillSelects(data);
+      render(data);
+    } catch (error) {
+      $('pv-status').textContent = 'Match data could not load. Refresh the page to try again.';
+    }
+  }
+
+  for (const id of ['pv-a', 'pv-b', 'pv-venue']) $(id).addEventListener('change', () => load(competition).then(render));
+  document.querySelectorAll('[data-competition]').forEach(btn => btn.addEventListener('click', () => {
+    if (btn.dataset.competition === competition) return;
+    competition = btn.dataset.competition;
+    for (const key of ['a', 'b', 'venue']) params.delete(key);
+    start();
+  }));
+  $('pv-share').addEventListener('click', async () => {
+    const url = new URL(link(), location.href).href;
+    try {
+      if (navigator.share) { await navigator.share({title: document.title, url}); return; }
+      await navigator.clipboard.writeText(url);
+      $('pv-share-status').textContent = 'Link copied.';
+    } catch (error) {
+      if (error.name !== 'AbortError') $('pv-share-status').textContent = url;
+    }
+  });
+
+  // Story-size image card (1080x1920), drawn from what the page is showing.
+  let cardUrl = '', cardBlob = null;
+  async function drawCard() {
+    const W = 1080, H = 1920, P = 72;
+    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    try { await Promise.all(['900 80px "Big Shoulders Display"', '700 32px Manrope', '400 28px Manrope'].map(font => document.fonts.load(font))); } catch (error) {}
+    const display = (size, weight = 900) => `${weight} ${size}px "Big Shoulders Display", Impact, sans-serif`;
+    const body = (size, weight = 600) => `${weight} ${size}px Manrope, system-ui, sans-serif`;
+    const gold = '#F6C453', chalk = '#F2F5EF', dim = '#9DB8A8', green = '#22c55e', red = '#ef4444';
+    const fit = (text, font, max) => { ctx.font = font; let t = text; while (ctx.measureText(t).width > max && t.length > 3) t = t.slice(0, -2); return t === text ? t : t.trimEnd() + '…'; };
+    const write = (text, x, y, font, color, max = W - 2 * P, align = 'left') => { ctx.textAlign = align; ctx.fillStyle = color; ctx.fillText(fit(text, font, max), x, y); };
+    const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#0C3022'); bg.addColorStop(1, '#07140f');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#ffffff14'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(W - 40, 260, 300, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(W - 40, 260, 190, 0, Math.PI * 2); ctx.stroke();
+    const rule = y => { ctx.fillStyle = '#ffffff22'; ctx.fillRect(P, y, W - 2 * P, 2); };
+    const a = $('pv-a').value, b = $('pv-b').value;
+    const venue = $('pv-venue').value ? $('pv-venue').selectedOptions[0].textContent.split(' · ')[0] : '';
+    let y = P + 40;
+    write('THE CRICKET SPACE · MATCH PREVIEW', P, y, body(26, 700), gold);
+    y += 110; write(a.toUpperCase(), P, y, display(a.length > 18 ? 84 : 96), chalk);
+    y += 80; write('VS', P, y, display(50), gold);
+    y += 100; write(b.toUpperCase(), P, y, display(b.length > 18 ? 84 : 96), chalk);
+    y += 56; write((competition.toUpperCase()) + (venue ? ' · ' + venue : ''), P, y, body(30, 600), dim);
+    y += 40; rule(y);
+    const tileText = id => [...$(id).querySelectorAll('.tile')].map(t => [t.querySelector('b').textContent, t.querySelector('span').textContent]);
+    const tileRow = (items, top) => {
+      const gap = 24, w = (W - 2 * P - gap * (items.length - 1)) / items.length;
+      items.forEach(([value, label], i) => {
+        const x = P + i * (w + gap);
+        ctx.fillStyle = '#ffffff0d'; ctx.beginPath(); ctx.roundRect(x, top, w, 130, 22); ctx.fill();
+        write(value, x + 24, top + 64, display(54, 800), gold, w - 48);
+        write(label, x + 24, top + 106, body(22, 600), dim, w - 48);
+      });
+    };
+    y += 64; write('HEAD TO HEAD', P, y, body(26, 800), dim);
+    const SHORT = {'Mumbai Indians': 'MI', 'Chennai Super Kings': 'CSK', 'Royal Challengers Bengaluru': 'RCB', 'Kolkata Knight Riders': 'KKR', 'Sunrisers Hyderabad': 'SRH',
+      'Delhi Capitals': 'DC', 'Punjab Kings': 'PBKS', 'Rajasthan Royals': 'RR', 'Gujarat Titans': 'GT', 'Lucknow Super Giants': 'LSG', 'UP Warriorz': 'UPW', 'Gujarat Giants': 'GG'};
+    const short = name => SHORT[name] || name.split(' ').map(w => w[0]).join('');
+    write('wins ' + short(a) + '–' + short(b), W - P, y, body(24, 600), dim, 400, 'right');
+    y += 26; tileRow(tileText('pv-h2h'), y); y += 130;
+    if (!$('pv-venue-section').hidden) {
+      y += 64; write(venue.toUpperCase() || 'VENUE', P, y, body(26, 800), dim);
+      const short = ['Avg 1st innings', 'Par after 6 overs', 'Chasing wins'];
+      y += 26; tileRow(tileText('pv-venue-tiles').slice(0, 3).map(([value], i) => [value, short[i]]), y); y += 130;
+    }
+    y += 64; write('KEY BATTLES', P, y, body(26, 800), dim);
+    for (const card of [...$('pv-battles').querySelectorAll('.battle')].slice(0, 3)) {
+      y += 22; ctx.fillStyle = '#ffffff0d'; ctx.beginPath(); ctx.roundRect(P, y, W - 2 * P, 118, 22); ctx.fill();
+      write(card.querySelector('h3').textContent, P + 28, y + 48, display(38, 800), chalk, W - 2 * P - 56);
+      write(card.querySelector('.verdict').textContent + ' · ' + card.querySelectorAll('p')[1].textContent, P + 28, y + 92, body(23, 600), gold, W - 2 * P - 56);
+      y += 118;
+    }
+    y += 64; write('IN FORM', P, y, body(26, 800), dim);
+    const cols = [...$('pv-form').children].slice(0, 2);
+    const colW = (W - 2 * P - 32) / 2;
+    let bottom = y;
+    cols.forEach((col, i) => {
+      const x = P + i * (colW + 32); let yy = y + 46;
+      write(col.querySelector('h3').textContent, x, yy, display(34, 800), chalk, colW);
+      for (const li of [...col.querySelectorAll('.form-list li')].filter((_, k) => k === 0 || k === 1 || k === 3 || k === 4)) {
+        yy += 42;
+        const badge = li.querySelector('small'); const text = li.textContent.replace(badge ? badge.textContent : '', '').replace(/ in last \d+/, '');
+        const name = text.split(' — ')[0], stat = text.split(' — ')[1] || '';
+        write(name, x, yy, body(25, 700), badge && badge.className === 'better' ? green : badge && badge.className === 'worse' ? red : chalk, colW * 0.5);
+        write(stat.replace(', econ', ' · econ').replace(', SR', ' · SR'), x + colW, yy, body(22, 600), dim, colW * 0.5, 'right');
+      }
+      bottom = Math.max(bottom, yy);
+    });
+    write('mstmayank.github.io/preview.html', P, H - P + 10, body(26, 700), gold);
+    write('Data: Cricsheet', W - P, H - P + 10, body(22, 600), dim, 400, 'right');
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  }
+
+  $('pv-card').addEventListener('click', async () => {
+    $('pv-card').disabled = true; $('pv-share-status').textContent = 'Making card…';
+    try {
+      cardBlob = await drawCard();
+      if (cardUrl) URL.revokeObjectURL(cardUrl);
+      cardUrl = URL.createObjectURL(cardBlob);
+      const name = ($('pv-a').value + '-vs-' + $('pv-b').value).toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-preview.png';
+      $('pv-card-img').src = cardUrl; $('pv-card-download').href = cardUrl; $('pv-card-download').download = name;
+      const file = new File([cardBlob], name, {type: 'image/png'});
+      $('pv-card-native').hidden = !(navigator.canShare && navigator.canShare({files: [file]}));
+      $('pv-card-native').onclick = () => navigator.share({files: [file]}).catch(() => {});
+      $('pv-card-box').hidden = false; $('pv-share-status').textContent = '';
+      $('pv-card-box').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    } catch (error) {
+      $('pv-share-status').textContent = 'The card could not be made in this browser.';
+    } finally { $('pv-card').disabled = false; }
+  });
+  $('pv-card-close').addEventListener('click', () => { $('pv-card-box').hidden = true; });
+  start();
+})();
+</script>
+<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

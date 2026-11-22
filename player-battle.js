@@ -13,7 +13,7 @@
   let competition = new URLSearchParams(location.search).get('competition') || 'ipl';
   if (!['ipl', 'wpl', 'international'].includes(competition)) competition = 'ipl';
   let mode = 'direct';
-  let view = new URLSearchParams(location.search).get('view')==='careers' || (competition==='international' && !new URLSearchParams(location.search).has('first')) ? 'careers' : 'matchups';
+  let view = new URLSearchParams(location.search).get('view')==='finder' ? 'finder' : new URLSearchParams(location.search).get('view')==='careers' || (competition==='international' && !new URLSearchParams(location.search).has('first')) ? 'careers' : 'matchups';
   let detailKey = '';
   let data = null;
   let careerRecords = null;
@@ -80,7 +80,7 @@
 const venueAliases = [
   "Rajiv Gandhi International Stadium",
   "Narendra Modi Stadium|Sardar Patel Stadium",
-  "Maharashtra Cricket Association Stadium",
+  "Maharashtra Cricket Association Stadium|Subrata Roy Sahara Stadium",
   "M Chinnaswamy Stadium",
   "Wankhede Stadium",
   "Eden Gardens",
@@ -88,7 +88,7 @@ const venueAliases = [
   "Punjab Cricket Association IS Bindra Stadium|Punjab Cricket Association Stadium",
   "MA Chidambaram Stadium",
   "Sawai Mansingh Stadium",
-  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium",
+  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium|Andhra Cricket Association-Visakhapatnam District Cricket Association Stadium",
   "Sheikh Zayed Stadium|Zayed Cricket Stadium",
   "Brabourne Stadium",
   "Dr DY Patil Sports Academy",
@@ -106,8 +106,26 @@ function venueLabel(name) {
       (!byId('battle-venue').value || venueLabel(data.venues[match[1]]) === byId('battle-venue').value);
   }
 
+  function finderRole() {
+    return byId('finder-role').value === 'bowling' ? 'bowling' : 'batting';
+  }
+
   function updateChoices() {
     if (!data) return;
+    if (view === 'finder') {
+      const bowling = finderRole() === 'bowling';
+      const label = bowling ? 'Bowler' : 'Batter';
+      byId('battle-first-label').textContent = label;
+      inputs[0].placeholder = 'Search ' + label.toLowerCase();
+      const weights = new Map();
+      for (const row of data.rows) {
+        const amount = row[bowling ? 11 : 5];
+        if (amount > 0) weights.set(row[bowling ? 2 : 1], (weights.get(row[bowling ? 2 : 1]) || 0) + amount);
+      }
+      playerWeights = [weights, new Map()];
+      availablePlayers = [[...weights.keys()].sort((a, b) => data.players[a].localeCompare(data.players[b])), []];
+      return;
+    }
     const labels = {
       direct: ['Batter', 'Bowler'],
       batters: ['Batter 1', 'Batter 2'],
@@ -373,6 +391,10 @@ function venueLabel(name) {
     document.querySelector('.battle-workspace').classList.remove('has-detail');
     detailKey = '';
     const profiles=view==='careers';
+    byId('finder-controls').hidden = view !== 'finder';
+    inputs[1].closest('.battle-picker').hidden = view === 'finder';
+    byId('battle-swap').hidden = view === 'finder';
+    if (view !== 'finder') clearFinderLink();
     byId('career-view-button').hidden=false;
     byId('player-career-shell').hidden=!profiles;
     document.querySelector('.battle-workspace').hidden=profiles;
@@ -385,6 +407,7 @@ function venueLabel(name) {
       return;
     }
     const matchup = view === 'matchups';
+    const finder = view === 'finder';
     const careerAvailable = false;
     byId('battle-career-scope-label').hidden=!careerAvailable;
     byId('battle-career-scope').value=careerScope;
@@ -400,6 +423,27 @@ function venueLabel(name) {
     byId('battle-panel-label').textContent = matchup ? 'MATCHUP EXPLORER' : 'PLAYER EXPLORER';
     byId('battle-players').hidden = !matchup;
     byId('battle-clear').hidden = !matchup;
+    if (finder) {
+      byId('battle-panel-label').textContent = 'MATCH-UP FINDER';
+      byId('battle-panel-title').textContent = finderRole() === 'bowling' ? 'Who does this bowler trouble?' : 'Who troubles this batter?';
+      if (data) byId('battle-hint').textContent = 'Pick a ' + (finderRole() === 'bowling' ? 'bowler' : 'batter') + ' to rank every opponent. Click a row for the full head to head.';
+      byId('battle-players').hidden = false;
+      byId('battle-clear').hidden = false;
+      byId('battle-compare-label').hidden = true;
+      byId('battle-search-label').hidden = true;
+      byId('battle-phase-label').hidden = false;
+      result.hidden = !data;
+      if (result.hidden) return;
+      if (selected[0] === null) {
+        (competition === 'international' ? ['T20I', 'ODI'] : [null]).forEach(renderFormLeaders);
+        if (competition !== 'international') renderImpactLeaders();
+        return;
+      }
+      const finderFormats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
+      finderFormats.forEach(renderFinder);
+      updateFinderLink();
+      return;
+    }
     byId('battle-compare-label').hidden = !matchup;
     byId('battle-search-label').hidden = matchup;
     byId('battle-phase-label').hidden = matchup && mode === 'teams';
@@ -500,6 +544,570 @@ function venueLabel(name) {
     board.appendChild(verdict);result.appendChild(board);
   }
 
+  // Match-up finder: rank every opponent of one player (ranking maths in matchup-core.js).
+  // Phase profile card (maths in phase-core.js). Limited-overs formats only; ignores the phase filter
+  // so all three phases are always shown, but respects season and venue.
+  const phaseAverageCache = new Map();
+  function phaseRows(format) {
+    return data.rows.filter(row => (!format || data.matches[row[0]][7] === format) && matchIncluded(data.matches[row[0]]));
+  }
+
+  function phaseProfile(format, id, role) {
+    const rows = phaseRows(format);
+    const key = [competition, byId('battle-gender').value, format, byId('battle-season').value, byId('battle-venue').value, role, data.rows.length].join('|');
+    if (!phaseAverageCache.has(key)) phaseAverageCache.set(key, window.TCSPhases.phaseAverages(rows, role));
+    const averages = phaseAverageCache.get(key);
+    const phases = window.TCSPhases.playerPhases(rows, id, role);
+    return { phases, averages, labels: window.TCSPhases.labels(phases, averages, role) };
+  }
+
+  // Small samples are left out so one extreme 14-ball phase cannot squash every other bar.
+  function phaseScale(playerPhaseSets, averages, main, role) {
+    const enough = playerPhaseSets.flat().filter(phase => phase.sample >= window.TCSPhases.SMALL_SAMPLE[role]);
+    return Math.max(...enough.map(phase => phase[main].value || 0), ...averages.map(phase => phase[main].value || 0)) || 1;
+  }
+
+  function hasPhases(format) {
+    return (format || data.format) !== 'Test';
+  }
+
+  // scaleTop: shared bar scale when cards are shown side by side.
+  function phaseCard(format, id, role, scaleTop) {
+    const P = window.TCSPhases;
+    const bowling = role === 'bowling';
+    const { phases, averages, labels } = phaseProfile(format, id, role);
+    const card = document.createElement('section');
+    card.className = 'phase-profile';
+    card.setAttribute('aria-label', data.players[id] + ' phase profile');
+    const head = document.createElement('div');
+    head.className = 'phase-head';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · ' + (bowling ? 'Bowling' : 'Batting') + ' by phase';
+    head.appendChild(title);
+    const chips = document.createElement('div');
+    chips.className = 'phase-labels';
+    const rules = P.LABEL_RULES;
+    const rulesText = bowling
+      ? 'Labels need ' + rules.minBalls + '+ balls in a phase: specialist = economy ' + Math.round(rules.tighterBy * 100) + '%+ better than the phase average; wicket-taker = strikes ' + Math.round(rules.strikesBy * 100) + '%+ more often.'
+      : 'Labels need ' + rules.minBalls + '+ balls in a phase: enforcer / accelerator / finisher = strike rate ' + Math.round(rules.fasterBy * 100) + '%+ above the phase average; anchor = lasts ' + Math.round(rules.stickierBy * 100) + '%+ longer at a normal strike rate.';
+    for (const label of labels) {
+      const chip = document.createElement('span');
+      chip.className = 'phase-chip';
+      chip.textContent = label.text;
+      chip.title = label.why + '. ' + rulesText;
+      chips.appendChild(chip);
+    }
+    if (!labels.length) {
+      const none = document.createElement('span');
+      none.className = 'phase-chip phase-chip-none';
+      none.textContent = 'No standout phase';
+      none.title = rulesText;
+      chips.appendChild(none);
+    }
+    head.appendChild(chips);
+    card.appendChild(head);
+    const keys = bowling
+      ? [['economy', 'Economy', 2], ['dotPct', 'Dot %', 1], ['ballsPerWicket', 'Balls / wicket', 1], ['boundaryPct', 'Boundary % conceded', 1]]
+      : [['strikeRate', 'Strike rate', 1], ['dotPct', 'Dot %', 1], ['boundaryPct', 'Boundary %', 1], ['ballsPerDismissal', 'Balls / dismissal', 1]];
+    const main = keys[0][0];
+    const top = scaleTop || phaseScale([phases], averages, main, role);
+    const grid = document.createElement('div');
+    grid.className = 'phase-grid';
+    const names = groups(format || data.format);
+    phases.forEach((phase, index) => {
+      const column = document.createElement('div');
+      column.className = 'phase-col';
+      const small = phase.sample < P.SMALL_SAMPLE[role];
+      if (small) column.classList.add('phase-small');
+      const name = document.createElement('h4');
+      name.textContent = names[index];
+      const sample = document.createElement('p');
+      sample.className = 'phase-sample';
+      sample.textContent = number(phase.sample) + (bowling ? ' balls bowled' : ' balls faced') + (small ? ' · small sample' : '');
+      column.append(name, sample);
+      const bar = document.createElement('div');
+      bar.className = 'phase-bar';
+      bar.setAttribute('role', 'img');
+      bar.setAttribute('aria-label', keys[0][1] + ' ' + fixed(phase[main].value, keys[0][2]) + ', phase average ' + fixed(averages[index][main].value, keys[0][2]));
+      const fill = document.createElement('span');
+      fill.className = 'phase-bar-fill';
+      fill.style.width = Math.min(100, (phase[main].value || 0) / top * 100) + '%';
+      const marker = document.createElement('span');
+      marker.className = 'phase-bar-avg';
+      marker.style.left = Math.min(100, (averages[index][main].value || 0) / top * 100) + '%';
+      marker.title = 'Phase average';
+      bar.append(fill, marker);
+      column.appendChild(bar);
+      const list = document.createElement('dl');
+      for (const [key, label, digits] of keys) {
+        const item = document.createElement('div');
+        const term = document.createElement('dt');
+        term.textContent = label;
+        const value = document.createElement('dd');
+        value.textContent = fixed(phase[key].value, digits);
+        const change = P.edge(phase[key], averages[index][key]);
+        if (change !== null && !small) {
+          const diff = document.createElement('small');
+          diff.className = change >= 0.03 ? 'phase-up' : change <= -0.03 ? 'phase-down' : 'phase-even';
+          const raw = (phase[key].value - averages[index][key].value) / averages[index][key].value;
+          diff.textContent = (raw > 0 ? '+' : raw < 0 ? '−' : '±') + Math.round(Math.abs(raw) * 100) + '%';
+          diff.title = 'Phase average ' + fixed(averages[index][key].value, digits) + (change >= 0.03 ? ' · better than average' : change <= -0.03 ? ' · worse than average' : ' · about average');
+          value.append(' ', diff);
+        }
+        item.append(term, value);
+        list.appendChild(item);
+      }
+      column.appendChild(list);
+      grid.appendChild(column);
+    });
+    card.appendChild(grid);
+    const foot = document.createElement('p');
+    foot.className = 'finder-method';
+    foot.textContent = '% = difference from the average of all ' + (bowling ? 'bowlers' : 'batters') + ' in the same phase, season and venue selection. Green is better, red is worse. Bar marker = phase average.';
+    card.appendChild(foot);
+    return card;
+  }
+
+  // Recent form (maths in form-core.js). Uses every match in the competition/format, ignoring
+  // the season, venue and phase filters, because form is about the latest matches.
+  function formRows(format) {
+    return format ? data.rows.filter(row => data.matches[row[0]][7] === format) : data.rows;
+  }
+
+  function formSpark(list, role) {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const ordered = [...list].reverse();
+    const values = ordered.map(entry => role === 'bowling' ? entry.wickets : entry.runs);
+    const top = Math.max(...values, role === 'bowling' ? 3 : 50);
+    const width = 200, height = 48, gap = 4, bar = (width - gap * (ordered.length - 1)) / Math.max(ordered.length, 1);
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('class', 'form-spark');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', (role === 'bowling' ? 'Wickets' : 'Runs') + ' in the last ' + ordered.length + ', oldest to newest: ' + values.join(', '));
+    ordered.forEach((entry, index) => {
+      const rect = document.createElementNS(svgNS, 'rect');
+      const h = Math.max(2, values[index] / top * (height - 2));
+      rect.setAttribute('x', index * (bar + gap)); rect.setAttribute('y', height - h);
+      rect.setAttribute('width', bar); rect.setAttribute('height', h); rect.setAttribute('rx', 2);
+      if (role !== 'bowling' && !entry.out) rect.setAttribute('class', 'not-out');
+      svg.appendChild(rect);
+    });
+    return svg;
+  }
+
+  function formCard(format, id, role) {
+    const bowling = role === 'bowling';
+    const result = window.TCSForm.form(data, id, role, formRows(format));
+    const card = document.createElement('section');
+    card.className = 'phase-profile form-card';
+    const head = document.createElement('div');
+    head.className = 'phase-head';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · Recent form';
+    const chip = document.createElement('span');
+    chip.className = 'phase-chip form-' + result.badge.key;
+    chip.textContent = result.badge.label;
+    const R = window.TCSForm.FORM_RULES;
+    chip.title = bowling
+      ? 'Last ' + R.recent + ' matches vs whole career. In form: wickets per match ' + R.up * 100 + '%+ higher at a similar economy, or economy ' + R.econBetter * 100 + '%+ better. Out of form: economy ' + R.econWorse * 100 + '%+ worse, or ' + R.wicketsDown * 100 + '%+ fewer wickets.'
+      : 'Last ' + R.recent + ' innings vs whole career. In form: runs per innings ' + R.up * 100 + '%+ higher at a similar strike rate. Out of form: runs per innings ' + R.down * 100 + '%+ lower.';
+    head.append(title, chip);
+    card.appendChild(head);
+    if (!result.list.length) {
+      const empty = document.createElement('p'); empty.className = 'finder-empty'; empty.textContent = 'No recorded ' + (bowling ? 'bowling' : 'innings') + ' yet.';
+      card.appendChild(empty);
+      return card;
+    }
+    const r = result.recent, c = result.career;
+    const compare = document.createElement('p');
+    compare.className = 'finder-summary';
+    compare.textContent = bowling
+      ? 'Last ' + r.matches + ': ' + r.wickets + ' wickets · economy ' + fixed(r.economy, 2) + ' · ' + fixed(r.perMatch, 2) + ' per match  (career ' + fixed(c.economy, 2) + ' econ · ' + fixed(c.perMatch, 2) + ' per match)'
+      : 'Last ' + r.innings + ': ' + number(r.runs) + ' runs · SR ' + fixed(r.strikeRate) + ' · ' + fixed(r.perInnings) + ' per innings  (career SR ' + fixed(c.strikeRate) + ' · ' + fixed(c.perInnings) + ' per innings)';
+    card.append(compare, formSpark(result.list, role));
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.tabIndex = 0;
+    wrap.setAttribute('aria-label', 'Recent ' + (bowling ? 'matches' : 'innings') + '; scroll horizontally for more columns');
+    const table = document.createElement('table');
+    const header = table.createTHead().insertRow();
+    (bowling ? ['Date', 'Match', 'Figures', 'Overs', 'Econ'] : ['Date', 'Match', 'Runs', 'SR', 'How out']).forEach(label => {
+      const th = document.createElement('th'); th.scope = 'col'; th.textContent = label; header.appendChild(th);
+    });
+    const body = table.createTBody();
+    for (const entry of result.list) {
+      const match = data.matches[entry.match];
+      const tr = body.insertRow();
+      const values = bowling
+        ? [match[2], match[3].join(' v '), entry.wickets + '/' + entry.conceded, overs(entry.legal), fixed(entry.legal ? entry.conceded / entry.legal * 6 : null, 2)]
+        : [match[2], match[3].join(' v '), entry.runs + (entry.out ? '' : '*') + ' (' + entry.balls + ')', fixed(entry.balls ? entry.runs / entry.balls * 100 : null), entry.out ? entry.how : 'not out'];
+      values.forEach((value, index) => {
+        const td = tr.insertCell();
+        if (index === 0 && competition !== 'international' && match[6]) {
+          const a = document.createElement('a');
+          a.href = 'match.html?' + new URLSearchParams(competition === 'ipl' ? {id: match[6]} : {c: competition, id: match[6]});
+          a.textContent = value; a.title = 'Worm, Manhattan and win probability';
+          td.appendChild(a);
+        } else td.textContent = value;
+      });
+    }
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+    const foot = document.createElement('p');
+    foot.className = 'finder-method';
+    foot.textContent = (bowling ? 'One row per match.' : '* not out. One row per match' + ((format || data.format) === 'Test' ? ' (both innings combined).' : '.')) + ' Form ignores the season, venue and phase filters.';
+    card.appendChild(foot);
+    return card;
+  }
+
+  function renderFormLeaders(format) {
+    const rows = formRows(format);
+    const block = document.createElement('section');
+    block.className = 'form-leaders';
+    const grid = document.createElement('div');
+    grid.className = 'phase-compare';
+    let season = '';
+    for (const role of ['batting', 'bowling']) {
+      const bowling = role === 'bowling';
+      const board = window.TCSForm.leaders(data, role, rows, 10);
+      season = board.season || season;
+      const card = document.createElement('div');
+      card.className = 'phase-profile';
+      const h = document.createElement('h3');
+      h.textContent = bowling ? 'Bowlers: most wickets in last 10' : 'Batters: most runs in last 10';
+      card.appendChild(h);
+      const list = document.createElement('ol');
+      list.className = 'form-list';
+      for (const item of board.players) {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = data.players[item.id];
+        button.addEventListener('click', () => {
+          byId('finder-role').value = role;
+          updateChoices();
+          selected[0] = item.id;
+          inputs[0].value = data.players[item.id];
+          render();
+        });
+        const stat = document.createElement('span');
+        stat.textContent = bowling ? item.recent.wickets + ' wkts · econ ' + fixed(item.recent.economy, 2) : number(item.recent.runs) + ' runs · SR ' + fixed(item.recent.strikeRate);
+        const badge = document.createElement('small');
+        badge.className = 'form-' + item.badge.key;
+        badge.textContent = item.badge.label;
+        li.append(button, stat, badge);
+        list.appendChild(li);
+      }
+      if (!board.players.length) { const none = document.createElement('p'); none.className = 'finder-empty'; none.textContent = 'Not enough matches yet.'; card.appendChild(none); }
+      card.appendChild(list);
+      grid.appendChild(card);
+    }
+    const heading = document.createElement('h3');
+    heading.className = 'result-heading';
+    heading.textContent = (format ? format + ' · ' : '') + 'In form now' + (season ? ' · players active in ' + season : '');
+    const note = document.createElement('p');
+    note.className = 'finder-method';
+    note.textContent = 'Players with 5+ ' + 'matches in the latest season, ranked by their last 10 innings or matches. Pick a name for their match-ups, phase profile and form.';
+    block.append(heading, note, grid);
+    result.appendChild(block);
+  }
+
+  // Impact & clutch (impact-<competition>.json, built by scripts/build-impact-stats.py). IPL and WPL only.
+  const impactCache = new Map();
+  function loadImpact() {
+    if (!impactCache.has(competition)) impactCache.set(competition, fetch('impact-' + competition + '.json?v=1').then(r => r.ok ? r.json() : null).catch(() => null));
+    return impactCache.get(competition);
+  }
+  const signed = (value, digits = 1) => value === null || value === undefined ? '—' : (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value).toFixed(digits);
+
+  // Entry points (entry-<competition>.json, built by scripts/build-impact-stats.py). IPL and WPL batters.
+  const entryCache = new Map();
+  function loadEntry() {
+    if (!entryCache.has(competition)) entryCache.set(competition, fetch('entry-' + competition + '.json?v=1').then(r => r.ok ? r.json() : null).catch(() => null));
+    return entryCache.get(competition);
+  }
+
+  function entryCard(id) {
+    const card = document.createElement('section');
+    card.className = 'phase-profile entry-card';
+    const head = document.createElement('div'); head.className = 'phase-head';
+    const title = document.createElement('h3'); title.textContent = data.players[id] + ' · Batting position';
+    const chip = document.createElement('span'); chip.className = 'phase-chip'; chip.hidden = true;
+    head.append(title, chip);
+    const body = document.createElement('div'); body.textContent = 'Loading…';
+    card.append(head, body);
+    loadEntry().then(entry => {
+      body.replaceChildren();
+      const player = entry?.players?.[data.players[id]];
+      if (!player) { body.textContent = 'Needs 60+ balls faced in completed matches.'; return; }
+      const R = entry.rules;
+      if (player.role) {
+        chip.hidden = false; chip.textContent = player.role;
+        chip.title = 'Based on where his innings start: top order = ' + R.topOrderShare * 100 + '%+ in overs 1–' + R.topOrderBy + '; finisher = ' + R.finisherShare * 100 + '%+ from over ' + (R.finisherFrom + 1) + '; middle order = ' + R.middleShare * 100 + '%+ in overs ' + (R.topOrderBy + 1) + '–' + R.finisherFrom + '; otherwise floater. Needs ' + R.minInnings + '+ innings.';
+      }
+      const stat = cell => ({sr: cell[2] ? cell[1] / cell[2] * 100 : null, avg: cell[3] ? cell[1] / cell[3] : null});
+      const table = (label, labels, rows, league) => {
+        const wrap = document.createElement('div'); wrap.className = 'table-wrap'; wrap.tabIndex = 0;
+        wrap.setAttribute('aria-label', label + '; scroll horizontally for more columns');
+        const t = document.createElement('table');
+        const h = t.createTHead().insertRow();
+        [label, 'Inns', 'Runs', 'SR', 'Avg', 'League SR', 'League avg'].forEach(text => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; h.appendChild(th); });
+        const tb = t.createTBody();
+        rows.forEach((cell, i) => {
+          const mine = stat(cell), all = stat(league[i]);
+          const tr = tb.insertRow();
+          if (cell[0] < 3) tr.className = 'entry-thin';
+          [labels[i], number(cell[0]), number(cell[1]), fixed(mine.sr), fixed(mine.avg), fixed(all.sr), fixed(all.avg)].forEach(v => { tr.insertCell().textContent = v; });
+        });
+        wrap.appendChild(t); return wrap;
+      };
+      body.append(table('Came in', entry.overBuckets, player.byOver, entry.league.byOver), table('Wickets down', entry.wicketBuckets, player.byWickets, entry.league.byWickets));
+      const heat = document.createElement('div'); heat.className = 'entry-heat';
+      heat.setAttribute('role', 'img');
+      const cells = player.grid.map((cell, over) => ({over, cell: cell || [0, 0, 0, 0]}));
+      heat.setAttribute('aria-label', 'Strike rate by the over he came in: ' + cells.filter(c => c.cell[0]).map(c => 'over ' + (c.over + 1) + ' ' + fixed(stat(c.cell).sr, 0)).join(', '));
+      for (const {over, cell} of cells) {
+        const box = document.createElement('span');
+        const sr = stat(cell).sr;
+        box.textContent = over + 1;
+        if (cell[0] >= 2 && sr !== null) {
+          const t = Math.max(0, Math.min(1, (sr - 100) / 80));
+          box.style.background = `rgba(246, 196, 83, ${0.12 + t * 0.75})`;
+          box.style.color = t > 0.55 ? '#10100f' : '';
+        } else box.className = 'empty';
+        box.title = 'Came in during over ' + (over + 1) + ': ' + cell[0] + ' innings' + (cell[0] ? ', ' + cell[1] + ' runs, SR ' + fixed(sr) : '');
+        heat.appendChild(box);
+      }
+      const heatLabel = document.createElement('p'); heatLabel.className = 'finder-method';
+      heatLabel.textContent = 'Strike rate by the over he walked in (brighter = faster, from SR 100 to 180; blank = under 2 innings). Hover a box for details.';
+      body.append(heat, heatLabel);
+      const note = document.createElement('p'); note.className = 'finder-method';
+      note.textContent = 'Openers count as coming in at over 1 with 0 down. Rows with fewer than 3 innings are faded. Rain-reduced and no-result matches are left out.';
+      body.appendChild(note);
+    });
+    return card;
+  }
+
+  function impactCard(id, role) {
+    const card = document.createElement('section');
+    card.className = 'phase-profile impact-card';
+    const title = document.createElement('h3');
+    title.textContent = data.players[id] + ' · Impact & clutch';
+    const body = document.createElement('div');
+    body.textContent = 'Loading…';
+    card.append(title, body);
+    const name = data.players[id];
+    loadImpact().then(impact => {
+      if (!card.isConnected && !document.body.contains(card)) return;
+      body.replaceChildren();
+      const pick = period => impact?.[period]?.[name]?.[role === 'bowling' ? 'bowling' : 'batting'];
+      const all = pick('all'), recent = pick('recent');
+      if (!all) { body.textContent = 'Needs ' + (impact?.minBalls || 60) + '+ balls in completed matches.'; return; }
+      const rows = role === 'bowling'
+        ? [['Runs saved per 4 overs', signed(all.runsSavedPer24), recent ? signed(recent.runsSavedPer24) : '—'],
+           ['Economy', fixed(all.economy, 2), recent ? fixed(recent.economy, 2) : '—'],
+           ['Death overs, close games: economy', fixed(all.pressure.economy, 2) + ' (' + overs(all.pressure.balls) + ' ov)', recent ? fixed(recent.pressure.economy, 2) + ' (' + overs(recent.pressure.balls) + ' ov)' : '—'],
+           ['Death overs, close games: wickets', String(all.pressure.wickets), recent ? String(recent.pressure.wickets) : '—']]
+        : [['Runs above expected per 100 balls', signed(all.aboveExpectedPer100), recent ? signed(recent.aboveExpectedPer100) : '—'],
+           ['Strike rate', fixed(all.strikeRate), recent ? fixed(recent.strikeRate) : '—'],
+           ['Under pressure: SR (balls)', fixed(all.pressure.strikeRate) + ' (' + number(all.pressure.balls) + ')', recent ? fixed(recent.pressure.strikeRate) + ' (' + number(recent.pressure.balls) + ')' : '—'],
+           ['Under pressure: average', fixed(all.pressure.average), recent ? fixed(recent.pressure.average) : '—'],
+           ['Match-winning knocks', String(all.winningKnocks), recent ? String(recent.winningKnocks) : '—']];
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      const table = document.createElement('table');
+      const head = table.createTHead().insertRow();
+      ['', 'All seasons', 'Last 3 seasons'].forEach(label => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = label; head.appendChild(th); });
+      const tbody = table.createTBody();
+      rows.forEach(values => { const tr = tbody.insertRow(); values.forEach(v => { tr.insertCell().textContent = v; }); });
+      wrap.appendChild(table);
+      body.appendChild(wrap);
+      if (role !== 'bowling' && all.bestKnocks.length) {
+        const best = document.createElement('p');
+        best.className = 'finder-summary';
+        best.textContent = 'Best match-winning knocks: ' + all.bestKnocks.map(k => k.runs + ' (' + k.balls + ') v ' + k.against + ', ' + k.date.slice(0, 4)).join(' · ');
+        body.appendChild(best);
+      }
+      const note = document.createElement('p');
+      note.className = 'finder-method';
+      note.textContent = role === 'bowling'
+        ? 'Runs saved = what an average bowler concedes off the same balls (by over and wickets down) minus what he conceded; wickets are not valued. Close games: won by under 15 runs or 2 wickets or fewer, or tied.'
+        : 'Runs above expected = runs scored minus what an average batter scores off the same balls (by over and wickets down). Under pressure = chasing at 10+ an over, or 3+ wickets down inside 8 overs. Match-winning knock = 30+ at SR 150+ in a winning chase, or the winning side’s top score (30+).';
+      body.appendChild(note);
+    });
+    return card;
+  }
+
+  function renderImpactLeaders() {
+    const block = document.createElement('section');
+    block.className = 'form-leaders';
+    result.appendChild(block);
+    loadImpact().then(impact => {
+      if (!impact) return;
+      const heading = document.createElement('h3');
+      heading.className = 'result-heading';
+      heading.textContent = 'Impact leaders · last 3 seasons (' + impact.recentSeasons[0] + '–' + impact.recentSeasons.at(-1) + ')';
+      const grid = document.createElement('div');
+      grid.className = 'phase-compare';
+      for (const [role, label, key, min, show] of [
+        ['batting', 'Batters: runs above expected per 100 balls', 'aboveExpectedPer100', 300, v => signed(v.aboveExpectedPer100) + ' · SR ' + fixed(v.strikeRate)],
+        ['bowling', 'Bowlers: runs saved per 4 overs', 'runsSavedPer24', 300, v => signed(v.runsSavedPer24) + ' · econ ' + fixed(v.economy, 2)]]) {
+        const list = Object.entries(impact.recent).map(([name, v]) => [name, v[role]]).filter(([, v]) => v && v.balls >= min)
+          .sort((a, b) => b[1][key] - a[1][key]).slice(0, 10);
+        const card = document.createElement('div');
+        card.className = 'phase-profile';
+        const h = document.createElement('h3'); h.textContent = label; card.appendChild(h);
+        const ol = document.createElement('ol'); ol.className = 'form-list';
+        for (const [name, v] of list) {
+          const li = document.createElement('li');
+          const id = data.players.indexOf(name);
+          const button = document.createElement('button'); button.type = 'button'; button.textContent = name;
+          button.disabled = id < 0;
+          button.addEventListener('click', () => { byId('finder-role').value = role; updateChoices(); selected[0] = id; inputs[0].value = name; render(); });
+          const stat = document.createElement('span'); stat.textContent = show(v);
+          li.append(button, stat); ol.appendChild(li);
+        }
+        card.appendChild(ol);
+        grid.appendChild(card);
+      }
+      const note = document.createElement('p');
+      note.className = 'finder-method';
+      note.textContent = 'Players with 300+ balls in the last 3 seasons. Compared with an average player facing (or bowling) the same balls, by over and wickets down.';
+      block.append(heading, note, grid);
+    });
+  }
+
+  function renderFinder(format) {
+    const role = finderRole();
+    const bowling = role === 'bowling';
+    const minBalls = +byId('finder-min').value || 30;
+    const player = data.players[selected[0]];
+    if (format) {
+      const heading = document.createElement('h3');
+      heading.className = 'result-heading';
+      heading.textContent = format;
+      result.appendChild(heading);
+    }
+    if (competition === 'international') {
+      const scope = document.createElement('p');
+      scope.className = 'battle-coverage-warning';
+      scope.textContent = 'Archived ball-by-ball subset — covers available matches only.';
+      result.appendChild(scope);
+    }
+    const ranked = window.TCSMatchups.rankMatchups(data.rows.filter(row => rowIncluded(row, format)), selected[0], role, {minBalls});
+    if (!ranked) {
+      const empty = document.createElement('p');
+      empty.className = 'finder-empty';
+      empty.textContent = player + ' has no recorded balls ' + (bowling ? 'bowled' : 'faced') + ' for this selection.';
+      result.appendChild(empty);
+      return;
+    }
+    const base = ranked.baseline;
+    const summary = document.createElement('p');
+    summary.className = 'finder-summary';
+    summary.textContent = player + ' · ' + number(base.balls) + ' balls ' + (bowling ? 'bowled to ' : 'faced against ') + number(base.opponents) + (bowling ? ' batters' : ' bowlers') +
+      ' · ' + (bowling ? 'batters’ SR ' : 'SR ') + fixed(base.strikeRate) + ' · ' + (base.wickets ? (bowling ? 'a wicket every ' : 'out to a bowler every ') + fixed(base.ballsPerWicket, 1) + ' balls' : (bowling ? 'no wickets' : 'never out to a bowler'));
+    result.appendChild(summary);
+    const method = document.createElement('p');
+    method.className = 'finder-method';
+    method.textContent = 'Ranked against ' + player + '’s own record for this selection (strike rate and dismissal rate). Small samples are pulled toward that record, and opponents with fewer than ' + minBalls + ' balls are left out.';
+    result.appendChild(method);
+    if (hasPhases(format)) result.appendChild(phaseCard(format, selected[0], role));
+    result.appendChild(formCard(format, selected[0], role));
+    if (competition !== 'international') result.appendChild(impactCard(selected[0], role));
+    if (competition !== 'international' && role === 'batting') result.appendChild(entryCard(selected[0]));
+    if (!ranked.opponents.length) {
+      const empty = document.createElement('p');
+      empty.className = 'finder-empty';
+      empty.textContent = 'No opponent reaches ' + minBalls + ' balls. Try a lower minimum or clear the filters.';
+      result.appendChild(empty);
+      return;
+    }
+    const troubles = ranked.opponents.filter(item => item.score > 0).slice(0, 10);
+    const eases = ranked.opponents.filter(item => item.score < 0).reverse().slice(0, 10);
+    const titles = bowling ? ['His bunnies', 'Batters who dominate him'] : ['Bowlers who trouble him', 'Bowlers he dominates'];
+    finderTable(titles[0], troubles, format, bowling);
+    finderTable(titles[1], eases, format, bowling);
+    const all = document.createElement('details');
+    const allTitle = document.createElement('summary');
+    allTitle.textContent = 'All ' + ranked.opponents.length + ' opponents with ' + minBalls + '+ balls';
+    all.appendChild(allTitle);
+    result.appendChild(all);
+    finderTable('', [...ranked.opponents].sort((a, b) => b.balls - a.balls), format, bowling, all);
+  }
+
+  function fixed(value, digits = 1) {
+    return value === null || value === undefined ? '—' : value.toFixed(digits);
+  }
+
+  function finderTable(title, items, format, bowling, parent = result) {
+    if (title) {
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+      parent.appendChild(heading);
+    }
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.className = 'finder-empty';
+      empty.textContent = 'None in this selection.';
+      parent.appendChild(empty);
+      return;
+    }
+    const labels = [bowling ? 'Batter' : 'Bowler', 'Balls', 'Runs', 'SR', 'Dot %', 'Boundary %', bowling ? 'Wickets' : 'Outs', bowling ? 'Balls / wicket' : 'Balls / out'];
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.tabIndex = 0;
+    wrap.setAttribute('aria-label', (title || 'All opponents') + '; scroll horizontally for more columns');
+    const table = document.createElement('table');
+    const header = table.createTHead().insertRow();
+    for (const label of labels) {
+      const cell = document.createElement('th');
+      cell.scope = 'col';
+      cell.textContent = label;
+      header.appendChild(cell);
+    }
+    const body = table.createTBody();
+    for (const item of items) {
+      const row = body.insertRow();
+      [data.players[item.id], number(item.balls), number(item.runs), fixed(item.strikeRate), fixed(item.dotPct), fixed(item.boundaryPct), number(item.wickets), fixed(item.ballsPerWicket)]
+        .forEach(value => { row.insertCell().textContent = value; });
+      row.tabIndex = 0;
+      row.title = 'Open the full head to head';
+      const open = () => openHeadToHead(bowling ? [item.id, selected[0]] : [selected[0], item.id]);
+      row.addEventListener('click', open);
+      row.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); }
+      });
+    }
+    wrap.appendChild(table);
+    parent.appendChild(wrap);
+  }
+
+  function openHeadToHead(pair) {
+    view = 'matchups';
+    mode = 'direct';
+    byId('battle-compare').value = 'direct';
+    document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active', item.dataset.view === 'matchups'));
+    updateChoices();
+    pair.forEach((id, index) => { selected[index] = id; inputs[index].value = data.players[id]; });
+    render();
+    document.querySelector('.battle-workspace').scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+
+  function updateFinderLink() {
+    if (!history.replaceState) return;
+    const params = new URLSearchParams({competition, view: 'finder', player: data.players[selected[0]], role: finderRole()});
+    if (byId('finder-min').value !== '30') params.set('min', byId('finder-min').value);
+    for (const [param, id] of [['season', 'battle-season'], ['venue', 'battle-venue'], ['phase', 'battle-phase']]) if (byId(id).value) params.set(param, byId(id).value);
+    if (competition === 'international' && byId('battle-gender').value === 'female') params.set('gender', 'female');
+    history.replaceState(null, '', location.pathname + '?' + params);
+  }
+
+  function clearFinderLink() {
+    if (history.replaceState && new URLSearchParams(location.search).get('view') === 'finder') history.replaceState(null, '', location.pathname + '?competition=' + competition);
+  }
+
   function renderPlayers(format) {
     const matchup = view === 'matchups';
     const bowling = view === 'bowling' || (matchup && mode === 'bowlers');
@@ -580,6 +1188,21 @@ function venueLabel(name) {
       cardTables.push({format:format || data.format,headers,rows});
       updateShareTools();
       if (!bowling) appendInsights(result,format,entries.map(([id])=>id));
+      if ((mode === 'batters' || mode === 'bowlers') && hasPhases(format) && selected.every(id => id !== null)) {
+        const compare = document.createElement('details');
+        compare.className = 'phase-compare-wrap';
+        compare.open = true;
+        const label = document.createElement('summary');
+        label.textContent = (format ? format + ' · ' : '') + 'Compare phase profiles';
+        const grid = document.createElement('div');
+        grid.className = 'phase-compare';
+        const role = bowling ? 'bowling' : 'batting';
+        const profiles = selected.map(id => phaseProfile(format, id, role));
+        const scale = phaseScale(profiles.map(item => item.phases), profiles[0].averages, bowling ? 'economy' : 'strikeRate', role);
+        selected.forEach(id => grid.appendChild(phaseCard(format, id, role, scale)));
+        compare.append(label, grid);
+        result.appendChild(compare);
+      }
     }
   }
 
@@ -1013,13 +1636,15 @@ function venueLabel(name) {
         ? fetch('career-batting-records.json',{signal:loadingController.signal}).then(response=>response.ok?response.json():null).catch(()=>null)
         : Promise.resolve(null);
       const datasets = await Promise.all(keys.map(async key => {
+        // Start both downloads together; insights no longer wait for the main dataset.
+        const insightsPromise = fetch('battle-insights-' + key + '.json', {signal:loadingController.signal})
+          .then(insights => { if (!insights.ok) throw new Error('Batting insights download failed'); return insights.json(); });
+        insightsPromise.catch(() => {});
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
         const dataset = await response.json();
         try {
-          const insights = await fetch('battle-insights-' + key + '.json', {signal:loadingController.signal});
-          if (!insights.ok) throw new Error('Batting insights download failed');
-          dataset.insights = (await insights.json()).rows;
+          dataset.insights = (await insightsPromise).rows;
         } catch(error) {
           if(error.name==='AbortError') throw error;
           dataset.insightsUnavailable = true;
@@ -1037,6 +1662,18 @@ function venueLabel(name) {
       status.textContent = number(data.matches.length) + ' archived matches · ' + dates[0] + ' to ' + dates[dates.length - 1];
       archiveStatus=status.textContent;
       inputs.forEach(input => { input.disabled = false; });
+      if (restoreLink && view === 'finder') {
+        restoreLink = false;
+        if (initialLink.get('role') === 'bowling') byId('finder-role').value = 'bowling';
+        if (['12', '30', '60'].includes(initialLink.get('min'))) byId('finder-min').value = initialLink.get('min');
+        for (const [param, id] of [['season','battle-season'],['venue','battle-venue'],['phase','battle-phase']]) {
+          const value = initialLink.get(param);
+          if (value !== null && [...byId(id).options].some(option => option.value === value)) byId(id).value = value;
+        }
+        updateChoices();
+        const id = data.players.indexOf(initialLink.get('player') || '');
+        if (id >= 0 && availablePlayers[0].includes(id)) { selected[0] = id; inputs[0].value = data.players[id]; }
+      }
       if (restoreLink) {
         restoreLink = false;
         const linkedMode = initialLink.get('compare');
@@ -1049,7 +1686,7 @@ function venueLabel(name) {
         [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
       }
       // First visit with no shared link: show a ready-made IPL matchup instead of an empty form.
-      if (!defaultMatchupShown && competition === 'ipl' && mode === 'direct' && !initialLink.has('first') && !initialLink.has('second') && selected[0] === null && selected[1] === null) {
+      if (!defaultMatchupShown && view === 'matchups' && competition === 'ipl' && mode === 'direct' && !initialLink.has('first') && !initialLink.has('second') && selected[0] === null && selected[1] === null) {
         defaultMatchupShown = true;
         [['V Kohli', 0], ['JJ Bumrah', 1]].forEach(([name, index]) => {
           const id = data.players.indexOf(name);
@@ -1095,6 +1732,7 @@ function venueLabel(name) {
   });
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
     view = button.dataset.view;
+    if (view === 'finder' && mode !== 'direct') { mode = 'direct'; byId('battle-compare').value = 'direct'; }
     document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active',item === button));
     byId('battle-search').value = '';
     clearSelections();
@@ -1122,7 +1760,9 @@ function venueLabel(name) {
     if(careerScope==='career')for(const id of ['battle-season','battle-venue','battle-phase'])byId(id).value='';
     render();
   });
-  byId('battle-clear').addEventListener('click', clearSelections);
+  byId('battle-clear').addEventListener('click', () => { clearSelections(); if (view === 'finder') clearFinderLink(); });
+  byId('finder-role').addEventListener('change', () => { clearSelections(); clearFinderLink(); updateChoices(); render(); });
+  byId('finder-min').addEventListener('change', render);
   if(initialLink.get('gender')==='female') byId('battle-gender').value='female';
   loadData();
 })();
