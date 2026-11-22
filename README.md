@@ -37,6 +37,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   powerplay, middle and death numbers against the average for that phase in the same selection,
   with role labels such as "Death finisher". Maths and label rules: `phase-core.js`
   (`LABEL_RULES`). Tests: `tests/phase-core.test.ts`. Not shown for Tests.
+- **Form tracker** (Match-ups tab): a player's last 10 innings or matches with a sparkline,
+  last-10 vs career numbers and an In form / Steady / Out of form badge; with no player picked
+  it lists the form leaders of the latest season. Maths and badge rules: `form-core.js`
+  (`FORM_RULES`). Tests: `tests/form-core.test.ts`.
 - **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
   ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
   weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in

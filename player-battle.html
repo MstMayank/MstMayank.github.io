@@ -139,6 +139,18 @@
 #ipl-lens .battle-result .phase-even { color:var(--dim); }
 #ipl-lens .battle-result .phase-compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
 #ipl-lens .battle-result .phase-compare .phase-grid { grid-template-columns:minmax(0,1fr); }
+#ipl-lens .battle-result .form-card .phase-head { margin-bottom:6px; }
+#ipl-lens .battle-result .phase-chip.form-up, #ipl-lens .battle-result .form-list .form-up { color:var(--green,#22c55e); border-color:var(--green,#22c55e); }
+#ipl-lens .battle-result .phase-chip.form-down, #ipl-lens .battle-result .form-list .form-down { color:var(--red,#ef4444); border-color:var(--red,#ef4444); }
+#ipl-lens .battle-result .phase-chip.form-even, #ipl-lens .battle-result .phase-chip.form-none { color:var(--dim); border-color:var(--line); }
+#ipl-lens .battle-result .form-spark { display:block; width:100%; max-width:320px; height:48px; margin:4px 0 12px; }
+#ipl-lens .battle-result .form-spark rect { fill:var(--gold,#F6C453); }
+#ipl-lens .battle-result .form-spark rect.not-out { fill:var(--chalk,#F2F5EF); opacity:.75; }
+#ipl-lens .battle-result .form-list { margin:8px 0 0; padding-left:22px; display:grid; gap:8px; }
+#ipl-lens .battle-result .form-list li { display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline; }
+#ipl-lens .battle-result .form-list button { background:none; border:0; padding:0; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+#ipl-lens .battle-result .form-list span { color:var(--dim); font-size:.9rem; }
+#ipl-lens .battle-result .form-list small { font-weight:700; font-size:.8rem; color:var(--dim); }
 @media (max-width:760px) { #ipl-lens .battle-result .phase-grid, #ipl-lens .battle-result .phase-compare { grid-template-columns:minmax(0,1fr); } }
 #ipl-lens .metrics { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
 #ipl-lens .metrics > div, #ipl-lens .panel { background:#181817; border:1px solid var(--line); border-radius:14px; padding:clamp(12px,2vw,24px); }
@@ -420,5 +432,6 @@
 <script defer src="player-careers.js?v=profiles-clean-credits"></script>
 <script defer src="matchup-core.js?v=1"></script>
 <script defer src="phase-core.js?v=1"></script>
-<script defer src="player-battle.js?v=phase-profiles"></script>
+<script defer src="form-core.js?v=1"></script>
+<script defer src="player-battle.js?v=form-tracker"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>
