@@ -80,7 +80,7 @@
 const venueAliases = [
   "Rajiv Gandhi International Stadium",
   "Narendra Modi Stadium|Sardar Patel Stadium",
-  "Maharashtra Cricket Association Stadium",
+  "Maharashtra Cricket Association Stadium|Subrata Roy Sahara Stadium",
   "M Chinnaswamy Stadium",
   "Wankhede Stadium",
   "Eden Gardens",
@@ -88,7 +88,7 @@ const venueAliases = [
   "Punjab Cricket Association IS Bindra Stadium|Punjab Cricket Association Stadium",
   "MA Chidambaram Stadium",
   "Sawai Mansingh Stadium",
-  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium",
+  "Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium|Andhra Cricket Association-Visakhapatnam District Cricket Association Stadium",
   "Sheikh Zayed Stadium|Zayed Cricket Stadium",
   "Brabourne Stadium",
   "Dr DY Patil Sports Academy",

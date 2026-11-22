@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPL Venue Stats and Pitch Reports | The Cricket Space</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mstmayank.github.io/venues.html">
+<meta name="description" content="IPL and WPL ground-by-ground stats: average first-innings score, par scores, chasing record, toss trends, phase run rates and top performers at every venue.">
+<meta name="theme-color" content="#07241A">
+<meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
+<meta property="og:title" content="IPL Venue Stats and Pitch Reports | The Cricket Space">
+<meta property="og:description" content="Average scores, par scores, chasing record, toss trends and top performers at every IPL and WPL ground.">
+<meta property="og:url" content="https://mstmayank.github.io/venues.html">
+<meta property="og:image" content="https://mstmayank.github.io/og-record-book.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
+  a { color: #ff946f; }
+  p { color: #b7b6af; }
+  label { display: grid; gap: 6px; }
+  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  .venue-app { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .venue-app > * { min-width: 0; }
+  .venue-app[hidden], .venue-app [hidden] { display: none !important; }
+  .venue-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  .venue-back { font-weight: 700; text-decoration: none; }
+  .venue-meta { margin: 4px 0 0; }
+  .venue-names { font-size: .85rem; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .tile { border: 1px solid var(--line, #ffffff26); border-radius: 14px; padding: 14px 16px; min-width: 0; background: #ffffff08; }
+  .tile b { display: block; font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.1; color: var(--gold, #F6C453); }
+  .tile span { display: block; font-size: .85rem; color: var(--dim, #9DB8A8); margin-top: 4px; }
+  .tile small { display: block; font-size: .75rem; color: var(--dim, #9DB8A8); margin-top: 2px; }
+  .venue-section h2 { margin: 0 0 12px; }
+  .venue-section .tool-table { overflow: auto; }
+  .cricket-tools .venue-section .tool-table table { min-width: 0; }
+  .cricket-tools .venue-section .tool-table :is(th, td) { padding: 12px 14px; }
+  .cricket-tools .tool-table th.num { text-align: right; }
+  .venue-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .venue-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
+  .venue-warning { border-left: 3px solid var(--gold, #F6C453); padding: 10px 14px; background: #f6c4530c; color: var(--chalk, #F2F5EF); }
+  .venue-list tbody tr { cursor: pointer; }
+  .venue-list tbody tr:hover, .venue-list tbody tr:focus { background: #ffffff10; outline: none; }
+  .venue-list td:first-child a { font-weight: 700; text-decoration: none; }
+  .num { text-align: right; white-space: nowrap; }
+  @media (max-width: 760px) { .venue-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
+</style>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1">
+</head>
+<body class="v2 cricket-feel cricket-tools">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
+<a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="venues.html">Venues</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
+<a class="btn d" href="./#contact">Let’s talk</a>
+</div></nav>
+<main class="wrap page tool-page archive-page">
+<nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html" aria-current="page">Venues</a></nav>
+<h1 class="tool-heading" id="venue-title">Venue<br><span>Stats</span></h1>
+<p class="tool-coverage" id="venue-coverage">Ground-by-ground numbers from every IPL and WPL match with ball-by-ball data (source: Cricsheet).</p>
+<div class="tool-pills" role="group" aria-label="Competition">
+  <button type="button" data-competition="ipl" aria-pressed="true">IPL</button>
+  <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
+</div>
+<p class="tool-count" id="venue-status" role="status">Loading venue data…</p>
+
+<section class="venue-app" id="venue-index" hidden aria-label="All venues">
+  <div class="venue-controls tool-filter">
+    <label>Find a ground<input type="search" id="venue-search" placeholder="e.g. Wankhede or Chennai" autocomplete="off"></label>
+  </div>
+  <div class="tool-table">
+    <table class="venue-list">
+      <thead><tr><th scope="col">Venue</th><th scope="col">City</th><th scope="col" class="num">Matches</th><th scope="col" class="num">Avg 1st inns</th><th scope="col" class="num">Chasing wins</th><th scope="col" class="num">Field first</th><th scope="col">Last match</th></tr></thead>
+      <tbody id="venue-rows"></tbody>
+    </table>
+  </div>
+  <p class="venue-note">Averages leave out no-result and rain-reduced matches. Click a ground for its full report.</p>
+</section>
+
+<section class="venue-app" id="venue-detail" hidden aria-live="polite">
+  <div>
+    <a class="venue-back" id="venue-back" href="venues.html">← All venues</a>
+    <p class="venue-meta" id="venue-meta"></p>
+    <p class="venue-names" id="venue-names" hidden></p>
+  </div>
+  <div class="venue-controls tool-filter">
+    <label>Period<select id="venue-period"><option value="all">All seasons</option><option value="recent">Last 3 seasons</option></select></label>
+  </div>
+  <p class="venue-warning" id="venue-small" hidden></p>
+  <div class="tiles" id="venue-tiles"></div>
+  <div class="venue-grid">
+    <section class="venue-section"><h2>Par scores (1st innings)</h2><div class="tool-table"><table><thead><tr><th scope="col">Point</th><th scope="col" class="num">Average score</th></tr></thead><tbody id="venue-par"></tbody></table></div></section>
+    <section class="venue-section"><h2>By phase (all innings)</h2><div class="tool-table"><table><thead><tr><th scope="col">Phase</th><th scope="col" class="num">Run rate</th><th scope="col" class="num">Wkts / inns</th><th scope="col" class="num">Boundary %</th></tr></thead><tbody id="venue-phases"></tbody></table></div></section>
+  </div>
+  <div class="venue-grid">
+    <section class="venue-section"><h2>Highest totals</h2><div class="tool-table"><table><thead><tr><th scope="col">Score</th><th scope="col">Team</th><th scope="col">Date</th></tr></thead><tbody id="venue-highest"></tbody></table></div></section>
+    <section class="venue-section"><h2>Lowest totals</h2><div class="tool-table"><table><thead><tr><th scope="col">Score</th><th scope="col">Team</th><th scope="col">Date</th></tr></thead><tbody id="venue-lowest"></tbody></table></div><p class="venue-note">All-out or full 20-over innings in matches not shortened by rain.</p></section>
+  </div>
+  <div class="venue-grid">
+    <section class="venue-section"><h2>Top batters here</h2><div class="tool-table"><table><thead><tr><th scope="col">Batter</th><th scope="col" class="num">Runs</th><th scope="col" class="num">Inns</th><th scope="col" class="num">SR</th><th scope="col" class="num">Best</th></tr></thead><tbody id="venue-batters"></tbody></table></div></section>
+    <section class="venue-section"><h2>Top bowlers here</h2><div class="tool-table"><table><thead><tr><th scope="col">Bowler</th><th scope="col" class="num">Wkts</th><th scope="col" class="num">Econ</th><th scope="col" class="num">Avg</th></tr></thead><tbody id="venue-bowlers"></tbody></table></div></section>
+  </div>
+  <section class="venue-section"><h2>Team records here</h2><div class="tool-table"><table><thead><tr><th scope="col">Team</th><th scope="col" class="num">Played</th><th scope="col" class="num">Won</th><th scope="col" class="num">Lost</th><th scope="col" class="num">Win %</th></tr></thead><tbody id="venue-teams"></tbody></table></div><p class="venue-note">Win % leaves out ties and no-results. Renamed franchises are combined (e.g. Delhi Daredevils → Delhi Capitals).</p></section>
+  <p class="venue-note" id="venue-footnote"></p>
+</section>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
+  let slug = params.get('v') || '';
+  let period = params.get('period') === 'recent' ? 'recent' : 'all';
+  const cache = new Map();
+  const phaseNames = ['Powerplay · overs 1–6', 'Middle · overs 7–15', 'Death · overs 16–20'];
+  const num = value => value === null || value === undefined ? '—' : Number(value).toLocaleString('en-IN');
+  const pct = value => value === null || value === undefined ? '—' : value.toFixed(1) + '%';
+  const fixed = (value, digits = 1) => value === null || value === undefined ? '—' : value.toFixed(digits);
+  const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+
+  function load(key) {
+    if (!cache.has(key)) cache.set(key, fetch('venue-stats-' + key + '.json?v=1').then(response => {
+      if (!response.ok) throw new Error('Venue data unavailable');
+      return response.json();
+    }).catch(error => { cache.delete(key); throw error; }));
+    return cache.get(key);
+  }
+
+  function rows(tbody, items) {
+    tbody.replaceChildren(...items.map(values => {
+      const tr = document.createElement('tr');
+      values.forEach(value => {
+        const td = document.createElement('td');
+        if (value && typeof value === 'object') { td.textContent = value.text; if (value.num) td.className = 'num'; }
+        else td.textContent = value;
+        tr.appendChild(td);
+      });
+      return tr;
+    }));
+    if (!items.length) {
+      const tr = document.createElement('tr'); const td = document.createElement('td');
+      td.colSpan = tbody.closest('table').tHead.rows[0].cells.length; td.textContent = 'Not enough data.';
+      tr.appendChild(td); tbody.appendChild(tr);
+    }
+  }
+  const n = text => ({text: String(text), num: true});
+
+  function setMeta(title, description, url) {
+    document.title = title;
+    document.querySelector('meta[name="description"]').content = description;
+    document.querySelector('link[rel="canonical"]').href = url;
+    document.querySelector('meta[property="og:title"]').content = title;
+    document.querySelector('meta[property="og:description"]').content = description;
+    document.querySelector('meta[property="og:url"]').content = url;
+  }
+
+  function link(extra) {
+    const query = new URLSearchParams({c: competition, ...extra});
+    if (competition === 'ipl') query.delete('c');
+    const text = query.toString();
+    return 'venues.html' + (text ? '?' + text : '');
+  }
+
+  function renderIndex(data) {
+    $('venue-detail').hidden = true;
+    $('venue-index').hidden = false;
+    $('venue-title').innerHTML = data.label + '<br><span>Venues</span>';
+    $('venue-status').textContent = data.venues.length + ' grounds · ' + num(data.matches) + ' matches · data to ' + when(data.venues.reduce((a, v) => v.lastMatch > a ? v.lastMatch : a, ''));
+    setMeta(data.label + ' Venue Stats and Pitch Reports | The Cricket Space',
+      'Ground-by-ground ' + data.label + ' stats: average first-innings score, par scores, chasing record, toss trends and top performers at all ' + data.venues.length + ' venues.',
+      'https://mstmayank.github.io/' + link({}));
+    const query = $('venue-search').value.trim().toLowerCase();
+    const list = data.venues.filter(v => !query || (v.name + ' ' + (v.city || '') + ' ' + v.names.join(' ')).toLowerCase().includes(query));
+    const tbody = $('venue-rows');
+    tbody.replaceChildren(...list.map(v => {
+      const tr = document.createElement('tr');
+      const a = document.createElement('a'); a.href = link({v: v.slug}); a.textContent = v.name;
+      const first = document.createElement('td'); first.appendChild(a); tr.appendChild(first);
+      [[v.city || '—'], [num(v.all.matches), 1], [fixed(v.all.firstInnings.average), 1], [pct(v.all.results.chaseWinPct), 1], [pct(v.all.toss.fieldFirstPct), 1], [when(v.lastMatch)]]
+        .forEach(([text, isNum]) => { const td = document.createElement('td'); td.textContent = text; if (isNum) td.className = 'num'; tr.appendChild(td); });
+      tr.tabIndex = 0;
+      tr.addEventListener('click', event => { if (event.target.tagName !== 'A') open(v.slug); });
+      tr.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); open(v.slug); } });
+      return tr;
+    }));
+    if (!list.length) rows(tbody, []);
+  }
+
+  function renderDetail(data, venue) {
+    $('venue-index').hidden = true;
+    $('venue-detail').hidden = false;
+    $('venue-back').href = link({});
+    $('venue-title').innerHTML = '';
+    $('venue-title').append(venue.name.split(',')[0], document.createElement('br'));
+    const span = document.createElement('span'); span.textContent = data.label + ' venue stats'; $('venue-title').appendChild(span);
+    const recentLabel = 'Last 3 seasons (' + data.recentSeasons[0] + '–' + data.recentSeasons.at(-1) + ')';
+    $('venue-period').options[1].textContent = recentLabel;
+    $('venue-period').options[1].disabled = !venue.recent;
+    if (!venue.recent) period = 'all';
+    $('venue-period').value = period;
+    const s = period === 'recent' ? venue.recent : venue.all;
+    $('venue-meta').textContent = [venue.city, num(venue.all.matches) + ' ' + data.label + ' matches', venue.seasons[0] + (venue.seasons.length > 1 ? '–' + venue.seasons.at(-1) : '')].filter(Boolean).join(' · ');
+    const others = venue.names.filter(name => name.split(',')[0] !== venue.name.split(',')[0]);
+    $('venue-names').hidden = !others.length;
+    $('venue-names').textContent = 'Also listed as: ' + others.join('; ');
+    $('venue-status').textContent = (period === 'recent' ? recentLabel : 'All seasons') + ' · ' + num(s.matches) + ' matches, ' + num(s.counted) + ' used for averages';
+    $('venue-small').hidden = s.counted >= 10;
+    $('venue-small').textContent = 'Small sample: only ' + s.counted + ' complete match' + (s.counted === 1 ? '' : 'es') + ' in this period, so treat these numbers with care.';
+    const tiles = [
+      [fixed(s.firstInnings.average), 'Average 1st-innings score', s.firstInnings.median !== null ? 'Median ' + fixed(s.firstInnings.median) : ''],
+      [fixed(s.secondInnings.average), 'Average 2nd-innings score', ''],
+      [pct(s.results.chaseWinPct), 'Chasing team wins', s.results.chaseWins + ' of ' + s.results.decided + ' results'],
+      [pct(s.toss.fieldFirstPct), 'Toss winners choosing to field', ''],
+      [pct(s.toss.tossWinnerWonPct), 'Toss winner went on to win', '']
+    ];
+    $('venue-tiles').replaceChildren(...tiles.map(([value, label, note]) => {
+      const tile = document.createElement('div'); tile.className = 'tile';
+      const b = document.createElement('b'); b.textContent = value;
+      const span = document.createElement('span'); span.textContent = label;
+      tile.append(b, span);
+      if (note) { const small = document.createElement('small'); small.textContent = note; tile.appendChild(small); }
+      return tile;
+    }));
+    rows($('venue-par'), ['6', '15'].filter(over => s.par[over].runs !== null).map(over => ['After ' + over + ' overs', n(fixed(s.par[over].runs, 0) + '/' + fixed(s.par[over].wickets, 0))])
+      .concat(s.firstInnings.average !== null ? [['Final total', n(fixed(s.firstInnings.average, 0))]] : []));
+    rows($('venue-phases'), s.phases.map((phase, i) => [phaseNames[i], n(fixed(phase.runRate, 2)), n(fixed(phase.wicketsPerInnings, 1)), n(pct(phase.boundaryPct))]));
+    const total = t => [t.runs + (t.wickets < 10 ? '/' + t.wickets : ''), t.team + ' v ' + t.opponent, when(t.date)];
+    rows($('venue-highest'), s.highest.map(total));
+    rows($('venue-lowest'), s.lowest.map(total));
+    rows($('venue-batters'), s.topBatters.map(b => [b.name, n(num(b.runs)), n(b.innings), n(fixed(b.strikeRate)), n(b.best)]));
+    rows($('venue-bowlers'), s.topBowlers.map(b => [b.name, n(b.wickets), n(fixed(b.economy, 2)), n(fixed(b.average))]));
+    rows($('venue-teams'), s.teams.map(t => [t.team, n(t.played), n(t.won), n(t.lost), n(pct(t.winPct))]));
+    const left = [s.results.noResult && s.results.noResult + ' no-result', s.results.reduced && s.results.reduced + ' rain-reduced'].filter(Boolean);
+    $('venue-footnote').textContent = (left.length ? 'Left out of averages: ' + left.join(', ') + ' match' + (s.results.noResult + s.results.reduced === 1 ? '' : 'es') + '. ' : '') + (s.results.ties ? 'Tied matches count in score averages but not in the chasing record. ' : '') + 'Source: ' + data.source + ', updated ' + when(data.generated) + '. Pace vs spin splits will follow once bowler types are added.';
+    const city = venue.city ? ' (' + venue.city + ')' : '';
+    setMeta(venue.name.split(',')[0] + city + ' ' + data.label + ' Stats: Average Score, Pitch Report | The Cricket Space',
+      venue.name.split(',')[0] + ' ' + data.label + ' record: average first-innings score ' + fixed(venue.all.firstInnings.average, 0) + ', chasing teams win ' + pct(venue.all.results.chaseWinPct) + ', par scores, toss trends and top performers.',
+      'https://mstmayank.github.io/' + link({v: venue.slug}));
+  }
+
+  function open(next) {
+    slug = next;
+    period = 'all';
+    history.pushState(null, '', link(slug ? {v: slug} : {}));
+    render();
+    window.scrollTo({top: 0});
+  }
+
+  async function render() {
+    document.querySelectorAll('[data-competition]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.competition === competition)));
+    $('venue-status').textContent = 'Loading venue data…';
+    try {
+      const data = await load(competition);
+      const venue = slug && data.venues.find(v => v.slug === slug);
+      if (slug && !venue) {
+        $('venue-status').textContent = 'That ground is not in the ' + data.label + ' data. Showing all venues.';
+        slug = '';
+        renderIndex(data);
+        $('venue-status').textContent = 'That ground is not in the ' + data.label + ' data. Showing all venues.';
+        return;
+      }
+      if (venue) renderDetail(data, venue); else renderIndex(data);
+    } catch (error) {
+      $('venue-status').textContent = 'Venue data could not load. Refresh the page to try again.';
+    }
+  }
+
+  document.querySelectorAll('[data-competition]').forEach(button => button.addEventListener('click', () => {
+    competition = button.dataset.competition;
+    open('');
+  }));
+  $('venue-search').addEventListener('input', render);
+  $('venue-period').addEventListener('change', () => {
+    period = $('venue-period').value;
+    history.replaceState(null, '', link(period === 'recent' ? {v: slug, period} : {v: slug}));
+    render();
+  });
+  window.addEventListener('popstate', () => {
+    const next = new URLSearchParams(location.search);
+    competition = next.get('c') === 'wpl' ? 'wpl' : 'ipl';
+    slug = next.get('v') || '';
+    period = next.get('period') === 'recent' ? 'recent' : 'all';
+    render();
+  });
+  render();
+})();
+</script>
+<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

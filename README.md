@@ -9,6 +9,7 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `index.html` | Homepage: writing, On This Day, tools and contact |
 | `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, plus player profiles |
 | `record-book.html` | Searchable international batting, bowling and team-total records |
+| `venues.html` | IPL and WPL ground-by-ground stats: average scores, par scores, chasing record, toss trends, phase run rates, top performers and team records |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
@@ -26,6 +27,17 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 
   ```sh
   python scripts/build-battle-aliases.py
+  ```
+
+- **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
+  ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
+  weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in
+  `player-battle.js`; a test keeps them in step). Averages leave out no-result and rain-reduced
+  matches. Tests: `tests/test_venue_stats.py`.
+
+  ```sh
+  python scripts/build-venue-stats.py                  # IPL
+  python scripts/build-venue-stats.py --competition wpl
   ```
 
 - **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
