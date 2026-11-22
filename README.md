@@ -10,6 +10,7 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `player-battle.html` | Batter vs bowler, player vs player and team matchups for IPL, WPL and international cricket, player profiles, and a match-up finder that ranks every opponent of one player |
 | `record-book.html` | Searchable international batting, bowling and team-total records |
 | `venues.html` | IPL and WPL ground-by-ground stats: average scores, par scores, chasing record, toss trends, phase run rates, top performers and team records |
+| `preview.html` | Match preview for any two IPL or WPL teams and a ground: head to head, venue summary, key battles, phase strengths and players in form |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
@@ -51,6 +52,11 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   python scripts/build-venue-stats.py                  # IPL
   python scripts/build-venue-stats.py --competition wpl
   ```
+
+- **Match preview** loads `team-stats-<competition>.json` (per-team, per-season results and
+  phase totals, latest squads and a compact match list), `venue-stats-<competition>.json` and
+  `battle-<competition>.json`. Key battles use `matchup-core.js` and form uses `form-core.js`.
+  `scripts/build-venue-stats.py` writes the team stats in the same run as the venue stats.
 
 - **IPL Retentions** reads `ipl-retentions-data.json`, generated from the verified squads in
   `data/ipl-2027-retentions.json` with the V6 squad rating (same weights as the original

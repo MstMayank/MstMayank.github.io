@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build venue-stats-<competition>.json for venues.html from Cricsheet ball-by-ball data.
+"""Build venue-stats-<competition>.json (venues.html) and team-stats-<competition>.json (preview.html) from Cricsheet.
 
     python scripts/build-venue-stats.py                  # IPL, downloads ipl_json.zip
     python scripts/build-venue-stats.py --competition wpl
@@ -248,6 +248,9 @@ def match_record(match_id, match):
     else:
         result, winner = 'no result', None
     toss = info.get('toss', {})
+    by = outcome.get('by', {})
+    margin = (f"{by['runs']} runs" if 'runs' in by else f"{by['wickets']} wickets" if 'wickets' in by else
+              'super over' if 'eliminator' in outcome else '') + (' (D/L)' if 'method' in outcome else '')
     return {
         'id': match_id, 'date': info['dates'][0], 'season': info['dates'][0][:4],
         'venue': venue_label(info['venue']), 'rawVenue': info['venue'], 'city': info.get('city'),
@@ -255,11 +258,13 @@ def match_record(match_id, match):
         'reduced': 'method' in outcome or any(i.get('target', {}).get('overs', 20) < 20 for i in match.get('innings', [])),
         'toss_winner': team(toss['winner']) if 'winner' in toss else None, 'toss_decision': toss.get('decision'),
         'innings': innings,
+        'margin': margin,
+        'players': {team(name): names for name, names in info.get('players', {}).items()},
     }
 
 
-def build(zip_path, competition):
-    records = [match_record(match_id, match) for match_id, match in matches_from_zip(zip_path)]
+def build(zip_path, competition, records=None):
+    records = records if records is not None else [match_record(match_id, match) for match_id, match in matches_from_zip(zip_path)]
     seasons = sorted({season_key(r) for r in records})
     recent = set(seasons[-RECENT_SEASONS:])
     by_venue = defaultdict(list)
@@ -300,6 +305,56 @@ def build(zip_path, competition):
     }
 
 
+def build_teams(records, competition):
+    """Per-team, per-season results and phase totals, squads, and a compact match list (preview.html)."""
+    teams = defaultdict(lambda: {'seasons': defaultdict(lambda: {
+        'played': 0, 'won': 0, 'lost': 0,
+        'batting': [{'runs': 0, 'balls': 0, 'wickets': 0, 'innings': 0} for _ in PHASES],
+        'bowling': [{'runs': 0, 'balls': 0, 'wickets': 0, 'innings': 0} for _ in PHASES]}),
+        'appearances': defaultdict(Counter)})
+    matches = []
+    for record in sorted(records, key=lambda r: (r['date'], r['id'])):
+        season = season_key(record)
+        for side in record['teams']:
+            row = teams[side]['seasons'][season]
+            row['played'] += 1
+            if record['winner'] == side:
+                row['won'] += 1
+            elif record['winner'] and record['result'] == 'win':
+                row['lost'] += 1
+        for side, names in record['players'].items():
+            teams[side]['appearances'][season].update(names)
+        if not record['reduced'] and record['result'] != 'no result':
+            for innings in record['innings']:
+                bowling_side = next((t for t in record['teams'] if t != innings['team']), None)
+                for index, phase in enumerate(innings['phases']):
+                    if not phase['balls']:
+                        continue
+                    for side, key in ((innings['team'], 'batting'), (bowling_side, 'bowling')):
+                        if side is None:
+                            continue
+                        cell = teams[side]['seasons'][season][key][index]
+                        cell['runs'] += phase['runs']
+                        cell['balls'] += phase['balls']
+                        cell['wickets'] += phase['wickets']
+                        cell['innings'] += 1
+        matches.append([record['date'], season, slugify(record['venue']), record['teams'][0], record['teams'][1],
+                        record['winner'], record['result'], record['margin']])
+    latest = max((season_key(r) for r in records), default=None)
+    output = {}
+    for name, data in sorted(teams.items()):
+        last = max(data['appearances']) if data['appearances'] else None
+        output[name] = {
+            'lastSeason': last,
+            'squad': [player for player, _ in sorted(data['appearances'][last].items(), key=lambda kv: (-kv[1], kv[0]))] if last else [],
+            'seasons': {season: row for season, row in sorted(data['seasons'].items())},
+        }
+    return {'version': 1, 'competition': competition, 'label': SOURCES[competition][1], 'generated': date.today().isoformat(),
+            'source': 'Cricsheet (cricsheet.org) ball-by-ball data', 'latestSeason': latest,
+            'matchColumns': ['date', 'season', 'venueSlug', 'teamA', 'teamB', 'winner', 'result', 'margin'],
+            'matches': matches, 'teams': output}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--competition', choices=sorted(SOURCES), default='ipl')
@@ -309,10 +364,15 @@ def main():
     if not zip_path:
         zip_path = Path(tempfile.gettempdir()) / SOURCES[args.competition][0]
         urllib.request.urlretrieve(f'https://cricsheet.org/downloads/{SOURCES[args.competition][0]}', zip_path)
-    data = build(zip_path, args.competition)
+    records = [match_record(match_id, match) for match_id, match in matches_from_zip(zip_path)]
+    data = build(zip_path, args.competition, records)
     out = ROOT / f'venue-stats-{args.competition}.json'
     out.write_text(json.dumps(data, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     print(f'Wrote {out.name}: {len(data["venues"])} venues from {data["matches"]} matches')
+    team_data = build_teams(records, args.competition)
+    team_out = ROOT / f'team-stats-{args.competition}.json'
+    team_out.write_text(json.dumps(team_data, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
+    print(f'Wrote {team_out.name}: {len(team_data["teams"])} teams')
 
 
 if __name__ == '__main__':
