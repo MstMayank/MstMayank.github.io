@@ -18,7 +18,7 @@
   td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
   .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
   button { margin-top: 16px; cursor: pointer; }
-</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Karla:wght@400;600;700&display=swap"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"><link rel="stylesheet" href="record-lens.css?v=coverage1"></head><body class="v2 cricket-feel cricket-tools">
+</style><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><link rel="stylesheet" href="record-lens.css?v=coverage1"></head><body class="v2 cricket-feel cricket-tools">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
 <a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
 <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu ☰</button><div class="links" id="site-links"><a href="./#writing">Writing</a><a href="record-book.html">Records</a><a href="player-battle.html">Player Battle</a><a href="ipl-retentions.html">Retentions</a><a href="ipl-auction/play.html">IPL Auction</a><a href="./#about">About</a></div>
@@ -90,16 +90,31 @@
     return JSON.parse(decoder.strFromU8(decoder.gunzipSync(bytes)));
   }
 
+  // Newer archives store rows column by column (see pack_rows in scripts/refresh-cricket.py).
+  function unpackArchive(data) {
+    if (!data || !data.table) return data;
+    const column = c => c.v || c.i.map(i => c.d[i]);
+    const lengths = column(data.table.lengths);
+    const columns = data.table.columns.map(column);
+    const rows = lengths.map((length, r) => {
+      const row = new Array(length);
+      for (let i = 0; i < length; i++) row[i] = columns[i][r];
+      return row;
+    });
+    return { matches: data.matches, rows, aliases: data.aliases };
+  }
+
   function loadDataset(key) {
     if (!pending.has(key)) {
       // Archives are gzip-compressed JSON served as binary (.bin) files.
-      const version = archiveVersions[key] || (key === 'T20' ? 'f7f5d6d9b77d7c29' : Date.now());
+      const version = archiveVersions[key] || (key === 'T20' ? 'aefcf13c5046c204' : Date.now());
       pending.set(key, fetch('./archive-players-' + key + '.bin?v=' + version)
         .then(response => {
           if (!response.ok) throw new Error('Archive ' + key + ' unavailable');
           return response.arrayBuffer();
         })
         .then(buffer => readArchive(new Uint8Array(buffer)))
+        .then(unpackArchive)
         .then(data => { datasets.set(key, data); })
         .finally(() => pending.delete(key)));
     }

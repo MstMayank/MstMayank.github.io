@@ -15,7 +15,8 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 
 ## Data
 
-- **Record Book** loads `archive-players-<format>.bin` (gzip-compressed JSON). The
+- **Record Book** loads `archive-players-<format>.bin` (gzip-compressed JSON, rows stored
+  column by column to keep downloads small; see `pack_rows` in `scripts/refresh-cricket.py`). The
   `Refresh cricket records and history` GitHub Action runs `scripts/refresh-cricket.py`
   on a schedule, adds newly completed international matches and commits only when data
   changes. `cricket-records-status.json` holds each archive's revision for cache busting.
@@ -46,6 +47,11 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   npm install
   npm run build:auction
   ```
+
+## Fonts
+
+Fonts are self-hosted from `fonts/` (`fonts/fonts.css`, latin and latin-ext subsets from the
+`@fontsource` packages, SIL Open Font License). Link `/fonts/fonts.css` instead of Google Fonts.
 
 ## Tests
 
