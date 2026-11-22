@@ -11,6 +11,7 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `record-book.html` | Searchable international batting, bowling and team-total records |
 | `venues.html` | IPL and WPL ground-by-ground stats: average scores, par scores, chasing record, toss trends, phase run rates, top performers and team records |
 | `preview.html` | Match preview for any two IPL or WPL teams and a ground: head to head, venue summary, key battles, phase strengths and players in form |
+| `match.html` | Every IPL and WPL match: worm, Manhattan and ball-by-ball win-probability charts, with top batters and bowlers |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
@@ -50,6 +51,10 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   score he walks in at, a strike-rate strip by entry over, and a suggested role (top order,
   middle order, finisher or floater). Data: `entry-<competition>.json`, written by the same
   script (rules in `ENTRY_ROLES`).
+- **Match charts** (`match.html?id=<cricsheet id>`) load `match-index-<competition>.json` (match list
+  and the fitted win-probability model) and one `matches/<competition>/<season>.json` file, built by
+  `scripts/build-match-charts.py` (model details at the top of the script; weekly workflow).
+  Tests: `tests/test_match_charts.py`.
 - **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
   ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
   weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in
