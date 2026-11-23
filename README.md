@@ -137,7 +137,7 @@ older page styles where needed. The header and footer markup is identical on eve
 
 ### Player pages
 
-`python scripts/build-player-pages.py` writes `player/<slug>.html`, `player/index.html` and `player/links.json`, and rewrites the player block of `sitemap.xml`. Run it again after rebuilding `battle-ipl.json`, `battle-wpl.json` or the player career files. Slugs already in `player/links.json` are kept, so player URLs do not change between builds. `links.json` maps the short scorecard names in the battle files to pages; venues, fantasy and the Player Battle profiles use it to link player names.
+`python scripts/build-player-pages.py` writes `player/<slug>.html`, `player/index.html` and `player/links.json`, and rewrites the player block of `sitemap.xml`. The `Build player pages` workflow (`.github/workflows/build-player-pages.yml`) runs it automatically whenever `battle-ipl.json`, `battle-wpl.json`, the player career files or the script change on `main`, and commits the result; it can also be started by hand from the Actions tab. Slugs already in `player/links.json` are kept, so player URLs do not change between builds. `links.json` maps the short scorecard names in the battle files to pages; venues, fantasy and the Player Battle profiles use it to link player names.
 
 ## Fonts
 

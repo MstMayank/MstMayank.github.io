@@ -1,0 +1,49 @@
+name: Build player pages
+# Rebuilds player/<slug>.html, player/index.html, player/links.json and the sitemap's player
+# block whenever the data they are made from changes on main, or on demand.
+on:
+  push:
+    branches: [main]
+    paths:
+      - battle-ipl.json
+      - battle-wpl.json
+      - player-career-index.json
+      - player-career-data.json
+      - scripts/build-player-pages.py
+      - fantasy.html
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: player-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check page builder
+        run: python -m unittest tests.test_player_pages
+      - name: Build player pages
+        run: python scripts/build-player-pages.py
+      - name: Publish updated pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add player sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'Player pages are already current.'
+            exit 0
+          fi
+          python -m unittest tests.test_player_pages
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Rebuild player pages'
+          git push origin HEAD:main
+          # Commits made with GITHUB_TOKEN do not start other workflows; ask Pages to rebuild.
+          gh api --method POST repos/${{ github.repository }}/pages/builds
