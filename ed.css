@@ -178,3 +178,66 @@ body.ed ::selection { background: var(--ed-yellow); color: #111; }
 @media (max-width: 760px) { .ed-footer .ed-wrap { grid-template-columns: 1fr 1fr; } }
 
 @media (prefers-reduced-motion: reduce) { body.ed *, body.ed *::before, body.ed *::after { transition: none !important; animation: none !important; } }
+
+/* ==========================================================================
+   Gradients
+   ========================================================================== */
+:root {
+  --ed-grad-yellow: linear-gradient(135deg, #ffe45c 0%, #ffd21f 45%, #ffb020 100%);
+  --ed-grad-ink: linear-gradient(135deg, #1c1c1c 0%, #0b0b0b 100%);
+  --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .28), transparent 70%),
+                  radial-gradient(45% 50% at 5% 0%, rgba(255, 176, 120, .22), transparent 70%),
+                  radial-gradient(50% 55% at 60% 100%, rgba(120, 190, 255, .16), transparent 70%);
+}
+:root[data-theme="dark"] { --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .16), transparent 70%), radial-gradient(45% 50% at 5% 0%, rgba(255, 140, 60, .12), transparent 70%); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .16), transparent 70%), radial-gradient(45% 50% at 5% 0%, rgba(255, 140, 60, .12), transparent 70%); } }
+.ed-glow { position: relative; isolation: isolate; }
+.ed-glow::before { content: ""; position: absolute; inset: -60px calc(-1 * var(--ed-gutter)) -40px; z-index: -1; background: var(--ed-grad-hero); pointer-events: none; }
+.ed-btn.yellow, .ed-tag:not(.dark):not(.white), .ed-chip.on, .ed-chip[aria-pressed="true"] { background: var(--ed-grad-yellow); border-color: transparent; }
+.ed-btn.yellow { box-shadow: 0 10px 24px -12px rgba(255, 166, 0, .8); }
+.ed-display mark { box-shadow: none; background: linear-gradient(90deg, #ffd21f, #ffb020) no-repeat 0 92% / 100% .16em; }
+.ed-icon-chip { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--ed-grad-yellow); color: #111; box-shadow: 0 8px 18px -10px rgba(255, 166, 0, .9); }
+.ed-icon-chip svg { width: 22px; height: 22px; }
+.ed-dark-panel { background: radial-gradient(70% 120% at 100% 0%, rgba(255, 210, 31, .28), transparent 60%), var(--ed-grad-ink); color: #fff; }
+.ed-card.grad-border { border: 1.5px solid transparent; background: linear-gradient(var(--ed-surface), var(--ed-surface)) padding-box, linear-gradient(135deg, #ffd21f, #ffb020 40%, var(--ed-line) 70%) border-box; }
+
+/* ==========================================================================
+   Motion (all of it turns off with prefers-reduced-motion)
+   ========================================================================== */
+@keyframes ed-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes ed-draw { from { background-size: 0 .16em; } to { background-size: 100% .16em; } }
+@keyframes ed-shine { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(220%) skewX(-20deg); } }
+@keyframes ed-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 196, 0, .55); } 50% { box-shadow: 0 0 0 12px rgba(255, 196, 0, 0); } }
+@keyframes ed-dot { 50% { opacity: .35; } }
+@keyframes ed-float { 50% { transform: translateY(-8px); } }
+@keyframes ed-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes ed-marquee { to { transform: translateX(-50%); } }
+@keyframes ed-glowmove { 50% { transform: translate(3%, 2%) scale(1.05); } }
+
+/* Reveal on scroll: ed.js adds .in when a [data-reveal] block enters the screen. */
+.js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.2, .7, .2, 1), transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i, 0) * 80ms); }
+.js [data-reveal].in { opacity: 1; transform: none; }
+.ed-hero-in > * { animation: ed-up .8s cubic-bezier(.2, .7, .2, 1) both; }
+.ed-hero-in > *:nth-child(2) { animation-delay: .08s; } .ed-hero-in > *:nth-child(3) { animation-delay: .16s; } .ed-hero-in > *:nth-child(4) { animation-delay: .24s; }
+.ed-display mark { animation: ed-draw 1s .55s cubic-bezier(.2, .7, .2, 1) both; }
+.ed-glow::before { animation: ed-glowmove 12s ease-in-out infinite; }
+.ed-btn.yellow { position: relative; overflow: hidden; }
+.ed-btn.yellow::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .65), transparent); transform: translateX(-120%) skewX(-20deg); animation: ed-shine 3.6s 1.2s ease-in-out infinite; pointer-events: none; }
+.ed-pulse { animation: ed-pulse 2.2s ease-in-out infinite; }
+.ed-live::before { content: "●"; margin-right: 4px; animation: ed-dot 1.2s steps(1) infinite; }
+.ed-float { animation: ed-float 6s ease-in-out infinite; }
+.ed-photo img { transition: transform .7s cubic-bezier(.2, .7, .2, 1); }
+a:hover .ed-photo img, .ed-photo:hover img { transform: scale(1.06); }
+.ed-card, .s-tool, .s-tool-card, .ed-stat { transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s, border-color .25s; }
+.ed-card.lift:hover, .ed-stat:hover { transform: translateY(-3px); box-shadow: var(--ed-shadow-lg); }
+.ed-bars-grow i { transform-origin: bottom; }
+.js .ed-bars-grow:not(.in) i { transform: scaleY(0); }
+.js .ed-bars-grow.in i { animation: ed-grow .9s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 35ms); }
+.ed-marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.ed-marquee > .track { display: flex; gap: 14px; width: max-content; animation: ed-marquee 40s linear infinite; }
+.ed-marquee:hover > .track, .ed-marquee:focus-within > .track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .ed-marquee > .track { animation: none; }
+  .ed-marquee { overflow-x: auto; }
+}
