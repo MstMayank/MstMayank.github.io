@@ -11,7 +11,7 @@
 <meta property="og:title" content="Daily Cricket Quiz | The Cricket Space">
 <meta property="og:description" content="Five new IPL and WPL questions every day. Keep your streak and share your score.">
 <meta property="og:url" content="https://mstmayank.github.io/quiz.html">
-<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image" content="https://mstmayank.github.io/og-quiz.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; }
@@ -41,6 +41,12 @@
   .qz-stats { display: flex; justify-content: center; gap: 28px; margin: 14px 0 20px; color: #a3b0a8; }
   .qz-stats b { display: block; font: 800 28px "Big Shoulders Display", sans-serif; color: #eef1ec; }
   .qz-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .qz-invite { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .qz-invite p { margin: 0; color: #a3b0a8; font-size: 14px; flex: 1 1 220px; min-width: 0; }
+  body.ds .qz-challenge { margin: 0; padding: 14px 18px; border: 1px solid rgba(233,196,106,.4); border-radius: 16px; background: rgba(233,196,106,.08); color: #eef1ec; font-weight: 600; }
+  body.ds .qz-challenge[hidden], body.ds .qz-verdict[hidden] { display: none; }
+  body.ds .qz-verdict { margin: 0; color: #e9c46a; font-weight: 700; }
+  body.ds a.ds-btn.qz-wa { text-decoration: none; }
   .qz-review { text-align: left; margin-top: 18px; display: grid; gap: 8px; }
   .qz-review p { margin: 0; font-size: 14px; }
 </style>
@@ -57,6 +63,9 @@
 </div>
 <div class="qz">
   <p class="tool-count" id="qz-status" role="status">Loading today’s questions…</p>
+  <p class="qz-challenge" id="qz-challenge" hidden></p>
+  <div class="qz-invite" id="qz-invite"><p>Same five questions for everyone today. Send it to a friend and compare scores.</p><button type="button" class="ds-btn ghost" id="qz-invite-share">Challenge a friend ↗</button><a class="ds-btn ghost qz-wa" id="qz-invite-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a></div>
+  <p class="qz-explain" id="qz-invite-status" role="status"></p>
   <div class="qz-progress" id="qz-progress" aria-hidden="true"></div>
   <section class="qz-card" id="qz-card" hidden aria-live="polite">
     <span class="qz-eyebrow" id="qz-count"></span>
@@ -70,14 +79,15 @@
     <div class="qz-score" id="qz-score"></div>
     <div class="qz-dots" id="qz-dots"></div>
     <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
-    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Share result ↗</button><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
+    <p class="qz-verdict" id="qz-verdict" hidden></p>
+    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Challenge friends ↗</button><a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
     <p class="qz-explain" id="qz-share-status" role="status"></p>
     <div class="qz-review" id="qz-review"></div>
     <p class="qz-explain">New questions at midnight (India time).</p>
   </section>
 </div>
 </main>
-<script src="quiz-core.js?v=1"></script>
+<script src="quiz-core.js?v=2"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -85,6 +95,14 @@
   const today = new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
   let league = new URLSearchParams(location.search).get('league') === 'wpl' ? 'wpl' : 'ipl';
   let questions = [], index = 0, answers = [];
+  const linkLeague = league;
+  const wa = text => 'https://wa.me/?text=' + encodeURIComponent(text);
+  async function share(text, status) {
+    try {
+      if (navigator.share) { await navigator.share({text}); return; }
+      await navigator.clipboard.writeText(text); $(status).textContent = 'Copied. Paste it in any chat.';
+    } catch (e) { if (e.name !== 'AbortError') $(status).textContent = text; }
+  }
   const KEY = 'tcs-quiz-v1';
   const store = { read() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }, write(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} } };
   const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
@@ -144,6 +162,11 @@
     $('qz-dots').textContent = answers.map(ok => (ok ? '🏏' : '⬜')).join('');
     $('qz-streak').textContent = streakOf(all.days); $('qz-best').textContent = all.best; $('qz-played').textContent = Object.values(all.days).filter(d => d.done).length;
     $('qz-other').textContent = 'Play the ' + (league === 'ipl' ? 'WPL' : 'IPL') + ' quiz';
+    const challenge = league === linkLeague ? Q.readChallenge(location.search, today, questions.length) : null;
+    $('qz-verdict').hidden = !challenge;
+    if (challenge) $('qz-verdict').textContent = Q.verdict(score, challenge.score);
+    $('qz-wa').href = wa(Q.challengeText(league, today, answers));
+    $('qz-invite').hidden = true; $('qz-challenge').hidden = true; $('qz-invite-status').textContent = '';
     $('qz-review').replaceChildren(...questions.map((q, i) => { const p = document.createElement('p'); p.textContent = (answers[i] ? '🏏 ' : '⬜ ') + q.question + ' — ' + q.options[q.answer]; return p; }));
   }
   async function start() {
@@ -156,17 +179,18 @@
       answers = saved ? saved.answers.slice() : [];
       index = answers.length;
       $('qz-status').textContent = 'Today’s ' + league.toUpperCase() + ' quiz · ' + questions.length + ' questions';
+      const challenge = league === linkLeague ? Q.readChallenge(location.search, today, questions.length) : null;
+      $('qz-challenge').hidden = !challenge;
+      if (challenge) $('qz-challenge').textContent = 'Your friend scored ' + challenge.score + '/' + questions.length + ' on today’s ' + league.toUpperCase() + ' quiz. Can you beat it?';
+      $('qz-invite').hidden = false; $('qz-invite-wa').href = wa(Q.inviteText(league, today));
       if (saved?.done || index >= questions.length) finish(); else show();
     } catch (e) { $('qz-status').textContent = 'The quiz could not load. Refresh the page to try again.'; }
   }
   $('qz-next').addEventListener('click', () => { index++; if (index < questions.length) show(); else finish(); });
   $('qz-other').addEventListener('click', () => { league = league === 'ipl' ? 'wpl' : 'ipl'; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); });
   document.querySelectorAll('[data-league]').forEach(b => b.addEventListener('click', () => { if (b.dataset.league === league) return; league = b.dataset.league; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); }));
-  $('qz-share').addEventListener('click', async () => {
-    const text = Q.shareText(today, answers, league.toUpperCase()) + '\nhttps://mstmayank.github.io/quiz.html';
-    try { if (navigator.share) { await navigator.share({text}); return; } await navigator.clipboard.writeText(text); $('qz-share-status').textContent = 'Result copied. Paste it anywhere.'; }
-    catch (e) { if (e.name !== 'AbortError') $('qz-share-status').textContent = text; }
-  });
+  $('qz-share').addEventListener('click', () => share(Q.challengeText(league, today, answers), 'qz-share-status'));
+  $('qz-invite-share').addEventListener('click', () => share(Q.inviteText(league, today), 'qz-invite-status'));
   start();
 })();
 </script>
