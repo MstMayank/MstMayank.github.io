@@ -11,7 +11,7 @@ html body.ds .pp-actions, html body.ds .pp-more { display: flex; flex-wrap: wrap
 html body.ds .pp-actions a, html body.ds .pp-actions button, html body.ds .pp-more a, html body.ds .pp-more button {
   display: inline-flex; align-items: center; min-height: 40px; padding: 8px 16px; border: 1px solid var(--ds-line-2); border-radius: 999px;
   background: var(--ds-surface); color: var(--ds-text); font: 600 14px/1.2 var(--ds-font); text-decoration: none; cursor: pointer; opacity: 1; box-shadow: none; }
-html body.ds .pp-actions button, html body.ds .pp-more button { background: var(--ds-chalk); color: #0a0f0c; border-color: var(--ds-chalk); }
+html body.ds .pp-actions button, html body.ds .pp-more button { background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); border-color: var(--ds-chalk); }
 html body.ds .pp-actions a:hover, html body.ds .pp-more a:hover { border-color: var(--ds-gold); }
 html body.ds .pp-more button:disabled { opacity: .6; cursor: progress; }
 html body.ds .pp-section { display: grid; gap: 16px; padding: clamp(18px, 3vw, 28px); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); background: var(--ds-surface); }

@@ -284,12 +284,12 @@ def shell_from(source):
     styles = re.search(r'<link rel="stylesheet" href="/fonts/fonts.css">.*?\n', text).group(0)
     styles = styles.replace('href="record-lens.css', 'href="/record-lens.css').replace('href="tools.css', 'href="/tools.css')
     head = ('<!doctype html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            '<title>{{TITLE}}</title>\n<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">\n'
-            '<link rel="canonical" href="{{URL}}">\n<meta name="description" content="{{DESC}}">\n<meta name="theme-color" content="#07241A">\n'
+            '<script>try{var t=localStorage.getItem(\'tcs-theme\');if(t===\'light\'||t===\'dark\')document.documentElement.setAttribute(\'data-theme\',t)}catch(e){}</script><title>{{TITLE}}</title>\n<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">\n'
+            '<link rel="canonical" href="{{URL}}">\n<meta name="description" content="{{DESC}}">\n<meta name="theme-color" content="#09090f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)">\n'
             '<meta property="og:type" content="profile"><meta property="og:site_name" content="The Cricket Space">\n'
             '<meta property="og:title" content="{{OGTITLE}}">\n<meta property="og:description" content="{{DESC}}">\n<meta property="og:url" content="{{URL}}">\n'
             '<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">\n'
-            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=1">\n')
+            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=glass-1">\n')
     return {'head': head, 'nav': nav.replace('<a href="/player-battle.html">Players</a>', '<a href="/player-battle.html" aria-current="page">Players</a>'), 'footer': footer}
 
 

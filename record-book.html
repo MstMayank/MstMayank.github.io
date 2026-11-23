@@ -1,44 +1,44 @@
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8">
+<meta charset="utf-8"><script>try{var t=localStorage.getItem('tcs-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cricket Record Book | The Cricket Space</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="canonical" href="https://mstmayank.github.io/record-book.html"><meta name="description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space"><meta property="og:title" content="Cricket Record Book | The Cricket Space"><meta property="og:description" content="Search international cricket scores, stats and results by player, year and format."><meta property="og:url" content="https://mstmayank.github.io/record-book.html"><meta property="og:image" content="https://mstmayank.github.io/og-record-book.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Cricket Record Book | The Cricket Space"><meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
-  a { color: #ff946f; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: rgb(var(--ds-bg-rgb)); color: rgb(var(--ds-ink-rgb)); font: 16px system-ui; }
+  a { color: rgb(var(--ds-red-rgb)); }
   h1 { font: 500 clamp(36px, 8vw, 72px) Georgia, serif; margin-bottom: 12px; }
-  p { color: #b7b6af; }
+  p { color: var(--ds-muted); }
   .filters { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
   label { display: grid; gap: 6px; }
-  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  input, select, button { background: rgb(var(--ds-surface-rgb)); color: inherit; border: 1px solid rgba(var(--ds-ink-rgb), .251); border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
   .table { overflow: auto; }
   table { width: 100%; border-collapse: collapse; text-align: left; }
-  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
-  td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
-  .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
+  th, td { border-bottom: 1px solid rgba(var(--ds-ink-rgb), .149); padding: 12px; }
+  td:nth-child(2) { color: rgb(var(--ds-red-rgb)); font-weight: 700; white-space: nowrap; }
+  .series-heading { background: rgb(var(--ds-surface-rgb)); color: rgb(var(--ds-red-rgb)); font-weight: 700; }
   button { margin-top: 16px; cursor: pointer; }
 
-  .milestones { border: 1px solid #ffffff1f; border-radius: 20px; padding: clamp(16px, 2.4vw, 26px); margin: 0 0 22px; background: #121a16; }
+  .milestones { border: 1px solid rgba(var(--ds-ink-rgb), .122); border-radius: 20px; padding: clamp(16px, 2.4vw, 26px); margin: 0 0 22px; background: rgb(var(--ds-surface-rgb)); }
   .milestones[hidden] { display: none; }
   .ms-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
   .ms-head h2 { margin: 0; font-size: clamp(22px, 2.6vw, 28px); }
   .ms-toggle { display: flex; gap: 6px; }
   .ms-toggle button { margin: 0; height: 34px; padding: 0 14px; border-radius: 999px; font: 650 13px Manrope, sans-serif; }
-  .ms-toggle [aria-pressed="true"] { background: #f4f6f1; color: #0b100d; border-color: #f4f6f1; }
+  .ms-toggle [aria-pressed="true"] { background: rgb(var(--ds-ink-rgb)); color: rgb(var(--ds-bg-rgb)); border-color: rgb(var(--ds-ink-rgb)); }
   .ms-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 14px; }
-  .ms-grid h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #74837a; }
+  .ms-grid h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ds-subtle); }
   .ms-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-  .ms-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid #ffffff12; }
+  .ms-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid rgba(var(--ds-ink-rgb), .071); }
   .ms-list li:last-child { border-bottom: 0; }
-  .ms-list button { all: unset; cursor: pointer; font-weight: 700; color: #eef1ec; }
+  .ms-list button { all: unset; cursor: pointer; font-weight: 700; color: rgb(var(--ds-ink-rgb)); }
   .ms-list button:hover, .ms-list button:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
-  .ms-list small { grid-column: 1 / -1; color: #a3b0a8; font-size: 13px; }
-  .ms-list b { font-family: "Big Shoulders Display", sans-serif; font-size: 20px; color: #e9c46a; }
-  .ms-empty { color: #a3b0a8; font-size: 14px; }
-  .ms-note { font-size: 12.5px; color: #74837a; margin: 12px 0 0; }
+  .ms-list small { grid-column: 1 / -1; color: var(--ds-muted); font-size: 13px; }
+  .ms-list b { font-family: "Big Shoulders Display", sans-serif; font-size: 20px; color: rgb(var(--ds-accent-rgb)); }
+  .ms-empty { color: var(--ds-muted); font-size: 14px; }
+  .ms-note { font-size: 12.5px; color: var(--ds-subtle); margin: 12px 0 0; }
   @media (max-width: 760px) { .ms-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
-</style><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="/ds.css?v=2"></head><body class="v2 cricket-feel cricket-tools ds" id="top">
+</style><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1"><link rel="stylesheet" href="/ds.css?v=3"></head><body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main class="wrap page tool-page archive-page">
 <nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html" aria-current="page">Record Book</a></nav><h1 class="tool-heading">Cricket<br><span>Record Book</span></h1>
 <p class="tool-coverage">Covers matches with ball-by-ball scorecards: Tests from December 2001, ODIs from June 2002 and T20Is from February 2005. Older matches are not included, so totals for players from earlier eras are incomplete.</p>
@@ -311,4 +311,4 @@
   setInterval(refreshArchives, 2 * 60 * 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshArchives(); });
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=theme-1"></script></body></html>
