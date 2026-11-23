@@ -483,21 +483,6 @@ function venueLabel(name) {
     }
   }
 
-  let rosterArt;
-  function showBattlePortrait(button, league, playerName) {
-    if (league !== 'ipl' && league !== 'wpl') return;
-    rosterArt ||= fetch('/battle-art/portraits.json').then(r => r.ok ? r.json() : null).catch(() => null);
-    rosterArt.then(art => {
-      const asset = art?.[league]?.[playerName];
-      if (!asset) return;
-      const image = new Image();
-      image.alt = '';
-      image.className = 'duel-portrait';
-      image.onload = () => button.prepend(image);
-      image.src = '/battle-art/' + asset + '.jpg';
-    });
-  }
-
   function renderBattleBoard(format, headers, rows, choose) {
     const board=document.createElement('section');board.className='duel-board';
     if(format){const heading=document.createElement('h3');heading.textContent=format;board.appendChild(heading);}
@@ -505,8 +490,9 @@ function venueLabel(name) {
     const ids=mode==='direct'?selected:rows.map(row=>data.players.indexOf(row[0]));
     ids.forEach((id,index)=>{const button=document.createElement('button');button.type='button';button.className='duel-name';
       const small=document.createElement('small');small.textContent=mode==='direct'?(index?'BOWLER':'BATTER'):'PLAYER '+(index+1);
-      const name=document.createElement('strong');name.textContent=data.players[id];button.append(small,name);
-      showBattlePortrait(button,competition,data.players[id]);
+      const name=document.createElement('strong');name.textContent=data.players[id];
+      const text=document.createElement('span');text.className='duel-text';text.append(small,name);button.append(text);
+      if(window.TCSFaces&&mode!=='teams')window.TCSFaces.attach(button,competition==='international'?'':competition,data.players[id],'duel-face');
       button.addEventListener('click',()=>choose(index));names.appendChild(button);});board.appendChild(names);
     if(mode==='direct'){
       const groups=[

@@ -43,6 +43,7 @@
       let any = false;
       for (const section of document.querySelectorAll('.pp-letter')) { const shown = [...section.querySelectorAll('li')].some(li => !li.hidden); section.hidden = !shown; any = any || shown; }
       document.querySelector('.pp-letters').hidden = !!q;
+      const feat = document.querySelector('.pp-featured'); if (feat) feat.hidden = !!q;
       document.getElementById('pp-empty').hidden = any;
     });
   }

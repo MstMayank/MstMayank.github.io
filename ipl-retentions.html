@@ -11,33 +11,33 @@
 <meta charset="utf-8"><script>try{var t=localStorage.getItem('tcs-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IPL 2027 Retentions | The Cricket Space</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="canonical" href="https://mstmayank.github.io/ipl-retentions.html"><meta name="description" content="Every IPL 2027 retained squad, rated and ranked: batting, bowling, XI balance, bench, phase coverage and fielding for all 10 franchises."><meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space"><meta property="og:title" content="IPL 2027 Retentions | The Cricket Space"><meta property="og:description" content="Every IPL 2027 retained squad, rated and ranked."><meta property="og:url" content="https://mstmayank.github.io/ipl-retentions.html"><meta property="og:image" content="https://mstmayank.github.io/og-retentions.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="IPL 2027 Retentions"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#09090f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)">
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1">
 <style>
   .rt-grid { display:grid; grid-template-columns:minmax(0,380px) minmax(0,1fr); gap:24px; align-items:start; margin-top:8px; }
   #rt-team { scroll-margin-top:84px; }
   .rt-panel { border:1px solid var(--line); border-radius:22px; background:rgba(var(--ds-ink-rgb), .045); padding:18px; min-width:0; }
-  .rt-panel h2 { font:800 13px Manrope,sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin:0 0 14px; }
+  .rt-panel h2 { font:800 13px var(--ds-font),sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin:0 0 14px; }
   .rt-rank { list-style:none; margin:0; padding:0; display:grid; gap:8px; }
-  .rt-rank button { width:100%; display:grid; grid-template-columns:28px 40px minmax(0,1fr) auto; align-items:center; gap:12px; padding:10px 12px; border-radius:16px; border:1px solid transparent; background:rgba(var(--ds-bg-rgb), .55); color:var(--ink); font:600 14px Manrope,sans-serif; text-align:left; cursor:pointer; transition:border-color .2s, background .2s; }
+  .rt-rank button { width:100%; display:grid; grid-template-columns:28px 40px minmax(0,1fr) auto; align-items:center; gap:12px; padding:10px 12px; border-radius:16px; border:1px solid transparent; background:rgba(var(--ds-bg-rgb), .55); color:var(--ink); font:600 14px var(--ds-font),sans-serif; text-align:left; cursor:pointer; transition:border-color .2s, background .2s; }
   .rt-rank button:hover, .rt-rank button:focus-visible { border-color:var(--line); outline:none; }
   .rt-rank button[aria-pressed="true"] { border-color:var(--team, var(--gold)); background:rgba(var(--ds-ink-rgb), .08); }
-  .rt-pos { font:800 18px "Big Shoulders Display",sans-serif; color:var(--muted); text-align:center; }
+  .rt-pos { font:800 18px var(--ds-num),sans-serif; color:var(--muted); text-align:center; }
   .rt-logo { width:40px; height:40px; object-fit:contain; }
   .rt-name { min-width:0; }
   .rt-name b { display:block; font-size:15px; }
   .rt-name small { color:var(--muted); font-size:12px; }
-  .rt-score { font:900 26px "Big Shoulders Display",sans-serif; color:var(--team, var(--gold)); text-align:right; line-height:1; }
-  .rt-score small { display:block; font:700 11px Manrope,sans-serif; color:var(--muted); letter-spacing:.08em; }
+  .rt-score { font:900 26px var(--ds-num),sans-serif; color:var(--team, var(--gold)); text-align:right; line-height:1; }
+  .rt-score small { display:block; font:700 11px var(--ds-font),sans-serif; color:var(--muted); letter-spacing:.08em; }
   .rt-head { display:grid; grid-template-columns:64px minmax(0,1fr) auto; align-items:center; gap:16px; margin-bottom:18px; }
   .rt-head img { width:64px; height:64px; object-fit:contain; }
-  .rt-head h3 { font:900 clamp(30px,5vw,44px)/.95 "Big Shoulders Display",sans-serif; margin:0; text-transform:uppercase; }
+  .rt-head h3 { font:900 clamp(30px,5vw,44px)/.95 var(--ds-num),sans-serif; margin:0; text-transform:uppercase; }
   .rt-head p { margin:4px 0 0; color:var(--muted); font-size:14px; }
   .rt-big { text-align:right; }
-  .rt-big b { display:block; font:900 56px/.9 "Big Shoulders Display",sans-serif; color:var(--team, var(--gold)); }
-  .rt-big span { font:800 12px Manrope,sans-serif; letter-spacing:.12em; color:var(--muted); }
+  .rt-big b { display:block; font:900 56px/.9 var(--ds-num),sans-serif; color:var(--team, var(--gold)); }
+  .rt-big span { font:800 12px var(--ds-font),sans-serif; letter-spacing:.12em; color:var(--muted); }
   .rt-facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:20px; }
   .rt-facts div { border:1px solid var(--line); border-radius:14px; padding:10px 12px; }
-  .rt-facts b { display:block; font:800 20px Manrope,sans-serif; }
+  .rt-facts b { display:block; font:800 20px var(--ds-font),sans-serif; }
   .rt-facts span { color:var(--muted); font-size:12px; }
   .rt-bars { display:grid; gap:10px; margin:0 0 22px; }
   .rt-bar { display:grid; grid-template-columns:minmax(0,1fr) 52px; gap:4px 10px; font-size:13px; }
@@ -46,7 +46,7 @@
   .rt-bar i { grid-column:1 / -1; height:8px; border-radius:8px; background:rgba(var(--ds-ink-rgb), .08); overflow:hidden; }
   .rt-bar i::before { content:""; display:block; height:100%; width:var(--w); border-radius:8px; background:var(--team, var(--gold)); }
   .rt-cols { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
-  .rt-cols h4, .rt-squad h4 { font:800 12px Manrope,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 10px; }
+  .rt-cols h4, .rt-squad h4 { font:800 12px var(--ds-font),sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 10px; }
   .rt-xi { margin:0; padding-left:22px; display:grid; gap:4px; font-size:14px; }
   .rt-xi small, .rt-tag { color:var(--muted); font-size:12px; }
   .rt-notes ul { margin:0 0 14px; padding-left:18px; display:grid; gap:4px; font-size:14px; }
@@ -70,8 +70,8 @@
     .rt-head img { width:48px; height:48px; }
     .rt-big { grid-column:1 / -1; text-align:left; display:flex; align-items:baseline; gap:10px; }
   }
-</style><link rel="stylesheet" href="/ds.css?v=3"></head><body class="v2 cricket-feel cricket-tools ds" id="top">
-<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main class="wrap page tool-page">
+</style><link rel="stylesheet" href="/ds.css?v=ed-1"></head><body class="v2 cricket-feel cricket-tools ds" id="top">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main class="wrap page tool-page">
 <nav class="tool-links" aria-label="Cricket tools"><a href="ipl-retentions.html" aria-current="page">IPL 2027 Retentions</a></nav><h1 class="tool-heading">Retained squads,<br><span>rated</span></h1>
 <p class="tool-coverage" id="rt-intro">All 10 franchises after the 17 November 2026 retention deadline, ranked with The Cricket Space squad rating.</p>
 <div class="rt-grid">
@@ -149,4 +149,4 @@
   window.addEventListener('hashchange', () => data && showTeam(location.hash.slice(1), false));
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=theme-1"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/"><small>The</small>Cricket Space<i>.</i></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ed-1"></script></body></html>

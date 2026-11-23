@@ -1,9 +1,9 @@
 
 (() => {
-  // Theme: a sun/moon button in the header. No saved choice = follow the phone or computer setting.
+  // Theme: a sun/moon button in the header.
   const root = document.documentElement;
-  const systemLight = matchMedia('(prefers-color-scheme: light)');
-  const current = () => root.getAttribute('data-theme') || (systemLight.matches ? 'light' : 'dark');
+  // Light is the default design; dark only when chosen.
+  const current = () => root.getAttribute('data-theme') || 'light';
   const bar = document.querySelector('.site-nav .bar');
   if (bar && !bar.querySelector('.theme-toggle')) {
     const button = document.createElement('button');
@@ -24,7 +24,6 @@
       paint();
       document.dispatchEvent(new CustomEvent('tcs-theme', {detail: next}));
     });
-    systemLight.addEventListener?.('change', paint);
     paint();
     bar.insertBefore(button, bar.querySelector('.nav-toggle') || bar.lastElementChild);
   }
@@ -45,7 +44,11 @@
     document.body.classList.toggle('menu-open', open);
   });
   // Mark the current section in the header (one shared header on every page).
-  const here = location.pathname.replace(/\/index\.html$/, '/').split('/').pop() || '';
+  const page = location.pathname.replace(/\/index\.html$/, '/').split('/').pop() || '';
+  // Pages reached from the Tools hub light up "Tools"; the article lights up "Stories".
+  const section = {'player-battle.html': 'tools.html', 'venues.html': 'tools.html', 'preview.html': 'tools.html', 'record-book.html': 'tools.html',
+    'fantasy.html': 'tools.html', 'ipl-retentions.html': 'tools.html', 'what-makes-the-ipl-so-special.html': 'writing.html'};
+  const here = section[page] || page;
   links?.querySelectorAll('a').forEach(link => {
     const target = new URL(link.href, location.href);
     if (!target.hash && target.pathname.split('/').pop() === here && here) link.setAttribute('aria-current', 'page');
