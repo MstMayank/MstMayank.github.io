@@ -6,29 +6,47 @@
    live moments. Manrope for words, Big Shoulders Display for numbers and the logo.
    ========================================================================== */
 
-/* ---------- Tokens ---------- */
+/* ---------- Tokens ----------
+   Two themes: dark (default) and light. Colours that need transparency are stored as RGB
+   triples (--ds-*-rgb) so any rule can write rgba(var(--ds-ink-rgb), .08) and still flip
+   with the theme. "ink" is the foreground (white on dark, near-black on light); "bg" and
+   "surface" are the page and card backgrounds; "accent" is the single violet highlight. */
 :root {
-  --ds-bg: #0a0f0c;
-  --ds-bg-2: #0e1511;
-  --ds-surface: #121a16;
-  --ds-surface-2: #17211c;
-  --ds-surface-3: #1d2923;
-  --ds-line: rgba(236, 241, 234, .09);
-  --ds-line-2: rgba(236, 241, 234, .16);
-  --ds-text: #eef1ec;
-  --ds-muted: #a3b0a8;
-  --ds-subtle: #74837a;
-  --ds-gold: #e9c46a;
-  --ds-gold-soft: rgba(233, 196, 106, .12);
-  --ds-red: #e5484d;
-  --ds-green: #3dd68c;
-  --ds-blue: #7cc4ff;
-  --ds-chalk: #f4f6f1;
-  --ds-radius-s: 10px;
-  --ds-radius: 14px;
-  --ds-radius-l: 20px;
-  --ds-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 12px 32px -18px rgba(0, 0, 0, .7);
-  --ds-ring: 0 0 0 3px rgba(233, 196, 106, .35);
+  --ds-bg-rgb: 9, 9, 15;
+  --ds-surface-rgb: 22, 22, 33;
+  --ds-ink-rgb: 255, 255, 255;
+  --ds-accent-rgb: 167, 139, 250;
+  --ds-red-rgb: 251, 113, 133;
+  --ds-green-rgb: 52, 211, 153;
+  --ds-blue-rgb: 96, 165, 250;
+  --ds-bg: rgb(var(--ds-bg-rgb));
+  --ds-bg-2: rgba(var(--ds-ink-rgb), .03);
+  --ds-surface: rgba(var(--ds-ink-rgb), .045);
+  --ds-surface-2: rgba(var(--ds-ink-rgb), .07);
+  --ds-surface-3: rgba(var(--ds-ink-rgb), .1);
+  --ds-surface-solid: rgb(var(--ds-surface-rgb));
+  --ds-line: rgba(var(--ds-ink-rgb), .08);
+  --ds-line-2: rgba(var(--ds-ink-rgb), .15);
+  --ds-text: #f4f4fb;
+  --ds-muted: #a3a3b8;
+  --ds-subtle: #71718a;
+  --ds-gold: rgb(var(--ds-accent-rgb));
+  --ds-gold-soft: rgba(var(--ds-accent-rgb), .14);
+  --ds-accent: rgb(var(--ds-accent-rgb));
+  --ds-red: rgb(var(--ds-red-rgb));
+  --ds-green: rgb(var(--ds-green-rgb));
+  --ds-blue: rgb(var(--ds-blue-rgb));
+  --ds-chalk: #f4f4fb;
+  --ds-on-chalk: #0b0b14;
+  --ds-glass-blur: saturate(150%) blur(18px);
+  --ds-aurora-1: rgba(139, 92, 246, .30);
+  --ds-aurora-2: rgba(56, 189, 248, .16);
+  --ds-aurora-3: rgba(236, 72, 153, .13);
+  --ds-radius-s: 12px;
+  --ds-radius: 16px;
+  --ds-radius-l: 24px;
+  --ds-shadow: 0 1px 0 rgba(var(--ds-ink-rgb), .06) inset, 0 20px 40px -24px rgba(0, 0, 0, .65);
+  --ds-ring: 0 0 0 3px rgba(var(--ds-accent-rgb), .4);
   --ds-ease: cubic-bezier(.2, .7, .2, 1);
   --ds-fast: 160ms;
   --ds-mid: 240ms;
@@ -37,14 +55,60 @@
   --page-gutter: clamp(16px, 4vw, 56px);
   color-scheme: dark;
 }
+/* Light theme: chosen with the header toggle, or the phone's setting when nothing is chosen. */
+:root[data-theme="light"] {
+  --ds-bg-rgb: 246, 246, 251;
+  --ds-surface-rgb: 255, 255, 255;
+  --ds-ink-rgb: 17, 17, 34;
+  --ds-accent-rgb: 109, 40, 217;
+  --ds-red-rgb: 220, 38, 38;
+  --ds-green-rgb: 4, 141, 96;
+  --ds-blue-rgb: 29, 99, 222;
+  --ds-surface: rgba(255, 255, 255, .62);
+  --ds-surface-2: rgba(255, 255, 255, .85);
+  --ds-surface-3: #fff;
+  --ds-text: #12121f;
+  --ds-muted: #4c4c66;
+  --ds-subtle: #6e6e88;
+  --ds-chalk: #12121f;
+  --ds-on-chalk: #ffffff;
+  --ds-aurora-1: rgba(139, 92, 246, .22);
+  --ds-aurora-2: rgba(56, 189, 248, .18);
+  --ds-aurora-3: rgba(236, 72, 153, .12);
+  --ds-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 40px -26px rgba(40, 30, 90, .35);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --ds-bg-rgb: 246, 246, 251; --ds-surface-rgb: 255, 255, 255; --ds-ink-rgb: 17, 17, 34; --ds-accent-rgb: 109, 40, 217;
+    --ds-red-rgb: 220, 38, 38; --ds-green-rgb: 4, 141, 96; --ds-blue-rgb: 29, 99, 222;
+    --ds-surface: rgba(255, 255, 255, .62); --ds-surface-2: rgba(255, 255, 255, .85); --ds-surface-3: #fff;
+    --ds-text: #12121f; --ds-muted: #4c4c66; --ds-subtle: #6e6e88; --ds-chalk: #12121f; --ds-on-chalk: #ffffff;
+    --ds-aurora-1: rgba(139, 92, 246, .22); --ds-aurora-2: rgba(56, 189, 248, .18); --ds-aurora-3: rgba(236, 72, 153, .12);
+    --ds-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 40px -26px rgba(40, 30, 90, .35);
+    color-scheme: light;
+  }
+}
+
+/* Page background with a soft aurora behind everything. */
+html:has(body.ds) { background: var(--ds-bg); }
+html body.ds { background: transparent !important; }
+body.ds::before {
+  content: ""; position: fixed; inset: -10% -10% auto; height: 120vh; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38% 34% at 12% 8%, var(--ds-aurora-1), transparent 70%),
+    radial-gradient(32% 30% at 88% 4%, var(--ds-aurora-2), transparent 72%),
+    radial-gradient(40% 38% at 70% 70%, var(--ds-aurora-3), transparent 72%);
+  filter: blur(30px);
+}
 
 /* Map the older variables onto the tokens so every page shares one palette. */
 body.ds {
   --bg: var(--ds-bg); --panel: var(--ds-surface); --panel2: var(--ds-surface-2);
   --chalk: var(--ds-text); --ink: var(--ds-text); --text: var(--ds-text);
   --muted: var(--ds-muted); --mute: var(--ds-muted); --dim: var(--ds-muted);
-  --line: var(--ds-line-2); --gold: var(--ds-gold); --gold2: #c99a3a;
-  --red: var(--ds-red); --red2: #c93a3f; --orange: var(--ds-red); --green: var(--ds-green);
+  --line: var(--ds-line-2); --gold: var(--ds-gold); --gold2: rgb(var(--ds-accent-rgb));
+  --red: var(--ds-red); --red2: rgb(var(--ds-red-rgb)); --orange: var(--ds-red); --green: var(--ds-green);
   background: var(--ds-bg);
   color: var(--ds-text);
   font: 400 16px/1.6 var(--ds-font);
@@ -52,7 +116,7 @@ body.ds {
   text-rendering: optimizeLegibility;
 }
 body.ds #ipl-lens { --ink: var(--ds-text); --dim: var(--ds-muted); --line: var(--ds-line-2); --orange: var(--ds-gold); --bg: var(--ds-bg); }
-body.ds ::selection { background: rgba(233, 196, 106, .35); color: #fff; }
+body.ds ::selection { background: rgba(var(--ds-accent-rgb), .35); color: rgb(var(--ds-ink-rgb)); }
 body.ds a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 body.ds p { color: var(--ds-muted); }
 body.ds :focus-visible { outline: 2px solid var(--ds-gold); outline-offset: 3px; border-radius: 6px; }
@@ -82,7 +146,7 @@ body.ds .tile b, body.ds .bento-num, body.ds .mx-card h3 b, body.ds #ipl-lens .m
 /* ---------- Header ---------- */
 body.ds .site-nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(10, 15, 12, .72);
+  background: rgba(var(--ds-bg-rgb), .72);
   backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
   border-bottom: 1px solid var(--ds-line);
 }
@@ -91,15 +155,15 @@ body.ds .site-nav .logo.d { flex: 0 0 auto; font: 900 22px/1 var(--ds-num); lett
 body.ds .site-nav .logo.d span { color: var(--ds-gold); }
 html body.ds .site-nav #site-links { display: flex; align-items: center; gap: 2px; margin-left: auto; font: 600 14px var(--ds-font); color: var(--ds-muted); position: static; flex-direction: row; padding: 0; background: none; border: 0; box-shadow: none; }
 html body.ds .site-nav #site-links a { padding: 8px 12px; border-radius: 999px; text-decoration: none; transition: color var(--ds-fast), background var(--ds-fast); }
-html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(255, 255, 255, .05); }
-html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); background: rgba(255, 255, 255, .08); }
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(var(--ds-ink-rgb), .05); }
+html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); background: rgba(var(--ds-ink-rgb), .08); }
 html body.ds .site-nav #site-links .links-cta { display: none; }
 body.ds .site-nav .bar > .btn, body.ds .site-nav .nav-cta {
   display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px; margin: 0;
-  background: var(--ds-chalk); color: #0b100d; font: 700 14px var(--ds-font); letter-spacing: -.01em; text-decoration: none; border: 0;
+  background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); font: 700 14px var(--ds-font); letter-spacing: -.01em; text-decoration: none; border: 0;
   transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast);
 }
-body.ds .site-nav .bar > .btn:hover { background: #fff; transform: translateY(-1px); }
+body.ds .site-nav .bar > .btn:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
 html body.ds .site-nav .bar > .nav-toggle { display: none; }
 body.ds .site-nav .mobile-contact { display: none; }
 
@@ -107,14 +171,14 @@ body.ds .site-nav .mobile-contact { display: none; }
   body.ds .site-nav .bar { gap: 10px; }
   html body.ds .site-nav .bar > .nav-toggle {
     display: inline-flex; align-items: center; gap: 8px; margin-left: auto; height: 38px; padding: 0 14px;
-    border: 1px solid var(--ds-line-2); border-radius: 999px; background: rgba(255, 255, 255, .04); color: var(--ds-text); font: 650 14px var(--ds-font); cursor: pointer;
+    border: 1px solid var(--ds-line-2); border-radius: 999px; background: rgba(var(--ds-ink-rgb), .04); color: var(--ds-text); font: 650 14px var(--ds-font); cursor: pointer;
   }
   body.ds .site-nav .bar > .btn { display: none; }
   /* Full-height sheet under the bar */
   /* The header's backdrop-filter makes it the containing block, so the sheet is sized from it. */
   html body.ds .site-nav #site-links {
     position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - 64px); height: calc(100dvh - 64px); display: flex; flex-direction: column; align-items: stretch; gap: 4px;
-    padding: 18px var(--page-gutter) 32px; margin: 0; background: rgba(10, 15, 12, .98); border: 0; border-radius: 0; box-shadow: none;
+    padding: 18px var(--page-gutter) 32px; margin: 0; background: rgba(var(--ds-bg-rgb), .98); border: 0; border-radius: 0; box-shadow: none;
     font: 700 24px/1.2 var(--ds-font); letter-spacing: -.02em; color: var(--ds-text);
     opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease), visibility 0s linear var(--ds-mid);
     overflow-y: auto;
@@ -122,7 +186,7 @@ body.ds .site-nav .mobile-contact { display: none; }
   html body.ds .site-nav #site-links.open { display: flex; grid-template-columns: none; opacity: 1; visibility: visible; transform: none; transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease); }
   html body.ds .site-nav #site-links a { padding: 14px 4px; border-radius: 0; border-bottom: 1px solid var(--ds-line); background: none; }
   html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-gold); background: none; }
-  html body.ds .site-nav #site-links .links-cta { display: inline-flex; justify-content: center; margin-top: 20px; padding: 14px; border: 0; border-radius: 999px; background: var(--ds-chalk); color: #0b100d; font-size: 16px; }
+  html body.ds .site-nav #site-links .links-cta { display: inline-flex; justify-content: center; margin-top: 20px; padding: 14px; border: 0; border-radius: 999px; background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); font-size: 16px; }
   body.ds.menu-open { overflow: hidden; }
 }
 
@@ -130,30 +194,30 @@ body.ds .site-nav .mobile-contact { display: none; }
 body.ds .ds-btn, body.ds .btn:not(.d), body.ds .ap-cta, body.ds .bento-send, body.ds #pv-share, body.ds #pv-card {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px;
   font: 700 15px var(--ds-font); letter-spacing: -.01em; text-decoration: none; cursor: pointer; border: 1px solid transparent;
-  background: var(--ds-chalk); color: #0b100d; box-shadow: none;
+  background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); box-shadow: none;
   transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast), border-color var(--ds-fast), color var(--ds-fast);
 }
-body.ds .ds-btn:hover, body.ds .ap-cta:hover, body.ds .bento-send:hover, body.ds #pv-share:hover, body.ds #pv-card:hover { background: #fff; transform: translateY(-1px); }
+body.ds .ds-btn:hover, body.ds .ap-cta:hover, body.ds .bento-send:hover, body.ds #pv-share:hover, body.ds #pv-card:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
 body.ds .ds-btn:active { transform: translateY(0) scale(.98); }
-body.ds .ds-btn.ghost, body.ds #pv-card { background: rgba(255, 255, 255, .04); color: var(--ds-text); border-color: var(--ds-line-2); }
-body.ds .ds-btn.ghost:hover, body.ds #pv-card:hover { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .28); }
+body.ds .ds-btn.ghost, body.ds #pv-card { background: rgba(var(--ds-ink-rgb), .04); color: var(--ds-text); border-color: var(--ds-line-2); }
+body.ds .ds-btn.ghost:hover, body.ds #pv-card:hover { background: rgba(var(--ds-ink-rgb), .08); border-color: rgba(var(--ds-ink-rgb), .28); }
 body.ds button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
 /* ---------- Pills, segmented controls, tool links ---------- */
 body.ds .tool-pills { gap: 6px; margin-bottom: 16px; }
 body.ds .tool-pills button, body.ds #ipl-lens .tool-pills button {
-  height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(255, 255, 255, .03);
+  height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .03);
   color: var(--ds-muted); font: 650 14px var(--ds-font); box-shadow: none; transition: all var(--ds-fast);
 }
-body.ds .tool-pills button:hover { color: var(--ds-text); border-color: rgba(255, 255, 255, .28); }
+body.ds .tool-pills button:hover { color: var(--ds-text); border-color: rgba(var(--ds-ink-rgb), .28); }
 body.ds .tool-pills :is(.active, [aria-pressed="true"]), body.ds #ipl-lens .tool-pills :is(.active, [aria-pressed="true"]) {
-  background: var(--ds-chalk); color: #0b100d; border-color: var(--ds-chalk); box-shadow: none;
+  background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); border-color: var(--ds-chalk); box-shadow: none;
 }
-body.ds .tool-links { padding: 4px; gap: 2px; border-color: var(--ds-line); background: rgba(255, 255, 255, .025); margin-bottom: 28px; max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+body.ds .tool-links { padding: 4px; gap: 2px; border-color: var(--ds-line); background: rgba(var(--ds-ink-rgb), .025); margin-bottom: 28px; max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
 body.ds .tool-links::-webkit-scrollbar { display: none; }
 body.ds .tool-links a { white-space: nowrap; padding: 8px 14px; font: 650 13px var(--ds-font); color: var(--ds-muted); transition: color var(--ds-fast), background var(--ds-fast); }
 body.ds .tool-links a:hover { color: var(--ds-text); }
-body.ds .tool-links [aria-current] { background: rgba(255, 255, 255, .1); color: var(--ds-text); }
+body.ds .tool-links [aria-current] { background: rgba(var(--ds-ink-rgb), .1); color: var(--ds-text); }
 
 /* ---------- Inputs & filters ---------- */
 body.ds .tool-filter, body.ds .battle-filters { padding: 14px; gap: 10px; border-radius: var(--ds-radius-l); border: 1px solid var(--ds-line); background: var(--ds-bg-2); backdrop-filter: none; }
@@ -163,7 +227,7 @@ body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens, .pv-controls, 
   font: 600 14.5px var(--ds-font); padding-inline: 14px; transition: border-color var(--ds-fast), box-shadow var(--ds-fast), background-color var(--ds-fast);
 }
 body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) select { padding-right: 36px; }
-body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):hover { border-color: rgba(255, 255, 255, .26); }
+body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):hover { border-color: rgba(var(--ds-ink-rgb), .26); }
 body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):focus { outline: none; border-color: var(--ds-gold); box-shadow: var(--ds-ring); }
 body.ds .tool-filter button, body.ds #battle-reset, body.ds #battle-swap, body.ds #battle-clear {
   height: 44px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: transparent; color: var(--ds-text); font: 650 14px var(--ds-font); padding: 0 16px;
@@ -186,9 +250,9 @@ body.ds .tile:hover { border-color: var(--ds-line-2); }
 body.ds .tile b { color: var(--ds-text); font-weight: 800; font-size: clamp(28px, 3.6vw, 40px); }
 body.ds .tile span { color: var(--ds-muted); font-size: 13px; }
 body.ds .phase-chip, body.ds #ipl-lens .battle-result .phase-chip { border-radius: 999px; font: 650 12.5px var(--ds-font); padding: 4px 12px; background: var(--ds-gold-soft); border-color: transparent; }
-body.ds #ipl-lens .battle-result .phase-chip-none, body.ds #ipl-lens .battle-result .phase-chip.form-even, body.ds #ipl-lens .battle-result .phase-chip.form-none { background: rgba(255, 255, 255, .05); }
-body.ds #ipl-lens .battle-result .phase-chip.form-up { background: rgba(61, 214, 140, .12); }
-body.ds #ipl-lens .battle-result .phase-chip.form-down { background: rgba(229, 72, 77, .12); }
+body.ds #ipl-lens .battle-result .phase-chip-none, body.ds #ipl-lens .battle-result .phase-chip.form-even, body.ds #ipl-lens .battle-result .phase-chip.form-none { background: rgba(var(--ds-ink-rgb), .05); }
+body.ds #ipl-lens .battle-result .phase-chip.form-up { background: rgba(var(--ds-green-rgb), .12); }
+body.ds #ipl-lens .battle-result .phase-chip.form-down { background: rgba(var(--ds-red-rgb), .12); }
 body.ds .battle-coverage-warning { border-left-color: var(--ds-gold); border-radius: 0 var(--ds-radius-s) var(--ds-radius-s) 0; background: var(--ds-gold-soft); font-size: 13.5px; }
 
 /* ---------- Tables ---------- */
@@ -199,7 +263,7 @@ body.ds .tool-table th, body.ds #ipl-lens th {
 body.ds .tool-table td, body.ds #ipl-lens td { border-bottom: 1px solid var(--ds-line); font: 500 14px/1.4 var(--ds-font); color: var(--ds-text); font-variant-numeric: tabular-nums; }
 body.ds .tool-table tbody tr:last-child td, body.ds #ipl-lens tbody tr:last-child td { border-bottom: 0; }
 body.ds .tool-table tbody tr, body.ds #ipl-lens tbody tr { transition: background var(--ds-fast); }
-body.ds .tool-table tbody tr:hover, body.ds #ipl-lens tbody tr:hover { background: rgba(255, 255, 255, .03); }
+body.ds .tool-table tbody tr:hover, body.ds #ipl-lens tbody tr:hover { background: rgba(var(--ds-ink-rgb), .03); }
 body.ds .tool-table td:nth-child(2) { color: inherit; }
 body.ds #ipl-lens .battle-result tr.selected { background: var(--ds-gold-soft); }
 
@@ -238,7 +302,7 @@ body.ds .finder-empty, body.ds .hint { color: var(--ds-muted); }
    ========================================================================== */
 body.ds.home-page .hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(24px, 5vw, 72px); align-items: center; padding: clamp(40px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); }
 body.ds .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 20px; padding: 6px 12px 6px 10px; border: 1px solid var(--ds-line-2); border-radius: 999px; font: 650 12.5px var(--ds-font); color: var(--ds-muted); letter-spacing: .02em; }
-body.ds .hero-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ds-red); box-shadow: 0 0 0 4px rgba(229, 72, 77, .18); }
+body.ds .hero-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ds-red); box-shadow: 0 0 0 4px rgba(var(--ds-red-rgb), .18); }
 body.ds .hero-title, body.ds.home-page .hero h1.hero-title {
   font: 800 clamp(48px, 8.4vw, 112px)/.95 var(--ds-font); letter-spacing: -.055em; margin: 0 0 22px; color: var(--ds-text); max-width: 11ch;
 }
@@ -248,7 +312,7 @@ body.ds .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom
 body.ds .hero-actions .ds-btn { min-height: 50px; padding: 0 24px; font-size: 16px; }
 body.ds.home-page .hero-social a { min-height: 40px; padding: 0 14px; border: 1px solid var(--ds-line); border-radius: 999px; font: 600 14px var(--ds-font); color: var(--ds-muted); text-decoration: none; transition: color var(--ds-fast), border-color var(--ds-fast); }
 body.ds.home-page .hero-social a:hover { color: var(--ds-text); border-color: var(--ds-line-2); }
-body.ds .hero-wheel { width: 100%; max-width: 520px; justify-self: end; filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .45)); }
+body.ds .hero-wheel { width: 100%; max-width: 520px; justify-self: end; filter: drop-shadow(0 40px 60px rgba(var(--ds-bg-rgb), .45)); }
 body.ds.home-page .strip { background: var(--ds-bg-2); border-block: 1px solid var(--ds-line); }
 body.ds.home-page .strip b { font: 800 18px var(--ds-num); letter-spacing: .04em; }
 body.ds.home-page .strip em { font: 500 14px var(--ds-font); color: var(--ds-subtle); }
@@ -292,11 +356,11 @@ body.ds .site-footer nav.footer-col { display: block; gap: 0; font-size: 14.5px;
 html body.ds .tool-links { display: none; }
 
 /* Homepage article label: readable red on a soft red chip. */
-html body.ds .bento-eye.bento-red { background: rgba(229, 72, 77, .14); color: #ff8b8f; border-color: transparent; }
+html body.ds .bento-eye.bento-red { background: rgba(var(--ds-red-rgb), .14); color: rgb(var(--ds-red-rgb)); border-color: transparent; }
 
 /* Record Book "Show more" and other plain buttons inside tool pages. */
-html body.ds #more { min-height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(255, 255, 255, .04); color: var(--ds-text); font: 650 14px var(--ds-font); margin-top: 18px; }
-html body.ds #more:hover { background: rgba(255, 255, 255, .08); }
+html body.ds #more { min-height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .04); color: var(--ds-text); font: 650 14px var(--ds-font); margin-top: 18px; }
+html body.ds #more:hover { background: rgba(var(--ds-ink-rgb), .08); }
 
 /* Player Battle */
 html body.ds #ipl-lens .panel th, html body.ds #ipl-lens .battle-result th, html body.ds #ipl-lens th { background: var(--ds-surface-2); color: var(--ds-subtle); }
@@ -304,20 +368,20 @@ html body.ds #ipl-lens .panel, html body.ds #ipl-lens .tool-panel { background: 
 html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):not(.battle-suggestions button) {
   background: transparent; border: 1px solid var(--ds-line-2); border-radius: 999px; color: var(--ds-text); font: 650 14px var(--ds-font); min-height: 40px; padding: 0 16px;
 }
-html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):hover { background: rgba(255, 255, 255, .06); }
+html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):hover { background: rgba(var(--ds-ink-rgb), .06); }
 html body.ds #ipl-lens .tool-pills button[data-competition], html body.ds #ipl-lens .tool-pills button[data-view] { border-radius: 999px; }
 html body.ds #ipl-lens .tool-picker { background: var(--ds-surface-2); border: 1px solid var(--ds-line); box-shadow: none; border-radius: var(--ds-radius); }
 html body.ds #ipl-lens .tool-picker::before, html body.ds #ipl-lens .tool-picker::after { display: none; }
 html body.ds #ipl-lens input, html body.ds #ipl-lens select { background-color: var(--ds-surface); border: 1px solid var(--ds-line-2); border-radius: var(--ds-radius-s); color: var(--ds-text); }
 html body.ds #ipl-lens input:focus, html body.ds #ipl-lens select:focus { border-color: var(--ds-gold); box-shadow: var(--ds-ring); outline: none; }
-html body.ds #ipl-lens .battle-suggestions { background: var(--ds-surface-2); border: 1px solid var(--ds-line-2); border-radius: var(--ds-radius); box-shadow: 0 20px 40px -20px #000; }
+html body.ds #ipl-lens .battle-suggestions { background: var(--ds-surface-2); border: 1px solid var(--ds-line-2); border-radius: var(--ds-radius); box-shadow: 0 20px 40px -20px rgb(var(--ds-bg-rgb)); }
 html body.ds #ipl-lens .battle-suggestions button { background: none; border: 0; border-radius: var(--ds-radius-s); color: var(--ds-text); }
-html body.ds #ipl-lens .battle-suggestions button:hover, html body.ds #ipl-lens .battle-suggestions button:focus { background: rgba(255, 255, 255, .06); }
+html body.ds #ipl-lens .battle-suggestions button:hover, html body.ds #ipl-lens .battle-suggestions button:focus { background: rgba(var(--ds-ink-rgb), .06); }
 html body.ds #ipl-lens h1, html body.ds .v2 #ipl-lens h1 { font: 800 clamp(40px, 6.4vw, 76px)/.98 var(--ds-font); letter-spacing: -.045em; text-transform: none; margin: 6px 0 22px; }
 html body.ds #ipl-lens h1 span { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--ds-gold); }
 html body.ds #ipl-lens .battle-result .phase-profile { background: var(--ds-surface); border-color: var(--ds-line); }
 html body.ds #ipl-lens .battle-result .form-spark rect { fill: var(--ds-gold); }
-html body.ds #ipl-lens .battle-result .phase-bar { background: rgba(255, 255, 255, .07); }
+html body.ds #ipl-lens .battle-result .phase-bar { background: rgba(var(--ds-ink-rgb), .07); }
 html body.ds #ipl-lens .battle-result .phase-bar-fill { background: var(--ds-gold); }
 html body.ds #ipl-lens .panel-head .eyebrow { color: var(--ds-gold); }
 html body.ds #ipl-lens .tool-picker input, html body.ds #ipl-lens .battle-picker input { background: var(--ds-surface); }
@@ -342,3 +406,45 @@ html body.ds .mx-card h3, html body.ds .battle h3, html body.ds .chart h2 { font
   html body.ds .site-nav #site-links { width: auto; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; grid-template-columns: none; }
 }
 @media (max-width: 960px) { html body.ds .site-nav .bar > .nav-toggle { width: auto; height: 38px; padding: 0 14px; font: 650 14px var(--ds-font); display: inline-flex; align-items: center; justify-content: center; } }
+
+/* ==========================================================================
+   Glass theme: frosted cards over the aurora, violet accent, theme toggle.
+   ========================================================================== */
+html body.ds .site-nav { background: rgba(var(--ds-bg-rgb), .6); backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur); border-bottom-color: var(--ds-line); }
+html body.ds .site-footer { background: transparent; }
+html body.ds :is(.bento-card, .bento-cta, .tool-panel, .tool-filter, .battle-filters, .tile, .mx-card, .chart, .battle, .pp-section, .qz-card, .fx-tile, .fx-player, .fx-rules, .panel) {
+  background: var(--ds-surface); border-color: var(--ds-line);
+  backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur);
+}
+html body.ds :is(.pp-tiles div, .pp-scroll, .tool-table) { background: rgba(var(--ds-ink-rgb), .025); border-color: var(--ds-line); }
+html body.ds a.bento-card:hover { background: var(--ds-surface-2); border-color: rgba(var(--ds-accent-rgb), .45); box-shadow: 0 24px 50px -28px rgba(var(--ds-accent-rgb), .55); }
+/* Primary buttons: solid ink pill; accent glow on hover. */
+html body.ds :is(.ds-btn:not(.ghost), .ap-cta, .bento-send, #pv-share):hover { background: var(--ds-chalk); box-shadow: 0 10px 30px -12px rgba(var(--ds-accent-rgb), .7); }
+html body.ds .site-nav .bar > .btn:hover { background: var(--ds-chalk); box-shadow: 0 8px 24px -10px rgba(var(--ds-accent-rgb), .7); }
+/* Accent text: the second line of page titles and highlighted numbers get a soft gradient. */
+html body.ds :is(.tool-heading span, .hero-title em, #ipl-lens h1 span) {
+  background: linear-gradient(100deg, rgb(var(--ds-accent-rgb)), #ec4899 60%, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+html body.ds .site-nav .logo.d span, html body.ds .footer-brand .logo.d span { color: rgb(var(--ds-accent-rgb)); }
+html body.ds .site-nav #site-links a[aria-current="page"] { background: rgba(var(--ds-accent-rgb), .16); color: var(--ds-text); }
+@media (max-width: 960px) { html body.ds .site-nav #site-links a[aria-current="page"] { background: none; color: rgb(var(--ds-accent-rgb)); } }
+/* Theme toggle */
+html body.ds .site-nav .theme-toggle {
+  display: inline-grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; padding: 0; margin: 0 0 0 6px; border-radius: 50%;
+  border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .05); color: var(--ds-text); cursor: pointer; box-shadow: none; opacity: 1;
+  transition: background var(--ds-fast), transform var(--ds-fast) var(--ds-ease), border-color var(--ds-fast);
+}
+html body.ds .site-nav .theme-toggle:hover { background: rgba(var(--ds-ink-rgb), .1); border-color: rgba(var(--ds-accent-rgb), .5); transform: rotate(-12deg); }
+html body.ds .site-nav .theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+html body.ds .site-nav .theme-toggle svg path:only-child { fill: currentColor; stroke: none; }
+@media (max-width: 960px) { html body.ds .site-nav .theme-toggle { margin-left: auto; } html body.ds .site-nav .bar > .nav-toggle { margin-left: 0; } }
+/* Smooth switch between themes (not on first paint). */
+html.theme-anim body.ds, html.theme-anim body.ds * { transition: background-color .3s, border-color .3s, color .3s !important; }
+/* Record Book milestones: names are links, not buttons (an old archive-page rule painted all buttons red). */
+html body.ds .milestones .ms-list button { all: unset; cursor: pointer; font-weight: 700; color: var(--ds-text); }
+html body.ds .milestones .ms-list button:hover, html body.ds .milestones .ms-list button:focus-visible { text-decoration: underline; text-underline-offset: 3px; color: rgb(var(--ds-accent-rgb)); }
+html body.ds .milestones .ms-toggle button { background: rgba(var(--ds-ink-rgb), .05); color: var(--ds-muted); border: 1px solid var(--ds-line-2); }
+html body.ds .milestones .ms-toggle button[aria-pressed="true"] { background: var(--ds-chalk); color: var(--ds-on-chalk); border-color: var(--ds-chalk); }
+/* Article body text */
+html body.ds .v2 .article-main .prose p, html body.ds.v2 .article-main .prose p { color: rgba(var(--ds-ink-rgb), .8); }
+html body.ds.v2 .article-main .prose p:first-child { color: var(--ds-text); }

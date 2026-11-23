@@ -1,5 +1,33 @@
 
 (() => {
+  // Theme: a sun/moon button in the header. No saved choice = follow the phone or computer setting.
+  const root = document.documentElement;
+  const systemLight = matchMedia('(prefers-color-scheme: light)');
+  const current = () => root.getAttribute('data-theme') || (systemLight.matches ? 'light' : 'dark');
+  const bar = document.querySelector('.site-nav .bar');
+  if (bar && !bar.querySelector('.theme-toggle')) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'theme-toggle';
+    const paint = () => {
+      const light = current() === 'light';
+      button.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+      button.title = button.getAttribute('aria-label');
+      button.innerHTML = light
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.8v2.6M12 19.6v2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M1.8 12h2.6M19.6 12h2.6M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></svg>';
+    };
+    button.addEventListener('click', () => {
+      const next = current() === 'light' ? 'dark' : 'light';
+      root.classList.add('theme-anim'); setTimeout(() => root.classList.remove('theme-anim'), 400);
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('tcs-theme', next); } catch (e) {}
+      paint();
+      document.dispatchEvent(new CustomEvent('tcs-theme', {detail: next}));
+    });
+    systemLight.addEventListener?.('change', paint);
+    paint();
+    bar.insertBefore(button, bar.querySelector('.nav-toggle') || bar.lastElementChild);
+  }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('site-links');

@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8">
+<meta charset="utf-8"><script>try{var t=localStorage.getItem('tcs-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IPL Match Charts: Worm, Manhattan, Win Probability | The Cricket Space</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://mstmayank.github.io/match.html">
 <meta name="description" content="Every IPL and WPL match with a worm chart, Manhattan chart, ball-by-ball win probability for the chase, and the top batters and bowlers.">
-<meta name="theme-color" content="#07241A">
+<meta name="theme-color" content="#09090f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
 <meta property="og:title" content="IPL Match Charts | The Cricket Space">
 <meta property="og:description" content="Worm, Manhattan and win-probability charts for every IPL and WPL match.">
@@ -15,13 +15,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
-  a { color: #ff946f; }
-  p { color: #b7b6af; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: rgb(var(--ds-bg-rgb)); color: rgb(var(--ds-ink-rgb)); font: 16px system-ui; }
+  a { color: rgb(var(--ds-red-rgb)); }
+  p { color: var(--ds-muted); }
   label { display: grid; gap: 6px; }
-  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  input, select, button { background: rgb(var(--ds-surface-rgb)); color: inherit; border: 1px solid rgba(var(--ds-ink-rgb), .251); border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
   table { width: 100%; border-collapse: collapse; text-align: left; }
-  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  th, td { border-bottom: 1px solid rgba(var(--ds-ink-rgb), .149); padding: 12px; }
   .mx { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .mx > * { min-width: 0; }
   .mx[hidden], .mx [hidden] { display: none !important; }
@@ -31,32 +31,32 @@
   .cricket-tools .mx .tool-table :is(th, td) { padding: 11px 14px; }
   .cricket-tools .tool-table th.num, .num { text-align: right; white-space: nowrap; }
   .mx-list tbody tr { cursor: pointer; }
-  .mx-list tbody tr:hover { background: #ffffff10; }
+  .mx-list tbody tr:hover { background: rgba(var(--ds-ink-rgb), .063); }
   .mx-list td:nth-child(2) a { font-weight: 700; text-decoration: none; }
-  .mx-result { font-size: 1.15rem; font-weight: 700; color: var(--gold, #F6C453); margin: 6px 0 0; }
+  .mx-result { font-size: 1.15rem; font-weight: 700; color: var(--gold, rgb(var(--ds-accent-rgb))); margin: 6px 0 0; }
   .mx-meta { margin: 4px 0 0; }
   .mx-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-  .mx-card { border: 1px solid var(--line, #ffffff26); border-radius: 16px; padding: 16px 18px; background: #ffffff08; min-width: 0; }
+  .mx-card { border: 1px solid var(--line, rgba(var(--ds-ink-rgb), .149)); border-radius: 16px; padding: 16px 18px; background: rgba(var(--ds-ink-rgb), .031); min-width: 0; }
   .mx-card h3 { margin: 0 0 4px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-  .mx-card h3 b { color: var(--gold, #F6C453); }
-  .mx-card.second h3 b { color: #7cc4ff; }
+  .mx-card h3 b { color: var(--gold, rgb(var(--ds-accent-rgb))); }
+  .mx-card.second h3 b { color: rgb(var(--ds-blue-rgb)); }
   .mx-card p { margin: 0 0 10px; font-size: .9rem; }
   .mx-card ul { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; }
   .mx-card li { display: flex; justify-content: space-between; gap: 10px; font-size: .95rem; }
-  .mx-card li span:last-child { color: var(--dim, #9DB8A8); white-space: nowrap; }
-  .chart { border: 1px solid var(--line, #ffffff26); border-radius: 16px; padding: 16px; background: #ffffff06; }
+  .mx-card li span:last-child { color: var(--dim, var(--ds-muted)); white-space: nowrap; }
+  .chart { border: 1px solid var(--line, rgba(var(--ds-ink-rgb), .149)); border-radius: 16px; padding: 16px; background: rgba(var(--ds-ink-rgb), .024); }
   .chart h2 { margin: 0 0 4px; }
   .chart p { margin: 0 0 10px; font-size: .9rem; }
   .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .chart .axis text { fill: var(--dim, #9DB8A8); font-size: 11px; font-family: Manrope, system-ui, sans-serif; }
-  .chart .axis line, .chart .grid line { stroke: #ffffff1f; }
-  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--dim, #9DB8A8); margin-top: 8px; }
+  .chart .axis text { fill: var(--dim, var(--ds-muted)); font-size: 11px; font-family: Manrope, system-ui, sans-serif; }
+  .chart .axis line, .chart .grid line { stroke: rgba(var(--ds-ink-rgb), .122); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--dim, var(--ds-muted)); margin-top: 8px; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-  .mx-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
+  .mx-note { font-size: .85rem; color: var(--dim, var(--ds-muted)); margin: 8px 0 0; }
   @media (max-width: 760px) { .mx-cards { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } .mx-list th:nth-child(5), .mx-list td:nth-child(5) { display: none; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
-<link rel="stylesheet" href="/ds.css?v=2"></head>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1"><link rel="stylesheet" href="tools.css?v=glass-1">
+<link rel="stylesheet" href="/ds.css?v=3"></head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main class="wrap page tool-page archive-page">
@@ -295,4 +295,4 @@
   render();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=theme-1"></script></body></html>

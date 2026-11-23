@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8">
+<meta charset="utf-8"><script>try{var t=localStorage.getItem('tcs-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IPL Match Preview: Stats, Venue, Key Battles | The Cricket Space</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://mstmayank.github.io/preview.html">
 <meta name="description" content="Pick two IPL or WPL teams and a ground for a stats preview: head-to-head record, venue par scores, phase strengths, key player battles and who is in form.">
-<meta name="theme-color" content="#07241A">
+<meta name="theme-color" content="#09090f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
 <meta property="og:title" content="IPL Match Preview: Stats, Venue, Key Battles | The Cricket Space">
 <meta property="og:description" content="Head-to-head record, venue par scores, phase strengths, key player battles and who is in form, for any IPL or WPL fixture.">
@@ -15,13 +15,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: #10100f; color: #f2f0e9; font: 16px system-ui; }
-  a { color: #ff946f; }
-  p { color: #b7b6af; }
+  body { margin: 0 auto; max-width: 1100px; padding: 28px 20px 60px; background: rgb(var(--ds-bg-rgb)); color: rgb(var(--ds-ink-rgb)); font: 16px system-ui; }
+  a { color: rgb(var(--ds-red-rgb)); }
+  p { color: var(--ds-muted); }
   label { display: grid; gap: 6px; }
-  input, select, button { background: #1b1b18; color: inherit; border: 1px solid #ffffff40; border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+  input, select, button { background: rgb(var(--ds-surface-rgb)); color: inherit; border: 1px solid rgba(var(--ds-ink-rgb), .251); border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
   table { width: 100%; border-collapse: collapse; text-align: left; }
-  th, td { border-bottom: 1px solid #ffffff26; padding: 12px; }
+  th, td { border-bottom: 1px solid rgba(var(--ds-ink-rgb), .149); padding: 12px; }
   .pv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .pv > * { min-width: 0; }
   .pv[hidden], .pv [hidden] { display: none !important; }
@@ -29,37 +29,37 @@
   .cricket-tools .pv-controls.tool-filter label { min-width: 0; width: auto; max-width: none; flex: none; }
   .cricket-tools .pv-controls.tool-filter select { width: 100%; max-width: none; min-width: 0; }
   .pv-section h2 { margin: 0 0 6px; }
-  .pv-sub { margin: 0 0 14px; font-size: .9rem; color: var(--dim, #9DB8A8); }
+  .pv-sub { margin: 0 0 14px; font-size: .9rem; color: var(--dim, var(--ds-muted)); }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-  .tile { border: 1px solid var(--line, #ffffff26); border-radius: 14px; padding: 14px 16px; min-width: 0; background: #ffffff08; }
-  .tile b { display: block; font-size: clamp(1.4rem, 4vw, 1.9rem); line-height: 1.1; color: var(--gold, #F6C453); }
-  .tile span { display: block; font-size: .85rem; color: var(--dim, #9DB8A8); margin-top: 4px; }
+  .tile { border: 1px solid var(--line, rgba(var(--ds-ink-rgb), .149)); border-radius: 14px; padding: 14px 16px; min-width: 0; background: rgba(var(--ds-ink-rgb), .031); }
+  .tile b { display: block; font-size: clamp(1.4rem, 4vw, 1.9rem); line-height: 1.1; color: var(--gold, rgb(var(--ds-accent-rgb))); }
+  .tile span { display: block; font-size: .85rem; color: var(--dim, var(--ds-muted)); margin-top: 4px; }
   .pv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
   .cricket-tools .pv .tool-table table { min-width: 0; }
   .cricket-tools .pv .tool-table :is(th, td) { padding: 12px 14px; }
   .cricket-tools .tool-table th.num, .num { text-align: right; white-space: nowrap; }
-  .better { color: var(--green, #22c55e); }
-  .worse { color: var(--red, #ef4444); }
-  body.cricket-tools .pv .tool-table td.num { color: var(--chalk, #F2F5EF); }
-  body.cricket-tools .pv .tool-table td.num.better { color: var(--green, #22c55e); }
-  body.cricket-tools .pv .tool-table td.num.worse { color: var(--red, #ef4444); }
+  .better { color: var(--green, rgb(var(--ds-green-rgb))); }
+  .worse { color: var(--red, rgb(var(--ds-red-rgb))); }
+  body.cricket-tools .pv .tool-table td.num { color: var(--chalk, rgb(var(--ds-ink-rgb))); }
+  body.cricket-tools .pv .tool-table td.num.better { color: var(--green, rgb(var(--ds-green-rgb))); }
+  body.cricket-tools .pv .tool-table td.num.worse { color: var(--red, rgb(var(--ds-red-rgb))); }
   .battles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-  .battle { border: 1px solid var(--line, #ffffff26); border-radius: 14px; padding: 16px; background: #ffffff08; display: grid; gap: 6px; min-width: 0; }
+  .battle { border: 1px solid var(--line, rgba(var(--ds-ink-rgb), .149)); border-radius: 14px; padding: 16px; background: rgba(var(--ds-ink-rgb), .031); display: grid; gap: 6px; min-width: 0; }
   .battle h3 { margin: 0; font-size: 1.05rem; }
-  .battle .verdict { font-weight: 700; color: var(--gold, #F6C453); }
+  .battle .verdict { font-weight: 700; color: var(--gold, rgb(var(--ds-accent-rgb))); }
   .battle p { margin: 0; }
   .form-list { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
   .form-list small { font-weight: 700; }
-  .pv-note { font-size: .85rem; color: var(--dim, #9DB8A8); margin: 8px 0 0; }
+  .pv-note { font-size: .85rem; color: var(--dim, var(--ds-muted)); margin: 8px 0 0; }
   .pv-share { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .pv-share button { cursor: pointer; font-weight: 700; }
   .pv-card { display: grid; gap: 12px; justify-items: start; }
-  .pv-card img { width: min(360px, 100%); height: auto; border-radius: 14px; border: 1px solid var(--line, #ffffff26); }
+  .pv-card img { width: min(360px, 100%); height: auto; border-radius: 14px; border: 1px solid var(--line, rgba(var(--ds-ink-rgb), .149)); }
   .pv-card a { font-weight: 700; }
   @media (max-width: 760px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
-<link rel="stylesheet" href="/ds.css?v=2"></head>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1"><link rel="stylesheet" href="tools.css?v=glass-1">
+<link rel="stylesheet" href="/ds.css?v=3"></head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main class="wrap page tool-page archive-page">
@@ -447,4 +447,4 @@
   start();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=theme-1"></script></body></html>
