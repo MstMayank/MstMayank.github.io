@@ -89,40 +89,40 @@ body.ds .site-nav {
 body.ds .site-nav .bar { height: 64px; gap: 20px; max-width: 1200px; }
 body.ds .site-nav .logo.d { flex: 0 0 auto; font: 900 22px/1 var(--ds-num); letter-spacing: .03em; color: var(--ds-text); text-decoration: none; white-space: nowrap; }
 body.ds .site-nav .logo.d span { color: var(--ds-gold); }
-body.ds .site-nav .links { display: flex; align-items: center; gap: 2px; margin-left: auto; font: 600 14px var(--ds-font); color: var(--ds-muted); position: static; flex-direction: row; padding: 0; background: none; border: 0; box-shadow: none; }
-body.ds .site-nav .links a { padding: 8px 12px; border-radius: 999px; text-decoration: none; transition: color var(--ds-fast), background var(--ds-fast); }
-body.ds .site-nav .links a:hover { color: var(--ds-text); background: rgba(255, 255, 255, .05); }
-body.ds .site-nav .links a[aria-current="page"] { color: var(--ds-text); background: rgba(255, 255, 255, .08); }
-body.ds .site-nav .links .links-cta { display: none; }
+html body.ds .site-nav #site-links { display: flex; align-items: center; gap: 2px; margin-left: auto; font: 600 14px var(--ds-font); color: var(--ds-muted); position: static; flex-direction: row; padding: 0; background: none; border: 0; box-shadow: none; }
+html body.ds .site-nav #site-links a { padding: 8px 12px; border-radius: 999px; text-decoration: none; transition: color var(--ds-fast), background var(--ds-fast); }
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(255, 255, 255, .05); }
+html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); background: rgba(255, 255, 255, .08); }
+html body.ds .site-nav #site-links .links-cta { display: none; }
 body.ds .site-nav .bar > .btn, body.ds .site-nav .nav-cta {
   display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px; margin: 0;
   background: var(--ds-chalk); color: #0b100d; font: 700 14px var(--ds-font); letter-spacing: -.01em; text-decoration: none; border: 0;
   transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast);
 }
 body.ds .site-nav .bar > .btn:hover { background: #fff; transform: translateY(-1px); }
-body.ds .site-nav .nav-toggle { display: none; }
+html body.ds .site-nav .bar > .nav-toggle { display: none; }
 body.ds .site-nav .mobile-contact { display: none; }
 
 @media (max-width: 960px) {
   body.ds .site-nav .bar { gap: 10px; }
-  body.ds .site-nav .nav-toggle {
+  html body.ds .site-nav .bar > .nav-toggle {
     display: inline-flex; align-items: center; gap: 8px; margin-left: auto; height: 38px; padding: 0 14px;
     border: 1px solid var(--ds-line-2); border-radius: 999px; background: rgba(255, 255, 255, .04); color: var(--ds-text); font: 650 14px var(--ds-font); cursor: pointer;
   }
   body.ds .site-nav .bar > .btn { display: none; }
   /* Full-height sheet under the bar */
   /* The header's backdrop-filter makes it the containing block, so the sheet is sized from it. */
-  body.ds .site-nav .links {
+  html body.ds .site-nav #site-links {
     position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - 64px); height: calc(100dvh - 64px); display: flex; flex-direction: column; align-items: stretch; gap: 4px;
     padding: 18px var(--page-gutter) 32px; margin: 0; background: rgba(10, 15, 12, .98); border: 0; border-radius: 0; box-shadow: none;
     font: 700 24px/1.2 var(--ds-font); letter-spacing: -.02em; color: var(--ds-text);
     opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease), visibility 0s linear var(--ds-mid);
     overflow-y: auto;
   }
-  body.ds .site-nav .links.open { opacity: 1; visibility: visible; transform: none; transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease); }
-  body.ds .site-nav .links a { padding: 14px 4px; border-radius: 0; border-bottom: 1px solid var(--ds-line); background: none; }
-  body.ds .site-nav .links a[aria-current="page"] { color: var(--ds-gold); background: none; }
-  body.ds .site-nav .links .links-cta { display: inline-flex; justify-content: center; margin-top: 20px; padding: 14px; border: 0; border-radius: 999px; background: var(--ds-chalk); color: #0b100d; font-size: 16px; }
+  html body.ds .site-nav #site-links.open { display: flex; grid-template-columns: none; opacity: 1; visibility: visible; transform: none; transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease); }
+  html body.ds .site-nav #site-links a { padding: 14px 4px; border-radius: 0; border-bottom: 1px solid var(--ds-line); background: none; }
+  html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-gold); background: none; }
+  html body.ds .site-nav #site-links .links-cta { display: inline-flex; justify-content: center; margin-top: 20px; padding: 14px; border: 0; border-radius: 999px; background: var(--ds-chalk); color: #0b100d; font-size: 16px; }
   body.ds.menu-open { overflow: hidden; }
 }
 
@@ -336,4 +336,9 @@ html body.ds .article-main h1, html body.ds .v2 .article-main h1 { font: 800 cla
 html body.ds .detail-head .title { font: 800 clamp(32px, 4.8vw, 56px)/1.04 var(--ds-font); letter-spacing: -.04em; }
 html body.ds .detail-head .title em { font: 700 .5em var(--ds-font); color: var(--ds-gold); vertical-align: .22em; margin: 0 .2em; letter-spacing: 0; }
 html body.ds .mx-card h3, html body.ds .battle h3, html body.ds .chart h2 { font-family: var(--ds-font); letter-spacing: -.02em; }
-@media (max-width: 960px) { html body.ds .site-nav .links { background: var(--ds-bg); } }
+@media (max-width: 960px) { html body.ds .site-nav #site-links { background: var(--ds-bg); } }
+/* main's grouped dropdown (cricket-feel.css) sized the panel to its content; the shared menu is full-width. */
+@media (max-width: 960px) {
+  html body.ds .site-nav #site-links { width: auto; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; grid-template-columns: none; }
+}
+@media (max-width: 960px) { html body.ds .site-nav .bar > .nav-toggle { width: auto; height: 38px; padding: 0 14px; font: 650 14px var(--ds-font); display: inline-flex; align-items: center; justify-content: center; } }

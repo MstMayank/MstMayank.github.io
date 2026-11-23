@@ -2,7 +2,7 @@ import {miniReady,MINI_PENDING,MINI_LIST_NOTE} from './mini-auction';
 import {PlayerPortrait} from './PlayerPortrait';
 import React,{useCallback,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {start,teams,auctionSet,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,type Game} from './engine';
+import {start,teams,auctionSet,findPlayer,KEY,money,canBid,nextBid,placeBid,pass,finishLot,tick,advance,computerBid,validate,auctionReport,STRATEGIES,strategyFor,type Game} from './engine';
 import {auctionCard} from './share';
 import StaticImage from '../image';
 import './room.css';
@@ -22,6 +22,15 @@ function restore(){
     const game=read();
     return {game,error:''};
   }catch(e){return {game:null,error:(e as Error).message};}
+}
+function ValueReport({game}:{game:Game}){
+  const report=auctionReport(game,5);
+  const row=(r:{id:string;teamId:string;price:number;fair:number;ratio:number})=><div key={r.id} className={r.teamId===game.teamId?'mine':''}><span><b>{findPlayer(r.id).name}</b><small>{r.teamId.toUpperCase()} · {STRATEGIES[strategyFor(r.teamId)].label}{r.teamId===game.teamId?' · You':''} · fair value {money(r.fair)}</small></span><strong>{money(r.price)}<small>{Math.round(r.ratio*100)}% of fair</small></strong></div>;
+  return <>
+    <p className="value-note">Price paid against fair value: the anchor (last salary or base price) moved by the player’s V6 rating over 2025–26, trusted more with more matches.</p>
+    <h3 className="value-head">Best value buys</h3>{report.bargains.map(row)}
+    <h3 className="value-head">Biggest overpays</h3>{report.overpays.map(row)}
+  </>;
 }
 function App(){
   const [initial]=useState(restore);
@@ -168,12 +177,12 @@ function App(){
             </>:<div className="finish"><span className="eyebrow">HAMMER DOWN</span><h2>Auction complete.</h2><p>You built a squad of {squad.length} players.</p>{squad.length<18&&<p>Your squad is short of the 18-player target.</p>}<button className="primary" onClick={share}>Share your squad ↗</button></div>}
             <p className="auction-call" role="status">{game.message}</p>
           </section>
-          <aside className="team-board"><div className="section-label"><h2>The room</h2><span>10 franchises</span></div>{teams.map(t=><div key={t.id} className={'franchise '+(game.leader===t.id?'leading':'')} style={{'--franchise':t.color} as React.CSSProperties}><Logo id={t.id}/><div><b>{t.id.toUpperCase()} {t.id===game.teamId&&<small>YOU</small>}</b><span>{game.squads[t.id].length}/25 players</span></div><strong>{money(game.purses[t.id])}</strong>{game.leader===t.id&&<i/>}</div>)}</aside>
+          <aside className="team-board"><div className="section-label"><h2>The room</h2><span>10 franchises</span></div>{teams.map(t=><div key={t.id} className={'franchise '+(game.leader===t.id?'leading':'')} style={{'--franchise':t.color} as React.CSSProperties}><Logo id={t.id}/><div><b>{t.id.toUpperCase()} {t.id===game.teamId&&<small>YOU</small>}</b><span>{game.squads[t.id].length}/25 players{t.id!==game.teamId&&<> · <em className="strategy" title={STRATEGIES[strategyFor(t.id)].blurb}>{STRATEGIES[strategyFor(t.id)].label}</em></>}</span></div><strong>{money(game.purses[t.id])}</strong>{game.leader===t.id&&<i/>}</div>)}</aside>
         </div>
         <section className="your-desk"><div className="desk-heading"><Logo id={game.teamId}/><div><span className="eyebrow">YOUR FRANCHISE</span><h2>{team.name}</h2></div><div className="desk-budget"><span>PURSE LEFT</span><strong>{money(game.purses[game.teamId])}</strong></div></div>
           <div className="squad-status"><span>{squad.length}/25 players · {squad.filter(m=>findPlayer(m.id).isOverseas).length}/8 overseas</span>{rating&&<strong>Squad rating {rating.overallRating.toFixed(1)}/100 · {rating.tier}{squad.length<11?' · Incomplete squad':''}</strong>}</div><div className="controls"><button className="primary" disabled={game.stage==='COMPLETE'} onClick={toggle}>{game.paused?'▶ Start / resume':'Ⅱ Pause auction'}</button><button onClick={share}>Share squad ↗</button><button onClick={()=>{showStart();}}>New game</button></div>
-          <nav className="desk-tabs" aria-label="Auction information">{['squad','queue','results'].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t==='squad'?'Your squad ('+squad.length+')':t==='queue'?'Coming up':'Auction results'}</button>)}</nav>
-          <div className="desk-list">{tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
+          <nav className="desk-tabs" aria-label="Auction information">{[...['squad','queue','results'],...(game.history.some(h=>h.teamId)?['value']:[])].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t==='squad'?'Your squad ('+squad.length+')':t==='queue'?'Coming up':t==='value'?'Value report':'Auction results'}</button>)}</nav>
+          <div className="desk-list">{tab==='value'?<ValueReport game={game}/>:tab==='squad'?squad.length?squad.map(m=><div key={m.id}><span><b>{findPlayer(m.id).name}</b><small>{findPlayer(m.id).role.replaceAll('_',' ')} · {m.retained?'Starting squad':'Won at auction'}</small></span><strong>{money(m.price)}</strong></div>):<p>Your first signing is waiting. Raise your paddle.</p>:tab==='queue'?game.queue.slice(game.index+1,game.index+11).map(id=><div key={id}><b>{findPlayer(id).name}</b><span>{findPlayer(id).role.replaceAll('_',' ')}</span></div>):game.history.length?game.history.slice().reverse().map(h=><div key={h.id}><b>{findPlayer(h.id).name}</b><span>{h.teamId?h.teamId.toUpperCase()+' · '+money(h.price):'Unsold'}</span></div>):<p>The hammer has yet to fall.</p>}</div>
         </section>
       </>}
       <p className="footnote">Fan mini-auction simulation · Computer-controlled bids · Progress saves on this device. Play solo or invite friends.</p>

@@ -1,6 +1,8 @@
 import {players,miniAuction,miniPlan,type Player,type MiniAuction} from './mini-auction';
 export {players,type Player} from './mini-auction';
 import setData from './auction-sets.json';
+import {bidLimit,strategyFor,STRATEGIES,valueReport} from './strategy';
+export {STRATEGIES,strategyFor} from './strategy';
 
 const uncappedIds=new Set([...setData.uncappedPlayerIds,...miniAuction.registeredPlayers.filter(r=>r.uncapped).map(r=>r.player.id)]);
 export const auctionSets=['Wicketkeepers','Batters','All-rounders','Bowlers','Uncapped players'] as const;
@@ -84,18 +86,23 @@ export function advance(g:Game):Game{
 export function computerBid(g:Game,humanTeams:string[]=[g.teamId]):Game{
   if(g.paused||g.stage!=='BIDDING')return g;
   const p=findPlayer(g.queue[g.index],g.registeredPlayers),price=nextBid(g);
+  const lotsLeft=g.queue.length-g.index;
+  // Each franchise bids up to its own strategy's limit (strategy.ts); canBid keeps it legal.
   const candidates=teams.filter(t=>!humanTeams.includes(t.id)&&canBid(g,t.id,price)).map(t=>{
-    const sameRole=g.squads[t.id].filter(m=>findPlayer(m.id,g.registeredPlayers).role===p.role).length;
-    const target=p.role==='WICKETKEEPER'?2:p.role==='BOWLER'?7:5;
-    const need=Math.max(.55,1.35-sameRole/target);
-    const value=Math.max(basePrice(g,p),p.salary??60)*need;
-    const budgetCap=g.purses[t.id]*(g.squads[t.id].length<10?.25:.4);
-    return {id:t.id,limit:Math.min(value,budgetCap),need};
-  }).filter(t=>t.limit>=price).sort((a,b)=>b.need-a.need||b.limit-a.limit);
+    const squad=g.squads[t.id];
+    const sameRole=squad.filter(m=>findPlayer(m.id,g.registeredPlayers).role===p.role).length;
+    const limit=bidLimit(strategyFor(t.id),p,{base:basePrice(g,p),purse:g.purses[t.id],squadSize:squad.length,sameRole,uncapped:uncappedIds.has(p.id),lotsLeft});
+    return {id:t.id,limit};
+  }).filter(t=>t.limit>=price).sort((a,b)=>b.limit-a.limit||a.id.localeCompare(b.id));
   if(!candidates.length)return g;
-  // A stable rotating choice makes different franchises compete without random prices.
+  // A stable rotating choice among the keenest franchises keeps a real bidding war without random prices;
+  // the lot ends close to the second-highest limit, as in a real auction.
   const chosen=candidates[(g.history.length+g.seconds)%Math.min(3,candidates.length)];
   return placeBid(g,chosen.id);
+}
+/** Best value buys and biggest overpays of a finished (or running) auction. */
+export function auctionReport(g:Game,count=5){
+  return valueReport(g.history,id=>findPlayer(id,g.registeredPlayers),id=>g.entryPrices[id],count);
 }
 export const money=(lakh:number)=>'₹'+(lakh/100).toLocaleString('en-IN',{maximumFractionDigits:2})+' Cr';
 export function validate(g:Game,config:MiniAuction=miniAuction):boolean{

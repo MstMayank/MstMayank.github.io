@@ -1,40 +1,19 @@
 {
   "discoveryPending": [
-    "series 1554058: HTTP Error 504: Gateway Timeout",
-    "series 1561006 on 2026-11-11: HTTP Error 502: Bad Gateway",
-    "series 1561006 on 2026-11-12: HTTP Error 504: Gateway Timeout",
-    "series 1561006 on 2026-11-15: HTTP Error 502: Bad Gateway",
-    "series 1561006 on 2026-11-16: HTTP Error 502: Bad Gateway",
-    "series 1561006 on 2026-11-17: HTTP Error 504: Gateway Timeout",
-    "series 1561011 on 2026-11-11: HTTP Error 502: Bad Gateway",
-    "series 1561011 on 2026-11-17: HTTP Error 504: Gateway Timeout",
-    "series 1561011 on 2026-11-18: HTTP Error 502: Bad Gateway",
-    "series 1562322 on 2026-11-20: HTTP Error 502: Bad Gateway",
-    "series 1562322 on 2026-11-21: HTTP Error 502: Bad Gateway",
-    "series 1562333: HTTP Error 502: Bad Gateway",
-    "series 1563430: HTTP Error 502: Bad Gateway",
+    "series 1561006 on 2026-11-11: HTTP Error 504: Gateway Timeout",
+    "series 1562333 on 2026-11-19: HTTP Error 504: Gateway Timeout",
+    "series 1562333 on 2026-11-21: HTTP Error 504: Gateway Timeout",
     "series 24195: HTTP Error 502: Bad Gateway",
-    "series 24196: HTTP Error 502: Bad Gateway",
-    "series 24197: HTTP Error 504: Gateway Timeout",
-    "series 24199: HTTP Error 502: Bad Gateway",
-    "series 24200 on 2026-11-23: HTTP Error 502: Bad Gateway",
-    "series 24269: HTTP Error 502: Bad Gateway",
-    "series 24271 on 2026-11-21: HTTP Error 502: Bad Gateway",
+    "series 24196: HTTP Error 504: Gateway Timeout",
+    "series 24197: HTTP Error 502: Bad Gateway",
+    "series 24200: HTTP Error 502: Bad Gateway",
+    "series 24269: HTTP Error 504: Gateway Timeout",
     "series 24272: HTTP Error 502: Bad Gateway",
-    "series 24282: HTTP Error 502: Bad Gateway",
-    "series 24284: HTTP Error 502: Bad Gateway",
-    "series 24285: HTTP Error 502: Bad Gateway",
-    "series 24461: HTTP Error 504: Gateway Timeout",
-    "series 24463: HTTP Error 502: Bad Gateway",
-    "series 24466 on 2026-11-20: HTTP Error 502: Bad Gateway",
-    "series 24467: HTTP Error 504: Gateway Timeout",
-    "series 24557: HTTP Error 502: Bad Gateway",
-    "series 24651: HTTP Error 504: Gateway Timeout",
-    "series 24704 on 2026-11-11: HTTP Error 502: Bad Gateway",
-    "series 24704 on 2026-11-20: HTTP Error 502: Bad Gateway",
-    "series 24797: HTTP Error 502: Bad Gateway",
-    "series 24874 on 2026-11-16: HTTP Error 502: Bad Gateway",
-    "series 24874 on 2026-11-17: HTTP Error 502: Bad Gateway"
+    "series 24464: HTTP Error 502: Bad Gateway",
+    "series 24467: HTTP Error 502: Bad Gateway",
+    "series 24558: HTTP Error 502: Bad Gateway",
+    "series 24651: HTTP Error 502: Bad Gateway",
+    "series 24704 on 2026-11-13: HTTP Error 502: Bad Gateway"
   ],
   "matches": {
     "1525662": {
@@ -21997,7 +21976,16 @@
       ]
     }
   },
-  "pending": {},
+  "pending": {
+    "1550712": "24704",
+    "1555124": "24797",
+    "1562227": "24874",
+    "1562228": "24874",
+    "1562229": "24874",
+    "1562232": "24874",
+    "1562233": "24874",
+    "1562234": "24874"
+  },
   "scannedThrough": "2026-11-21",
   "version": 1
 }

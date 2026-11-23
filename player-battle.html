@@ -155,6 +155,10 @@
 #ipl-lens .battle-result .similar-card .similar-self td { color:var(--gold,#F6C453); font-weight:700; }
 #ipl-lens .battle-result .similar-card .similar-name { background:none; border:0; padding:0; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 #ipl-lens .battle-result .similar-card td:last-child { white-space:normal; min-width:180px; color:var(--dim); }
+#ipl-lens .battle-result .pace-spin-card tr.type-main td { font-weight:700; color:var(--ink); }
+#ipl-lens .battle-result .pace-spin-card tr.type-sub td:first-child { padding-left:28px; color:var(--dim); }
+#ipl-lens .battle-result .pace-spin-card tr.type-thin td { opacity:.55; }
+#ipl-lens .battle-result .pace-spin-card tr.type-total td { border-top:1px solid var(--line); font-weight:600; }
 #ipl-lens .battle-result .entry-thin td { opacity:.5; }
 #ipl-lens .battle-result .entry-heat { display:grid; grid-template-columns:repeat(20,minmax(0,1fr)); gap:3px; margin:14px 0 4px; }
 #ipl-lens .battle-result .entry-heat span { aspect-ratio:1; display:grid; place-items:center; border-radius:4px; font-size:.7rem; font-weight:700; color:var(--ink); cursor:help; min-width:0; }
@@ -299,7 +303,7 @@
 #ipl-lens .battle-suggestions button:hover, #ipl-lens .battle-suggestions button:focus-visible { background:#f1d8c9; color:#26201c; }
 #ipl-lens .battle-players { align-items:end; }
 #ipl-lens .battle-result:empty { display:none; }
-</style><link rel="stylesheet" href="cricket-feel.css?v=mobile-wordmark2"><style>
+</style><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><style>
 #ipl-lens .batting-insights { margin-top:28px; padding-top:20px; border-top:1px solid var(--line); }
 #ipl-lens .batting-insights summary { cursor:pointer; color:var(--gold); font-weight:700; font-size:20px; }
 #ipl-lens .batting-insights h3 { font:700 25px/1.2 "Big Shoulders Display",sans-serif; margin:26px 0 12px; }
@@ -366,9 +370,9 @@
 @media(max-width:760px){#ipl-lens .direct-stats{grid-template-columns:1fr}}
 
 </style>
-<link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="/ds.css?v=1"></head>
+<link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="/ds.css?v=2"></head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
-<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/#writing">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main>
 <section class="section tool-page" id="ipl-lens" aria-labelledby="battle-title">
 <span class="label">THE CRICKET SPACE / COMPARISONS</span>
@@ -402,6 +406,7 @@
 <div class="finder-controls" id="finder-controls" hidden>
 <label>Find match-ups for<select id="finder-role"><option value="batting">A batter</option><option value="bowling">A bowler</option></select></label>
 <label>Minimum balls<select id="finder-min"><option value="12">12</option><option value="30" selected>30</option><option value="60">60</option></select></label>
+<label id="finder-type-label">Bowler type<select id="finder-type"><option value="">All bowlers</option><option value="pace">Pace</option><option value="spin">Spin</option><option value="right-pace">Right-arm pace</option><option value="left-pace">Left-arm pace</option><option value="off-spin">Off-spin</option><option value="leg-spin">Leg-spin</option><option value="left-orthodox">Left-arm orthodox</option><option value="left-wrist">Left-arm wrist spin</option></select></label>
 </div>
 <label id="battle-career-scope-label" hidden>Batting records<select id="battle-career-scope"><option value="career">All-time career records</option><option value="archive">Archived match analysis</option></select></label>
 <p class="battle-status" id="battle-status" role="status">Loading match data…</p>
@@ -439,8 +444,8 @@
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
 <script defer src="similarity-core.js?v=1"></script>
-<script defer src="player-battle.js?v=similarity"></script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/#writing">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script>
+<script defer src="player-battle.js?v=ds-pace-spin"></script>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script>
 // Phones: filters fold behind one button so the player search comes first.
 (() => {
   const toggle = document.getElementById('filters-toggle'), box = document.getElementById('battle-filters-box'), count = document.getElementById('filters-count');
@@ -451,4 +456,4 @@
   update();
 })();
 </script>
-<script defer src="design-v2.js?v=1"></script></body></html>
+<script defer src="/design-v2.js?v=ds-2"></script></body></html>
