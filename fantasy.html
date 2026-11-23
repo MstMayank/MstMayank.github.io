@@ -43,6 +43,9 @@
   .fx-warn { border-left: 3px solid rgb(var(--ds-accent-rgb)); padding: 10px 14px; background: rgba(var(--ds-accent-rgb), .08); border-radius: 0 10px 10px 0; color: rgb(var(--ds-ink-rgb)); font-size: 14px; }
   .fx-rules { border: 1px solid rgba(var(--ds-ink-rgb), .09); border-radius: 16px; padding: 14px 18px; background: rgb(var(--ds-bg-rgb)); }
   .fx-rules summary { cursor: pointer; font-weight: 700; }
+.fx-pitch { margin:18px auto; padding:20px 12px; background:repeating-linear-gradient(0deg,#1a6342 0 25%,#215f45 25% 50%); border-radius:32% / 14%; max-width:680px; }
+.fx-line { display:flex; justify-content:center; flex-wrap:wrap; gap:5px; padding:7px; }
+.fx-line span { background:#fff; color:#143b28; border-radius:5px; font-size:12px; padding:3px 7px; font-weight:650; }
 </style>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1"><link rel="stylesheet" href="tools.css?v=glass-1"><link rel="stylesheet" href="/ds.css?v=3">
 </head>
@@ -65,6 +68,7 @@
   <p class="fx-warn">Not betting advice. This is a fun, stats-based suggestion; it can’t know injuries, playing XIs, pitch or weather.</p>
   <div class="fx" id="fx-body" hidden>
     <div class="fx-summary" id="fx-summary"></div>
+    <section aria-label="Projected team formation" class="fx-pitch" id="fx-pitch"></section>
     <div id="fx-roles" class="fx"></div>
     <details class="fx-rules"><summary>How the XI is chosen</summary>
       <p class="fx-note" id="fx-rules-text"></p></details>
@@ -119,6 +123,17 @@
     const teamCount = t => xi.players.filter(p => p.team === t).length;
     const tiles = [[Math.round(xi.expected), 'Expected points (C ×2, VC ×1.5)'], [xi.credits + ' / ' + F.RULES.credits, 'Credits used'], [teamCount(a) + ' – ' + teamCount(b), 'Players from each team'], [battle.players[xi.captain], 'Captain']];
     $('fx-summary').replaceChildren(...tiles.map(([v, l]) => { const d = document.createElement('div'); d.className = 'fx-tile'; const bEl = document.createElement('b'); bEl.textContent = v; const s = document.createElement('span'); s.textContent = l; d.append(bEl, s); return d; }));
+    $('fx-pitch').replaceChildren(...Object.keys(ROLE_NAMES).map(role => {
+      const line = document.createElement('div');
+      line.className = 'fx-line';
+      line.setAttribute('aria-label', ROLE_NAMES[role]);
+      for (const player of xi.players.filter(p => p.role === role)) {
+        const label = document.createElement('span');
+        label.textContent = battle.players[player.id] + (player.id === xi.captain ? ' (C)' : player.id === xi.viceCaptain ? ' (VC)' : '');
+        line.append(label);
+      }
+      return line;
+    }));
     $('fx-roles').replaceChildren(...Object.keys(ROLE_NAMES).map(role => {
       const list = xi.players.filter(p => p.role === role);
       const sec = document.createElement('section'); sec.className = 'fx-role';

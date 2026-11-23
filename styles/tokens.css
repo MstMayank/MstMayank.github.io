@@ -1,0 +1,27 @@
+/* Shared by the Pages frontend and both auction bundles. */
+:root {
+  color-scheme:light;
+  --ds-bg-rgb:250,250,250; --ds-surface-rgb:255,255,255; --ds-ink-rgb:17,17,17;
+  --ds-accent-rgb:112,77,0; --ds-red-rgb:173,35,46; --ds-green-rgb:18,109,61; --ds-blue-rgb:20,90,180;
+  --brand-yellow:#ffd633; --on-yellow:#111;
+  --ds-bg:rgb(var(--ds-bg-rgb)); --ds-text:rgb(var(--ds-ink-rgb)); --ds-surface-solid:rgb(var(--ds-surface-rgb));
+  --ds-bg-2:#f4f4f2; --ds-surface:var(--ds-surface-solid); --ds-surface-2:#f5f5f3; --ds-surface-3:#eeeeeb;
+  --ds-muted:#585858; --ds-subtle:#666; --ds-line:#e8e8e8; --ds-line-2:#c6c6c2;
+  --ds-chalk:var(--ds-text); --ds-on-chalk:var(--ds-bg);
+  --ds-accent:rgb(var(--ds-accent-rgb)); --ds-gold:var(--ds-accent); --ds-gold-soft:rgba(255,214,51,.2);
+  --ds-red:rgb(var(--ds-red-rgb)); --ds-green:rgb(var(--ds-green-rgb)); --ds-blue:rgb(var(--ds-blue-rgb));
+  --ds-radius-s:6px; --ds-radius:10px; --ds-radius-l:14px; --ds-shadow:0 2px 6px #18140c08;
+  --ds-ring:0 0 0 3px rgba(var(--ds-blue-rgb),.35); --ds-glass-blur:none;
+  --ds-aurora-1:transparent; --ds-aurora-2:transparent; --ds-aurora-3:transparent;
+  --ds-fast:140ms; --ds-mid:200ms; --ds-ease:ease-out;
+  --ds-font:'DM Sans',system-ui,sans-serif; --ds-num:var(--ds-font);
+  --editorial-serif:Georgia,'Times New Roman',serif;
+  --page-gutter:clamp(16px,4vw,56px);
+}
+:root[data-theme="dark"] {
+  color-scheme:dark;
+  --ds-bg-rgb:22,22,21; --ds-surface-rgb:31,31,30; --ds-ink-rgb:248,248,244;
+  --ds-accent-rgb:255,214,51; --ds-red-rgb:255,144,149; --ds-green-rgb:119,215,159; --ds-blue-rgb:137,190,255;
+  --ds-bg-2:#232321; --ds-surface-2:#292927; --ds-surface-3:#323230;
+  --ds-muted:#c6c6bf; --ds-subtle:#aaa9a3; --ds-line:#3c3c38; --ds-line-2:#60605a;
+}

@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>For You</title>
 <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/styles/tokens.css">
 <style>
 :root{color-scheme:dark}
 *{box-sizing:border-box}
@@ -24,6 +25,14 @@ button:disabled{opacity:.6}
 .err{min-height:22px;color:#ff7a8a;font-size:14px}
 .shake{animation:sh .4s}
 @keyframes sh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+html,body{background:var(--ds-bg);color:var(--ds-text);font-family:var(--ds-font);color-scheme:light}
+p,.hint{color:var(--ds-muted)}
+input{color:var(--ds-text);background:var(--ds-surface);border-color:var(--ds-line)}
+button{background:var(--brand-yellow);color:var(--on-yellow)}
+.err{color:#a32335}
+.h{filter:none}
+:focus-visible{outline:3px solid var(--ds-blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.h,.shake{animation:none}}
 </style>
 </head>
 <body>

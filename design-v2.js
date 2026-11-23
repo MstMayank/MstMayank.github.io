@@ -3,7 +3,7 @@
   // Theme: a sun/moon button in the header. No saved choice = follow the phone or computer setting.
   const root = document.documentElement;
   const systemLight = matchMedia('(prefers-color-scheme: light)');
-  const current = () => root.getAttribute('data-theme') || (systemLight.matches ? 'light' : 'dark');
+  const current = () => root.getAttribute('data-theme') || 'light';
   const bar = document.querySelector('.site-nav .bar');
   if (bar && !bar.querySelector('.theme-toggle')) {
     const button = document.createElement('button');
@@ -32,6 +32,12 @@
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('site-links');
   if (toggle) { toggle.textContent = '☰'; toggle.setAttribute('aria-label','Navigation'); }
+  if (links && !links.querySelector('a[href="/tools.html"]')) {
+    const toolsLink = document.createElement('a');
+    toolsLink.href = '/tools.html';
+    toolsLink.textContent = 'Tools';
+    links.prepend(toolsLink);
+  }
   function closeMenu() {
     links?.classList.remove('open');
     toggle?.setAttribute('aria-expanded','false');
