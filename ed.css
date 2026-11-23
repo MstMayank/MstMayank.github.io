@@ -31,7 +31,7 @@
   --ed-r-l: 20px;
   --ed-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ed-gutter: clamp(16px, 4vw, 48px);
-  --ed-max: 1240px;
+  --ed-max: 1440px;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
@@ -185,7 +185,7 @@ body.ed ::selection { background: var(--ed-yellow); color: #111; }
 }
 :root[data-theme="dark"] { --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .16), transparent 70%), radial-gradient(45% 50% at 5% 0%, rgba(255, 140, 60, .12), transparent 70%); }
 .ed-glow { position: relative; isolation: isolate; }
-.ed-glow::before { content: ""; position: absolute; inset: -60px 0 -40px; z-index: -1; background: var(--ed-grad-hero); pointer-events: none; }
+.ed-glow::before { content: ""; position: absolute; inset: -60px calc(50% - 50vw) -40px; z-index: -1; background: var(--ed-grad-hero); pointer-events: none; }
 .ed-btn.yellow, .ed-tag:not(.dark):not(.white), .ed-chip.on, .ed-chip[aria-pressed="true"] { background: var(--ed-grad-yellow); border-color: transparent; }
 .ed-btn.yellow { box-shadow: 0 10px 24px -12px rgba(255, 166, 0, .8); }
 .ed-display mark { box-shadow: none; background: linear-gradient(90deg, #ffd21f, #ffb020) no-repeat 0 92% / 100% .16em; }
