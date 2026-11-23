@@ -15,9 +15,9 @@
   --ds-bg-rgb: 255, 255, 255;
   --ds-surface-rgb: 255, 255, 255;
   --ds-ink-rgb: 17, 17, 17;
-  --ds-accent-rgb: 150, 104, 0;
+  --ds-accent-rgb: 17, 17, 17;
   --ds-red-rgb: 220, 38, 38;
-  --ds-green-rgb: 22, 150, 70;
+  --ds-green-rgb: 21, 128, 61;
   --ds-blue-rgb: 37, 99, 235;
   --ds-bg: #ffffff;
   --ds-bg-2: #f6f6f4;
@@ -29,7 +29,7 @@
   --ds-line-2: #d9d9d6;
   --ds-text: #111111;
   --ds-muted: #6b6b6b;
-  --ds-subtle: #8c8c86;
+  --ds-subtle: #6f6f69;
   --ds-gold: rgb(var(--ds-accent-rgb));
   --ds-gold-soft: #fff6cc;
   --ds-accent: rgb(var(--ds-accent-rgb));
@@ -496,3 +496,28 @@ html body.ds main:is(.archive-page, .tool-page, .cricket-tools) { background: no
 /* Wider pages so big screens do not show wide empty margins. */
 html body.ds .wrap, html body.ds main.wrap.page, html body.ds main.tool-page, html body.ds .site-nav .bar, html body.ds .site-footer .wrap { max-width: 1440px; }
 @media (min-width: 961px) { html body.ds .site-nav #site-links { overflow: visible; } }
+
+/* ---- Audit fixes (Nov 2026) ---- */
+/* Fills that used the accent colour stay yellow now that accent text is ink. */
+html body.ds #ipl-lens .battle-result .phase-bar-fill { background: var(--ds-grad-yellow); }
+html body.ds #ipl-lens .battle-result .form-spark rect { fill: var(--ds-yellow); }
+html body.ds #ipl-lens .result-heading { color: var(--ds-text); }
+html body.ds :is(.tool-heading, #ipl-lens h1) span::before { content: " "; }
+@media (max-width: 520px) {
+  html body.ds #ipl-lens .duel-face { width: 44px; height: 44px; border-radius: 12px; font-size: 15px; }
+  html body.ds #ipl-lens .duel-name { gap: 8px; padding: 14px 10px; }
+  html body.ds #ipl-lens .duel-names { grid-template-columns: minmax(0, 1fr); }
+  html body.ds #ipl-lens .duel-name, html body.ds #ipl-lens .duel-name:last-child { flex-direction: row; text-align: left; }
+  html body.ds #ipl-lens .duel-name + .duel-name { border-top: 1px solid var(--ds-line); }
+  html body.ds #ipl-lens .duel-name strong { font-size: 22px; white-space: nowrap; }
+}
+/* Article: black and yellow instead of the old red */
+html body.ds .share-actions button { background: var(--ds-chalk); color: var(--ds-on-chalk); border: 0; }
+html body.ds .share-actions button#share { background: var(--ds-grad-yellow); color: #111; }
+html body.ds .prose p:last-child { border-left-color: var(--ds-yellow) !important; }
+html body.ds .article-main .label, html body.ds main .label { color: var(--ds-text); }
+/* Retentions: ratings in ink (team colours were too faint as text) */
+html body.ds :is(.rt-score, .rt-big b) { color: var(--ds-text) !important; }
+html body.ds .rt-bar i::before { background: var(--ds-grad-yellow); }
+html body.ds main [aria-pressed="true"]:has(.rt-score) { border-color: var(--ds-text); background: var(--ds-yellow-soft); }
+html body.ds img[src*="logos/"] { filter: drop-shadow(0 0 .7px rgba(0, 0, 0, .7)) drop-shadow(0 0 .7px rgba(0, 0, 0, .7)); }

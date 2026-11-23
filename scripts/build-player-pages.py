@@ -506,7 +506,8 @@ def focus_style(slug):
     if not photo:
         return ''
     cx, cy, _w = FOCUS.get(photo.rsplit('/', 1)[-1].split('.')[0], (.5, .25, .3))
-    return f'object-position:{cx * 100:.0f}% {cy * 100:.0f}%'
+    # Leave headroom: aligning the face's own height would cut the top of the head in wide frames.
+    return f'object-position:{cx * 100:.0f}% {max(0, cy * 100 - 18):.0f}%'
 
 
 def star_rail(featured):

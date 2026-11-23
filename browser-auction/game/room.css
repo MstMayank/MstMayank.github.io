@@ -144,3 +144,8 @@ body{background:var(--ds-bg);color:var(--ds-text);font-family:var(--ds-font)}
 @media(max-width:850px){.team-board{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.team-board>*{min-width:0}}
 /* Light theme: darken pale team colours (GT, RR, KKR) so names stay readable on white. */
 :root:not([data-theme="dark"]) .franchise b{color:color-mix(in srgb,var(--franchise) 62%,#000)}
+
+/* Pale team logos (RR) need a tinted tile on white. */
+.team-picker button{background:var(--ds-surface-2)}
+.team-picker button[aria-pressed=true]{background:var(--ds-chalk)}
+.franchise img,.team-picker img,.desk-heading>img{filter:drop-shadow(0 0 .7px rgba(0,0,0,.7)) drop-shadow(0 0 .7px rgba(0,0,0,.7))}
