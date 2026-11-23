@@ -129,11 +129,15 @@
   const fixed = (value, digits = 1) => value === null || value === undefined ? '—' : value.toFixed(digits);
   const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 
+  // Short scorecard name -> /player/<slug>.html (built by scripts/build-player-pages.py).
+  let playerLinks = {};
+  const linksPromise = fetch('/player/links.json').then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+  const playerCell = name => (playerLinks[name] ? {link: '/player/' + playerLinks[name] + '.html', text: name, title: 'Player page'} : name);
   function load(key) {
-    if (!cache.has(key)) cache.set(key, fetch('venue-stats-' + key + '.json?v=1').then(response => {
+    if (!cache.has(key)) cache.set(key, Promise.all([fetch('venue-stats-' + key + '.json?v=1').then(response => {
       if (!response.ok) throw new Error('Venue data unavailable');
       return response.json();
-    }).catch(error => { cache.delete(key); throw error; }));
+    }), linksPromise]).then(([data, links]) => { playerLinks = links[key] || {}; return data; }).catch(error => { cache.delete(key); throw error; }));
     return cache.get(key);
   }
 
@@ -142,7 +146,7 @@
       const tr = document.createElement('tr');
       values.forEach(value => {
         const td = document.createElement('td');
-        if (value && typeof value === 'object' && value.link) { const a = document.createElement('a'); a.href = value.link; a.textContent = value.text; a.title = 'Match charts'; td.appendChild(a); }
+        if (value && typeof value === 'object' && value.link) { const a = document.createElement('a'); a.href = value.link; a.textContent = value.text; a.title = value.title || 'Match charts'; td.appendChild(a); }
         else if (value && typeof value === 'object') { td.textContent = value.text; if (value.num) td.className = 'num'; }
         else td.textContent = value;
         tr.appendChild(td);
@@ -249,8 +253,8 @@
     const total = t => [t.runs + (t.wickets < 10 ? '/' + t.wickets : ''), t.team + ' v ' + t.opponent, {link: 'match.html?' + new URLSearchParams(competition === 'ipl' ? {id: t.matchId} : {c: competition, id: t.matchId}), text: when(t.date)}];
     rows($('venue-highest'), s.highest.map(total));
     rows($('venue-lowest'), s.lowest.map(total));
-    rows($('venue-batters'), s.topBatters.map(b => [b.name, n(num(b.runs)), n(b.innings), n(fixed(b.strikeRate)), n(b.best)]));
-    rows($('venue-bowlers'), s.topBowlers.map(b => [b.name, n(b.wickets), n(fixed(b.economy, 2)), n(fixed(b.average))]));
+    rows($('venue-batters'), s.topBatters.map(b => [playerCell(b.name), n(num(b.runs)), n(b.innings), n(fixed(b.strikeRate)), n(b.best)]));
+    rows($('venue-bowlers'), s.topBowlers.map(b => [playerCell(b.name), n(b.wickets), n(fixed(b.economy, 2)), n(fixed(b.average))]));
     rows($('venue-teams'), s.teams.map(t => [t.team, n(t.played), n(t.won), n(t.lost), n(pct(t.winPct))]));
     const left = [s.results.noResult && s.results.noResult + ' no-result', s.results.reduced && s.results.reduced + ' rain-reduced'].filter(Boolean);
     $('venue-footnote').textContent = (left.length ? 'Left out of averages: ' + left.join(', ') + ' match' + (s.results.noResult + s.results.reduced === 1 ? '' : 'es') + '. ' : '') + (s.results.ties ? 'Tied matches count in score averages but not in the chasing record. ' : '') + 'Source: ' + data.source + ', updated ' + when(data.generated) + '. Pace vs spin splits will follow once bowler types are added.';
@@ -307,4 +311,4 @@
   render();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>

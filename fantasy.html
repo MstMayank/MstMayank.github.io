@@ -84,7 +84,7 @@
   const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
   const label = name => name.split(',')[0];
   function load(key) {
-    if (!cache.has(key)) cache.set(key, Promise.all([json('battle-' + key + '.json'), json('team-stats-' + key + '.json?v=1')]).then(([battle, teams]) => ({battle, teams, points: F.matchPoints(battle)})).catch(e => { cache.delete(key); throw e; }));
+    if (!cache.has(key)) cache.set(key, Promise.all([json('battle-' + key + '.json'), json('team-stats-' + key + '.json?v=1'), json('/player/links.json').catch(() => ({}))]).then(([battle, teams, links]) => ({battle, teams, links: links[key] || {}, points: F.matchPoints(battle)})).catch(e => { cache.delete(key); throw e; }));
     return cache.get(key);
   }
   function fill(data) {
@@ -129,7 +129,8 @@
         const badge = document.createElement('span'); badge.className = 'fx-badge' + (p.id === xi.captain ? ' c' : p.id === xi.viceCaptain ? ' vc' : '');
         badge.textContent = p.id === xi.captain ? 'C' : p.id === xi.viceCaptain ? 'VC' : role;
         const name = document.createElement('div'); name.className = 'fx-name';
-        const n = document.createElement('b'); n.textContent = battle.players[p.id];
+        const n = document.createElement('b'); const slug = data.links[battle.players[p.id]];
+        if (slug) { const a = document.createElement('a'); a.href = '/player/' + slug + '.html'; a.textContent = battle.players[p.id]; n.appendChild(a); } else n.textContent = battle.players[p.id];
         const s = document.createElement('small'); s.textContent = p.team + ' · ' + p.credits + ' cr · last ' + p.recentMatches + ': ' + p.form.toFixed(0) + ' pts a match';
         name.append(n, s);
         const pts = document.createElement('div'); pts.className = 'fx-points';
@@ -155,4 +156,4 @@
   start();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
