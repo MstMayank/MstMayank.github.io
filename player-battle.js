@@ -1455,6 +1455,77 @@ function venueLabel(name) {
     }
   }
 
+  // Phase strip for the battle card: runs (balls) per phase for the shown matchup, or SR / economy
+  // per player when comparing two batters or two bowlers. Limited-overs formats only.
+  function cardPhaseLine(formatLabel) {
+    const format = competition === 'international' ? formatLabel : null;
+    if ((format || data.format) === 'Test' || mode === 'teams') return '';
+    const short = ['PP', 'MID', 'DEATH'];
+    const rows = data.rows.filter(row => rowIncluded(row, format));
+    if (mode === 'direct') {
+      const parts = [0, 1, 2].map(phase => {
+        const s = emptyStats();
+        rows.filter(row => row[3] === phase && row[1] === selected[0] && row[2] === selected[1]).forEach(row => addStats(s, row));
+        return s.balls ? short[phase] + ' ' + s.runs + ' (' + s.balls + ')' + (s.wickets ? ' · ' + s.wickets + 'w' : '') : '';
+      }).filter(Boolean);
+      return parts.length ? parts.join('   |   ') : '';
+    }
+    const bowling = mode === 'bowlers';
+    const parts = [0, 1, 2].map(phase => short[phase] + ' ' + selected.map(id => {
+      const s = emptyStats();
+      rows.filter(row => row[3] === phase && row[bowling ? 2 : 1] === id).forEach(row => addStats(s, row));
+      return bowling ? (s.legal ? (s.conceded / s.legal * 6).toFixed(1) : '—') : (s.balls ? (s.runs / s.balls * 100).toFixed(0) : '—');
+    }).join(' v '));
+    return (bowling ? 'Economy  ' : 'Strike rate  ') + parts.join('   |   ');
+  }
+
+  // Square and landscape cards: the story artwork on the left, key numbers on the right.
+  function composeCardSize(story, table, names) {
+    const size = byId('battle-card-size')?.value || 'story';
+    if (size === 'story') return story;
+    const [W, H] = size === 'square' ? [1080, 1080] : [1200, 630];
+    const out = document.createElement('canvas'); out.width = W; out.height = H;
+    const c = out.getContext('2d');
+    const bg = c.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#102820'); bg.addColorStop(1, '#061811');
+    c.fillStyle = bg; c.fillRect(0, 0, W, H);
+    const scale = H / 1920, artW = Math.round(1080 * scale);
+    c.drawImage(story, 0, 0, artW, H);
+    const x = artW + (size === 'square' ? 48 : 40), right = W - (size === 'square' ? 48 : 40), width = right - x;
+    const cream = '#fff3d7', gold = '#eac357', muted = '#b9c9bd';
+    const fit = (text, font, max) => { c.font = font; let t = String(text); while (c.measureText(t).width > max && t.length > 3) t = t.slice(0, -2); return t === String(text) ? t : t.trimEnd() + '…'; };
+    const write = (text, y, font, color, align = 'left') => { c.textAlign = align; c.fillStyle = color; c.fillText(fit(text, font, width), align === 'right' ? right : x, y); };
+    const big = size === 'square' ? 1 : .62;
+    let y = Math.round(80 * big);
+    write(size === 'square' ? 'PLAYER BATTLE' : 'THE CRICKET SPACE · PLAYER BATTLE', y, `700 ${Math.round(24 * big)}px Manrope, Arial, sans-serif`, gold);
+    y += Math.round(78 * big);
+    write(names[0].toUpperCase(), y, `italic 900 ${Math.round(66 * big)}px "Big Shoulders Display", Arial, sans-serif`, cream);
+    y += Math.round(52 * big);
+    write('VS', y, `italic 900 ${Math.round(40 * big)}px "Big Shoulders Display", Arial, sans-serif`, gold);
+    y += Math.round(62 * big);
+    write(names[1].toUpperCase(), y, `italic 900 ${Math.round(66 * big)}px "Big Shoulders Display", Arial, sans-serif`, cream);
+    y += Math.round(34 * big);
+    c.fillStyle = gold; c.fillRect(x, y, width, 2);
+    const [first, second] = table.rows;
+    const lines = table.headers.slice(1).map((header, i) => [header, first[i + 1], second ? second[i + 1] : null]).slice(0, size === 'square' ? 8 : 5);
+    const rowH = Math.round(64 * big);
+    for (const [header, a, b] of lines) {
+      y += rowH;
+      write(header.toUpperCase(), y, `700 ${Math.round(24 * big)}px Manrope, Arial, sans-serif`, muted);
+      const value = b === null ? String(a) : a + '  ·  ' + b;
+      write(value, y, `italic 900 ${Math.round(44 * big)}px "Big Shoulders Display", Arial, sans-serif`, cream, 'right');
+    }
+    const phase = cardPhaseLine(table.format);
+    if (phase) {
+      // One phase per line so nothing is cut off on narrow panels.
+      const [lead, ...parts] = phase.includes('  ') && !phase.startsWith('PP') ? [phase.split('  ')[0], ...phase.split('  ').slice(1).join('  ').split('   |   ')] : ['By phase', ...phase.split('   |   ')];
+      y += Math.round(52 * big);
+      write(lead.toUpperCase(), y, `700 ${Math.round(20 * big)}px Manrope, Arial, sans-serif`, gold);
+      for (const part of parts) { y += Math.round(36 * big); write(part.trim(), y, `700 ${Math.round(24 * big)}px Manrope, Arial, sans-serif`, cream); }
+    }
+    write('mstmayank.github.io/player-battle', H - Math.round(40 * big), `700 ${Math.round(20 * big)}px Manrope, Arial, sans-serif`, gold);
+    return out;
+  }
+
   async function drawBattleCard() {
     const render=++cardRender;
     byId('battle-card-feedback').textContent='';
@@ -1655,9 +1726,12 @@ function venueLabel(name) {
       });
     }
     rule(1755);
-    label('Archived matches',540,1834,20,956,muted);
+    const phaseLine = cardPhaseLine(table.format);
+    if (phaseLine) label(phaseLine, 540, 1800, 26, 956, cream);
+    label('Archived matches · mstmayank.github.io/player-battle', 540, phaseLine ? 1846 : 1834, 20, 956, muted);
     photos.filter(photo=>photo?.credit).forEach((photo,index)=>label(photo.credit,540,1863+index*24,17,956,muted));
-    canvas.toBlob(blob=>{
+    const output = composeCardSize(canvas, table, names);
+    output.toBlob(blob=>{
       if(render!==cardRender)return;
       if(!blob){byId('battle-share-status').textContent='Card could not be generated.';return;}
       cardBlob=blob;if(cardObjectURL)URL.revokeObjectURL(cardObjectURL);cardObjectURL=URL.createObjectURL(blob);
@@ -1669,6 +1743,7 @@ function venueLabel(name) {
     }catch(error){byId('battle-share-status').textContent='Image preview is unavailable in this browser.';}
   }
   byId('battle-card-format').addEventListener('change',()=>{cardBlob=null;byId('battle-card-dialog').hidden=true;});
+  byId('battle-card-size').addEventListener('change',()=>{cardBlob=null;byId('battle-card-dialog').hidden=true;});
   byId('battle-card-dialog').addEventListener('keydown',event=>{
     if(event.key!=='Tab')return;
     const items=[...byId('battle-card-dialog').querySelectorAll('button,a[href],input')];
