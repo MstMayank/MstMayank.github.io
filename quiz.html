@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Cricket Quiz | The Cricket Space</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mstmayank.github.io/quiz.html">
+<meta name="description" content="Five new IPL and WPL questions every day, built from ball-by-ball stats. Keep your streak and share your score.">
+<meta name="theme-color" content="#07241A">
+<meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
+<meta property="og:title" content="Daily Cricket Quiz | The Cricket Space">
+<meta property="og:description" content="Five new IPL and WPL questions every day. Keep your streak and share your score.">
+<meta property="og:url" content="https://mstmayank.github.io/quiz.html">
+<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0a0f0c; color: #eef1ec; }
+  .qz { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; max-width: 760px; }
+  .qz > * { min-width: 0; }
+  .qz[hidden], .qz [hidden] { display: none !important; }
+  .qz-progress { display: flex; gap: 6px; }
+  .qz-progress span { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); }
+  .qz-progress .done { background: #e9c46a; } .qz-progress .now { background: rgba(233,196,106,.45); }
+  .qz-card { border: 1px solid rgba(236,241,234,.09); border-radius: 22px; padding: clamp(20px, 3vw, 32px); background: #121a16; }
+  .qz-card h2 { margin: 6px 0 18px; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.3; }
+  .qz-eyebrow { font: 650 12px Manrope, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #74837a; }
+  .qz-options { display: grid; gap: 10px; }
+  body.ds .qz-options button { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 54px; padding: 12px 18px; border: 1px solid rgba(236,241,234,.16); border-radius: 14px; background: #0e1511; font: 650 16px Manrope, sans-serif; color: #eef1ec; cursor: pointer; transition: border-color .16s, background .16s, transform .16s; }
+  body.ds .qz-options button:hover:not(:disabled) { border-color: rgba(255,255,255,.32); transform: translateY(-1px); }
+  body.ds .qz-options button:focus-visible { outline: 2px solid #e9c46a; outline-offset: 3px; }
+  body.ds .qz-options button:disabled { cursor: default; opacity: 1; }
+  body.ds .qz-options button:disabled:not(.right):not(.wrong) { opacity: .55; }
+  body.ds .qz-options .right { border-color: #3dd68c; background: rgba(61,214,140,.1); }
+  body.ds .qz-options .wrong { border-color: #e5484d; background: rgba(229,72,77,.1); }
+  .qz-explain { margin: 14px 0 0; color: #a3b0a8; }
+  .qz-next { margin-top: 18px; }
+  .qz-result { text-align: center; }
+  .qz-score { font: 800 clamp(56px, 10vw, 88px)/1 "Big Shoulders Display", sans-serif; color: #e9c46a; }
+  .qz-dots { font-size: 28px; letter-spacing: 4px; margin: 10px 0; }
+  .qz-stats { display: flex; justify-content: center; gap: 28px; margin: 14px 0 20px; color: #a3b0a8; }
+  .qz-stats b { display: block; font: 800 28px "Big Shoulders Display", sans-serif; color: #eef1ec; }
+  .qz-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .qz-review { text-align: left; margin-top: 18px; display: grid; gap: 8px; }
+  .qz-review p { margin: 0; font-size: 14px; }
+</style>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1"><link rel="stylesheet" href="/ds.css?v=2">
+</head>
+<body class="v2 cricket-feel cricket-tools ds" id="top">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
+<main class="wrap page tool-page archive-page">
+<h1 class="tool-heading">Daily <span>Quiz</span></h1>
+<p class="tool-coverage">Five new questions every day, built from the site’s ball-by-ball stats. Same questions for everyone, so you can compare scores.</p>
+<div class="tool-pills" role="group" aria-label="League">
+  <button type="button" data-league="ipl" aria-pressed="true">IPL</button>
+  <button type="button" data-league="wpl" aria-pressed="false">WPL</button>
+</div>
+<div class="qz">
+  <p class="tool-count" id="qz-status" role="status">Loading today’s questions…</p>
+  <div class="qz-progress" id="qz-progress" aria-hidden="true"></div>
+  <section class="qz-card" id="qz-card" hidden aria-live="polite">
+    <span class="qz-eyebrow" id="qz-count"></span>
+    <h2 id="qz-question"></h2>
+    <div class="qz-options" id="qz-options"></div>
+    <p class="qz-explain" id="qz-explain" hidden></p>
+    <button type="button" class="ds-btn qz-next" id="qz-next" hidden>Next question →</button>
+  </section>
+  <section class="qz-card qz-result" id="qz-result" hidden aria-live="polite">
+    <span class="qz-eyebrow" id="qz-result-label"></span>
+    <div class="qz-score" id="qz-score"></div>
+    <div class="qz-dots" id="qz-dots"></div>
+    <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
+    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Share result ↗</button><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
+    <p class="qz-explain" id="qz-share-status" role="status"></p>
+    <div class="qz-review" id="qz-review"></div>
+    <p class="qz-explain">New questions at midnight (India time).</p>
+  </section>
+</div>
+</main>
+<script src="quiz-core.js?v=1"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const Q = window.TCSQuiz;
+  const today = new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  let league = new URLSearchParams(location.search).get('league') === 'wpl' ? 'wpl' : 'ipl';
+  let questions = [], index = 0, answers = [];
+  const KEY = 'tcs-quiz-v1';
+  const store = { read() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }, write(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} } };
+  const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
+  function progress() {
+    $('qz-progress').replaceChildren(...questions.map((_, i) => { const s = document.createElement('span'); s.className = i < index ? 'done' : i === index ? 'now' : ''; return s; }));
+  }
+  function show() {
+    const q = questions[index];
+    progress();
+    $('qz-card').hidden = false; $('qz-result').hidden = true;
+    $('qz-count').textContent = league.toUpperCase() + ' · Question ' + (index + 1) + ' of ' + questions.length;
+    $('qz-question').textContent = q.question;
+    $('qz-explain').hidden = true; $('qz-next').hidden = true;
+    $('qz-options').replaceChildren(...q.options.map((option, i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      const name = document.createElement('span'); name.textContent = option; const mark = document.createElement('span'); mark.setAttribute('aria-hidden', 'true');
+      b.append(name, mark);
+      b.addEventListener('click', () => choose(i));
+      return b;
+    }));
+    $('qz-options').querySelector('button')?.focus({preventScroll: true});
+  }
+  function choose(i) {
+    const q = questions[index];
+    answers[index] = i === q.answer;
+    [...$('qz-options').children].forEach((b, k) => {
+      b.disabled = true;
+      if (k === q.answer) { b.classList.add('right'); b.lastChild.textContent = '✓'; }
+      else if (k === i) { b.classList.add('wrong'); b.lastChild.textContent = '✕'; }
+    });
+    $('qz-explain').textContent = (answers[index] ? 'Correct. ' : 'Not quite. ') + q.explain;
+    $('qz-explain').hidden = false;
+    $('qz-next').textContent = index + 1 < questions.length ? 'Next question →' : 'See your score →';
+    $('qz-next').hidden = false; $('qz-next').focus();
+    save(false);
+  }
+  function save(finished) {
+    const all = store.read();
+    const day = (all[league] ||= {days: {}, best: 0});
+    day.days[today] = {answers: answers.slice(), done: finished || !!day.days[today]?.done};
+    if (finished) day.best = Math.max(day.best, answers.filter(Boolean).length);
+    store.write(all);
+  }
+  function streakOf(days) {
+    let streak = 0; const d = new Date(today + 'T00:00:00Z');
+    while (days[d.toISOString().slice(0, 10)]?.done) { streak++; d.setUTCDate(d.getUTCDate() - 1); }
+    return streak;
+  }
+  function finish() {
+    save(true);
+    index = questions.length; progress();
+    const all = store.read()[league];
+    const score = answers.filter(Boolean).length;
+    $('qz-card').hidden = true; $('qz-result').hidden = false;
+    $('qz-result-label').textContent = league.toUpperCase() + ' quiz · ' + new Date(today + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'long'});
+    $('qz-score').textContent = score + '/' + questions.length;
+    $('qz-dots').textContent = answers.map(ok => (ok ? '🏏' : '⬜')).join('');
+    $('qz-streak').textContent = streakOf(all.days); $('qz-best').textContent = all.best; $('qz-played').textContent = Object.values(all.days).filter(d => d.done).length;
+    $('qz-other').textContent = 'Play the ' + (league === 'ipl' ? 'WPL' : 'IPL') + ' quiz';
+    $('qz-review').replaceChildren(...questions.map((q, i) => { const p = document.createElement('p'); p.textContent = (answers[i] ? '🏏 ' : '⬜ ') + q.question + ' — ' + q.options[q.answer]; return p; }));
+  }
+  async function start() {
+    document.querySelectorAll('[data-league]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.league === league)));
+    $('qz-status').textContent = 'Loading today’s questions…';
+    try {
+      const [venues, impact] = await Promise.all([json('venue-stats-' + league + '.json?v=1'), json('impact-' + league + '.json?v=1')]);
+      questions = Q.dailyQuiz({label: league.toUpperCase(), venues, impact}, today);
+      const saved = store.read()[league]?.days?.[today];
+      answers = saved ? saved.answers.slice() : [];
+      index = answers.length;
+      $('qz-status').textContent = 'Today’s ' + league.toUpperCase() + ' quiz · ' + questions.length + ' questions';
+      if (saved?.done || index >= questions.length) finish(); else show();
+    } catch (e) { $('qz-status').textContent = 'The quiz could not load. Refresh the page to try again.'; }
+  }
+  $('qz-next').addEventListener('click', () => { index++; if (index < questions.length) show(); else finish(); });
+  $('qz-other').addEventListener('click', () => { league = league === 'ipl' ? 'wpl' : 'ipl'; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); });
+  document.querySelectorAll('[data-league]').forEach(b => b.addEventListener('click', () => { if (b.dataset.league === league) return; league = b.dataset.league; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); }));
+  $('qz-share').addEventListener('click', async () => {
+    const text = Q.shareText(today, answers, league.toUpperCase()) + '\nhttps://mstmayank.github.io/quiz.html';
+    try { if (navigator.share) { await navigator.share({text}); return; } await navigator.clipboard.writeText(text); $('qz-share-status').textContent = 'Result copied. Paste it anywhere.'; }
+    catch (e) { if (e.name !== 'AbortError') $('qz-share-status').textContent = text; }
+  });
+  start();
+})();
+</script>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
