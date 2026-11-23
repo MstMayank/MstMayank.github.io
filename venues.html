@@ -93,6 +93,8 @@
     <section class="venue-section"><h2>Par scores (1st innings)</h2><div class="tool-table"><table><thead><tr><th scope="col">Point</th><th scope="col" class="num">Average score</th></tr></thead><tbody id="venue-par"></tbody></table></div></section>
     <section class="venue-section"><h2>By phase (all innings)</h2><div class="tool-table"><table><thead><tr><th scope="col">Phase</th><th scope="col" class="num">Run rate</th><th scope="col" class="num">Wkts / inns</th><th scope="col" class="num">Boundary %</th></tr></thead><tbody id="venue-phases"></tbody></table></div></section>
   </div>
+  <section class="venue-section" id="venue-ps-section"><h2>Pace vs spin</h2><p class="venue-note" id="venue-ps-sub" style="margin:0 0 12px"></p>
+    <div class="tool-table"><table><thead><tr><th scope="col">Bowler type</th><th scope="col" class="num">Share of overs</th><th scope="col" class="num">Share of wickets</th><th scope="col" class="num">Economy</th><th scope="col" class="num">Average</th><th scope="col" class="num">Balls / wkt</th></tr></thead><tbody id="venue-ps"></tbody></table></div></section>
   <div class="venue-grid">
     <section class="venue-section"><h2>Highest totals</h2><div class="tool-table"><table><thead><tr><th scope="col">Score</th><th scope="col">Team</th><th scope="col">Date</th></tr></thead><tbody id="venue-highest"></tbody></table></div></section>
     <section class="venue-section"><h2>Lowest totals</h2><div class="tool-table"><table><thead><tr><th scope="col">Score</th><th scope="col">Team</th><th scope="col">Date</th></tr></thead><tbody id="venue-lowest"></tbody></table></div><p class="venue-note">All-out or full 20-over innings in matches not shortened by rain.</p></section>
@@ -226,6 +228,13 @@
     rows($('venue-par'), ['6', '15'].filter(over => s.par[over].runs !== null).map(over => ['After ' + over + ' overs', n(fixed(s.par[over].runs, 0) + '/' + fixed(s.par[over].wickets, 0))])
       .concat(s.firstInnings.average !== null ? [['Final total', n(fixed(s.firstInnings.average, 0))]] : []));
     rows($('venue-phases'), s.phases.map((phase, i) => [phaseNames[i], n(fixed(phase.runRate, 2)), n(fixed(phase.wicketsPerInnings, 1)), n(pct(phase.boundaryPct))]));
+    const ps = s.paceSpin;
+    $('venue-ps-section').hidden = !ps;
+    if (ps) {
+      rows($('venue-ps'), [['Pace', ps.pace], ['Spin', ps.spin]].map(([label, t]) => [label, n(pct(t.ballShare)), n(pct(t.wicketShare)), n(fixed(t.economy, 2)), n(fixed(t.average)), n(fixed(t.strikeRate))]));
+      const cheaper = ps.spin.economy < ps.pace.economy ? 'Spin' : 'Pace';
+      $('venue-ps-sub').textContent = cheaper + ' has been cheaper here (' + fixed(Math.min(ps.spin.economy, ps.pace.economy), 2) + ' vs ' + fixed(Math.max(ps.spin.economy, ps.pace.economy), 2) + ' an over). Bowler types cover ' + pct(ps.coveragePct) + ' of balls.';
+    }
     const total = t => [t.runs + (t.wickets < 10 ? '/' + t.wickets : ''), t.team + ' v ' + t.opponent, {link: 'match.html?' + new URLSearchParams(competition === 'ipl' ? {id: t.matchId} : {c: competition, id: t.matchId}), text: when(t.date)}];
     rows($('venue-highest'), s.highest.map(total));
     rows($('venue-lowest'), s.lowest.map(total));

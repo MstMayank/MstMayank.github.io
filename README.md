@@ -55,6 +55,22 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   and the fitted win-probability model) and one `matches/<competition>/<season>.json` file, built by
   `scripts/build-match-charts.py` (model details at the top of the script; weekly workflow).
   Tests: `tests/test_match_charts.py`.
+- **Pace vs spin**: `data/bowler-types.json` (all bowlers) and `data/bowler-types/<competition>.json`
+  (small per-page files) give each bowler a type (pace or spin) and sub-type (right-/left-arm pace,
+  off-spin, leg-spin, left-arm orthodox, left-arm wrist spin). Styles come from `player_meta` in the
+  cricketdata R package (GPL-3.0, from ESPNcricinfo) and are matched to scorecard names through the
+  Cricsheet registry, per competition; names that stay ambiguous are left unknown. Coverage: 99% of
+  IPL balls, 89–99% elsewhere. Rebuild when needed (not in the weekly workflow):
+
+  ```sh
+  pip install pyreadr
+  curl -LO https://raw.githubusercontent.com/robjhyndman/cricketdata/master/data/player_meta.rda
+  python scripts/build-bowler-types.py --meta player_meta.rda --zip ipl_json.zip --zip wpl_json.zip --zip t20s_json.zip --zip odis_json.zip --zip tests_json.zip
+  ```
+
+  Used by Player Battle (a "Vs pace & spin" card and a bowler-type filter in the match-up finder) and
+  by the venue pages (pace vs spin economy, average and wicket share; `paceSpin` in venue stats).
+  Tests: `tests/test_bowler_types.py`, `tests/test_venue_stats.py`.
 - **Venues** loads `venue-stats-ipl.json` and `venue-stats-wpl.json`, built from Cricsheet
   ball-by-ball data by `scripts/build-venue-stats.py` (the `Refresh venue stats` workflow runs it
   weekly). Venue names are merged with the same list as Player Battle (`venueAliases` in
