@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fantasy XI Helper for IPL and WPL | The Cricket Space</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mstmayank.github.io/fantasy.html">
+<meta name="description" content="A stats-based fantasy XI for any IPL or WPL fixture: expected points from recent form, venue record and match-ups, with captain, vice-captain and credits. Not betting advice.">
+<meta name="theme-color" content="#07241A">
+<meta property="og:type" content="website"><meta property="og:site_name" content="The Cricket Space">
+<meta property="og:title" content="Fantasy XI Helper | The Cricket Space">
+<meta property="og:description" content="Expected fantasy points, captain and vice-captain for any IPL or WPL fixture, from ball-by-ball data.">
+<meta property="og:url" content="https://mstmayank.github.io/fantasy.html">
+<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0a0f0c; color: #eef1ec; }
+  .fx { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .fx > * { min-width: 0; }
+  .fx[hidden], .fx [hidden] { display: none !important; }
+  .cricket-tools .fx-controls.tool-filter { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+  .cricket-tools .fx-controls.tool-filter label { min-width: 0; }
+  .cricket-tools .fx-controls.tool-filter select { width: 100%; }
+  .fx-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .fx-tile { border: 1px solid rgba(236,241,234,.09); border-radius: 20px; padding: 16px 18px; background: #121a16; }
+  .fx-tile b { display: block; font: 800 clamp(26px, 3.4vw, 36px)/1.1 "Big Shoulders Display", sans-serif; color: #eef1ec; }
+  .fx-tile span { display: block; font-size: 13px; color: #a3b0a8; margin-top: 4px; }
+  .fx-role h2 { margin: 6px 0 10px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #74837a; }
+  .fx-list { display: grid; gap: 8px; }
+  .fx-player { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; border: 1px solid rgba(236,241,234,.09); border-radius: 16px; padding: 12px 16px; background: #121a16; }
+  .fx-badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 13px Manrope, sans-serif; background: rgba(255,255,255,.06); color: #a3b0a8; }
+  .fx-badge.c { background: #e9c46a; color: #0b100d; }
+  .fx-badge.vc { background: rgba(233,196,106,.18); color: #e9c46a; }
+  .fx-name b { display: block; font-weight: 700; }
+  .fx-name small { color: #a3b0a8; font-size: 13px; }
+  .fx-points { text-align: right; }
+  .fx-points b { font: 800 22px "Big Shoulders Display", sans-serif; color: #e9c46a; display: block; }
+  .fx-points small { color: #74837a; font-size: 12px; }
+  .fx-why { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+  .fx-why span { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.05); color: #a3b0a8; }
+  .fx-note { font-size: 13px; color: #74837a; line-height: 1.6; }
+  .fx-warn { border-left: 3px solid #e9c46a; padding: 10px 14px; background: rgba(233,196,106,.08); border-radius: 0 10px 10px 0; color: #eef1ec; font-size: 14px; }
+  .fx-rules { border: 1px solid rgba(236,241,234,.09); border-radius: 16px; padding: 14px 18px; background: #0e1511; }
+  .fx-rules summary { cursor: pointer; font-weight: 700; }
+</style>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1"><link rel="stylesheet" href="/ds.css?v=2">
+</head>
+<body class="v2 cricket-feel cricket-tools ds" id="top">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
+<main class="wrap page tool-page archive-page">
+<h1 class="tool-heading" id="fx-title">Fantasy <span>XI helper</span></h1>
+<p class="tool-coverage">A stats-based team for any IPL or WPL fixture: expected points from recent form, the venue and match-ups against the other squad. Built from ball-by-ball data.</p>
+<div class="tool-pills" role="group" aria-label="Competition">
+  <button type="button" data-competition="ipl" aria-pressed="true">IPL</button>
+  <button type="button" data-competition="wpl" aria-pressed="false">WPL</button>
+</div>
+<div class="fx">
+  <div class="fx-controls tool-filter">
+    <label>Team 1<select id="fx-a"></select></label>
+    <label>Team 2<select id="fx-b"></select></label>
+    <label>Venue<select id="fx-venue"><option value="">Any venue</option></select></label>
+  </div>
+  <p class="tool-count" id="fx-status" role="status">Loading match data…</p>
+  <p class="fx-warn">Not betting advice. This is a fun, stats-based suggestion; it can’t know injuries, playing XIs, pitch or weather.</p>
+  <div class="fx" id="fx-body" hidden>
+    <div class="fx-summary" id="fx-summary"></div>
+    <div id="fx-roles" class="fx"></div>
+    <details class="fx-rules"><summary>How the XI is chosen</summary>
+      <p class="fx-note" id="fx-rules-text"></p></details>
+  </div>
+</div>
+</main>
+<script src="fantasy-core.js?v=1"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const F = window.TCSFantasy;
+  const params = new URLSearchParams(location.search);
+  let competition = params.get('c') === 'wpl' ? 'wpl' : 'ipl';
+  const cache = new Map();
+  const ROLE_NAMES = {WK: 'Wicketkeepers', BAT: 'Batters', AR: 'All-rounders', BOWL: 'Bowlers'};
+  const DEFAULTS = {ipl: ['Mumbai Indians', 'Chennai Super Kings'], wpl: ['Mumbai Indians', 'Delhi Capitals']};
+  const json = url => fetch(url).then(r => { if (!r.ok) throw new Error(url); return r.json(); });
+  const label = name => name.split(',')[0];
+  function load(key) {
+    if (!cache.has(key)) cache.set(key, Promise.all([json('battle-' + key + '.json'), json('team-stats-' + key + '.json?v=1'), json('/player/links.json').catch(() => ({}))]).then(([battle, teams, links]) => ({battle, teams, links: links[key] || {}, points: F.matchPoints(battle)})).catch(e => { cache.delete(key); throw e; }));
+    return cache.get(key);
+  }
+  function fill(data) {
+    const current = Object.entries(data.teams.teams).filter(([, t]) => t.lastSeason === data.teams.latestSeason).map(([n]) => n).sort();
+    [$('fx-a'), $('fx-b')].forEach((sel, i) => {
+      sel.replaceChildren(...current.map(n => new Option(n, n)));
+      const want = params.get(i ? 'b' : 'a');
+      sel.value = [want, DEFAULTS[competition][i], current[i]].find(n => n && current.includes(n) && (i === 0 || n !== $('fx-a').value)) || current.find(n => n !== $('fx-a').value);
+    });
+    const counts = new Map();
+    for (const m of data.battle.matches) counts.set(label(data.battle.venues[m[1]]), (counts.get(label(data.battle.venues[m[1]])) || 0) + 1);
+    const venues = [...counts].filter(([, n]) => n >= 5).sort((a, b) => b[1] - a[1]).map(([v]) => v);
+    $('fx-venue').replaceChildren(new Option('Any venue', ''), ...venues.map(v => new Option(v, v)));
+    if (venues.includes(params.get('venue'))) $('fx-venue').value = params.get('venue');
+  }
+  function render(data) {
+    const a = $('fx-a').value, b = $('fx-b').value, venue = $('fx-venue').value;
+    if (a === b) { $('fx-status').textContent = 'Pick two different teams.'; $('fx-body').hidden = true; return; }
+    const battle = data.battle;
+    const ids = name => (data.teams.teams[name]?.squad || []).map(n => battle.players.indexOf(n)).filter(i => i >= 0);
+    const ia = ids(a), ib = ids(b);
+    const make = (list, team, opp) => list.map(id => F.profile(battle, data.points, id, {venueLabel: venue || null, venueOf: i => label(battle.venues[i]), opponents: new Set(opp)})).filter(p => p && p.recentMatches >= 3).map(p => ({...p, team}));
+    const pool = [...make(ia, a, ib), ...make(ib, b, ia)];
+    const all = pool.map(p => p.seasonAvg);
+    pool.forEach(p => { p.credits = F.credits(p.seasonAvg, all); });
+    const xi = F.pickXI(pool);
+    $('fx-body').hidden = !xi;
+    $('fx-status').textContent = xi ? data.teams.label + ' · squads from ' + data.teams.latestSeason + (venue ? ' · at ' + venue : '') + ' · ' + pool.length + ' players considered' : 'Not enough recent data to build a legal XI for these squads.';
+    history.replaceState(null, '', 'fantasy.html?' + new URLSearchParams({...(competition !== 'ipl' ? {c: competition} : {}), a, b, ...(venue ? {venue} : {})}));
+    document.title = a + ' vs ' + b + ' Fantasy XI | The Cricket Space';
+    if (!xi) return;
+    const teamCount = t => xi.players.filter(p => p.team === t).length;
+    const tiles = [[Math.round(xi.expected), 'Expected points (C ×2, VC ×1.5)'], [xi.credits + ' / ' + F.RULES.credits, 'Credits used'], [teamCount(a) + ' – ' + teamCount(b), 'Players from each team'], [battle.players[xi.captain], 'Captain']];
+    $('fx-summary').replaceChildren(...tiles.map(([v, l]) => { const d = document.createElement('div'); d.className = 'fx-tile'; const bEl = document.createElement('b'); bEl.textContent = v; const s = document.createElement('span'); s.textContent = l; d.append(bEl, s); return d; }));
+    $('fx-roles').replaceChildren(...Object.keys(ROLE_NAMES).map(role => {
+      const list = xi.players.filter(p => p.role === role);
+      const sec = document.createElement('section'); sec.className = 'fx-role';
+      const h = document.createElement('h2'); h.textContent = ROLE_NAMES[role] + ' · ' + list.length; sec.appendChild(h);
+      const box = document.createElement('div'); box.className = 'fx-list';
+      for (const p of list) {
+        const row = document.createElement('article'); row.className = 'fx-player';
+        const badge = document.createElement('span'); badge.className = 'fx-badge' + (p.id === xi.captain ? ' c' : p.id === xi.viceCaptain ? ' vc' : '');
+        badge.textContent = p.id === xi.captain ? 'C' : p.id === xi.viceCaptain ? 'VC' : role;
+        const name = document.createElement('div'); name.className = 'fx-name';
+        const n = document.createElement('b'); const slug = data.links[battle.players[p.id]];
+        if (slug) { const a = document.createElement('a'); a.href = '/player/' + slug + '.html'; a.textContent = battle.players[p.id]; n.appendChild(a); } else n.textContent = battle.players[p.id];
+        const s = document.createElement('small'); s.textContent = p.team + ' · ' + p.credits + ' cr · last ' + p.recentMatches + ': ' + p.form.toFixed(0) + ' pts a match';
+        name.append(n, s);
+        const pts = document.createElement('div'); pts.className = 'fx-points';
+        const pb = document.createElement('b'); pb.textContent = p.expected.toFixed(0); const ps = document.createElement('small'); ps.textContent = 'expected';
+        pts.append(pb, ps);
+        row.append(badge, name, pts);
+        if (p.reasons.length) { const why = document.createElement('div'); why.className = 'fx-why'; p.reasons.forEach(r => { const c = document.createElement('span'); c.textContent = r; why.appendChild(c); }); row.appendChild(why); }
+        box.appendChild(row);
+      }
+      sec.appendChild(box); return sec;
+    }));
+    const R = F.RULES, W = F.WEIGHTS, P = F.POINTS;
+    $('fx-rules-text').textContent = 'Points per match: 1 per run, +' + P.four + ' per four, +' + P.six + ' per six, +' + P.thirty + '/' + P.fifty + '/' + P.hundred + ' for 30/50/100; ' + P.wicket + ' per wicket, +' + P.bowledLbw + ' for bowled or lbw, +' + P.threeW + '/' + P.fourW + '/' + P.fiveW + ' for 3/4/5 wickets; ' + P.catch + ' per catch, ' + P.stumping + ' per stumping, ' + P.runOut + ' per run-out. Expected points = ' + W.form * 100 + '% last 10 matches + ' + W.seasons * 100 + '% last two seasons, adjusted up to ±' + W.venueCap * 100 + '% for the venue (' + W.venueMinMatches + '+ matches there) and ±' + W.matchupCap * 100 + '% for the record against the other squad (' + W.matchupMinBalls + '+ balls). Roles come from the data (keepers have stumpings; all-rounders bat and bowl 120+ balls over two seasons). Credits 7–10.5 by recent points. XI: ' + R.players + ' players, ' + R.credits + ' credits, at most ' + R.maxPerTeam + ' from one team, WK ' + R.roles.WK.join('–') + ', BAT ' + R.roles.BAT.join('–') + ', AR ' + R.roles.AR.join('–') + ', BOWL ' + R.roles.BOWL.join('–') + '; the best legal combination is searched in full. Squads are the players who appeared in ' + data.teams.latestSeason + '.';
+  }
+  async function start() {
+    document.querySelectorAll('[data-competition]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.competition === competition)));
+    $('fx-status').textContent = 'Loading match data…'; $('fx-body').hidden = true;
+    try { const data = await load(competition); fill(data); render(data); }
+    catch (error) { $('fx-status').textContent = 'Match data could not load. Refresh the page to try again.'; }
+  }
+  for (const id of ['fx-a', 'fx-b', 'fx-venue']) $(id).addEventListener('change', () => load(competition).then(render));
+  document.querySelectorAll('[data-competition]').forEach(b => b.addEventListener('click', () => { if (b.dataset.competition === competition) return; competition = b.dataset.competition; ['a', 'b', 'venue'].forEach(k => params.delete(k)); start(); }));
+  start();
+})();
+</script>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>
