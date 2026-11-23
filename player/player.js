@@ -5,6 +5,22 @@
   const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
   const num = (v, d) => (v === null || !Number.isFinite(v) ? '—' : v.toLocaleString('en-IN', { maximumFractionDigits: d ?? 0, minimumFractionDigits: d ?? 0 }));
 
+  const profileHeader = document.querySelector('.pp-head');
+  if (profileHeader && !document.getElementById('pp-filter')) {
+    const slug = location.pathname.split('/').pop().replace(/\.html$/, '');
+    fetch('/battle-art/portraits.json').then(r => r.ok ? r.json() : null).then(art => {
+      const asset = art?.profiles[slug];
+      if (!asset) return;
+      const image = new Image();
+      image.alt = '';
+      image.onload = () => {
+        profileHeader.classList.add('with-portrait');
+        profileHeader.prepend(image);
+      };
+      image.src = '/battle-art/' + asset + '.jpg';
+    }).catch(() => {});
+  }
+
   // Share
   for (const button of document.querySelectorAll('.pp-share')) {
     button.addEventListener('click', async () => {

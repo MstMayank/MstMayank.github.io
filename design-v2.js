@@ -30,17 +30,17 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('site-links');
+  if (toggle) { toggle.textContent = '☰'; toggle.setAttribute('aria-label','Navigation'); }
   function closeMenu() {
     links?.classList.remove('open');
     toggle?.setAttribute('aria-expanded','false');
-    if (toggle) toggle.textContent = 'Menu';
     document.body.classList.remove('menu-open');
   }
   toggle?.addEventListener('click', () => {
     const open = !links.classList.contains('open');
     links.classList.toggle('open',open);
     toggle.setAttribute('aria-expanded',String(open));
-    toggle.textContent = open ? 'Close' : 'Menu';
+    toggle.textContent = open ? '×' : '☰';
     document.body.classList.toggle('menu-open', open);
   });
   // Mark the current section in the header (one shared header on every page).
