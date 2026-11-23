@@ -121,6 +121,15 @@ class VenueStatsTests(unittest.TestCase):
         self.assertEqual(data['matches'][1][5:], ['Delhi Capitals', 'win', '3 wickets'])
         self.assertEqual(data['matches'][0][2], 'wankhede-stadium')
 
+    def test_pace_spin_split(self):
+        innings = [{'bowlers': {'P': {'balls': 60, 'runs': 80, 'wickets': 2}, 'S': {'balls': 48, 'runs': 48, 'wickets': 3}, 'U': {'balls': 12, 'runs': 20, 'wickets': 0}}}]
+        split = venue_stats.type_split(innings, {'P': 'pace', 'S': 'spin'})
+        self.assertEqual(split['pace']['economy'], 8.0)
+        self.assertEqual(split['spin']['economy'], 6.0)
+        self.assertEqual(split['spin']['wicketShare'], 60.0)
+        self.assertEqual(split['coveragePct'], 90.0)
+        self.assertIsNone(venue_stats.type_split(innings, {}), 'no known types means no split')
+
 
 if __name__ == '__main__':
     unittest.main()

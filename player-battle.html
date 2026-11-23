@@ -152,6 +152,10 @@
 #ipl-lens .battle-result .form-list span { color:var(--dim); font-size:.9rem; }
 #ipl-lens .battle-result .form-list small { font-weight:700; font-size:.8rem; color:var(--dim); }
 #ipl-lens .battle-result .entry-card .table-wrap { margin:10px 0; }
+#ipl-lens .battle-result .pace-spin-card tr.type-main td { font-weight:700; color:var(--ink); }
+#ipl-lens .battle-result .pace-spin-card tr.type-sub td:first-child { padding-left:28px; color:var(--dim); }
+#ipl-lens .battle-result .pace-spin-card tr.type-thin td { opacity:.55; }
+#ipl-lens .battle-result .pace-spin-card tr.type-total td { border-top:1px solid var(--line); font-weight:600; }
 #ipl-lens .battle-result .entry-thin td { opacity:.5; }
 #ipl-lens .battle-result .entry-heat { display:grid; grid-template-columns:repeat(20,minmax(0,1fr)); gap:3px; margin:14px 0 4px; }
 #ipl-lens .battle-result .entry-heat span { aspect-ratio:1; display:grid; place-items:center; border-radius:4px; font-size:.7rem; font-weight:700; color:var(--ink); cursor:help; min-width:0; }
@@ -402,6 +406,7 @@
 <div class="finder-controls" id="finder-controls" hidden>
 <label>Find match-ups for<select id="finder-role"><option value="batting">A batter</option><option value="bowling">A bowler</option></select></label>
 <label>Minimum balls<select id="finder-min"><option value="12">12</option><option value="30" selected>30</option><option value="60">60</option></select></label>
+<label id="finder-type-label">Bowler type<select id="finder-type"><option value="">All bowlers</option><option value="pace">Pace</option><option value="spin">Spin</option><option value="right-pace">Right-arm pace</option><option value="left-pace">Left-arm pace</option><option value="off-spin">Off-spin</option><option value="leg-spin">Leg-spin</option><option value="left-orthodox">Left-arm orthodox</option><option value="left-wrist">Left-arm wrist spin</option></select></label>
 </div>
 <label id="battle-career-scope-label" hidden>Batting records<select id="battle-career-scope"><option value="career">All-time career records</option><option value="archive">Archived match analysis</option></select></label>
 <p class="battle-status" id="battle-status" role="status">Loading match data…</p>
@@ -438,5 +443,5 @@
 <script defer src="matchup-core.js?v=1"></script>
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
-<script defer src="player-battle.js?v=match-links"></script>
+<script defer src="player-battle.js?v=pace-spin"></script>
 <footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="design-v2.js?v=1"></script></body></html>

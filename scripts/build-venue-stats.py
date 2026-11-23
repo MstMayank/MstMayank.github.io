@@ -176,7 +176,36 @@ def ratio(numerator, denominator, multiplier=1):
     return numerator * multiplier / denominator if denominator else None
 
 
-def summarise(block):
+def bowler_types(competition):
+    """Bowler name -> 'pace' / 'spin' from data/bowler-types/<competition>.json (build-bowler-types.py)."""
+    path = ROOT / 'data' / 'bowler-types' / f'{competition}.json'
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text())
+    return {name: 'pace' if sub in data['pace'] else 'spin' for name, sub in data['bowlers'].items()}
+
+
+def type_split(innings_list, types):
+    """Pace vs spin totals over these innings, with the share of balls whose bowler type is known."""
+    totals = {kind: {'balls': 0, 'runs': 0, 'wickets': 0} for kind in ('pace', 'spin', 'unknown')}
+    for innings in innings_list:
+        for name, stats in innings['bowlers'].items():
+            cell = totals[types.get(name, 'unknown')]
+            for key in ('balls', 'runs', 'wickets'):
+                cell[key] += stats[key]
+    known = totals['pace']['balls'] + totals['spin']['balls']
+    every = known + totals['unknown']['balls']
+    out = {}
+    for kind in ('pace', 'spin'):
+        t = totals[kind]
+        out[kind] = {**t, 'economy': rounded(ratio(t['runs'], t['balls'], 6), 2), 'average': rounded(ratio(t['runs'], t['wickets'])),
+                     'strikeRate': rounded(ratio(t['balls'], t['wickets'])), 'ballShare': rounded(ratio(t['balls'], known, 100)),
+                     'wicketShare': rounded(ratio(t['wickets'], totals['pace']['wickets'] + totals['spin']['wickets'], 100))}
+    out['coveragePct'] = rounded(ratio(known, every, 100))
+    return out if known else None
+
+
+def summarise(block, types=None):
     """Turn one venue's matches into the numbers venues.html shows."""
     matches = block['matches']
     full = [m for m in matches if m['result'] in ('win', 'tie') and not m['reduced'] and len(m['innings']) >= 2]
@@ -230,6 +259,7 @@ def summarise(block):
         'topBatters': [{'name': name, 'runs': s['runs'], 'balls': s['balls'], 'innings': s['innings'], 'best': s['best'],
                         'strikeRate': rounded(ratio(s['runs'], s['balls'], 100)), 'average': rounded(ratio(s['runs'], s['outs']))}
                        for name, s in batters],
+        'paceSpin': type_split(counted, types) if types else None,
         'topBowlers': [{'name': name, 'wickets': s['wickets'], 'balls': s['balls'], 'runs': s['runs'],
                         'economy': rounded(ratio(s['runs'], s['balls'], 6), 2), 'average': rounded(ratio(s['runs'], s['wickets']))}
                        for name, s in bowlers if s['wickets']],
@@ -264,6 +294,7 @@ def match_record(match_id, match):
 
 
 def build(zip_path, competition, records=None):
+    types = bowler_types(competition)
     records = records if records is not None else [match_record(match_id, match) for match_id, match in matches_from_zip(zip_path)]
     seasons = sorted({season_key(r) for r in records})
     recent = set(seasons[-RECENT_SEASONS:])
@@ -286,8 +317,8 @@ def build(zip_path, competition, records=None):
             'names': sorted({m['rawVenue'] for m in matches}),
             'firstMatch': matches[0]['date'], 'lastMatch': matches[-1]['date'],
             'seasons': sorted({season_key(m) for m in matches}),
-            'all': summarise(everything),
-            'recent': summarise(latest) if latest['matches'] else None,
+            'all': summarise(everything, types),
+            'recent': summarise(latest, types) if latest['matches'] else None,
         })
     venues.sort(key=lambda v: (-v['all']['matches'], v['name']))
     slugs = Counter(v['slug'] for v in venues)
