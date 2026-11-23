@@ -102,7 +102,7 @@ function App(){
   const team=teams.find(t=>t.id===(me?.teamId||selected))!;
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
     <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="play.html">Single player ↗</a><ThemeToggle/></div></header>
-    <main><div className="room-heading"><div><span className="eyebrow">IPL 2027 · MINI AUCTION WITH FRIENDS</span><h1>Multiplayer room<span>.</span></h1></div><span className="live-label"><i/>{credentials?(connected?'CONNECTED':'RECONNECTING'):'2–10 PLAYERS'}</span></div>
+    <main><div className="room-heading"><div><span className="eyebrow">IPL 2027 · MINI AUCTION WITH FRIENDS</span><h1>MULTIPLAYER ROOM<span>.</span></h1></div><span className="live-label"><i/>{credentials?(connected?'CONNECTED':'RECONNECTING'):'2–10 PLAYERS'}</span></div>
       <p className="notice" role="status">{miniReady?MINI_LIST_NOTE:MINI_PENDING}</p>
       {error&&<p className="alert" role="alert">{error}</p>}{notice&&<p className="notice" role="status">{notice}</p>}
       {!credentials&&launch==='CHOOSE'?<section className="setup"><div><span className="eyebrow">MULTIPLAYER</span><h2>New game or last room?</h2><p>Start a new room with friends, join an invite, or reconnect to your saved auction.</p></div><div className="controls"><button className="primary" onClick={()=>{setLaunch('NEW');setError('');}}>New game / Join room ↗</button>{savedRoom&&<button onClick={resume}>Resume last room · {savedRoom.code} →</button>}</div></section>:!credentials?<section className="setup"><div><h2>Bring your rivals.</h2><p>Create a room, send the code and choose your franchises. Unclaimed teams are controlled by the computer.</p></div>

@@ -11,7 +11,7 @@ await build({
   outdir:'ipl-auction',
   entryNames:'auction-game',
   jsx:'automatic',
-  external:['/fonts/*','/media/*'],
+  external:['/fonts/*'],
   define:{'process.env.NODE_ENV':'"production"'}
 });
 
