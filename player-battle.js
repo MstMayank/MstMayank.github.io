@@ -829,6 +829,61 @@ function venueLabel(name) {
     return entryCache.get(competition);
   }
 
+  // "Players most like X" (maths in similarity-core.js). Uses every match in the competition/format.
+  const similarityCache = new Map();
+  function similarCard(format, id, role) {
+    const S = window.TCSSimilarity;
+    const key = [competition, byId('battle-gender').value, format, role, data.rows.length].join('|');
+    if (!similarityCache.has(key)) similarityCache.set(key, S.build(formRows(format), role, {phased: hasPhases(format)}));
+    const model = similarityCache.get(key);
+    const bowling = role === 'bowling';
+    const card = document.createElement('section');
+    card.className = 'phase-profile similar-card';
+    const title = document.createElement('h3');
+    title.textContent = 'Players most like ' + data.players[id];
+    card.appendChild(title);
+    const list = S.similar(model, id, 5);
+    if (!list) {
+      const note = document.createElement('p'); note.className = 'finder-empty';
+      note.textContent = 'Needs ' + model.minBalls + '+ balls ' + (bowling ? 'bowled' : 'faced') + ' to compare styles.';
+      card.appendChild(note);
+      return card;
+    }
+    const self = model.raw[model.ids.indexOf(id)];
+    const cols = (bowling
+      ? [['Econ', 'all', v => v.economy, 2], ['Dot %', 3, null, 1], ['Balls / wkt', 4, null, 1], ['Boundary %', 5, null, 1]]
+      : [['Death SR', 2, null, 1], ['Dot %', 3, null, 1], ['Boundary %', 4, null, 1], ['Balls / out', 6, null, 1]])
+      .filter(c => hasPhases(format) || (c[1] !== 2 && c[1] !== 'all'));
+    const wrap = document.createElement('div'); wrap.className = 'table-wrap'; wrap.tabIndex = 0;
+    wrap.setAttribute('aria-label', 'Most similar players; scroll horizontally for more columns');
+    const table = document.createElement('table');
+    const head = table.createTHead().insertRow();
+    ['Player', 'Match', ...cols.map(c => c[0]), 'Why'].forEach(text => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; head.appendChild(th); });
+    const tbody = table.createTBody();
+    const economy = raw => { const vals = [raw[0], raw[1], raw[2]].filter(v => v !== null); return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null; };
+    const cell = (raw, c) => c[1] === 'all' ? fixed(economy(raw), c[3]) : fixed(raw[c[1]], c[3]);
+    const addRow = (name, match, raw, why, onClick) => {
+      const tr = tbody.insertRow();
+      const first = tr.insertCell();
+      if (onClick) { const b = document.createElement('button'); b.type = 'button'; b.className = 'similar-name'; b.textContent = name; b.addEventListener('click', onClick); first.appendChild(b); }
+      else { first.textContent = name; tr.className = 'similar-self'; }
+      tr.insertCell().textContent = match;
+      cols.forEach(c => { tr.insertCell().textContent = cell(raw, c); });
+      tr.insertCell().textContent = why;
+    };
+    addRow(data.players[id] + ' (selected)', '—', self, '', null);
+    for (const item of list) addRow(data.players[item.id], item.match + '%', item.raw, item.reasons.join(', ') || 'similar overall profile', () => {
+      selected[0] = item.id; inputs[0].value = data.players[item.id]; render();
+      byId('battle-result').scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+    const note = document.createElement('p'); note.className = 'finder-method';
+    note.textContent = 'Compares playing style, not quality: ' + model.labels.filter((_, f) => model.used[f]).join(', ') + '. Each is measured against the average, then players are matched by how alike those patterns are. Players with ' + model.minBalls + '+ balls' + (format ? ' in ' + format : '') + '; filters are ignored.' + (bowling ? ' Econ = average of the phase economies.' : '');
+    card.appendChild(note);
+    return card;
+  }
+
   function entryCard(id) {
     const card = document.createElement('section');
     card.className = 'phase-profile entry-card';
@@ -1102,6 +1157,7 @@ function venueLabel(name) {
     result.appendChild(formCard(format, selected[0], role));
     if (competition !== 'international') result.appendChild(impactCard(selected[0], role));
     if (competition !== 'international' && role === 'batting') result.appendChild(entryCard(selected[0]));
+    result.appendChild(similarCard(format, selected[0], role));
     if (!ranked.opponents.length) {
       const empty = document.createElement('p');
       empty.className = 'finder-empty';

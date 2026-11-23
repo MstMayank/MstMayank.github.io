@@ -48,13 +48,10 @@
   .num { text-align: right; white-space: nowrap; }
   @media (max-width: 760px) { .venue-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1">
-</head>
-<body class="v2 cricket-feel cricket-tools">
-<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
-<a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
-<button class="nav-toggle" type="button" aria-label="Navigation" aria-expanded="false" aria-controls="site-links"><span aria-hidden="true">☰</span></button><div class="links" id="site-links"><div class="nav-group"><strong>Read</strong><a href="/writing.html">Writing</a><a href="/#about">About</a></div><div class="nav-group"><strong>Stats</strong><a href="/record-book.html">Records</a><a href="/player-battle.html">Player Battle</a><a href="/venues.html" aria-current="page">Venues</a><a href="/preview.html">Match Preview</a><a href="/match.html">Match Charts</a></div><div class="nav-group"><strong>IPL</strong><a href="/ipl-retentions.html">Retentions</a><a href="/ipl-auction/play.html">IPL Auction</a></div><a href="/#contact" class="nav-contact">Let’s talk</a></div>
-</div></nav>
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="tools.css?v=1">
+<link rel="stylesheet" href="/ds.css?v=2"></head>
+<body class="v2 cricket-feel cricket-tools ds" id="top">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main class="wrap page tool-page archive-page">
 <nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html">Record Book</a><a href="player-battle.html">Player Battle</a><a href="venues.html" aria-current="page">Venues</a><a href="preview.html">Match Preview</a><a href="match.html">Match Charts</a></nav>
 <h1 class="tool-heading" id="venue-title">Venue<br><span>Stats</span></h1>
@@ -115,6 +112,17 @@
   let slug = params.get('v') || '';
   let period = params.get('period') === 'recent' ? 'recent' : 'all';
   const cache = new Map();
+  // Heading: big poster style for section pages, quieter label + name for detail pages (tools.css).
+  function heading(el, detail, eyebrow, titleParts, sub) {
+    if (!detail) { el.className = 'tool-heading'; el.replaceChildren(titleParts[0], document.createElement('br')); const s = document.createElement('span'); s.textContent = titleParts[1]; el.appendChild(s); return; }
+    el.className = 'detail-head';
+    const e = document.createElement('span'); e.className = 'eyebrow'; e.textContent = eyebrow;
+    const t = document.createElement('span'); t.className = 'title';
+    titleParts.forEach(part => t.append(typeof part === 'string' ? part : part));
+    el.replaceChildren(e, t);
+    if (sub) { const s = document.createElement('span'); s.className = 'sub'; s.append(...[].concat(sub)); el.appendChild(s); }
+  }
+  const vs = () => { const em = document.createElement('em'); em.textContent = 'vs'; return em; };
   const phaseNames = ['Powerplay · overs 1–6', 'Middle · overs 7–15', 'Death · overs 16–20'];
   const num = value => value === null || value === undefined ? '—' : Number(value).toLocaleString('en-IN');
   const pct = value => value === null || value === undefined ? '—' : value.toFixed(1) + '%';
@@ -168,7 +176,9 @@
   function renderIndex(data) {
     $('venue-detail').hidden = true;
     $('venue-index').hidden = false;
-    $('venue-title').innerHTML = data.label + '<br><span>Venues</span>';
+    heading($('venue-title'), false, '', [data.label, 'Venues']);
+    document.querySelector('.tool-pills').hidden = false;
+    $('venue-coverage').hidden = false;
     $('venue-status').textContent = data.venues.length + ' grounds · ' + num(data.matches) + ' matches · data to ' + when(data.venues.reduce((a, v) => v.lastMatch > a ? v.lastMatch : a, ''));
     setMeta(data.label + ' Venue Stats and Pitch Reports | The Cricket Space',
       'Ground-by-ground ' + data.label + ' stats: average first-innings score, par scores, chasing record, toss trends and top performers at all ' + data.venues.length + ' venues.',
@@ -194,16 +204,17 @@
     $('venue-index').hidden = true;
     $('venue-detail').hidden = false;
     $('venue-back').href = link({});
-    $('venue-title').innerHTML = '';
-    $('venue-title').append(venue.name.split(',')[0], document.createElement('br'));
-    const span = document.createElement('span'); span.textContent = data.label + ' venue stats'; $('venue-title').appendChild(span);
+    $('venue-coverage').hidden = true;
+    document.querySelector('.tool-pills').hidden = true;
     const recentLabel = 'Last 3 seasons (' + data.recentSeasons[0] + '–' + data.recentSeasons.at(-1) + ')';
     $('venue-period').options[1].textContent = recentLabel;
     $('venue-period').options[1].disabled = !venue.recent;
     if (!venue.recent) period = 'all';
     $('venue-period').value = period;
     const s = period === 'recent' ? venue.recent : venue.all;
-    $('venue-meta').textContent = [venue.city, num(venue.all.matches) + ' ' + data.label + ' matches', venue.seasons[0] + (venue.seasons.length > 1 ? '–' + venue.seasons.at(-1) : '')].filter(Boolean).join(' · ');
+    heading($('venue-title'), true, data.label + ' · Venue report', [venue.name.split(',')[0]],
+      [venue.city, num(venue.all.matches) + ' ' + data.label + ' matches', venue.seasons[0] + (venue.seasons.length > 1 ? '–' + venue.seasons.at(-1) : '')].filter(Boolean).join(' · '));
+    $('venue-meta').hidden = true;
     const others = venue.names.filter(name => name.split(',')[0] !== venue.name.split(',')[0]);
     $('venue-names').hidden = !others.length;
     $('venue-names').textContent = 'Also listed as: ' + others.join('; ');
@@ -296,4 +307,4 @@
   render();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="/design-v2.js?v=nav-icon-1"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ds-2"></script></body></html>

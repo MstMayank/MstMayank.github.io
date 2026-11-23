@@ -1,0 +1,344 @@
+/* ==========================================================================
+   The Cricket Space — design system (ds.css)
+   Loaded last on every page with <body class="... ds">. It refines the older
+   stylesheets (cricket-feel.css, record-lens.css, page styles) into one language:
+   near-black pitch greens, chalk text, gold for data, ball-red for wickets and
+   live moments. Manrope for words, Big Shoulders Display for numbers and the logo.
+   ========================================================================== */
+
+/* ---------- Tokens ---------- */
+:root {
+  --ds-bg: #0a0f0c;
+  --ds-bg-2: #0e1511;
+  --ds-surface: #121a16;
+  --ds-surface-2: #17211c;
+  --ds-surface-3: #1d2923;
+  --ds-line: rgba(236, 241, 234, .09);
+  --ds-line-2: rgba(236, 241, 234, .16);
+  --ds-text: #eef1ec;
+  --ds-muted: #a3b0a8;
+  --ds-subtle: #74837a;
+  --ds-gold: #e9c46a;
+  --ds-gold-soft: rgba(233, 196, 106, .12);
+  --ds-red: #e5484d;
+  --ds-green: #3dd68c;
+  --ds-blue: #7cc4ff;
+  --ds-chalk: #f4f6f1;
+  --ds-radius-s: 10px;
+  --ds-radius: 14px;
+  --ds-radius-l: 20px;
+  --ds-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 12px 32px -18px rgba(0, 0, 0, .7);
+  --ds-ring: 0 0 0 3px rgba(233, 196, 106, .35);
+  --ds-ease: cubic-bezier(.2, .7, .2, 1);
+  --ds-fast: 160ms;
+  --ds-mid: 240ms;
+  --ds-font: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-num: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif;
+  --page-gutter: clamp(16px, 4vw, 56px);
+  color-scheme: dark;
+}
+
+/* Map the older variables onto the tokens so every page shares one palette. */
+body.ds {
+  --bg: var(--ds-bg); --panel: var(--ds-surface); --panel2: var(--ds-surface-2);
+  --chalk: var(--ds-text); --ink: var(--ds-text); --text: var(--ds-text);
+  --muted: var(--ds-muted); --mute: var(--ds-muted); --dim: var(--ds-muted);
+  --line: var(--ds-line-2); --gold: var(--ds-gold); --gold2: #c99a3a;
+  --red: var(--ds-red); --red2: #c93a3f; --orange: var(--ds-red); --green: var(--ds-green);
+  background: var(--ds-bg);
+  color: var(--ds-text);
+  font: 400 16px/1.6 var(--ds-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body.ds #ipl-lens { --ink: var(--ds-text); --dim: var(--ds-muted); --line: var(--ds-line-2); --orange: var(--ds-gold); --bg: var(--ds-bg); }
+body.ds ::selection { background: rgba(233, 196, 106, .35); color: #fff; }
+body.ds a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+body.ds p { color: var(--ds-muted); }
+body.ds :focus-visible { outline: 2px solid var(--ds-gold); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- Layout ---------- */
+body.ds .wrap { max-width: 1200px; margin-inline: auto; padding-inline: var(--page-gutter); }
+body.ds main.wrap.page, body.ds main.tool-page { max-width: 1200px; }
+
+/* ---------- Typography ---------- */
+body.ds h1, body.ds h2, body.ds h3, body.ds h4 { font-family: var(--ds-font); color: var(--ds-text); letter-spacing: -.02em; text-transform: none; }
+body.ds h2 { font-weight: 750; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.15; }
+body.ds h3 { font-weight: 700; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.25; }
+/* Section-page title: big but calm. Words in Manrope; the gold second line stays as the signature. */
+body.ds .tool-heading, body.ds #ipl-lens h1.tool-heading, body.ds .archive-page h1 {
+  font: 800 clamp(40px, 6.4vw, 76px)/.98 var(--ds-font); letter-spacing: -.045em; text-transform: none; margin: 8px 0 18px; max-width: 16ch;
+}
+body.ds .tool-heading span { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--ds-gold); }
+body.ds .tool-heading br { display: none; }
+body.ds .tool-heading span::before { content: " "; }
+body.ds .label, body.ds #ipl-lens .label, body.ds .eyebrow, body.ds .bento-eye {
+  font: 650 12px/1.3 var(--ds-font); letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle);
+}
+body.ds .tool-coverage, body.ds .tool-count, body.ds .battle-status { color: var(--ds-muted); font-size: 14px; }
+/* Numbers keep the scoreboard face — the site's signature. */
+body.ds .tile b, body.ds .bento-num, body.ds .mx-card h3 b, body.ds #ipl-lens .metrics strong, body.ds .num-face { font-family: var(--ds-num); letter-spacing: .01em; }
+
+/* ---------- Header ---------- */
+body.ds .site-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10, 15, 12, .72);
+  backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--ds-line);
+}
+body.ds .site-nav .bar { height: 64px; gap: 20px; max-width: 1200px; }
+body.ds .site-nav .logo.d { flex: 0 0 auto; font: 900 22px/1 var(--ds-num); letter-spacing: .03em; color: var(--ds-text); text-decoration: none; white-space: nowrap; }
+body.ds .site-nav .logo.d span { color: var(--ds-gold); }
+html body.ds .site-nav #site-links { display: flex; align-items: center; gap: 2px; margin-left: auto; font: 600 14px var(--ds-font); color: var(--ds-muted); position: static; flex-direction: row; padding: 0; background: none; border: 0; box-shadow: none; }
+html body.ds .site-nav #site-links a { padding: 8px 12px; border-radius: 999px; text-decoration: none; transition: color var(--ds-fast), background var(--ds-fast); }
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(255, 255, 255, .05); }
+html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); background: rgba(255, 255, 255, .08); }
+html body.ds .site-nav #site-links .links-cta { display: none; }
+body.ds .site-nav .bar > .btn, body.ds .site-nav .nav-cta {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px; margin: 0;
+  background: var(--ds-chalk); color: #0b100d; font: 700 14px var(--ds-font); letter-spacing: -.01em; text-decoration: none; border: 0;
+  transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast);
+}
+body.ds .site-nav .bar > .btn:hover { background: #fff; transform: translateY(-1px); }
+html body.ds .site-nav .bar > .nav-toggle { display: none; }
+body.ds .site-nav .mobile-contact { display: none; }
+
+@media (max-width: 960px) {
+  body.ds .site-nav .bar { gap: 10px; }
+  html body.ds .site-nav .bar > .nav-toggle {
+    display: inline-flex; align-items: center; gap: 8px; margin-left: auto; height: 38px; padding: 0 14px;
+    border: 1px solid var(--ds-line-2); border-radius: 999px; background: rgba(255, 255, 255, .04); color: var(--ds-text); font: 650 14px var(--ds-font); cursor: pointer;
+  }
+  body.ds .site-nav .bar > .btn { display: none; }
+  /* Full-height sheet under the bar */
+  /* The header's backdrop-filter makes it the containing block, so the sheet is sized from it. */
+  html body.ds .site-nav #site-links {
+    position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - 64px); height: calc(100dvh - 64px); display: flex; flex-direction: column; align-items: stretch; gap: 4px;
+    padding: 18px var(--page-gutter) 32px; margin: 0; background: rgba(10, 15, 12, .98); border: 0; border-radius: 0; box-shadow: none;
+    font: 700 24px/1.2 var(--ds-font); letter-spacing: -.02em; color: var(--ds-text);
+    opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease), visibility 0s linear var(--ds-mid);
+    overflow-y: auto;
+  }
+  html body.ds .site-nav #site-links.open { display: flex; grid-template-columns: none; opacity: 1; visibility: visible; transform: none; transition: opacity var(--ds-mid) var(--ds-ease), transform var(--ds-mid) var(--ds-ease); }
+  html body.ds .site-nav #site-links a { padding: 14px 4px; border-radius: 0; border-bottom: 1px solid var(--ds-line); background: none; }
+  html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-gold); background: none; }
+  html body.ds .site-nav #site-links .links-cta { display: inline-flex; justify-content: center; margin-top: 20px; padding: 14px; border: 0; border-radius: 999px; background: var(--ds-chalk); color: #0b100d; font-size: 16px; }
+  body.ds.menu-open { overflow: hidden; }
+}
+
+/* ---------- Buttons ---------- */
+body.ds .ds-btn, body.ds .btn:not(.d), body.ds .ap-cta, body.ds .bento-send, body.ds #pv-share, body.ds #pv-card {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px;
+  font: 700 15px var(--ds-font); letter-spacing: -.01em; text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  background: var(--ds-chalk); color: #0b100d; box-shadow: none;
+  transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast), border-color var(--ds-fast), color var(--ds-fast);
+}
+body.ds .ds-btn:hover, body.ds .ap-cta:hover, body.ds .bento-send:hover, body.ds #pv-share:hover, body.ds #pv-card:hover { background: #fff; transform: translateY(-1px); }
+body.ds .ds-btn:active { transform: translateY(0) scale(.98); }
+body.ds .ds-btn.ghost, body.ds #pv-card { background: rgba(255, 255, 255, .04); color: var(--ds-text); border-color: var(--ds-line-2); }
+body.ds .ds-btn.ghost:hover, body.ds #pv-card:hover { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .28); }
+body.ds button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ---------- Pills, segmented controls, tool links ---------- */
+body.ds .tool-pills { gap: 6px; margin-bottom: 16px; }
+body.ds .tool-pills button, body.ds #ipl-lens .tool-pills button {
+  height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(255, 255, 255, .03);
+  color: var(--ds-muted); font: 650 14px var(--ds-font); box-shadow: none; transition: all var(--ds-fast);
+}
+body.ds .tool-pills button:hover { color: var(--ds-text); border-color: rgba(255, 255, 255, .28); }
+body.ds .tool-pills :is(.active, [aria-pressed="true"]), body.ds #ipl-lens .tool-pills :is(.active, [aria-pressed="true"]) {
+  background: var(--ds-chalk); color: #0b100d; border-color: var(--ds-chalk); box-shadow: none;
+}
+body.ds .tool-links { padding: 4px; gap: 2px; border-color: var(--ds-line); background: rgba(255, 255, 255, .025); margin-bottom: 28px; max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+body.ds .tool-links::-webkit-scrollbar { display: none; }
+body.ds .tool-links a { white-space: nowrap; padding: 8px 14px; font: 650 13px var(--ds-font); color: var(--ds-muted); transition: color var(--ds-fast), background var(--ds-fast); }
+body.ds .tool-links a:hover { color: var(--ds-text); }
+body.ds .tool-links [aria-current] { background: rgba(255, 255, 255, .1); color: var(--ds-text); }
+
+/* ---------- Inputs & filters ---------- */
+body.ds .tool-filter, body.ds .battle-filters { padding: 14px; gap: 10px; border-radius: var(--ds-radius-l); border: 1px solid var(--ds-line); background: var(--ds-bg-2); backdrop-filter: none; }
+body.ds .tool-filter label, body.ds #ipl-lens label { font: 600 12.5px var(--ds-font); color: var(--ds-muted); letter-spacing: 0; }
+body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens, .pv-controls, .mx-controls) :is(input, select) {
+  height: 44px; border-radius: var(--ds-radius-s); border: 1px solid var(--ds-line-2); background-color: var(--ds-surface); color: var(--ds-text);
+  font: 600 14.5px var(--ds-font); padding-inline: 14px; transition: border-color var(--ds-fast), box-shadow var(--ds-fast), background-color var(--ds-fast);
+}
+body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) select { padding-right: 36px; }
+body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):hover { border-color: rgba(255, 255, 255, .26); }
+body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):focus { outline: none; border-color: var(--ds-gold); box-shadow: var(--ds-ring); }
+body.ds .tool-filter button, body.ds #battle-reset, body.ds #battle-swap, body.ds #battle-clear {
+  height: 44px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: transparent; color: var(--ds-text); font: 650 14px var(--ds-font); padding: 0 16px;
+}
+body.ds textarea { border-radius: var(--ds-radius); border: 1px solid var(--ds-line-2); background: var(--ds-surface); color: var(--ds-text); font: 500 15px/1.5 var(--ds-font); }
+body.ds textarea:focus { outline: none; border-color: var(--ds-gold); box-shadow: var(--ds-ring); }
+
+/* ---------- Cards & panels ---------- */
+body.ds .tool-panel, body.ds #ipl-lens .panel {
+  background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); box-shadow: var(--ds-shadow); padding: clamp(16px, 2.4vw, 28px);
+}
+body.ds .tool-panel::before { display: none; }
+body.ds .tool-panel h2, body.ds #ipl-lens .panel h2 { font: 750 clamp(22px, 2.6vw, 30px)/1.15 var(--ds-font); letter-spacing: -.02em; margin: 4px 0 18px; }
+body.ds .tool-panel .eyebrow, body.ds #ipl-lens .eyebrow { color: var(--ds-gold); letter-spacing: .1em; font-weight: 700; }
+body.ds .tile, body.ds .battle, body.ds .mx-card, body.ds .chart, body.ds .phase-profile, body.ds #ipl-lens .battle-result .phase-profile {
+  background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); box-shadow: var(--ds-shadow);
+}
+body.ds .tile { padding: 18px 20px; transition: border-color var(--ds-mid), transform var(--ds-mid) var(--ds-ease); }
+body.ds .tile:hover { border-color: var(--ds-line-2); }
+body.ds .tile b { color: var(--ds-text); font-weight: 800; font-size: clamp(28px, 3.6vw, 40px); }
+body.ds .tile span { color: var(--ds-muted); font-size: 13px; }
+body.ds .phase-chip, body.ds #ipl-lens .battle-result .phase-chip { border-radius: 999px; font: 650 12.5px var(--ds-font); padding: 4px 12px; background: var(--ds-gold-soft); border-color: transparent; }
+body.ds #ipl-lens .battle-result .phase-chip-none, body.ds #ipl-lens .battle-result .phase-chip.form-even, body.ds #ipl-lens .battle-result .phase-chip.form-none { background: rgba(255, 255, 255, .05); }
+body.ds #ipl-lens .battle-result .phase-chip.form-up { background: rgba(61, 214, 140, .12); }
+body.ds #ipl-lens .battle-result .phase-chip.form-down { background: rgba(229, 72, 77, .12); }
+body.ds .battle-coverage-warning { border-left-color: var(--ds-gold); border-radius: 0 var(--ds-radius-s) var(--ds-radius-s) 0; background: var(--ds-gold-soft); font-size: 13.5px; }
+
+/* ---------- Tables ---------- */
+body.ds .tool-table, body.ds #ipl-lens .table-wrap { border: 1px solid var(--ds-line); border-radius: var(--ds-radius); background: var(--ds-bg-2); }
+body.ds .tool-table th, body.ds #ipl-lens th {
+  background: var(--ds-surface-2); color: var(--ds-subtle); font: 650 11.5px var(--ds-font); letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--ds-line);
+}
+body.ds .tool-table td, body.ds #ipl-lens td { border-bottom: 1px solid var(--ds-line); font: 500 14px/1.4 var(--ds-font); color: var(--ds-text); font-variant-numeric: tabular-nums; }
+body.ds .tool-table tbody tr:last-child td, body.ds #ipl-lens tbody tr:last-child td { border-bottom: 0; }
+body.ds .tool-table tbody tr, body.ds #ipl-lens tbody tr { transition: background var(--ds-fast); }
+body.ds .tool-table tbody tr:hover, body.ds #ipl-lens tbody tr:hover { background: rgba(255, 255, 255, .03); }
+body.ds .tool-table td:nth-child(2) { color: inherit; }
+body.ds #ipl-lens .battle-result tr.selected { background: var(--ds-gold-soft); }
+
+/* ---------- Footer ---------- */
+body.ds .site-footer { border-top: 1px solid var(--ds-line); margin-top: clamp(48px, 8vw, 96px); padding: 48px 0 32px; background: var(--ds-bg); }
+body.ds .site-footer .wrap { display: block; }
+body.ds .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr)); gap: 32px; }
+body.ds .footer-brand .logo.d { font: 900 22px/1 var(--ds-num); letter-spacing: .03em; color: var(--ds-text); text-decoration: none; text-transform: uppercase; }
+body.ds .footer-brand .logo.d span { color: var(--ds-gold); }
+body.ds .footer-brand p { margin: 12px 0 0; max-width: 34ch; font-size: 14px; }
+body.ds .footer-col h2 { font: 650 12px var(--ds-font); letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle); margin: 4px 0 12px; }
+body.ds .footer-col a { display: block; padding: 5px 0; color: var(--ds-muted); font-size: 14.5px; text-decoration: none; transition: color var(--ds-fast); }
+body.ds .footer-col a:hover { color: var(--ds-text); }
+body.ds .footer-base { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--ds-line); color: var(--ds-subtle); font-size: 13px; }
+body.ds .footer-base a { color: var(--ds-muted); text-decoration: none; }
+@media (max-width: 760px) {
+  body.ds .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body.ds .footer-brand { grid-column: 1 / -1; }
+}
+
+/* ---------- Motion ---------- */
+@keyframes ds-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+body.ds .ds-reveal { animation: ds-rise .6s var(--ds-ease) both; }
+body.ds .ds-reveal-2 { animation: ds-rise .6s .08s var(--ds-ease) both; }
+body.ds .ds-reveal-3 { animation: ds-rise .6s .16s var(--ds-ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  body.ds *, body.ds *::before, body.ds *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- States ---------- */
+body.ds .ds-loading { color: var(--ds-muted); }
+body.ds .finder-empty, body.ds .hint { color: var(--ds-muted); }
+
+/* ==========================================================================
+   Homepage
+   ========================================================================== */
+body.ds.home-page .hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(24px, 5vw, 72px); align-items: center; padding: clamp(40px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); }
+body.ds .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 20px; padding: 6px 12px 6px 10px; border: 1px solid var(--ds-line-2); border-radius: 999px; font: 650 12.5px var(--ds-font); color: var(--ds-muted); letter-spacing: .02em; }
+body.ds .hero-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ds-red); box-shadow: 0 0 0 4px rgba(229, 72, 77, .18); }
+body.ds .hero-title, body.ds.home-page .hero h1.hero-title {
+  font: 800 clamp(48px, 8.4vw, 112px)/.95 var(--ds-font); letter-spacing: -.055em; margin: 0 0 22px; color: var(--ds-text); max-width: 11ch;
+}
+body.ds .hero-title em { font-style: normal; color: var(--ds-gold); display: block; }
+body.ds.home-page .hero .sub { font: 450 clamp(17px, 1.7vw, 20px)/1.55 var(--ds-font); color: var(--ds-muted); max-width: 42ch; margin: 0 0 30px; }
+body.ds .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+body.ds .hero-actions .ds-btn { min-height: 50px; padding: 0 24px; font-size: 16px; }
+body.ds.home-page .hero-social a { min-height: 40px; padding: 0 14px; border: 1px solid var(--ds-line); border-radius: 999px; font: 600 14px var(--ds-font); color: var(--ds-muted); text-decoration: none; transition: color var(--ds-fast), border-color var(--ds-fast); }
+body.ds.home-page .hero-social a:hover { color: var(--ds-text); border-color: var(--ds-line-2); }
+body.ds .hero-wheel { width: 100%; max-width: 520px; justify-self: end; filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .45)); }
+body.ds.home-page .strip { background: var(--ds-bg-2); border-block: 1px solid var(--ds-line); }
+body.ds.home-page .strip b { font: 800 18px var(--ds-num); letter-spacing: .04em; }
+body.ds.home-page .strip em { font: 500 14px var(--ds-font); color: var(--ds-subtle); }
+
+/* Bento → calm card grid */
+body.ds .bento-bento { gap: 14px; }
+body.ds .bento-card {
+  background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); box-shadow: var(--ds-shadow);
+  padding: clamp(20px, 2.4vw, 28px); text-decoration: none; color: var(--ds-text);
+  transition: transform var(--ds-mid) var(--ds-ease), border-color var(--ds-mid), background var(--ds-mid);
+}
+body.ds a.bento-card:hover { transform: translateY(-3px); border-color: var(--ds-line-2); background: var(--ds-surface-2); }
+body.ds .bento-card h2 { font: 750 clamp(20px, 2vw, 24px)/1.2 var(--ds-font); letter-spacing: -.025em; margin: 10px 0 8px; }
+body.ds .bento-card p { font-size: 15px; line-height: 1.55; color: var(--ds-muted); }
+body.ds .bento-big { font: 800 clamp(28px, 3.6vw, 44px)/1.05 var(--ds-font) !important; letter-spacing: -.04em; }
+body.ds .bento-link { font: 650 14px var(--ds-font); color: var(--ds-text); display: inline-flex; gap: 6px; margin-top: auto; }
+body.ds .bento-link em { font-style: normal; transition: transform var(--ds-fast) var(--ds-ease); }
+body.ds a.bento-card:hover .bento-link em { transform: translate(2px, -2px); }
+body.ds .bento-eye.bento-red { color: var(--ds-red); }
+body.ds .bento-cta { background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); }
+body.ds .bento-cta h2 { font: 800 clamp(28px, 3.6vw, 44px)/1.05 var(--ds-font); letter-spacing: -.04em; }
+
+@media (max-width: 860px) {
+  body.ds.home-page .hero { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
+  body.ds .hero-wheel { justify-self: center; max-width: 360px; order: -1; margin-bottom: -8px; }
+}
+@media (max-width: 480px) {
+  body.ds .hero-actions .ds-btn { flex: 1 1 100%; }
+  body.ds .hero-wheel { max-width: 240px; }
+}
+
+/* Some older page styles target bare nav/footer elements; keep the shared footer immune. */
+body.ds .site-footer, body.ds footer.site-footer { display: block; padding: 48px 0 32px; font-size: 14px; color: var(--ds-muted); }
+body.ds .site-footer nav.footer-col { display: block; gap: 0; font-size: 14.5px; }
+
+/* ==========================================================================
+   Overrides for page styles that load after this file (inline <style> in the body).
+   `html body.ds` adds one step of specificity so the shared language wins.
+   ========================================================================== */
+/* The header now carries site navigation, so the per-page tool-link bars are redundant. */
+html body.ds .tool-links { display: none; }
+
+/* Homepage article label: readable red on a soft red chip. */
+html body.ds .bento-eye.bento-red { background: rgba(229, 72, 77, .14); color: #ff8b8f; border-color: transparent; }
+
+/* Record Book "Show more" and other plain buttons inside tool pages. */
+html body.ds #more { min-height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(255, 255, 255, .04); color: var(--ds-text); font: 650 14px var(--ds-font); margin-top: 18px; }
+html body.ds #more:hover { background: rgba(255, 255, 255, .08); }
+
+/* Player Battle */
+html body.ds #ipl-lens .panel th, html body.ds #ipl-lens .battle-result th, html body.ds #ipl-lens th { background: var(--ds-surface-2); color: var(--ds-subtle); }
+html body.ds #ipl-lens .panel, html body.ds #ipl-lens .tool-panel { background: var(--ds-surface); border: 1px solid var(--ds-line); }
+html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):not(.battle-suggestions button) {
+  background: transparent; border: 1px solid var(--ds-line-2); border-radius: 999px; color: var(--ds-text); font: 650 14px var(--ds-font); min-height: 40px; padding: 0 16px;
+}
+html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):hover { background: rgba(255, 255, 255, .06); }
+html body.ds #ipl-lens .tool-pills button[data-competition], html body.ds #ipl-lens .tool-pills button[data-view] { border-radius: 999px; }
+html body.ds #ipl-lens .tool-picker { background: var(--ds-surface-2); border: 1px solid var(--ds-line); box-shadow: none; border-radius: var(--ds-radius); }
+html body.ds #ipl-lens .tool-picker::before, html body.ds #ipl-lens .tool-picker::after { display: none; }
+html body.ds #ipl-lens input, html body.ds #ipl-lens select { background-color: var(--ds-surface); border: 1px solid var(--ds-line-2); border-radius: var(--ds-radius-s); color: var(--ds-text); }
+html body.ds #ipl-lens input:focus, html body.ds #ipl-lens select:focus { border-color: var(--ds-gold); box-shadow: var(--ds-ring); outline: none; }
+html body.ds #ipl-lens .battle-suggestions { background: var(--ds-surface-2); border: 1px solid var(--ds-line-2); border-radius: var(--ds-radius); box-shadow: 0 20px 40px -20px #000; }
+html body.ds #ipl-lens .battle-suggestions button { background: none; border: 0; border-radius: var(--ds-radius-s); color: var(--ds-text); }
+html body.ds #ipl-lens .battle-suggestions button:hover, html body.ds #ipl-lens .battle-suggestions button:focus { background: rgba(255, 255, 255, .06); }
+html body.ds #ipl-lens h1, html body.ds .v2 #ipl-lens h1 { font: 800 clamp(40px, 6.4vw, 76px)/.98 var(--ds-font); letter-spacing: -.045em; text-transform: none; margin: 6px 0 22px; }
+html body.ds #ipl-lens h1 span { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--ds-gold); }
+html body.ds #ipl-lens .battle-result .phase-profile { background: var(--ds-surface); border-color: var(--ds-line); }
+html body.ds #ipl-lens .battle-result .form-spark rect { fill: var(--ds-gold); }
+html body.ds #ipl-lens .battle-result .phase-bar { background: rgba(255, 255, 255, .07); }
+html body.ds #ipl-lens .battle-result .phase-bar-fill { background: var(--ds-gold); }
+html body.ds #ipl-lens .panel-head .eyebrow { color: var(--ds-gold); }
+html body.ds #ipl-lens .tool-picker input, html body.ds #ipl-lens .battle-picker input { background: var(--ds-surface); }
+html body.ds #ipl-lens .filters-toggle { display: none; }
+@media (max-width: 760px) {
+  html body.ds #ipl-lens .filters-toggle { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 12px; }
+  html body.ds #ipl-lens .filters-toggle::after { content: "▾"; font-size: 12px; color: var(--ds-muted); transition: transform var(--ds-fast); }
+  html body.ds #ipl-lens.filters-open .filters-toggle::after { transform: rotate(180deg); }
+  html body.ds #ipl-lens .battle-filters:not([hidden]) { display: none; }
+  html body.ds #ipl-lens.filters-open .battle-filters:not([hidden]) { display: grid; animation: ds-rise .25s var(--ds-ease) both; }
+  html body.ds #ipl-lens #filters-count { color: var(--ds-gold); }
+}
+
+/* One heading voice everywhere: Manrope for titles (articles and detail pages too). */
+html body.ds .article-main h1, html body.ds .v2 .article-main h1 { font: 800 clamp(36px, 5.6vw, 68px)/1.02 var(--ds-font); letter-spacing: -.045em; text-transform: none; }
+html body.ds .detail-head .title { font: 800 clamp(32px, 4.8vw, 56px)/1.04 var(--ds-font); letter-spacing: -.04em; }
+html body.ds .detail-head .title em { font: 700 .5em var(--ds-font); color: var(--ds-gold); vertical-align: .22em; margin: 0 .2em; letter-spacing: 0; }
+html body.ds .mx-card h3, html body.ds .battle h3, html body.ds .chart h2 { font-family: var(--ds-font); letter-spacing: -.02em; }
+@media (max-width: 960px) { html body.ds .site-nav #site-links { background: var(--ds-bg); } }
+/* main's grouped dropdown (cricket-feel.css) sized the panel to its content; the shared menu is full-width. */
+@media (max-width: 960px) {
+  html body.ds .site-nav #site-links { width: auto; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; grid-template-columns: none; }
+}
+@media (max-width: 960px) { html body.ds .site-nav .bar > .nav-toggle { width: auto; height: 38px; padding: 0 14px; font: 650 14px var(--ds-font); display: inline-flex; align-items: center; justify-content: center; } }

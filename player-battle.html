@@ -152,6 +152,9 @@
 #ipl-lens .battle-result .form-list span { color:var(--dim); font-size:.9rem; }
 #ipl-lens .battle-result .form-list small { font-weight:700; font-size:.8rem; color:var(--dim); }
 #ipl-lens .battle-result .entry-card .table-wrap { margin:10px 0; }
+#ipl-lens .battle-result .similar-card .similar-self td { color:var(--gold,#F6C453); font-weight:700; }
+#ipl-lens .battle-result .similar-card .similar-name { background:none; border:0; padding:0; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+#ipl-lens .battle-result .similar-card td:last-child { white-space:normal; min-width:180px; color:var(--dim); }
 #ipl-lens .battle-result .pace-spin-card tr.type-main td { font-weight:700; color:var(--ink); }
 #ipl-lens .battle-result .pace-spin-card tr.type-sub td:first-child { padding-left:28px; color:var(--dim); }
 #ipl-lens .battle-result .pace-spin-card tr.type-thin td { opacity:.55; }
@@ -367,12 +370,9 @@
 @media(max-width:760px){#ipl-lens .direct-stats{grid-template-columns:1fr}}
 
 </style>
-<link rel="stylesheet" href="record-lens.css?v=coverage1"></head>
-<body class="v2 cricket-feel cricket-tools">
-<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar">
-<a class="logo d" href="./" aria-label="The Cricket Space home">The Cricket <span>Space</span></a>
-<button class="nav-toggle" type="button" aria-label="Navigation" aria-expanded="false" aria-controls="site-links"><span aria-hidden="true">☰</span></button><div class="links" id="site-links"><div class="nav-group"><strong>Read</strong><a href="/writing.html">Writing</a><a href="/#about">About</a></div><div class="nav-group"><strong>Stats</strong><a href="/record-book.html">Records</a><a href="/player-battle.html" aria-current="page">Player Battle</a><a href="/venues.html">Venues</a><a href="/preview.html">Match Preview</a><a href="/match.html">Match Charts</a></div><div class="nav-group"><strong>IPL</strong><a href="/ipl-retentions.html">Retentions</a><a href="/ipl-auction/play.html">IPL Auction</a></div><a href="/#contact" class="nav-contact">Let’s talk</a></div>
-</div></nav>
+<link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="/ds.css?v=2"></head>
+<body class="v2 cricket-feel cricket-tools ds" id="top">
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main>
 <section class="section tool-page" id="ipl-lens" aria-labelledby="battle-title">
 <span class="label">THE CRICKET SPACE / COMPARISONS</span>
@@ -388,7 +388,8 @@
 <button type="button" data-view="finder">🎯 Match-ups</button>
 </div>
 <section id="player-career-shell" class="panel" aria-label="Player career profiles" hidden></section>
-<div class="battle-filters tool-filter">
+<button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="battle-filters-box">Filters <span id="filters-count" aria-hidden="true"></span></button>
+<div class="battle-filters tool-filter" id="battle-filters-box">
 <label id="gender-field" hidden>Category<select id="battle-gender"><option value="male">Men</option><option value="female">Women</option></select></label>
 
 <label>Season<select id="battle-season"><option value="">All seasons</option></select></label>
@@ -442,5 +443,17 @@
 <script defer src="matchup-core.js?v=1"></script>
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
-<script defer src="player-battle.js?v=pace-spin"></script>
-<footer class="site-footer"><div class="wrap"><span>© <span data-year></span> The Cricket Space</span><a href="./">Home ↗</a></div></footer><script defer src="/design-v2.js?v=nav-icon-1"></script></body></html>
+<script defer src="similarity-core.js?v=1"></script>
+<script defer src="player-battle.js?v=ds-pace-spin"></script>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script>
+// Phones: filters fold behind one button so the player search comes first.
+(() => {
+  const toggle = document.getElementById('filters-toggle'), box = document.getElementById('battle-filters-box'), count = document.getElementById('filters-count');
+  const lens = document.getElementById('ipl-lens');
+  toggle.addEventListener('click', () => { const open = !lens.classList.contains('filters-open'); lens.classList.toggle('filters-open', open); toggle.setAttribute('aria-expanded', String(open)); });
+  const update = () => { const n = [...box.querySelectorAll('select')].filter(sel => sel.value && sel.id !== 'battle-gender').length; count.textContent = n ? '· ' + n : ''; };
+  box.addEventListener('change', update); document.getElementById('battle-reset')?.addEventListener('click', () => setTimeout(update));
+  update();
+})();
+</script>
+<script defer src="/design-v2.js?v=ds-2"></script></body></html>
