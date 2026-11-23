@@ -98,6 +98,13 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
   The script applies `data/ipl-rating-identity-fixes.json`, which links roster players whose
   IPL records sit under Cricsheet ids (for example Vaibhav Sooryavanshi and Rohit Sharma).
 
+- **Auction computer franchises** bid with a strategy each (`browser-auction/game/strategy.ts`):
+  star-chaser (MI, RCB, SRH), value hunter (KKR, DC), youth builder (RR, PBKS) or balanced (CSK, GT,
+  LSG). Limits come from a fair value per player in `browser-auction/game/player-values.json` (V6
+  selection quality over 2025–26 and matches played; rebuild with `npx tsx scripts/build-auction-values.ts`
+  after the pool changes), plus squad needs and a per-player purse cap; `canBid` in `engine.ts` still
+  enforces purse reserve, 25-player squads and 8 overseas. A Value report tab ranks the best buys and
+  overpays. Tests: `tests/auction-strategy.test.ts`.
 - **IPL Auction** is built from `browser-auction/` (shared with the Next.js source in `app/`,
   `components/` and `lib/`). Official 2027 lists go in `browser-auction/game/mini-auction.json`;
   the game stays locked until retentions and registrations are confirmed. Rebuild with:
