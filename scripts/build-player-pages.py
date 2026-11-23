@@ -144,6 +144,50 @@ def league_stats(data, pid):
 
 # ---------------------------------------------------------------- HTML pieces
 
+PHOTOS = {}          # slug -> /battle-art/thumbs/<name>.webp
+LEAGUE_PHASES = {}   # competition -> {'bat': [SR per phase], 'bowl': [economy per phase]}
+# Portraits drawn for the site (battle-art/), matched to player pages by name. Where the art's
+# file name differs from the page slug, the pair is listed here.
+PORTRAIT_SLUGS = {'kohli-rcb': 'virat-kohli', 'abd-rcb': 'ab-de-villiers', 'steyn': 'dale-steyn', 'mandhana': 'smriti-mandhana',
+                  'harmanpreet': 'harmanpreet-bhullar', 'dhoni': 'ms-dhoni', 'sai-sudharsan': 'bhardwaj-sudharsan', 'phil-salt': 'philip-salt',
+                  'bhuvneshwar-kumar': 'bhuvneshwar-singh', 'pat-cummins': 'patrick-cummins', 'varun-chakaravarthy': 'varun-vinod',
+                  'vaibhav-sooryavanshi': 'v-suryavanshi', 'bumrah': 'jasprit-bumrah', 'hardik': 'hardik-pandya', 'rohit': 'rohit-sharma',
+                  'rashid-khan': 'rashid-arman', 'noor-ahmad': 'noor-lakanwal', 'tilak-varma': 'namboori-varma'}
+DISPLAY = {}         # slug -> the name fans know (from the portrait list), e.g. Tilak Varma
+
+
+def known_names(slug_of_name):
+    """Display names from browser-auction/game/portraits.ts, keyed by page slug."""
+    text = (ROOT / 'browser-auction' / 'game' / 'portraits.ts').read_text(encoding='utf-8')
+    out = {}
+    for name, stem in re.findall(r'"([^"]+)":\s*"/battle-art/([^"]+)\.jpg"', text):
+        slug = slug_of_name(stem)
+        if slug:
+            out[slug] = name
+    out.update({'virat-kohli': 'Virat Kohli', 'ab-de-villiers': 'AB de Villiers', 'dale-steyn': 'Dale Steyn', 'smriti-mandhana': 'Smriti Mandhana',
+                'harmanpreet-bhullar': 'Harmanpreet Kaur', 'ms-dhoni': 'MS Dhoni'})
+    return out
+SKIP_ART = {'kohli-india', 'auction-preview-bumrah', 'auction-preview-dhoni'}
+
+
+def initials(name):
+    words = [w for w in re.split(r'\s+', name) if w]
+    return (words[0][0] + (words[-1][0] if len(words) > 1 else '')).upper()
+
+
+def hue(name):
+    return sum(ord(c) * (i + 7) for i, c in enumerate(name)) % 360
+
+
+def face(name, slug, cls='pp-face', eager=False):
+    """Portrait thumbnail if the site has one, otherwise an initials badge coloured from the name."""
+    photo = PHOTOS.get(slug)
+    if photo:
+        lazy = '' if eager else ' loading="lazy"'
+        return f'<span class="{cls} has-photo"><img src="{photo}" alt="" width="360" height="540"{lazy} decoding="async"></span>'
+    return f'<span class="{cls}" style="--h:{hue(name)}" aria-hidden="true">{esc(initials(name))}</span>'
+
+
 def table(caption, head, rows, cls='pp-table'):
     out = [f'<div class="pp-scroll"><table class="{cls}"><caption>{esc(caption)}</caption><thead><tr>']
     out += [f'<th scope="col">{esc(h)}</th>' for h in head]
@@ -154,8 +198,12 @@ def table(caption, head, rows, cls='pp-table'):
     return ''.join(out)
 
 
-def tiles(items):
-    return '<dl class="pp-tiles">' + ''.join(f'<div><dt>{esc(k)}</dt><dd>{esc(fmt(v))}</dd></div>' for k, v in items) + '</dl>'
+def details(summary, inner):
+    return f'<details class="pp-details"><summary>{esc(summary)}</summary>{inner}</details>'
+
+
+def card(title, body, wide=False, extra=''):
+    return f'<section class="pp-card{" wide" if wide else ""}"{extra}><h2>{esc(title)}</h2>{body}</section>'
 
 
 def match_link(league, match):
@@ -163,85 +211,165 @@ def match_link(league, match):
     return f'<a href="/match.html?{q}">{esc(match[2])}</a>'
 
 
-def league_section(label, key, short, s, data, slugs):
+def bar_chart(items, label):
+    """Inline SVG bar chart. items: [(axis label, value, value text, highlight)]."""
+    if not items:
+        return ''
+    h, top, bottom, slot = 160, 24, 26, 44
+    width = len(items) * slot
+    peak = max(v for _, v, _, _ in items) or 1
+    out = [f'<svg class="pp-chart" viewBox="0 0 {width} {h}" style="min-width:{width * 0.72:.0f}px" role="img" aria-label="{esc(label)}">']
+    for i, (axis, v, text, hi) in enumerate(items):
+        bh = max(2.0, (h - top - bottom) * v / peak)
+        x, y, w = i * slot + 7, h - bottom - bh, slot - 14
+        out.append(f'<rect class="pp-bar{" hi" if hi else ""}" x="{x}" y="{y:.1f}" width="{w}" height="{bh:.1f}" rx="6"><title>{esc(axis)}: {esc(text)}</title></rect>')
+        out.append(f'<text class="pp-val" x="{x + w / 2:.1f}" y="{y - 7:.1f}" text-anchor="middle">{esc(text)}</text>')
+        out.append(f'<text class="pp-axis" x="{x + w / 2:.1f}" y="{h - 8}" text-anchor="middle">{esc(axis)}</text>')
+    out.append('</svg>')
+    return f'<div class="pp-chart-wrap">{"".join(out)}</div>'
+
+
+def phase_bars(rows, unit, lower_better=False):
+    """rows: [(phase, value, league average, note)] as horizontal bars with a league-average tick."""
+    rows = [r for r in rows if r[1] is not None]
+    if not rows:
+        return ''
+    peak = max(max(r[1], r[2] or 0) for r in rows) * 1.1
+    digits = 1 if unit == 'SR' else 2
+    out = ['<div class="pp-phases">']
+    for phase, v, avg, note in rows:
+        good = bool(avg) and ((v < avg) if lower_better else (v > avg))
+        tone = 'up' if good else 'down'
+        out.append(f'<div class="pp-phase"><div class="pp-phase-head"><b>{esc(phase)}</b><span><strong class="{tone}">{v:.{digits}f}</strong> {unit}</span></div>'
+                   f'<div class="pp-track"><i class="{tone}" style="width:{v / peak * 100:.1f}%"></i>'
+                   + (f'<em style="left:{avg / peak * 100:.1f}%" title="League average {avg:.{digits}f}"></em>' if avg else '')
+                   + f'</div><small>{esc(note)}' + (f' · league average {avg:.{digits}f}' if avg else '') + '</small></div>')
+    out.append('</div>')
+    return ''.join(out)
+
+
+def overs(balls):
+    return f'{balls // 6}.{balls % 6}'
+
+
+def season_label(matches, v):
+    """Year the season was played (Cricsheet calls IPL 2008 "2007/08" and IPL 2020 "2020/21")."""
+    return "'" + min(matches[i][2] for i in v['mat'])[2:4]
+
+
+def league_cards(label, key, short, s, data, slugs):
     from urllib.parse import quote
     m = data['matches']
-    parts = [f'<section class="pp-section" aria-labelledby="pp-{key}"><h2 id="pp-{key}">{label} ball-by-ball</h2>',
-             f'<p class="pp-note">{fmt(s["matches"])} matches in the archive, {esc(s["first"][:4])}–{esc(s["last"][:4])}. Scorecard name: {esc(short)}.</p>']
     b, w = s['batting'], s['bowling']
-    if b and b['balls']:
-        parts.append('<h3>Batting</h3>' + tiles([('Innings', b['innings']), ('Runs', b['runs']), ('Average', b['avg']), ('Strike rate', b['sr']),
-                                                ('Highest', b['highest']), ('50s / 100s', f'{b["fifties"]} / {b["hundreds"]}'), ('4s / 6s', f'{b["fours"]} / {b["sixes"]}')]))
-        rows = []
-        for i, p in enumerate(s['batPhases']):
-            if p[1]:
-                rows.append([PHASES[i], fmt(p[0]), fmt(p[1]), fmt(ratio(p[0], p[1], 100), 1), fmt(p[2]), fmt(ratio(p[3], p[1], 100), 0) + '%', fmt(ratio(p[4] + p[5], p[1], 100), 0) + '%'])
-        parts.append(table('Batting by phase (powerplay overs 1–6, middle 7–15, death 16–20)', ['Phase', 'Runs', 'Balls', 'SR', 'Outs', 'Dots', 'Boundary %'], rows))
+    # Cards for the player's main role, plus the other role only with 600+ balls of it, so
+    # part-time bowling or tail-end batting does not fill the page with noisy charts.
+    bat_balls, bowl_balls = (b['balls'] if b else 0), (w['legal'] if w else 0)
+    bat = bat_balls > 0 and (bat_balls >= bowl_balls or bat_balls >= 600)
+    if w and not (bowl_balls > bat_balls or bowl_balls >= 600):
+        w = None
+    lp = LEAGUE_PHASES[key]
+    cards = []
+    seasons = sorted(s['seasons'])
+    if bat and len(seasons) > 1:
+        best = max(v['runs'] for _, v in seasons)
+        cards.append(card(f'{label} runs by season', bar_chart(
+            [(season_label(m, v), v['runs'], fmt(v['runs']), v['runs'] == best and best > 0) for se, v in seasons], f'{label} runs by season')
+            + details('Season table', table('Season by season', ['Season', 'Matches', 'Runs', 'SR', 'Wickets', 'Economy'],
+                [[esc(se), fmt(len(v['mat'])), fmt(v['runs']) if v['inn'] else '—', fmt(ratio(v['runs'], v['balls'], 100), 1) if v['balls'] else '—',
+                  fmt(v['wkts']) if v['legal'] else '—', fmt(ratio(v['conceded'], v['legal'], 6)) if v['legal'] else '—'] for se, v in reversed(seasons)])), wide=True))
+    if w and len(seasons) > 1 and (not bat or w['legal'] >= 300):
+        best = max(v['wkts'] for _, v in seasons)
+        cards.append(card(f'{label} wickets by season', bar_chart(
+            [(season_label(m, v), v['wkts'], str(v['wkts']), v['wkts'] == best and best > 0) for se, v in seasons if v['legal']], f'{label} wickets by season'), wide=True))
+    if bat:
+        cards.append(card('Batting by phase', phase_bars(
+            [(PHASES[i], ratio(p[0], p[1], 100), lp['bat'][i], f'{fmt(p[0])} runs off {fmt(p[1])} balls, out {p[2]}') for i, p in enumerate(s['batPhases']) if p[1] >= 6], 'SR')
+            + details('Phase table', table('Batting by phase (powerplay overs 1–6, middle 7–15, death 16–20)', ['Phase', 'Runs', 'Balls', 'SR', 'Outs', 'Dots', 'Boundary %'],
+                [[PHASES[i], fmt(p[0]), fmt(p[1]), fmt(ratio(p[0], p[1], 100), 1), fmt(p[2]), fmt(ratio(p[3], p[1], 100), 0) + '%', fmt(ratio(p[4] + p[5], p[1], 100), 0) + '%']
+                 for i, p in enumerate(s['batPhases']) if p[1]]))))
     if w:
-        parts.append('<h3>Bowling</h3>' + tiles([('Matches', w['matches']), ('Wickets', w['wickets']), ('Economy', w['econ']), ('Average', w['avg']),
-                                                ('Strike rate', w['sr']), ('Best', w['best']), ('Overs', f'{w["legal"] // 6}.{w["legal"] % 6}')]))
-        rows = []
-        for i, p in enumerate(s['bowlPhases']):
-            if p[0]:
-                rows.append([PHASES[i], f'{p[0] // 6}.{p[0] % 6}', fmt(p[1]), fmt(p[2]), fmt(ratio(p[1], p[0], 6)), fmt(ratio(p[3], p[0], 100), 0) + '%'])
-        parts.append(table('Bowling by phase', ['Phase', 'Overs', 'Runs', 'Wickets', 'Economy', 'Dots'], rows))
-    season_rows = []
-    for season, v in s['seasons']:
-        season_rows.append([esc(season), fmt(len(v['mat'])), fmt(v['runs']) if v['inn'] else '—', fmt(ratio(v['runs'], v['balls'], 100), 1) if v['balls'] else '—',
-                            fmt(v['wkts']) if v['legal'] else '—', fmt(ratio(v['conceded'], v['legal'], 6)) if v['legal'] else '—'])
-    parts.append(table('Season by season', ['Season', 'Matches', 'Runs', 'SR', 'Wickets', 'Economy'], season_rows))
-    recent = []
-    if s['recentBat'] and b and b['balls']:
-        recent.append(table('Last 10 innings', ['Date', 'Match', 'Score', 'SR'],
-                            [[match_link(key, m[i]), teams(m[i][3]), f'{e[0]}{"" if e[4] else "*"} ({e[1]})', fmt(ratio(e[0], e[1], 100), 1)] for i, e in s['recentBat']], 'pp-table pp-recent'))
-    if s['recentBowl'] and w:
-        recent.append(table('Last 10 bowling matches', ['Date', 'Match', 'Figures', 'Economy'],
-                            [[match_link(key, m[i]), teams(m[i][3]), f'{e[2] // 6}.{e[2] % 6}-{e[1]}-{e[0]}', fmt(ratio(e[1], e[2], 6))] for i, e in s['recentBowl']], 'pp-table pp-recent'))
-    if recent:
-        parts.append('<h3>Recent matches</h3><div class="pp-pair">' + ''.join(recent) + '</div>')
+        cards.append(card('Bowling by phase', phase_bars(
+            [(PHASES[i], ratio(p[1], p[0], 6), lp['bowl'][i], f'{p[2]} wicket{"" if p[2] == 1 else "s"} in {overs(p[0])} overs') for i, p in enumerate(s['bowlPhases']) if p[0] >= 12], 'econ', lower_better=True)
+            + details('Phase table', table('Bowling by phase', ['Phase', 'Overs', 'Runs', 'Wickets', 'Economy', 'Dots'],
+                [[PHASES[i], overs(p[0]), fmt(p[1]), fmt(p[2]), fmt(ratio(p[1], p[0], 6)), fmt(ratio(p[3], p[0], 100), 0) + '%'] for i, p in enumerate(s['bowlPhases']) if p[0]]))))
+    if s['recentBat'] and bat:
+        last = list(reversed(s['recentBat']))
+        cards.append(card('Last 10 innings', bar_chart(
+            [(str(int(m[i][2][8:10])) + '/' + str(int(m[i][2][5:7])), e[0], f'{e[0]}{"" if e[4] else "*"}', e[0] >= 50) for i, e in last], 'Runs in the last 10 innings')
+            + details('Scorecards', table('Last 10 innings', ['Date', 'Match', 'Score', 'SR'],
+                [[match_link(key, m[i]), teams(m[i][3]), f'{e[0]}{"" if e[4] else "*"} ({e[1]})', fmt(ratio(e[0], e[1], 100), 1)] for i, e in s['recentBat']], 'pp-table pp-recent'))))
+    if s['recentBowl'] and w and (not bat or w['legal'] >= 300):
+        last = list(reversed(s['recentBowl']))
+        cards.append(card('Last 10 bowling matches', bar_chart(
+            [(str(int(m[i][2][8:10])) + '/' + str(int(m[i][2][5:7])), e[0], f'{e[0]}/{e[1]}', e[0] >= 3) for i, e in last], 'Wickets in the last 10 matches')
+            + details('Figures', table('Last 10 bowling matches', ['Date', 'Match', 'Figures', 'Economy'],
+                [[match_link(key, m[i]), teams(m[i][3]), f'{overs(e[2])}-{e[1]}-{e[0]}', fmt(ratio(e[1], e[2], 6))] for i, e in s['recentBowl']], 'pp-table pp-recent'))))
 
-    def who(name):
-        slug = slugs.get((key, name))
-        return f'<a href="/player/{slug}.html">{esc(name)}</a>' if slug else esc(name)
+    def rows(items, rate):
+        out = []
+        for n, v in items:
+            slug = slugs.get((key, n))
+            who = f'<a href="/player/{slug}.html">{esc(n)}</a>' if slug else esc(n)
+            stat = (f'{fmt(v[0])} off {fmt(v[1])} · SR {fmt(ratio(v[0], v[1], 100), 1)} · out {v[2]}' if rate == 'sr'
+                    else f'{fmt(v[0])} runs in {overs(v[1])} overs · econ {fmt(ratio(v[0], v[1], 6))} · {v[2]} wkts')
+            out.append(f'<li>{face(n, slug or "", "pp-mini")}<div>{who}<small>{stat}</small></div></li>')
+        return '<ul class="pp-mu">' + ''.join(out) + '</ul>'
     mu = []
-    if s['faced']:
-        mu.append(table(f'Bowlers faced most (min {MATCHUP_MIN_BALLS} balls)', ['Bowler', 'Runs', 'Balls', 'SR', 'Outs'],
-                        [[who(n), fmt(v[0]), fmt(v[1]), fmt(ratio(v[0], v[1], 100), 1), fmt(v[2])] for n, v in s['faced']]))
-    if s['bowledTo']:
-        mu.append(table(f'Batters bowled to most (min {MATCHUP_MIN_BALLS} balls)', ['Batter', 'Runs', 'Balls', 'Economy', 'Wickets'],
-                        [[who(n), fmt(v[0]), fmt(v[1]), fmt(ratio(v[0], v[1], 6)), fmt(v[2])] for n, v in s['bowledTo']]))
-    if mu:
-        parts.append('<h3>Main match-ups</h3><div class="pp-pair">' + ''.join(mu) + '</div>')
+    if s['faced'] and bat:
+        mu.append(('Bowlers faced most', rows(s['faced'], 'sr')))
+    if s['bowledTo'] and w:
+        mu.append(('Batters bowled to most', rows(s['bowledTo'], 'econ')))
+    for title, body in mu:   # one list alone spans the row in two columns
+        cards.append(card(title, body.replace('class="pp-mu"', 'class="pp-mu cols"') if len(mu) == 1 else body, wide=len(mu) == 1))
     role = 'bowling' if w and (not b or w['legal'] > b['balls']) else 'batting'
-    parts.append(f'<div class="pp-more" data-competition="{key}" data-player="{esc(short)}" data-role="{role}">'
+    cards.append(f'<div class="pp-more wide" data-competition="{key}" data-player="{esc(short)}" data-role="{role}">'
                  f'<button type="button" class="pp-load">Show every {label} match-up</button>'
                  f'<a href="/player-battle.html?competition={key}&amp;first={quote(short)}">Compare in Player Battle ↗</a>'
                  f'<a href="/player-battle.html?competition={key}&amp;view=finder&amp;player={quote(short)}&amp;role={role}">Best and worst match-ups ↗</a>'
                  f'<div class="pp-more-out" aria-live="polite"></div></div>')
-    parts.append('</section>')
-    return ''.join(parts)
+    return cards
 
 
-def career_section(profile):
+def career_card(profile):
     rows = []
     for key, label in FORMATS:
         r = profile['formats'].get(key)
         if not r:
             continue
         b, w = r.get('batting') or {}, r.get('bowling') or {}
-        kind = {'archive': 'Archived matches', 'career_snapshot': 'Career snapshot'}.get(r.get('status'), 'Published record')
+        kind = {'archive': 'Archive', 'career_snapshot': 'Snapshot'}.get(r.get('status'), 'Record')
         rows.append([esc(label), fmt(b.get('matches')), fmt(b.get('runs')), fmt(b.get('average')), fmt(b.get('strikeRate')), esc(fmt(b.get('highest'))),
                      fmt(w.get('wickets')) if w.get('balls') or w.get('wickets') else '—', fmt(w.get('economy')) if w.get('balls') else '—',
                      f'<a href="{esc(r["source"])}" rel="noopener noreferrer" target="_blank">{kind}</a>' + (f' · {esc(r["asOf"])}' if r.get('asOf') else '')])
-    return ('<section class="pp-section" aria-labelledby="pp-career"><h2 id="pp-career">Career by format</h2>'
-            + table('Career records from the site’s sources. A missing format does not mean the player never played it.',
-                    ['Format', 'Matches', 'Runs', 'Average', 'SR', 'Highest', 'Wickets', 'Economy', 'Source'], rows) + '</section>')
+    return card('Career by format', table('From the site’s sources. A missing format does not mean the player never played it.',
+                                          ['Format', 'Mat', 'Runs', 'Avg', 'SR', 'HS', 'Wkts', 'Econ', 'Source'], rows), wide=True)
+
+
+def headline(profile, leagues):
+    """Big numbers for the header: the main league if there is one, else the busiest format."""
+    if leagues:
+        label, _k, _s, s, _d = leagues[0]
+        b, w = s['batting'], s['bowling']
+        bat_balls = b['balls'] if b else 0
+        bowl_balls = w['legal'] if w else 0
+        items = [(f'{label} matches', fmt(s['matches']))]
+        if bat_balls >= bowl_balls or bat_balls >= 300:
+            items += [('Runs', fmt(b['runs'])), ('Strike rate', fmt(b['sr'], 1)), ('Average', fmt(b['avg'], 1)), ('50s / 100s', f'{b["fifties"]} / {b["hundreds"]}')]
+        if bowl_balls > bat_balls or bowl_balls >= 300:
+            items += [('Wickets', fmt(w['wickets'])), ('Economy', fmt(w['econ'])), ('Best', w['best'] or '—')]
+        return items[:6]
+    for key, label in FORMATS:
+        r = profile['formats'].get(key)
+        b = (r or {}).get('batting') or {}
+        if b.get('runs'):
+            return [(f'{label} matches', fmt(b.get('matches'))), ('Runs', fmt(b.get('runs'))), ('Average', fmt(b.get('average'))), ('Highest', fmt(b.get('highest')))]
+    return []
 
 
 def page(shell, slug, row, profile, leagues, slugs):
-    pid, name, country, gender, aliases, _ = row
+    pid, full_name, country, gender, aliases, _ = row
+    name = DISPLAY.get(slug, full_name)
     tags = [t for t in (country, {'female': 'Women', 'male': 'Men'}.get(gender)) if t]
-    sections = [career_section(profile)] + [league_section(label, key, short, s, data, slugs) for label, key, short, s, data in leagues]
     facts = []
     for label, _key, _short, s, _d in leagues:
         if s['batting'] and s['batting']['runs']:
@@ -258,22 +386,39 @@ def page(shell, slug, row, profile, leagues, slugs):
     desc = f'{name}' + (f' ({", ".join(tags)})' if tags else '') + ': ' + ('; '.join(facts) or 'career records by format') + ('. Phase splits, seasons, recent form and match-ups from ball-by-ball data.' if leagues else '. Career records by format with sources.')
     url = f'{SITE}/player/{slug}.html'
     ld = {'@context': 'https://schema.org', '@type': 'ProfilePage', 'url': url, 'name': title,
-          'mainEntity': {'@type': 'Person', 'name': name, **({'nationality': country} if country else {}), **({'alternateName': aliases} if aliases else {})}}
+          'mainEntity': {'@type': 'Person', 'name': name, **({'nationality': country} if country else {}), **({'alternateName': ([full_name] if full_name != name else []) + aliases} if aliases or full_name != name else {})}}
     head = shell['head'].replace('{{TITLE}}', esc(title)).replace('{{DESC}}', esc(desc)).replace('{{URL}}', url).replace('{{OGTITLE}}', esc(name + ' | The Cricket Space'))
+    if PHOTOS.get(slug):
+        head = head.replace('https://mstmayank.github.io/og-player-battle.jpg', SITE + PHOTOS[slug].replace('/thumbs/', '/').replace('.webp', '.jpg'))
     short = leagues[0][2] if leagues else ''
+    cards = []
+    for label, key, sh, s, data in leagues:
+        cards += league_cards(label, key, sh, s, data, slugs)
+    cards.append(career_card(profile))
+    big = headline(profile, leagues)
+    chips = ''.join(f'<span>{esc(t)}</span>' for t in tags + [label for label, *_ in leagues])
+    span = ''
+    if leagues:
+        s0 = leagues[0][3]
+        span = f'<span>{esc(s0["first"][:4])}–{esc(s0["last"][:4])}</span>'
     return (head + f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n</head>\n<body class="ds">'
             + shell['nav'] + '<main class="wrap page tool-page archive-page cricket-tools pp" id="top">'
             + '<nav class="pp-crumbs" aria-label="Breadcrumb"><a href="/player/">Players</a><span aria-hidden="true">/</span><span>' + esc(name) + '</span></nav>'
-            + '<header class="pp-head"><p class="pp-eyebrow">' + esc(' · '.join(tags + [label for label, *_ in leagues]) or 'Player') + '</p>'
+            + '<header class="pp-hero">' + face(name, slug, 'pp-portrait', eager=True)
+            + '<div class="pp-hero-body"><p class="pp-chips">' + chips + span + '</p>'
             + f'<h1>{esc(name)}</h1>'
+            + (f'<p class="pp-fullname">{esc(full_name)}</p>' if full_name != name else '')
             + (f'<p class="pp-lede">{esc("; ".join(facts))}.</p>' if facts else '')
+            + ('<dl class="pp-big">' + ''.join(f'<div><dt>{esc(k)}</dt><dd>{esc(str(v))}</dd></div>' for k, v in big) + '</dl>' if big else '')
             + '<div class="pp-actions"><button type="button" class="pp-share" data-title="' + esc(name) + '">Share ↗</button>'
-            + f'<a href="/player-battle.html?competition=international&amp;view=careers&amp;player={esc(pid)}">All formats in Player Battle ↗</a>'
-            + (f'<a href="/fantasy.html">Fantasy XI helper ↗</a>' if leagues else '') + '</div></header>'
-            + ''.join(sections)
+            + (f'<a href="/player-battle.html?competition={leagues[0][1]}&amp;first={esc(short)}">Battle this player ↗</a>' if leagues else '')
+            + f'<a href="/player-battle.html?competition=international&amp;view=careers&amp;player={esc(pid)}">All formats ↗</a></div>'
+            + '</div></header>'
+            + '<div class="pp-grid">' + ''.join(cards) + '</div>'
             + '<p class="pp-note pp-sources">Ball-by-ball numbers come from Cricsheet scorecards (ODC-BY) and cover the matches in the archive, not necessarily a full career. '
-            + 'Career records list their own source and date. Short scorecard name' + ('s' if len(aliases) > 1 else '') + ': ' + esc(', '.join(aliases) or short or '—') + '.</p>'
-            + '</main>' + shell['footer'].replace('<script defer src="/design-v2.js', '<script defer src="/player/player.js?v=1"></script><script defer src="/design-v2.js'))
+            + 'League averages compare with every batter or bowler in the same phase. Career records list their own source and date. Portraits are illustrations made for this site. Short scorecard name'
+            + ('s' if len(aliases) > 1 else '') + ': ' + esc(', '.join(aliases) or short or '—') + '.</p>'
+            + '</main>' + shell['footer'].replace('<script defer src="/design-v2.js', '<script defer src="/player/player.js?v=2"></script><script defer src="/design-v2.js'))
 
 
 def shell_from(source):
@@ -289,11 +434,11 @@ def shell_from(source):
             '<meta property="og:type" content="profile"><meta property="og:site_name" content="The Cricket Space">\n'
             '<meta property="og:title" content="{{OGTITLE}}">\n<meta property="og:description" content="{{DESC}}">\n<meta property="og:url" content="{{URL}}">\n'
             '<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">\n'
-            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=glass-1">\n')
+            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=faces-1">\n')
     return {'head': head, 'nav': nav.replace('<a href="/player-battle.html">Players</a>', '<a href="/player-battle.html" aria-current="page">Players</a>'), 'footer': footer}
 
 
-def index_page(shell, entries):
+def index_page(shell, entries, featured=()):
     groups = defaultdict(list)
     for name, slug, meta in sorted(entries, key=lambda e: e[0].lower()):
         letter = name[0].upper() if name[0].isalpha() else '#'
@@ -306,10 +451,78 @@ def index_page(shell, entries):
     return (head + '</head>\n<body class="ds">' + shell['nav'] + '<main class="wrap page tool-page archive-page cricket-tools pp" id="top">'
             + '<header class="pp-head"><p class="pp-eyebrow">Players</p><h1>Player pages</h1>'
             + f'<p class="pp-lede">{len(entries)} players with IPL, WPL, ODI or T20I records. Each page has career numbers by format, phase splits, seasons, recent form and main match-ups.</p></header>'
+            + ('<section class="pp-featured" aria-labelledby="pp-feat"><h2 id="pp-feat">Featured players</h2><div class="pp-feat-grid">'
+               + ''.join(f'<a class="pp-feat" href="/player/{slug}.html">{face(name, slug, "pp-feat-face")}<b>{esc(name)}</b><small>{esc(line)}</small></a>' for name, slug, line, _ in featured)
+               + '</div></section>' if featured else '')
             + '<label class="pp-filter">Find a player <input type="search" id="pp-filter" placeholder="e.g. Kohli, Mandhana, Bumrah" autocomplete="off"></label>'
             + f'<nav class="pp-letters" aria-label="Jump to letter">{letters}</nav>{body}'
             + '<p class="pp-note" id="pp-empty" hidden>No player page matches. Try a surname.</p></main>'
-            + shell['footer'].replace('<script defer src="/design-v2.js', '<script defer src="/player/player.js?v=1"></script><script defer src="/design-v2.js'))
+            + shell['footer'].replace('<script defer src="/design-v2.js', '<script defer src="/player/player.js?v=2"></script><script defer src="/design-v2.js'))
+
+
+def make_thumbnails(slug_of_name):
+    """battle-art/<name>.jpg -> battle-art/thumbs/<name>.webp (360 px wide), only when missing or older."""
+    from PIL import Image
+    art, thumbs = ROOT / 'battle-art', ROOT / 'battle-art' / 'thumbs'
+    thumbs.mkdir(exist_ok=True)
+    out = {}
+    for src in sorted(art.glob('*.jpg')):
+        if src.stem in SKIP_ART:
+            continue
+        slug = slug_of_name(src.stem)
+        if not slug:
+            continue
+        dst = thumbs / f'{src.stem}.webp'
+        if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+            with Image.open(src) as im:
+                im = im.convert('RGB')
+                im.thumbnail((360, 540))
+                im.save(dst, 'WEBP', quality=78, method=6)
+        out[slug] = f'/battle-art/thumbs/{src.stem}.webp'
+    return out
+
+
+def league_phase_averages(data):
+    bat, bowl = [[0, 0] for _ in PHASES], [[0, 0] for _ in PHASES]
+    for r in data['rows']:
+        bat[r[3]][0] += r[4]; bat[r[3]][1] += r[5]
+        bowl[r[3]][0] += r[10]; bowl[r[3]][1] += r[11]
+    return {'bat': [ratio(a, b, 100) for a, b in bat], 'bowl': [ratio(a, b, 6) for a, b in bowl]}
+
+
+HOME_START, HOME_END = '<!-- star-players:start (built by scripts/build-player-pages.py) -->', '<!-- star-players:end -->'
+
+
+def star_rail(featured):
+    cards = ''.join(f'<a class="star-card" href="/player/{slug}.html">{face(name, slug, "star-face")}<span class="star-meta"><b>{esc(name)}</b><small>{esc(line)}</small></span></a>'
+                    for name, slug, line, _ in featured[:16])
+    return (HOME_START + '<section class="star-rail" aria-labelledby="star-title"><div class="star-head"><h2 id="star-title">Star players</h2>'
+            '<a href="/player/">All 983 players ↗</a></div><div class="star-track">' + cards + '</div></section>' + HOME_END)
+
+
+def faceoff(battle, ids, bat='V Kohli', bowl='JJ Bumrah'):
+    data = battle['ipl']
+    a, b = ids['ipl'].get(bat), ids['ipl'].get(bowl)
+    runs = balls = outs = dots = 0
+    for r in data['rows']:
+        if r[1] == a and r[2] == b:
+            runs += r[4]; balls += r[5]; outs += r[9]; dots += r[6]
+    return {'runs': runs, 'balls': balls, 'outs': outs, 'sr': ratio(runs, balls, 100), 'dots': ratio(dots, balls, 100)}
+
+
+def update_home(featured, fo):
+    path = ROOT / 'index.html'
+    text = path.read_text(encoding='utf-8')
+    if HOME_START not in text:
+        return False
+    text = re.sub(re.escape(HOME_START) + '.*?' + re.escape(HOME_END), lambda _m: star_rail(featured), text, flags=re.S)
+    text = re.sub(r'(<span data-fo="runs">)[^<]*', lambda m: m.group(1) + fmt(fo['runs']), text)
+    text = re.sub(r'(<span data-fo="balls">)[^<]*', lambda m: m.group(1) + fmt(fo['balls']), text)
+    text = re.sub(r'(<span data-fo="outs">)[^<]*', lambda m: m.group(1) + str(fo['outs']), text)
+    text = re.sub(r'(<span data-fo="sr">)[^<]*', lambda m: m.group(1) + fmt(fo['sr'], 1), text)
+    text = re.sub(r'(<span data-fo="dots">)[^<]*', lambda m: m.group(1) + fmt(fo['dots'], 0) + '%', text)
+    path.write_text(text, encoding='utf-8')
+    return True
 
 
 def update_sitemap(slugs):
@@ -369,6 +582,15 @@ def main():
                 short_of.pop((pid, key), None)   # two players share a scorecard name: do not guess
     slugs = {(key, short): slug for key, names in by_short.items() for short, slug in names.items()}
     shell = shell_from(ROOT / 'fantasy.html')
+    all_slugs = set(slug_of.values())
+    PHOTOS.clear()
+    match_art = lambda stem: PORTRAIT_SLUGS.get(stem) or (stem if stem in all_slugs else None)
+    PHOTOS.update(make_thumbnails(match_art))
+    DISPLAY.clear()
+    DISPLAY.update(known_names(match_art))
+    for key, data in battle.items():
+        LEAGUE_PHASES[key] = league_phase_averages(data)
+    featured = []
     OUT.mkdir(exist_ok=True)
     keep = {'player.js', 'player.css', 'links.json', 'index.html'}
     wanted = {f'{s}.html' for s in slug_of.values()}
@@ -385,19 +607,28 @@ def main():
             s = league_stats(battle[key], ids[key][short])
             if s:
                 leagues.append((label, key, short, s, battle[key]))
+        if PHOTOS.get(slug_of[r[0]]) and leagues:
+            label, _k, _sh, s0, _d = leagues[0]
+            bb, ww = s0['batting'], s0['bowling']
+            line = (f'{label} · {fmt(bb["runs"])} runs · SR {fmt(bb["sr"], 1)}' if bb and (not ww or bb['balls'] >= ww['legal'])
+                    else f'{label} · {fmt(ww["wickets"])} wkts · econ {fmt(ww["econ"])}')
+            featured.append((DISPLAY.get(slug_of[r[0]], r[1]), slug_of[r[0]], line, s0['matches']))
         text = page(shell, slug_of[r[0]], r, records[r[0]], leagues, slugs)
         (OUT / f'{slug_of[r[0]]}.html').write_text(text, encoding='utf-8')
         total += len(text.encode())
         meta = ' · '.join(x for x in [r[2]] + [f for f, _ in FORMATS if f in records[r[0]]['formats'] and f in PAGE_FORMATS] if x)
         entries.append((r[1], slug_of[r[0]], meta))
-    (OUT / 'index.html').write_text(index_page(shell, entries), encoding='utf-8')
+    featured.sort(key=lambda f: -f[3])
+    (OUT / 'index.html').write_text(index_page(shell, entries, featured), encoding='utf-8')
+    home = update_home(featured, faceoff(battle, ids))
     links = {'generated': date.today().isoformat(), 'note': 'Short scorecard name -> /player/<slug>.html, per competition. Built by scripts/build-player-pages.py.',
              'ipl': dict(sorted(by_short['ipl'].items())), 'wpl': dict(sorted(by_short['wpl'].items())),
-             'byId': dict(sorted(slug_of.items()))}
+             'byId': dict(sorted(slug_of.items())), 'photos': dict(sorted(PHOTOS.items()))}
     (OUT / 'links.json').write_text(json.dumps(links, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     update_sitemap(slug_of.values())
     print(f'Wrote {len(chosen)} player pages ({total / 1e6:.1f} MB), player/index.html, player/links.json '
-          f'({len(by_short["ipl"])} IPL and {len(by_short["wpl"])} WPL scorecard names linked); updated sitemap.xml')
+          f'({len(by_short["ipl"])} IPL and {len(by_short["wpl"])} WPL scorecard names linked, {len(PHOTOS)} portraits); updated sitemap.xml'
+          + (' and the homepage star rail' if home else ''))
 
 
 if __name__ == '__main__':

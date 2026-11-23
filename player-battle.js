@@ -490,7 +490,9 @@ function venueLabel(name) {
     const ids=mode==='direct'?selected:rows.map(row=>data.players.indexOf(row[0]));
     ids.forEach((id,index)=>{const button=document.createElement('button');button.type='button';button.className='duel-name';
       const small=document.createElement('small');small.textContent=mode==='direct'?(index?'BOWLER':'BATTER'):'PLAYER '+(index+1);
-      const name=document.createElement('strong');name.textContent=data.players[id];button.append(small,name);
+      const name=document.createElement('strong');name.textContent=data.players[id];
+      const text=document.createElement('span');text.className='duel-text';text.append(small,name);button.append(text);
+      if(window.TCSFaces&&mode!=='teams')window.TCSFaces.attach(button,competition==='international'?'':competition,data.players[id],'duel-face');
       button.addEventListener('click',()=>choose(index));names.appendChild(button);});board.appendChild(names);
     if(mode==='direct'){
       const groups=[

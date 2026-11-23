@@ -7,21 +7,8 @@
   gtag('config', 'G-CT3F1MC8VS');
 </script>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="match-centre.css?v=glass-1"><link rel="stylesheet" href="home-bento.css?v=glass-1"><style>
-.hero-wheel { --shot-color:rgb(var(--ds-accent-rgb)); }
-.hero-wheel .six { --shot-color:rgb(var(--ds-red-rgb)); }
-.hero-wheel .wheel-trail { fill:none; stroke:var(--shot-color); stroke-width:3.2; stroke-linecap:round; stroke-dasharray:1; animation:hero-wheel-trail 10s var(--shot-delay) cubic-bezier(.3,.7,.2,1) infinite both; }
-.hero-wheel .wheel-marker { fill:var(--shot-color); animation:hero-wheel-marker 10s var(--shot-delay) infinite both; }
-.hero-wheel .wheel-ripple { fill:none; stroke:rgb(var(--ds-ink-rgb)); stroke-width:2; animation:hero-wheel-ripple 10s var(--shot-delay) infinite both; }
-.hero-wheel .wheel-marker,.hero-wheel .wheel-ripple { transform-box:fill-box; transform-origin:center; }
-@keyframes hero-wheel-trail { 0% {stroke-dashoffset:1} 7%,82% {stroke-dashoffset:0;opacity:1} 95%,100% {stroke-dashoffset:0;opacity:0} }
-@keyframes hero-wheel-marker { 0%,5% {opacity:0;transform:scale(0)} 8% {opacity:1;transform:scale(1.5)} 11%,82% {opacity:1;transform:scale(1)} 95%,100% {opacity:0;transform:scale(1)} }
-@keyframes hero-wheel-ripple { 0%,6% {opacity:0;transform:scale(.4)} 8% {opacity:.9} 16%,100% {opacity:0;transform:scale(3)} }
-@media (prefers-reduced-motion:reduce) {
-  .hero-wheel .wheel-trail,.hero-wheel .wheel-marker,.hero-wheel .wheel-ripple { animation:none; }
-  .hero-wheel .wheel-ripple { display:none; }
-}
 </style>
-<link rel="stylesheet" href="/ds.css?v=3"></head><body class="v2 cricket-feel home-page ds" id="top"><nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main><div class="wrap">
+<link rel="stylesheet" href="/ds.css?v=5"></head><body class="v2 cricket-feel home-page ds" id="top"><nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main><div class="wrap">
 <div class="hero">
 <div>
 <p class="hero-eyebrow ds-reveal">IPL · WPL · International</p>
@@ -30,73 +17,16 @@
 <div class="hero-actions ds-reveal-3"><a class="ds-btn" href="/player-battle.html?view=finder">Explore Player Battle <span aria-hidden="true">→</span></a><a class="ds-btn ghost" href="/preview.html">Preview a match</a></div>
 <div class="soc hero-social ds-reveal-3" aria-label="Follow TheCricketSpace"><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Instagram <span aria-hidden="true">↗</span></a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="1" y="4" width="22" height="16" rx="5" fill="currentColor"/><path d="m10 8 6 4-6 4z" fill="#10100f"/></svg>YouTube <span aria-hidden="true">↗</span></a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-4H14V7c0-1 .3-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v9z"/></svg>Facebook <span aria-hidden="true">↗</span></a></div>
 </div>
-<svg class="ground hero-wheel" viewBox="0 0 600 600" role="img" aria-label="Cricket wagon wheel with paths for fours and sixes">
-<circle cx="300" cy="300" r="298" fill="#33703f"/>
-<g stroke="#2a5f37" stroke-width="298" fill="none"><circle cx="300" cy="300" r="149" pathLength="48" stroke-dasharray="1 1"/></g>
-<circle cx="300" cy="300" r="297" fill="none" stroke="#f4f6ef" stroke-width="5"/>
-<circle cx="300" cy="300" r="170" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-dasharray="7 9"/>
-<g fill="#fff" fill-opacity=".55"><circle cx="335.0" cy="127.5" r="3.4"/>
-<circle cx="437.7" cy="190.3" r="3.4"/>
-<circle cx="475.9" cy="304.5" r="3.4"/>
-<circle cx="431.9" cy="416.5" r="3.4"/>
-<circle cx="326.1" cy="474.0" r="3.4"/>
-<circle cx="208.1" cy="450.1" r="3.4"/>
-<circle cx="133.1" cy="356.0" r="3.4"/>
-<circle cx="136.2" cy="235.6" r="3.4"/>
-<circle cx="215.9" cy="145.4" r="3.4"/>
-</g>
-<rect x="280" y="215" width="40" height="170" rx="6" fill="#d6c38b"/>
-<path d="M268 232h64M268 368h64" stroke="#fff" stroke-width="2.4"/>
-<path d="M292 224v8m8-8v8m8-8v8M292 368v8m8-8v8m8-8v8" stroke="#c89a2e" stroke-width="2.4"/>
-<g style="--shot-delay:0ms" class="four">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q323.4 186.3 409.0 55.2"/>
-  <circle class="wheel-marker" cx="409.0" cy="55.2" r="9"/>
-  <circle class="wheel-ripple" cx="409.0" cy="55.2" r="14"/>
-</g>
-<g style="--shot-delay:1150ms" class="six">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q437.0 303.8 548.5 199.6"/>
-  <circle class="wheel-marker" cx="548.5" cy="199.6" r="9"/>
-  <circle class="wheel-ripple" cx="548.5" cy="199.6" r="14"/>
-</g>
-<g style="--shot-delay:2300ms" class="four">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q437.0 341.2 548.5 400.4"/>
-  <circle class="wheel-marker" cx="548.5" cy="400.4" r="9"/>
-  <circle class="wheel-ripple" cx="548.5" cy="400.4" r="14"/>
-</g>
-<g style="--shot-delay:3450ms" class="four">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q337.6 455.5 434.0 532.1"/>
-  <circle class="wheel-marker" cx="434.0" cy="532.1" r="9"/>
-  <circle class="wheel-ripple" cx="434.0" cy="532.1" r="14"/>
-</g>
-<g style="--shot-delay:4600ms" class="six">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q290.9 460.4 217.2 554.9"/>
-  <circle class="wheel-marker" cx="217.2" cy="554.9" r="9"/>
-  <circle class="wheel-ripple" cx="217.2" cy="554.9" r="14"/>
-</g>
-<g style="--shot-delay:5750ms" class="four">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q165.7 355.4 63.4 425.8"/>
-  <circle class="wheel-marker" cx="63.4" cy="425.8" r="9"/>
-  <circle class="wheel-ripple" cx="63.4" cy="425.8" r="14"/>
-</g>
-<g style="--shot-delay:6900ms" class="four">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q162.1 313.4 45.1 217.2"/>
-  <circle class="wheel-marker" cx="45.1" cy="217.2" r="9"/>
-  <circle class="wheel-ripple" cx="45.1" cy="217.2" r="14"/>
-</g>
-<g style="--shot-delay:8050ms" class="six">
-  <path class="wheel-trail" pathLength="1" d="M300 345 Q271.8 187.2 182.5 59.1"/>
-  <circle class="wheel-marker" cx="182.5" cy="59.1" r="9"/>
-  <circle class="wheel-ripple" cx="182.5" cy="59.1" r="14"/>
-</g>
-</svg>
+<a class="faceoff ds-reveal-2" href="/player-battle.html?competition=ipl&amp;first=V%20Kohli&amp;second=JJ%20Bumrah" aria-label="Virat Kohli against Jasprit Bumrah in the IPL: open the full battle">
+<div class="fo-top"><span class="fo-live"><i></i>IPL head to head</span><span>Batter v bowler</span></div>
+<div class="fo-faces"><figure><img src="/battle-art/thumbs/kohli-rcb.webp" alt="" width="360" height="540" decoding="async"><figcaption>Virat Kohli<small>Batter</small></figcaption></figure><span class="fo-vs">VS</span><figure><img src="/battle-art/thumbs/bumrah.webp" alt="" width="360" height="540" decoding="async"><figcaption>Jasprit Bumrah<small>Bowler</small></figcaption></figure></div>
+<dl class="fo-stats"><div><dt>Runs</dt><dd><span data-fo="runs">159</span></dd></div><div><dt>Balls</dt><dd><span data-fo="balls">108</span></dd></div><div><dt>Outs</dt><dd><span data-fo="outs">5</span></dd></div><div><dt>Strike rate</dt><dd><span data-fo="sr">147.2</span></dd></div><div><dt>Dot balls</dt><dd><span data-fo="dots">36%</span></dd></div></dl>
+<span class="fo-cta">Open the full battle <em>↗</em></span>
+</a>
 </div>
 </div>
 
-<div class="strip"><div class="wrap">
-<b class="d">THIS OVER</b>
-<div class="balls d" aria-hidden="true"><span class="f">4</span><span>1</span><span>0</span><span class="w">W</span><span class="s">6</span><span>2</span></div>
-<em>Content with character · Stories with soul</em>
-</div></div>
+<!-- star-players:start (built by scripts/build-player-pages.py) --><section class="star-rail" aria-labelledby="star-title"><div class="star-head"><h2 id="star-title">Star players</h2><a href="/player/">All 983 players ↗</a></div><div class="star-track"><a class="star-card" href="/player/rohit-sharma.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/rohit.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Rohit Sharma</b><small>IPL · 7,329 runs · SR 132.9</small></span></a><a class="star-card" href="/player/virat-kohli.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/kohli-rcb.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Virat Kohli</b><small>IPL · 9,336 runs · SR 134.8</small></span></a><a class="star-card" href="/player/ms-dhoni.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/dhoni.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>MS Dhoni</b><small>IPL · 5,439 runs · SR 137.5</small></span></a><a class="star-card" href="/player/bhuvneshwar-singh.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/bhuvneshwar-kumar.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Bhuvneshwar Kumar</b><small>IPL · 226 wkts · econ 7.71</small></span></a><a class="star-card" href="/player/sunil-narine.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/sunil-narine.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Sunil Narine</b><small>IPL · 207 wkts · econ 6.79</small></span></a><a class="star-card" href="/player/ajinkya-rahane.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/ajinkya-rahane.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Ajinkya Rahane</b><small>IPL · 5,367 runs · SR 125.6</small></span></a><a class="star-card" href="/player/sanju-samson.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/sanju-samson.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Sanju Samson</b><small>IPL · 5,181 runs · SR 141.1</small></span></a><a class="star-card" href="/player/yuzvendra-chahal.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/yuzvendra-chahal.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Yuzvendra Chahal</b><small>IPL · 233 wkts · econ 8.05</small></span></a><a class="star-card" href="/player/axar-patel.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/axar-patel.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Axar Patel</b><small>IPL · 139 wkts · econ 7.43</small></span></a><a class="star-card" href="/player/ab-de-villiers.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/abd-rcb.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>AB de Villiers</b><small>IPL · 5,162 runs · SR 151.7</small></span></a><a class="star-card" href="/player/suryakumar-yadav.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/suryakumar-yadav.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Suryakumar Yadav</b><small>IPL · 4,581 runs · SR 148.6</small></span></a><a class="star-card" href="/player/hardik-pandya.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/hardik.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Hardik Pandya</b><small>IPL · 2,955 runs · SR 146.3</small></span></a><a class="star-card" href="/player/jasprit-bumrah.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/bumrah.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Jasprit Bumrah</b><small>IPL · 187 wkts · econ 7.34</small></span></a><a class="star-card" href="/player/rashid-arman.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/rashid-khan.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Rashid Khan</b><small>IPL · 179 wkts · econ 7.28</small></span></a><a class="star-card" href="/player/kl-rahul.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/kl-rahul.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>KL Rahul</b><small>IPL · 5,815 runs · SR 139.1</small></span></a><a class="star-card" href="/player/shreyas-iyer.html"><span class="star-face has-photo"><img src="/battle-art/thumbs/shreyas-iyer.webp" alt="" width="360" height="540" loading="lazy" decoding="async"></span><span class="star-meta"><b>Shreyas Iyer</b><small>IPL · 4,229 runs · SR 136.7</small></span></a></div></section><!-- star-players:end -->
 
 <section class="match-centre" aria-labelledby="auction-card-title"><div class="match-wrap">
 

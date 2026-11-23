@@ -448,3 +448,79 @@ html body.ds .milestones .ms-toggle button[aria-pressed="true"] { background: va
 /* Article body text */
 html body.ds .v2 .article-main .prose p, html body.ds.v2 .article-main .prose p { color: rgba(var(--ds-ink-rgb), .8); }
 html body.ds.v2 .article-main .prose p:first-child { color: var(--ds-text); }
+
+/* ==========================================================================
+   Homepage: face-off card and star players rail (portraits from battle-art/)
+   ========================================================================== */
+html body.ds.home-page .hero { padding: clamp(28px, 5vw, 64px) 0 clamp(24px, 4vw, 40px); }
+html body.ds .faceoff { position: relative; display: grid; gap: 14px; padding: 16px; border-radius: 28px; text-decoration: none; color: var(--ds-text);
+  border: 1px solid var(--ds-line-2); background: var(--ds-surface); backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur);
+  box-shadow: 0 40px 80px -40px rgba(var(--ds-accent-rgb), .6); overflow: hidden; transition: transform var(--ds-mid) var(--ds-ease), border-color var(--ds-mid); }
+html body.ds .faceoff:hover { transform: translateY(-4px) rotate(-.3deg); border-color: rgba(var(--ds-accent-rgb), .6); }
+html body.ds .fo-top { display: flex; justify-content: space-between; gap: 10px; font: 700 11.5px var(--ds-font); letter-spacing: .1em; text-transform: uppercase; color: var(--ds-subtle); }
+html body.ds .fo-live { display: inline-flex; align-items: center; gap: 8px; color: var(--ds-text); }
+html body.ds .fo-live i { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--ds-red-rgb)); box-shadow: 0 0 0 4px rgba(var(--ds-red-rgb), .2); animation: fo-pulse 1.8s ease-in-out infinite; }
+@keyframes fo-pulse { 50% { box-shadow: 0 0 0 8px rgba(var(--ds-red-rgb), 0); } }
+html body.ds .fo-faces { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+html body.ds .fo-faces figure { position: relative; margin: 0; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; background: rgb(var(--ds-surface-rgb)); }
+html body.ds .fo-faces img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block; transition: transform .6s var(--ds-ease); }
+html body.ds .faceoff:hover .fo-faces img { transform: scale(1.04); }
+html body.ds .fo-faces figcaption { position: absolute; inset: auto 0 0; padding: 40px 12px 12px; background: linear-gradient(transparent, rgba(0, 0, 0, .82)); color: #fff; font: 800 clamp(15px, 1.6vw, 19px)/1.1 var(--ds-font); letter-spacing: -.01em; }
+html body.ds .fo-faces figcaption small { display: block; margin-top: 3px; font: 600 11px var(--ds-font); letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+html body.ds .fo-vs { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--ds-accent-rgb)), #ec4899); color: #fff; font: 900 20px/1 var(--ds-num); letter-spacing: .04em; box-shadow: 0 0 0 5px rgba(var(--ds-bg-rgb), .9), 0 12px 30px -8px rgba(236, 72, 153, .7); z-index: 2; }
+html body.ds .fo-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin: 0; }
+html body.ds .fo-stats div { padding: 8px 6px; border-radius: 14px; background: rgba(var(--ds-ink-rgb), .05); text-align: center; min-width: 0; }
+html body.ds .fo-stats dt { font-size: 10.5px; color: var(--ds-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body.ds .fo-stats dd { margin: 2px 0 0; font: 800 clamp(20px, 2.2vw, 26px)/1 var(--ds-num); color: var(--ds-text); }
+html body.ds .fo-stats div:nth-child(3) dd { color: rgb(var(--ds-red-rgb)); }
+html body.ds .fo-cta { font: 700 14px var(--ds-font); color: rgb(var(--ds-accent-rgb)); }
+
+html body.ds .star-rail { max-width: 1200px; margin: 0 auto clamp(28px, 5vw, 56px); padding-inline: var(--page-gutter); display: grid; gap: 14px; }
+html body.ds .star-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+html body.ds .star-head h2 { margin: 0; font: 800 clamp(24px, 3vw, 34px)/1.05 var(--ds-font); letter-spacing: -.03em; }
+html body.ds .star-head a { font: 650 14px var(--ds-font); color: rgb(var(--ds-accent-rgb)); text-decoration: none; white-space: nowrap; }
+html body.ds .star-track { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(140px, 16vw, 176px); gap: 12px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+html body.ds .star-card { position: relative; display: block; scroll-snap-align: start; aspect-ratio: 3 / 4.2; border-radius: 22px; overflow: hidden; text-decoration: none; color: #fff;
+  border: 1px solid var(--ds-line); transition: transform var(--ds-mid) var(--ds-ease), box-shadow var(--ds-mid); }
+html body.ds .star-card:hover { transform: translateY(-5px); box-shadow: 0 24px 44px -22px rgba(var(--ds-accent-rgb), .8); }
+html body.ds .star-face { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(160deg, hsl(var(--h, 260) 70% 55%), hsl(calc(var(--h, 260) + 50) 70% 30%)); font: 900 48px var(--ds-num); }
+html body.ds .star-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; transition: transform .6s var(--ds-ease); }
+html body.ds .star-card:hover .star-face img { transform: scale(1.06); }
+html body.ds .star-meta { position: absolute; inset: auto 0 0; display: grid; gap: 2px; padding: 44px 12px 12px; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); }
+html body.ds .star-meta b { font: 800 15.5px/1.15 var(--ds-font); letter-spacing: -.01em; }
+html body.ds .star-meta small { font: 600 11.5px/1.3 var(--ds-font); color: rgba(255, 255, 255, .78); }
+@media (max-width: 860px) { html body.ds .faceoff { max-width: 520px; width: 100%; justify-self: center; } }
+@media (max-width: 480px) { html body.ds .fo-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } html body.ds .fo-stats div:nth-child(n+4) { display: none; } }
+@media (prefers-reduced-motion: reduce) { html body.ds .fo-live i { animation: none; } }
+/* Homepage density: less dead space around the auction card and between sections. */
+html body.ds .match-centre .match-wrap { padding: 4px var(--page-gutter) 28px; max-width: 1200px; }
+html body.ds .auction-preview .ap-lot { min-height: 0; }
+html body.ds .auction-preview .ap-in { padding: clamp(18px, 3vw, 30px); gap: 22px; align-items: center; }
+html body.ds .auction-preview .ap-title { font-size: clamp(44px, 6vw, 72px); }
+html body.ds .home-bento .bento-wrap { padding: 8px var(--page-gutter) 40px; max-width: 1200px; }
+html body.ds .home-bento .bento-num { font-size: clamp(36px, 4vw, 50px); margin-bottom: 8px; }
+html body.ds .star-track { mask-image: linear-gradient(90deg, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); }
+@media (max-width: 480px) {
+  html body.ds .star-track { grid-auto-columns: 46%; }
+  html body.ds .star-meta b { font-size: 14px; }
+  html body.ds .star-meta small { font-size: 10.5px; }
+}
+html body.ds .auction-preview .ap-lot { grid-template-rows: auto auto auto; align-content: start; }
+
+/* Player faces (player-faces.js): portrait or initials badge. */
+html body.ds .tcs-face { flex: 0 0 auto; display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; vertical-align: middle;
+  background: linear-gradient(150deg, hsl(var(--h, 260) 65% 55%), hsl(calc(var(--h, 260) + 50) 65% 35%)); color: #fff; font: 800 13px/1 var(--ds-font); letter-spacing: 0; }
+html body.ds .tcs-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 16%; display: block; }
+html body.ds .tcs-face.row-face { width: 30px; height: 30px; font-size: 11.5px; margin-right: 10px; }
+html body.ds #ipl-lens .duel-name { display: flex; align-items: center; gap: 14px; }
+html body.ds #ipl-lens .duel-name > small, html body.ds #ipl-lens .duel-name > strong { min-width: 0; }
+html body.ds #ipl-lens .duel-face { width: 64px; height: 64px; border-radius: 18px; font-size: 22px; box-shadow: 0 14px 30px -14px rgba(var(--ds-accent-rgb), .8); }
+html body.ds .fx-who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+html body.ds .fx-who .tcs-face { width: 44px; height: 44px; }
+html body.ds #ipl-lens .duel-name:last-child { flex-direction: row-reverse; }
+html body.ds #ipl-lens .duel-text { display: grid; min-width: 0; }
+html body.ds td.with-face { white-space: nowrap; }
+/* Grid tool pages: the grid gap spaces blocks, so their own margins do not stack on top of it. */
+html body.ds .fx { gap: 16px; }
+html body.ds .fx > * { margin-block: 0; }

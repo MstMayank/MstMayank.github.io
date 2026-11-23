@@ -11,6 +11,8 @@ on:
       - player-career-data.json
       - scripts/build-player-pages.py
       - fantasy.html
+      - battle-art/**
+      - browser-auction/game/portraits.ts
   workflow_dispatch:
 permissions:
   contents: write
@@ -35,7 +37,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add player sitemap.xml
+          git add player sitemap.xml index.html battle-art/thumbs
           if git diff --cached --quiet; then
             echo 'Player pages are already current.'
             exit 0
