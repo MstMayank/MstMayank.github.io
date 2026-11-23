@@ -91,7 +91,38 @@
 
   const shareText = (date, results, label) => 'The Cricket Space ' + label + ' quiz · ' + date + ' · ' + results.filter(Boolean).length + '/' + results.length + ' ' + results.map(ok => (ok ? '🏏' : '⬜')).join('');
 
-  const api = { rng, dailyQuiz, shareText, GENERATORS };
+  /*
+   * Sharing. A shared link opens the same league, and carries the sharer's score and date so a
+   * friend sees "beat 3/5" on the same day's quiz. The questions themselves are never in the link.
+   */
+  const SITE = 'https://mstmayank.github.io/quiz.html';
+  function quizLink(league, date, score) {
+    const q = new URLSearchParams();
+    if (league === 'wpl') q.set('league', 'wpl');
+    if (Number.isInteger(score)) { q.set('beat', String(score)); q.set('d', date); }
+    const t = q.toString();
+    return SITE + (t ? '?' + t : '');
+  }
+  const inviteText = (league, date) => 'Can you get 5/5 on today’s ' + league.toUpperCase() + ' quiz? Five questions from real match data, new every day 🏏\n' + quizLink(league, date);
+  const challengeText = (league, date, results) => {
+    const score = results.filter(Boolean).length;
+    return 'I got ' + score + '/' + results.length + ' on today’s ' + league.toUpperCase() + ' quiz on The Cricket Space ' + results.map(ok => (ok ? '🏏' : '⬜')).join('') +
+      '\nCan you beat me? ' + quizLink(league, date, score);
+  };
+  /** A friend's challenge from the link, only for today's quiz; null otherwise. */
+  function readChallenge(search, today, total) {
+    const p = new URLSearchParams(search);
+    const beat = Number(p.get('beat'));
+    if (!p.has('beat') || p.get('d') !== today || !Number.isInteger(beat) || beat < 0 || beat > (total || 5)) return null;
+    return { score: beat };
+  }
+  function verdict(mine, theirs) {
+    if (mine > theirs) return 'You beat your friend’s ' + theirs + '. Send it back to them!';
+    if (mine === theirs) return 'Level with your friend on ' + theirs + '. Challenge someone else!';
+    return 'Your friend got ' + theirs + '. Try tomorrow’s quiz for a rematch.';
+  }
+
+  const api = { rng, dailyQuiz, shareText, quizLink, inviteText, challengeText, readChallenge, verdict, GENERATORS };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.TCSQuiz = api;
 })(typeof window !== 'undefined' ? window : this);

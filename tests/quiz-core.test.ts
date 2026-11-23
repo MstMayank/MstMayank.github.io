@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
-const {dailyQuiz, shareText, rng, GENERATORS} = require('../quiz-core.js');
+const {dailyQuiz, shareText, rng, GENERATORS, quizLink, inviteText, challengeText, readChallenge, verdict} = require('../quiz-core.js');
 const leagues = ['ipl', 'wpl'].map(l => ({label: l.toUpperCase(), venues: require(`../venue-stats-${l}.json`), impact: require(`../impact-${l}.json`)}));
 const day = (i: number) => new Date(Date.UTC(2026, 10, 23 + i)).toISOString().slice(0, 10);
 
@@ -50,4 +50,25 @@ test('the same date gives the same quiz; different dates differ', () => {
 test('share text', () => {
   assert.equal(shareText('2026-11-23', [true, false, true, true, true], 'IPL'), 'The Cricket Space IPL quiz · 2026-11-23 · 4/5 🏏⬜🏏🏏🏏');
   assert.ok(Object.keys(GENERATORS).length >= 5);
+});
+
+test('share links keep the league and carry the score only for a challenge', () => {
+  assert.equal(quizLink('ipl', '2026-11-23'), 'https://mstmayank.github.io/quiz.html');
+  assert.equal(quizLink('wpl', '2026-11-23'), 'https://mstmayank.github.io/quiz.html?league=wpl');
+  assert.equal(quizLink('wpl', '2026-11-23', 3), 'https://mstmayank.github.io/quiz.html?league=wpl&beat=3&d=2026-11-23');
+  assert.match(inviteText('ipl', '2026-11-23'), /today’s IPL quiz[\s\S]*quiz\.html$/);
+  const text = challengeText('ipl', '2026-11-23', [true, false, true, true, false]);
+  assert.match(text, /^I got 3\/5 on today’s IPL quiz/);
+  assert.ok(text.endsWith('quiz.html?beat=3&d=2026-11-23'));
+});
+
+test('a challenge counts only on the same day and with a valid score', () => {
+  assert.deepEqual(readChallenge('?beat=3&d=2026-11-23', '2026-11-23', 5), {score: 3});
+  assert.equal(readChallenge('?beat=3&d=2026-11-22', '2026-11-23', 5), null);
+  assert.equal(readChallenge('?beat=9&d=2026-11-23', '2026-11-23', 5), null);
+  assert.equal(readChallenge('?beat=x&d=2026-11-23', '2026-11-23', 5), null);
+  assert.equal(readChallenge('', '2026-11-23', 5), null);
+  assert.match(verdict(4, 3), /beat/);
+  assert.match(verdict(3, 3), /Level/);
+  assert.match(verdict(2, 3), /rematch/);
 });
