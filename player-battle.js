@@ -42,7 +42,7 @@
   }
 
   function divide(numerator, denominator, multiplier = 1) {
-    return denominator ? (numerator * multiplier / denominator).toFixed(2) : '—';
+    return denominator ? (numerator * multiplier / denominator).toFixed(2) : '–';
   }
 
   function overs(legalBalls) {
@@ -466,7 +466,7 @@ function venueLabel(name) {
 
   function renderCareerRecords() {
     const notice=document.createElement('p');notice.className='battle-coverage-warning';
-    notice.textContent='Full career totals · Top 50 men’s run-scorers per format. Verified '+(careerRecords?.verified||'—')+'. Season, venue and phase filters switch to archived match analysis.';result.appendChild(notice);
+    notice.textContent='Full career totals · Top 50 men’s run-scorers per format. Verified '+(careerRecords?.verified||'–')+'. Season, venue and phase filters switch to archived match analysis.';result.appendChild(notice);
     if(!careerRecords){notice.textContent='Career records could not load. Reselect International to retry, or choose Archived match analysis. Partial archive totals are not shown as career records.';return;}
     for(const format of ['Test','ODI','T20I']){
       const source=careerRecords.formats[format];const query=searchKey(byId('battle-search').value);
@@ -822,7 +822,7 @@ function venueLabel(name) {
     if (!impactCache.has(competition)) impactCache.set(competition, fetch('impact-' + competition + '.json?v=1').then(r => r.ok ? r.json() : null).catch(() => null));
     return impactCache.get(competition);
   }
-  const signed = (value, digits = 1) => value === null || value === undefined ? '—' : (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value).toFixed(digits);
+  const signed = (value, digits = 1) => value === null || value === undefined ? '–' : (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value).toFixed(digits);
 
   // Entry points (entry-<competition>.json, built by scripts/build-impact-stats.py). IPL and WPL batters.
   const entryCache = new Map();
@@ -873,7 +873,7 @@ function venueLabel(name) {
       cols.forEach(c => { tr.insertCell().textContent = cell(raw, c); });
       tr.insertCell().textContent = why;
     };
-    addRow(data.players[id] + ' (selected)', '—', self, '', null);
+    addRow(data.players[id] + ' (selected)', '–', self, '', null);
     for (const item of list) addRow(data.players[item.id], item.match + '%', item.raw, item.reasons.join(', ') || 'similar overall profile', () => {
       selected[0] = item.id; inputs[0].value = data.players[item.id]; render();
       byId('battle-result').scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -963,15 +963,15 @@ function venueLabel(name) {
       const all = pick('all'), recent = pick('recent');
       if (!all) { body.textContent = 'Needs ' + (impact?.minBalls || 60) + '+ balls in completed matches.'; return; }
       const rows = role === 'bowling'
-        ? [['Runs saved per 4 overs', signed(all.runsSavedPer24), recent ? signed(recent.runsSavedPer24) : '—'],
-           ['Economy', fixed(all.economy, 2), recent ? fixed(recent.economy, 2) : '—'],
-           ['Death overs, close games: economy', fixed(all.pressure.economy, 2) + ' (' + overs(all.pressure.balls) + ' ov)', recent ? fixed(recent.pressure.economy, 2) + ' (' + overs(recent.pressure.balls) + ' ov)' : '—'],
-           ['Death overs, close games: wickets', String(all.pressure.wickets), recent ? String(recent.pressure.wickets) : '—']]
-        : [['Runs above expected per 100 balls', signed(all.aboveExpectedPer100), recent ? signed(recent.aboveExpectedPer100) : '—'],
-           ['Strike rate', fixed(all.strikeRate), recent ? fixed(recent.strikeRate) : '—'],
-           ['Under pressure: SR (balls)', fixed(all.pressure.strikeRate) + ' (' + number(all.pressure.balls) + ')', recent ? fixed(recent.pressure.strikeRate) + ' (' + number(recent.pressure.balls) + ')' : '—'],
-           ['Under pressure: average', fixed(all.pressure.average), recent ? fixed(recent.pressure.average) : '—'],
-           ['Match-winning knocks', String(all.winningKnocks), recent ? String(recent.winningKnocks) : '—']];
+        ? [['Runs saved per 4 overs', signed(all.runsSavedPer24), recent ? signed(recent.runsSavedPer24) : '–'],
+           ['Economy', fixed(all.economy, 2), recent ? fixed(recent.economy, 2) : '–'],
+           ['Death overs, close games: economy', fixed(all.pressure.economy, 2) + ' (' + overs(all.pressure.balls) + ' ov)', recent ? fixed(recent.pressure.economy, 2) + ' (' + overs(recent.pressure.balls) + ' ov)' : '–'],
+           ['Death overs, close games: wickets', String(all.pressure.wickets), recent ? String(recent.pressure.wickets) : '–']]
+        : [['Runs above expected per 100 balls', signed(all.aboveExpectedPer100), recent ? signed(recent.aboveExpectedPer100) : '–'],
+           ['Strike rate', fixed(all.strikeRate), recent ? fixed(recent.strikeRate) : '–'],
+           ['Under pressure: SR (balls)', fixed(all.pressure.strikeRate) + ' (' + number(all.pressure.balls) + ')', recent ? fixed(recent.pressure.strikeRate) + ' (' + number(recent.pressure.balls) + ')' : '–'],
+           ['Under pressure: average', fixed(all.pressure.average), recent ? fixed(recent.pressure.average) : '–'],
+           ['Match-winning knocks', String(all.winningKnocks), recent ? String(recent.winningKnocks) : '–']];
       const wrap = document.createElement('div');
       wrap.className = 'table-wrap';
       const table = document.createElement('table');
@@ -1096,14 +1096,14 @@ function venueLabel(name) {
       for (const {label, s, cls} of lines) {
         if (!s.balls && cls === 'type-sub') continue;
         const tr = tbody.insertRow(); tr.className = cls + (s.balls < 30 ? ' type-thin' : '');
-        [label, number(s.balls), number(s.runs), divide(s.runs, s.balls, 100), divide(s.dots, s.balls, 100), number(s.wickets), s.wickets ? divide(s.balls, s.wickets) : '—']
+        [label, number(s.balls), number(s.runs), divide(s.runs, s.balls, 100), divide(s.dots, s.balls, 100), number(s.wickets), s.wickets ? divide(s.balls, s.wickets) : '–']
           .forEach(v => { tr.insertCell().textContent = v; });
       }
       const tr = tbody.insertRow(); tr.className = 'type-total';
-      ['All bowlers', number(all.balls), number(all.runs), divide(all.runs, all.balls, 100), divide(all.dots, all.balls, 100), number(all.wickets), all.wickets ? divide(all.balls, all.wickets) : '—'].forEach(v => { tr.insertCell().textContent = v; });
+      ['All bowlers', number(all.balls), number(all.runs), divide(all.runs, all.balls, 100), divide(all.dots, all.balls, 100), number(all.wickets), all.wickets ? divide(all.balls, all.wickets) : '–'].forEach(v => { tr.insertCell().textContent = v; });
       wrap.appendChild(table);
       const note = document.createElement('p'); note.className = 'finder-method';
-      note.textContent = 'Outs = dismissals credited to the bowler. Rows under 30 balls are faded. Respects the season, venue and phase filters. Bowler types come from ESPNcricinfo styles via the cricketdata package and cover ' + (types.coveragePctOfBalls ?? '—') + '% of balls bowled in this data.';
+      note.textContent = 'Outs = dismissals credited to the bowler. Rows under 30 balls are faded. Respects the season, venue and phase filters. Bowler types come from ESPNcricinfo styles via the cricketdata package and cover ' + (types.coveragePctOfBalls ?? '–') + '% of balls bowled in this data.';
       body.append(wrap, note);
     };
     const ready = bowlerTypes(format, types => { if (card.isConnected) fill(types); else setTimeout(() => card.isConnected && fill(types)); });
@@ -1125,7 +1125,7 @@ function venueLabel(name) {
     if (competition === 'international') {
       const scope = document.createElement('p');
       scope.className = 'battle-coverage-warning';
-      scope.textContent = 'Archived ball-by-ball subset — covers available matches only.';
+      scope.textContent = 'Archived ball-by-ball subset: covers available matches only.';
       result.appendChild(scope);
     }
     const wantedType = !bowling ? byId('finder-type').value : '';
@@ -1181,7 +1181,7 @@ function venueLabel(name) {
   }
 
   function fixed(value, digits = 1) {
-    return value === null || value === undefined ? '—' : value.toFixed(digits);
+    return value === null || value === undefined ? '–' : value.toFixed(digits);
   }
 
   function finderTable(title, items, format, bowling, parent = result) {
@@ -1258,7 +1258,7 @@ function venueLabel(name) {
     const fielding = view === 'fielding';
     if(competition==='international'){
       const scope=document.createElement('p');scope.className='battle-coverage-warning';
-      scope.textContent=(format?format+' · ':'')+'Archived ball-by-ball subset — these runs cover available matches only, not complete career totals. Missing matches and early career innings are excluded.';
+      scope.textContent=(format?format+' · ':'')+'Archived ball-by-ball subset. These runs cover available matches only, not complete career totals. Missing matches and early career innings are excluded.';
       result.appendChild(scope);
     }
     const filtered = data.rows.filter(row => rowIncluded(row, format));
@@ -1476,7 +1476,7 @@ function venueLabel(name) {
     const parts = [0, 1, 2].map(phase => short[phase] + ' ' + selected.map(id => {
       const s = emptyStats();
       rows.filter(row => row[3] === phase && row[bowling ? 2 : 1] === id).forEach(row => addStats(s, row));
-      return bowling ? (s.legal ? (s.conceded / s.legal * 6).toFixed(1) : '—') : (s.balls ? (s.runs / s.balls * 100).toFixed(0) : '—');
+      return bowling ? (s.legal ? (s.conceded / s.legal * 6).toFixed(1) : '–') : (s.balls ? (s.runs / s.balls * 100).toFixed(0) : '–');
     }).join(' v '));
     return (bowling ? 'Economy  ' : 'Strike rate  ') + parts.join('   |   ');
   }

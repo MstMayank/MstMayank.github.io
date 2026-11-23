@@ -1,5 +1,5 @@
 /* ==========================================================================
-   The Cricket Space — design system (ds.css)
+   The Cricket Space: design system (ds.css)
    Loaded last on every page with <body class="... ds">. It refines the older
    stylesheets (cricket-feel.css, record-lens.css, page styles) into one language:
    near-black pitch greens, chalk text, gold for data, ball-red for wickets and
@@ -113,7 +113,7 @@ body.ds .label, body.ds #ipl-lens .label, body.ds .eyebrow, body.ds .bento-eye {
   font: 650 12px/1.3 var(--ds-font); letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle);
 }
 body.ds .tool-coverage, body.ds .tool-count, body.ds .battle-status { color: var(--ds-muted); font-size: 14px; }
-/* Numbers keep the scoreboard face — the site's signature. */
+/* Numbers keep the scoreboard face, the site's signature. */
 body.ds .tile b, body.ds .bento-num, body.ds .mx-card h3 b, body.ds #ipl-lens .metrics strong, body.ds .num-face { font-family: var(--ds-num); letter-spacing: .01em; }
 
 /* ---------- Header ---------- */
@@ -128,7 +128,6 @@ body.ds .site-nav .logo.d { flex: 0 0 auto; font: 900 22px/1 var(--ds-num); lett
 body.ds .site-nav .logo.d span { color: var(--ds-gold); }
 html body.ds .site-nav #site-links { display: flex; align-items: center; gap: 2px; margin-left: auto; font: 600 14px var(--ds-font); color: var(--ds-muted); position: static; flex-direction: row; padding: 0; background: none; border: 0; box-shadow: none; }
 html body.ds .site-nav #site-links a { padding: 8px 12px; border-radius: 999px; text-decoration: none; transition: color var(--ds-fast), background var(--ds-fast); }
-html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(var(--ds-ink-rgb), .05); }
 html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); background: rgba(var(--ds-ink-rgb), .08); }
 html body.ds .site-nav #site-links .links-cta { display: none; }
 body.ds .site-nav .bar > .btn, body.ds .site-nav .nav-cta {
@@ -136,7 +135,6 @@ body.ds .site-nav .bar > .btn, body.ds .site-nav .nav-cta {
   background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); font: 700 14px var(--ds-font); letter-spacing: -.01em; text-decoration: none; border: 0;
   transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast);
 }
-body.ds .site-nav .bar > .btn:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
 html body.ds .site-nav .bar > .nav-toggle { display: none; }
 body.ds .site-nav .mobile-contact { display: none; }
 
@@ -170,26 +168,22 @@ body.ds .ds-btn, body.ds .btn:not(.d), body.ds .ap-cta, body.ds .bento-send, bod
   background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); box-shadow: none;
   transition: transform var(--ds-fast) var(--ds-ease), background var(--ds-fast), border-color var(--ds-fast), color var(--ds-fast);
 }
-body.ds .ds-btn:hover, body.ds .ap-cta:hover, body.ds .bento-send:hover, body.ds #pv-share:hover, body.ds #pv-card:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
 body.ds .ds-btn:active { transform: translateY(0) scale(.98); }
 body.ds .ds-btn.ghost, body.ds #pv-card { background: rgba(var(--ds-ink-rgb), .04); color: var(--ds-text); border-color: var(--ds-line-2); }
-body.ds .ds-btn.ghost:hover, body.ds #pv-card:hover { background: rgba(var(--ds-ink-rgb), .08); border-color: rgba(var(--ds-ink-rgb), .28); }
 body.ds button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
 /* ---------- Pills, segmented controls, tool links ---------- */
 body.ds .tool-pills { gap: 6px; margin-bottom: 16px; }
 body.ds .tool-pills button, body.ds #ipl-lens .tool-pills button {
   height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .03);
-  color: var(--ds-muted); font: 650 14px var(--ds-font); box-shadow: none; transition: all var(--ds-fast);
+  color: var(--ds-muted); font: 650 14px var(--ds-font); box-shadow: none; transition: color var(--ds-fast), background-color var(--ds-fast), border-color var(--ds-fast);
 }
-body.ds .tool-pills button:hover { color: var(--ds-text); border-color: rgba(var(--ds-ink-rgb), .28); }
 body.ds .tool-pills :is(.active, [aria-pressed="true"]), body.ds #ipl-lens .tool-pills :is(.active, [aria-pressed="true"]) {
   background: var(--ds-chalk); color: rgb(var(--ds-bg-rgb)); border-color: var(--ds-chalk); box-shadow: none;
 }
 body.ds .tool-links { padding: 4px; gap: 2px; border-color: var(--ds-line); background: rgba(var(--ds-ink-rgb), .025); margin-bottom: 28px; max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
 body.ds .tool-links::-webkit-scrollbar { display: none; }
 body.ds .tool-links a { white-space: nowrap; padding: 8px 14px; font: 650 13px var(--ds-font); color: var(--ds-muted); transition: color var(--ds-fast), background var(--ds-fast); }
-body.ds .tool-links a:hover { color: var(--ds-text); }
 body.ds .tool-links [aria-current] { background: rgba(var(--ds-ink-rgb), .1); color: var(--ds-text); }
 
 /* ---------- Inputs & filters ---------- */
@@ -197,7 +191,7 @@ body.ds .tool-filter, body.ds .battle-filters { padding: 14px; gap: 10px; border
 body.ds .tool-filter label, body.ds #ipl-lens label { font: 600 12.5px var(--ds-font); color: var(--ds-muted); letter-spacing: 0; }
 body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens, .pv-controls, .mx-controls) :is(input, select) {
   height: 44px; border-radius: var(--ds-radius-s); border: 1px solid var(--ds-line-2); background-color: var(--ds-surface); color: var(--ds-text);
-  font: 600 14.5px var(--ds-font); padding-inline: 14px; transition: border-color var(--ds-fast), box-shadow var(--ds-fast), background-color var(--ds-fast);
+  font: 600 14.5px var(--ds-font); padding-inline: 14px; transition: border-color var(--ds-fast), background-color var(--ds-fast);
 }
 body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) select { padding-right: 36px; }
 body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens) :is(input, select):hover { border-color: rgba(var(--ds-ink-rgb), .26); }
@@ -219,7 +213,6 @@ body.ds .tile, body.ds .battle, body.ds .mx-card, body.ds .chart, body.ds .phase
   background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); box-shadow: var(--ds-shadow);
 }
 body.ds .tile { padding: 18px 20px; transition: border-color var(--ds-mid), transform var(--ds-mid) var(--ds-ease); }
-body.ds .tile:hover { border-color: var(--ds-line-2); }
 body.ds .tile b { color: var(--ds-text); font-weight: 800; font-size: clamp(28px, 3.6vw, 40px); }
 body.ds .tile span { color: var(--ds-muted); font-size: 13px; }
 body.ds .phase-chip, body.ds #ipl-lens .battle-result .phase-chip { border-radius: 999px; font: 650 12.5px var(--ds-font); padding: 4px 12px; background: var(--ds-gold-soft); border-color: transparent; }
@@ -236,7 +229,6 @@ body.ds .tool-table th, body.ds #ipl-lens th {
 body.ds .tool-table td, body.ds #ipl-lens td { border-bottom: 1px solid var(--ds-line); font: 500 14px/1.4 var(--ds-font); color: var(--ds-text); font-variant-numeric: tabular-nums; }
 body.ds .tool-table tbody tr:last-child td, body.ds #ipl-lens tbody tr:last-child td { border-bottom: 0; }
 body.ds .tool-table tbody tr, body.ds #ipl-lens tbody tr { transition: background var(--ds-fast); }
-body.ds .tool-table tbody tr:hover, body.ds #ipl-lens tbody tr:hover { background: rgba(var(--ds-ink-rgb), .03); }
 body.ds .tool-table td:nth-child(2) { color: inherit; }
 body.ds #ipl-lens .battle-result tr.selected { background: var(--ds-gold-soft); }
 
@@ -249,7 +241,6 @@ body.ds .footer-brand .logo.d span { color: var(--ds-gold); }
 body.ds .footer-brand p { margin: 12px 0 0; max-width: 34ch; font-size: 14px; }
 body.ds .footer-col h2 { font: 650 12px var(--ds-font); letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle); margin: 4px 0 12px; }
 body.ds .footer-col a { display: block; padding: 5px 0; color: var(--ds-muted); font-size: 14.5px; text-decoration: none; transition: color var(--ds-fast); }
-body.ds .footer-col a:hover { color: var(--ds-text); }
 body.ds .footer-base { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--ds-line); color: var(--ds-subtle); font-size: 13px; }
 body.ds .footer-base a { color: var(--ds-muted); text-decoration: none; }
 @media (max-width: 760px) {
@@ -259,9 +250,9 @@ body.ds .footer-base a { color: var(--ds-muted); text-decoration: none; }
 
 /* ---------- Motion ---------- */
 @keyframes ds-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-body.ds .ds-reveal { animation: ds-rise .6s var(--ds-ease) both; }
-body.ds .ds-reveal-2 { animation: ds-rise .6s .08s var(--ds-ease) both; }
-body.ds .ds-reveal-3 { animation: ds-rise .6s .16s var(--ds-ease) both; }
+body.ds .ds-reveal { animation: ds-rise .35s var(--ds-ease) both; }
+body.ds .ds-reveal-2 { animation: ds-rise .35s .08s var(--ds-ease) both; }
+body.ds .ds-reveal-3 { animation: ds-rise .35s .16s var(--ds-ease) both; }
 @media (prefers-reduced-motion: reduce) {
   body.ds *, body.ds *::before, body.ds *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
@@ -284,7 +275,6 @@ body.ds.home-page .hero .sub { font: 450 clamp(17px, 1.7vw, 20px)/1.55 var(--ds-
 body.ds .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
 body.ds .hero-actions .ds-btn { min-height: 50px; padding: 0 24px; font-size: 16px; }
 body.ds.home-page .hero-social a { min-height: 40px; padding: 0 14px; border: 1px solid var(--ds-line); border-radius: 999px; font: 600 14px var(--ds-font); color: var(--ds-muted); text-decoration: none; transition: color var(--ds-fast), border-color var(--ds-fast); }
-body.ds.home-page .hero-social a:hover { color: var(--ds-text); border-color: var(--ds-line-2); }
 body.ds .hero-wheel { width: 100%; max-width: 520px; justify-self: end; filter: drop-shadow(0 40px 60px rgba(var(--ds-bg-rgb), .45)); }
 body.ds.home-page .strip { background: var(--ds-bg-2); border-block: 1px solid var(--ds-line); }
 body.ds.home-page .strip b { font: 800 18px var(--ds-num); letter-spacing: .04em; }
@@ -297,13 +287,11 @@ body.ds .bento-card {
   padding: clamp(20px, 2.4vw, 28px); text-decoration: none; color: var(--ds-text);
   transition: transform var(--ds-mid) var(--ds-ease), border-color var(--ds-mid), background var(--ds-mid);
 }
-body.ds a.bento-card:hover { transform: translateY(-3px); border-color: var(--ds-line-2); background: var(--ds-surface-2); }
 body.ds .bento-card h2 { font: 750 clamp(20px, 2vw, 24px)/1.2 var(--ds-font); letter-spacing: -.025em; margin: 10px 0 8px; }
 body.ds .bento-card p { font-size: 15px; line-height: 1.55; color: var(--ds-muted); }
 body.ds .bento-big { font: 800 clamp(28px, 3.6vw, 44px)/1.05 var(--ds-font) !important; letter-spacing: -.04em; }
 body.ds .bento-link { font: 650 14px var(--ds-font); color: var(--ds-text); display: inline-flex; gap: 6px; margin-top: auto; }
 body.ds .bento-link em { font-style: normal; transition: transform var(--ds-fast) var(--ds-ease); }
-body.ds a.bento-card:hover .bento-link em { transform: translate(2px, -2px); }
 body.ds .bento-eye.bento-red { color: var(--ds-red); }
 body.ds .bento-cta { background: var(--ds-surface); border: 1px solid var(--ds-line); border-radius: var(--ds-radius-l); }
 body.ds .bento-cta h2 { font: 800 clamp(28px, 3.6vw, 44px)/1.05 var(--ds-font); letter-spacing: -.04em; }
@@ -333,7 +321,6 @@ html body.ds .bento-eye.bento-red { background: rgba(var(--ds-red-rgb), .14); co
 
 /* Record Book "Show more" and other plain buttons inside tool pages. */
 html body.ds #more { min-height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .04); color: var(--ds-text); font: 650 14px var(--ds-font); margin-top: 18px; }
-html body.ds #more:hover { background: rgba(var(--ds-ink-rgb), .08); }
 
 /* Player Battle */
 html body.ds #ipl-lens .panel th, html body.ds #ipl-lens .battle-result th, html body.ds #ipl-lens th { background: var(--ds-surface-2); color: var(--ds-subtle); }
@@ -341,7 +328,6 @@ html body.ds #ipl-lens .panel, html body.ds #ipl-lens .tool-panel { background: 
 html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):not(.battle-suggestions button) {
   background: transparent; border: 1px solid var(--ds-line-2); border-radius: 999px; color: var(--ds-text); font: 650 14px var(--ds-font); min-height: 40px; padding: 0 16px;
 }
-html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):hover { background: rgba(var(--ds-ink-rgb), .06); }
 html body.ds #ipl-lens .tool-pills button[data-competition], html body.ds #ipl-lens .tool-pills button[data-view] { border-radius: 999px; }
 html body.ds #ipl-lens .tool-picker { background: var(--ds-surface-2); border: 1px solid var(--ds-line); box-shadow: none; border-radius: var(--ds-radius); }
 html body.ds #ipl-lens .tool-picker::before, html body.ds #ipl-lens .tool-picker::after { display: none; }
@@ -423,13 +409,10 @@ html body.ds .logo.d small { display: block; font: inherit; font-size: 13px; mar
 html body.ds .logo.d i, html body.ds .logo.d span { font-style: normal; color: var(--ds-yellow) !important; }
 html body.ds .site-nav #site-links { font: 600 14px var(--ds-font); color: var(--ds-text); gap: 2px; }
 html body.ds .site-nav #site-links a { position: relative; border-radius: 8px; color: var(--ds-text); }
-html body.ds .site-nav #site-links a:hover { background: var(--ds-surface-2); }
 html body.ds .site-nav #site-links a[aria-current="page"] { background: none; color: var(--ds-text); }
 @media (min-width: 961px) { html body.ds .site-nav #site-links a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -15px; height: 3px; border-radius: 3px; background: var(--ds-yellow); } }
 html body.ds .site-nav .bar > .btn, html body.ds .site-nav .nav-cta { background: var(--ds-chalk); color: var(--ds-on-chalk); }
-html body.ds .site-nav .bar > .btn:hover { background: var(--ds-chalk); box-shadow: 0 8px 20px -10px rgba(17, 17, 17, .5); }
 html body.ds .site-nav .theme-toggle { display: inline-grid; place-items: center; flex: 0 0 auto; width: 40px; height: 40px; padding: 0; margin: 0 0 0 6px; border-radius: 50%; border: 0; background: transparent; color: var(--ds-text); cursor: pointer; }
-html body.ds .site-nav .theme-toggle:hover { background: var(--ds-surface-2); }
 html body.ds .site-nav .theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 html body.ds .site-nav .theme-toggle svg path:only-child { fill: currentColor; stroke: none; }
 @media (max-width: 960px) {
@@ -479,7 +462,6 @@ html body.ds :is(.tool-table td, #ipl-lens td) { font-family: var(--ds-font); }
 html body.ds .site-footer { background: var(--ds-bg); border-top: 1px solid var(--ds-line); }
 html body.ds .footer-col h2 { color: var(--ds-text); letter-spacing: .12em; }
 html body.ds .footer-col a { color: var(--ds-muted); }
-html body.ds .footer-col a:hover { color: var(--ds-text); }
 
 /* Header layout without the older stylesheets (pages like the homepage load only ds.css). */
 html body.ds .site-nav { position: sticky; top: 0; z-index: 50; }
@@ -578,7 +560,6 @@ html body.ds .logo.d { font-size: 18px !important; text-transform: uppercase !im
 html body.ds .logo.d small { display: inline; font-size: inherit; margin: 0 .25em 0 0; }
 html body.ds .logo.d i { color: #c8ff3c !important; }
 html body.ds .site-nav #site-links a { color: var(--ds-muted); font-weight: 700; letter-spacing: .02em; }
-html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: var(--ds-surface); }
 html body.ds .site-nav #site-links a[aria-current="page"] { color: #c8ff3c; }
 @media (min-width: 961px) { html body.ds .site-nav #site-links a[aria-current="page"]::after { background: #c8ff3c; box-shadow: 0 0 12px rgba(200, 255, 60, .7); } }
 
@@ -609,7 +590,6 @@ html body.ds .pp-big div:nth-child(2) dd { color: #c8ff3c; text-shadow: 0 0 16px
 
 /* Footer */
 html body.ds .site-footer { background: #040606; border-top-color: var(--ds-line); }
-html body.ds .footer-col a:hover { color: #c8ff3c; }
 /* ed.css declares its tokens on :root after this file loads, so its components read
    the floodlight values from body instead. */
 html body.ds.ed, html body.ds .ed-main, html body.ed {
@@ -634,3 +614,29 @@ html body.ds #battle-panel-label { display: none; }
 html body.ds .fl .btn:not(.go) { background: var(--panel) !important; color: var(--chalk) !important; border-color: var(--line-2) !important; }
 html body.ds .fl .btn.go { background: #c8ff3c !important; color: #071006 !important; border-color: #c8ff3c !important; }
 html body.ds .pp-sources { max-width: 75ch; }
+html body.ds .btn-ic { width: 16px; height: 16px; margin-right: 6px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Hover effects only on devices with a real pointer, so taps on phones never leave a glow stuck on. */
+@media (hover: hover) and (pointer: fine) {
+
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: rgba(var(--ds-ink-rgb), .05); }
+body.ds .site-nav .bar > .btn:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
+body.ds .ds-btn:hover, body.ds .ap-cta:hover, body.ds .bento-send:hover, body.ds #pv-share:hover, body.ds #pv-card:hover { background: rgb(var(--ds-ink-rgb)); transform: translateY(-1px); }
+body.ds .ds-btn.ghost:hover, body.ds #pv-card:hover { background: rgba(var(--ds-ink-rgb), .08); border-color: rgba(var(--ds-ink-rgb), .28); }
+body.ds .tool-pills button:hover { color: var(--ds-text); border-color: rgba(var(--ds-ink-rgb), .28); }
+body.ds .tool-links a:hover { color: var(--ds-text); }
+body.ds .tile:hover { border-color: var(--ds-line-2); }
+body.ds .tool-table tbody tr:hover, body.ds #ipl-lens tbody tr:hover { background: rgba(var(--ds-ink-rgb), .03); }
+body.ds .footer-col a:hover { color: var(--ds-text); }
+body.ds.home-page .hero-social a:hover { color: var(--ds-text); border-color: var(--ds-line-2); }
+body.ds a.bento-card:hover { transform: translateY(-3px); border-color: var(--ds-line-2); background: var(--ds-surface-2); }
+body.ds a.bento-card:hover .bento-link em { transform: translate(2px, -2px); }
+html body.ds #more:hover { background: rgba(var(--ds-ink-rgb), .08); }
+html body.ds #ipl-lens button:not(.similar-name):not(.phase-chip):not([data-competition]):not([data-view]):hover { background: rgba(var(--ds-ink-rgb), .06); }
+html body.ds .site-nav #site-links a:hover { background: var(--ds-surface-2); }
+html body.ds .site-nav .bar > .btn:hover { background: var(--ds-chalk); box-shadow: 0 8px 20px -10px rgba(17, 17, 17, .5); }
+html body.ds .site-nav .theme-toggle:hover { background: var(--ds-surface-2); }
+html body.ds .footer-col a:hover { color: var(--ds-text); }
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: var(--ds-surface); }
+html body.ds .footer-col a:hover { color: #c8ff3c; }
+}

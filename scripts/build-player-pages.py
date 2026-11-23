@@ -70,7 +70,7 @@ def short_slug(full_name):
 
 def fmt(value, digits=2):
     if value is None or value == '':
-        return '—'
+        return '–'
     if isinstance(value, float):
         return f'{value:,.{digits}f}'.rstrip('0').rstrip('.') if digits else f'{value:,.0f}'
     if isinstance(value, int):
@@ -278,8 +278,8 @@ def league_cards(label, key, short, s, data, slugs):
         cards.append(card(f'{label} runs by season', bar_chart(
             [(season_label(m, v), v['runs'], fmt(v['runs']), v['runs'] == best and best > 0) for se, v in seasons], f'{label} runs by season')
             + details('Season table', table('Season by season', ['Season', 'Matches', 'Runs', 'SR', 'Wickets', 'Economy'],
-                [[esc(se), fmt(len(v['mat'])), fmt(v['runs']) if v['inn'] else '—', fmt(ratio(v['runs'], v['balls'], 100), 1) if v['balls'] else '—',
-                  fmt(v['wkts']) if v['legal'] else '—', fmt(ratio(v['conceded'], v['legal'], 6)) if v['legal'] else '—'] for se, v in reversed(seasons)])), wide=True))
+                [[esc(se), fmt(len(v['mat'])), fmt(v['runs']) if v['inn'] else '–', fmt(ratio(v['runs'], v['balls'], 100), 1) if v['balls'] else '–',
+                  fmt(v['wkts']) if v['legal'] else '–', fmt(ratio(v['conceded'], v['legal'], 6)) if v['legal'] else '–'] for se, v in reversed(seasons)])), wide=True))
     if w and len(seasons) > 1 and (not bat or w['legal'] >= 300):
         best = max(v['wkts'] for _, v in seasons)
         cards.append(card(f'{label} wickets by season', bar_chart(
@@ -342,7 +342,7 @@ def career_card(profile):
         b, w = r.get('batting') or {}, r.get('bowling') or {}
         kind = {'archive': 'Archive', 'career_snapshot': 'Snapshot'}.get(r.get('status'), 'Record')
         rows.append([esc(label), fmt(b.get('matches')), fmt(b.get('runs')), fmt(b.get('average')), fmt(b.get('strikeRate')), esc(fmt(b.get('highest'))),
-                     fmt(w.get('wickets')) if w.get('balls') or w.get('wickets') else '—', fmt(w.get('economy')) if w.get('balls') else '—',
+                     fmt(w.get('wickets')) if w.get('balls') or w.get('wickets') else '–', fmt(w.get('economy')) if w.get('balls') else '–',
                      f'<a href="{esc(r["source"])}" rel="noopener noreferrer" target="_blank">{kind}</a>' + (f' · {esc(r["asOf"])}' if r.get('asOf') else '')])
     return card('Career by format', table('From the site’s sources. A missing format does not mean the player never played it.',
                                           ['Format', 'Mat', 'Runs', 'Avg', 'SR', 'HS', 'Wkts', 'Econ', 'Source'], rows), wide=True)
@@ -359,7 +359,7 @@ def headline(profile, leagues):
         if bat_balls >= bowl_balls or bat_balls >= 300:
             items += [('Runs', fmt(b['runs'])), ('Strike rate', fmt(b['sr'], 1)), ('Average', fmt(b['avg'], 1)), ('50s / 100s', f'{b["fifties"]} / {b["hundreds"]}')]
         if bowl_balls > bat_balls or bowl_balls >= 300:
-            items += [('Wickets', fmt(w['wickets'])), ('Economy', fmt(w['econ'])), ('Best', w['best'] or '—')]
+            items += [('Wickets', fmt(w['wickets'])), ('Economy', fmt(w['econ'])), ('Best', w['best'] or '–')]
         return items[:6]
     for key, label in FORMATS:
         r = profile['formats'].get(key)
@@ -420,7 +420,7 @@ def page(shell, slug, row, profile, leagues, slugs):
             + '<div class="pp-grid">' + ''.join(cards) + '</div>'
             + '<p class="pp-note pp-sources">Ball-by-ball numbers come from Cricsheet scorecards (ODC-BY) and cover the matches in the archive, not necessarily a full career. '
             + 'League averages compare with every batter or bowler in the same phase. Career records list their own source and date. Portraits are illustrations made for this site. Short scorecard name'
-            + ('s' if len(aliases) > 1 else '') + ': ' + esc(', '.join(aliases) or short or '—') + '.</p>'
+            + ('s' if len(aliases) > 1 else '') + ': ' + esc(', '.join(aliases) or short or '–') + '.</p>'
             + '</main>' + shell['footer'].replace('<script defer src="/design-v2.js', '<script defer src="/player/player.js?v=2"></script><script defer src="/design-v2.js'))
 
 
