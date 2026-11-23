@@ -149,3 +149,51 @@ body{background:var(--ds-bg);color:var(--ds-text);font-family:var(--ds-font)}
 .team-picker button{background:var(--ds-surface-2)}
 .team-picker button[aria-pressed=true]{background:var(--ds-chalk)}
 .franchise img,.team-picker img,.desk-heading>img{filter:drop-shadow(0 0 .7px rgba(0,0,0,.7)) drop-shadow(0 0 .7px rgba(0,0,0,.7))}
+
+/* ---- Floodlights theme (matches the site) ---- */
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  --ds-bg-rgb: 6, 8, 10;
+  --ds-surface-rgb: 15, 23, 22;
+  --ds-ink-rgb: 234, 242, 238;
+  --ds-accent-rgb: 200, 255, 60;
+  --ds-red-rgb: 255, 79, 109;
+  --ds-green-rgb: 200, 255, 60;
+  --ds-blue-rgb: 63, 227, 255;
+  --ds-bg: #06080a; --ds-bg-2: #0b1110; --ds-surface: #0f1716; --ds-surface-2: #142120; --ds-surface-3: #1a2a28; --ds-surface-solid: #0f1716;
+  --ds-line: #1f2e2c; --ds-line-2: #2c403d;
+  --ds-text: #eaf2ee; --ds-muted: #a7b8b2; --ds-subtle: #8a9e97;
+  --ds-yellow: #c8ff3c; --ds-yellow-soft: rgba(200, 255, 60, .12); --ds-gold-soft: rgba(200, 255, 60, .12);
+  --ds-grad-yellow: linear-gradient(135deg, #d8ff6a, #c8ff3c 55%, #a8e21f);
+  --ds-cyan: #3fe3ff;
+  --ds-chalk: #c8ff3c; --ds-on-chalk: #071006;
+  --ds-shadow: 0 1px 0 rgba(234, 242, 238, .03) inset, 0 14px 34px -20px rgba(0, 0, 0, .9);
+  --ds-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .9);
+  --ds-ring: 0 0 0 3px rgba(63, 227, 255, .45);
+  --ds-font: "Barlow", system-ui, sans-serif;
+  --ds-num: "Chakra Petch", "Barlow", sans-serif;
+  --ed-bg: #06080a; --ed-page: #06080a; --ed-surface: #0f1716; --ed-soft: #142120;
+  --ed-ink: #eaf2ee; --ed-ink-2: #d4dfda; --ed-muted: #a7b8b2; --ed-subtle: #8a9e97;
+  --ed-line: #1f2e2c; --ed-line-2: #2c403d;
+  --ed-yellow: #c8ff3c; --ed-yellow-2: #d8ff6a; --ed-yellow-soft: rgba(200, 255, 60, .12); --ed-on-yellow: #071006;
+  --ed-grad-yellow: linear-gradient(135deg, #d8ff6a, #c8ff3c 55%, #a8e21f);
+  --ed-green: #c8ff3c; --ed-green-soft: rgba(200, 255, 60, .12); --ed-red: #ff4f6d; --ed-red-soft: rgba(255, 79, 109, .12); --ed-blue: #3fe3ff;
+  --ed-shadow: 0 14px 34px -20px rgba(0, 0, 0, .9); --ed-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .9);
+  --ed-font: "Barlow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html,body{background:var(--ds-bg)}
+.room{background:radial-gradient(50% 40% at 15% 0%,rgba(200,255,60,.14),transparent 70%),radial-gradient(45% 35% at 90% 0%,rgba(63,227,255,.12),transparent 70%)}
+.room-nav>a:first-child{font:700 18px/1 var(--ds-num);text-transform:uppercase;letter-spacing:.02em}
+.room-nav>a:first-child small{display:inline;font-size:inherit;margin-right:.25em}
+.room-nav>a:first-child i{color:#c8ff3c}
+.room h1{font-family:var(--ds-num);text-transform:uppercase;color:var(--ds-text)}
+.room h1>span{color:#c8ff3c;text-shadow:0 0 18px rgba(200,255,60,.6)}
+.room h2,.bid-display>strong,.desk-budget strong,.sale-result strong{font-family:var(--ds-num)}
+.bid-display>strong{color:#3fe3ff;text-shadow:0 0 18px rgba(63,227,255,.4)}
+.room .primary{background:#c8ff3c;color:#071006;border-color:#c8ff3c;box-shadow:0 8px 26px -10px rgba(200,255,60,.7)}
+.room .primary:hover:not(:disabled){background:#d8ff6a;box-shadow:0 0 0 1px rgba(200,255,60,.55),0 8px 30px -6px rgba(200,255,60,.55)}
+.team-picker button{background:var(--ds-surface)}
+.team-picker button[aria-pressed=true],.desk-tabs button[aria-pressed=true]{background:rgba(200,255,60,.12);color:#c8ff3c;border-color:#c8ff3c}
+.franchise.leading{background:rgba(200,255,60,.1)}.franchise>i{background:#c8ff3c}
+.franchise img,.team-picker img,.desk-heading>img{filter:none}
+.theme-toggle{display:none!important}

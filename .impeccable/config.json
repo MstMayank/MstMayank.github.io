@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-23T16:38:48.183Z",
+        "reason": "User asked for a neon gaming style with a dark tone; glow is the brief"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "ds.css"
+        ],
+        "createdAt": "2026-11-23T16:38:48.192Z",
+        "reason": "User asked for a neon gaming style with a dark tone; glow is the brief"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "home.css"
+        ],
+        "createdAt": "2026-11-23T16:38:48.199Z",
+        "reason": "User asked for a neon gaming style with a dark tone; glow is the brief"
+      }
+    ]
+  }
+}

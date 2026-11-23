@@ -521,3 +521,116 @@ html body.ds :is(.rt-score, .rt-big b) { color: var(--ds-text) !important; }
 html body.ds .rt-bar i::before { background: var(--ds-grad-yellow); }
 html body.ds main [aria-pressed="true"]:has(.rt-score) { border-color: var(--ds-text); background: var(--ds-yellow-soft); }
 html body.ds img[src*="logos/"] { filter: drop-shadow(0 0 .7px rgba(0, 0, 0, .7)) drop-shadow(0 0 .7px rgba(0, 0, 0, .7)); }
+
+/* ==========================================================================
+   FLOODLIGHTS (Nov 2026): the site's single theme. A night match: near-black ground,
+   floodlight lime for action, scoreboard cyan for data, wicket red for outs.
+   Chakra Petch for headings and numbers, Barlow for text. Overrides every token above,
+   so the light/dark split no longer applies.
+   ========================================================================== */
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  --ds-bg-rgb: 6, 8, 10;
+  --ds-surface-rgb: 15, 23, 22;
+  --ds-ink-rgb: 234, 242, 238;
+  --ds-accent-rgb: 200, 255, 60;
+  --ds-red-rgb: 255, 79, 109;
+  --ds-green-rgb: 200, 255, 60;
+  --ds-blue-rgb: 63, 227, 255;
+  --ds-bg: #06080a; --ds-bg-2: #0b1110; --ds-surface: #0f1716; --ds-surface-2: #142120; --ds-surface-3: #1a2a28; --ds-surface-solid: #0f1716;
+  --ds-line: #1f2e2c; --ds-line-2: #2c403d;
+  --ds-text: #eaf2ee; --ds-muted: #a7b8b2; --ds-subtle: #8a9e97;
+  --ds-yellow: #c8ff3c; --ds-yellow-soft: rgba(200, 255, 60, .12); --ds-gold-soft: rgba(200, 255, 60, .12);
+  --ds-grad-yellow: linear-gradient(135deg, #d8ff6a, #c8ff3c 55%, #a8e21f);
+  --ds-cyan: #3fe3ff;
+  --ds-chalk: #c8ff3c; --ds-on-chalk: #071006;
+  --ds-shadow: 0 1px 0 rgba(234, 242, 238, .03) inset, 0 14px 34px -20px rgba(0, 0, 0, .9);
+  --ds-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .9);
+  --ds-ring: 0 0 0 3px rgba(63, 227, 255, .45);
+  --ds-font: "Barlow", system-ui, sans-serif;
+  --ds-num: "Chakra Petch", "Barlow", sans-serif;
+  --ed-bg: #06080a; --ed-page: #06080a; --ed-surface: #0f1716; --ed-soft: #142120;
+  --ed-ink: #eaf2ee; --ed-ink-2: #d4dfda; --ed-muted: #a7b8b2; --ed-subtle: #8a9e97;
+  --ed-line: #1f2e2c; --ed-line-2: #2c403d;
+  --ed-yellow: #c8ff3c; --ed-yellow-2: #d8ff6a; --ed-yellow-soft: rgba(200, 255, 60, .12); --ed-on-yellow: #071006;
+  --ed-grad-yellow: linear-gradient(135deg, #d8ff6a, #c8ff3c 55%, #a8e21f);
+  --ed-green: #c8ff3c; --ed-green-soft: rgba(200, 255, 60, .12); --ed-red: #ff4f6d; --ed-red-soft: rgba(255, 79, 109, .12); --ed-blue: #3fe3ff;
+  --ed-shadow: 0 14px 34px -20px rgba(0, 0, 0, .9); --ed-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .9);
+  --ed-font: "Barlow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html body.ds, html body.ed { background: var(--ds-bg) !important; color: var(--ds-text); font-family: var(--ds-font); font-size: 17px; }
+html body.ds ::selection { background: #c8ff3c; color: #06080a; }
+html body.ds :focus-visible { outline-color: #3fe3ff; }
+html { scrollbar-color: #2c403d #06080a; }
+/* No theme switch: the site is a night match. */
+html body.ds .site-nav .theme-toggle { display: none !important; }
+
+/* Headings and numbers in the scoreboard face */
+html body.ds :is(h1, h2, h3, .tool-heading, #ipl-lens h1, .pp-hero h1, .pp-head h1, .ed-display, .ed-title, .ed-h2, .logo.d) { font-family: var(--ds-num) !important; letter-spacing: -.005em !important; }
+html body.ds :is(.tool-heading, #ipl-lens h1, .pp-hero h1, .pp-head h1, .ed-title) { text-transform: uppercase; }
+html body.ds :is(.tool-heading, #ipl-lens h1, .pp-head h1, .pp-hero h1, .ed-title, .ed-h2.dot, .ed-display, .pp-letter h2)::after { color: #c8ff3c; text-shadow: 0 0 18px rgba(200, 255, 60, .6); }
+html body.ds :is(.tile b, .fx-tile b, .qz-score, .bento-num, .pp-big dd, .ed-stat b, .h-nums b, .rt-score, .rt-big b, .board b) { font-family: var(--ds-num) !important; }
+html body.ds :is(.pp-big div:nth-child(2) dd, .tile:first-child b) { color: #3fe3ff; text-shadow: 0 0 16px rgba(63, 227, 255, .35); }
+
+/* Header */
+html body.ds .site-nav { background: rgba(6, 8, 10, .84); border-bottom-color: var(--ds-line); }
+html body.ds .logo.d { font-size: 18px !important; text-transform: uppercase !important; letter-spacing: .02em !important; }
+html body.ds .logo.d small { display: inline; font-size: inherit; margin: 0 .25em 0 0; }
+html body.ds .logo.d i { color: #c8ff3c !important; }
+html body.ds .site-nav #site-links a { color: var(--ds-muted); font-weight: 700; letter-spacing: .02em; }
+html body.ds .site-nav #site-links a:hover { color: var(--ds-text); background: var(--ds-surface); }
+html body.ds .site-nav #site-links a[aria-current="page"] { color: #c8ff3c; }
+@media (min-width: 961px) { html body.ds .site-nav #site-links a[aria-current="page"]::after { background: #c8ff3c; box-shadow: 0 0 12px rgba(200, 255, 60, .7); } }
+
+/* Buttons: lime pill with glow, outline buttons in the ground colour */
+html body.ds :is(.ds-btn, .btn:not(.d), .ap-cta, .bento-send, #pv-share, .ed-btn, .site-nav .bar > .btn) { font-family: var(--ds-num) !important; letter-spacing: .03em; border-radius: 10px; }
+html body.ds :is(.ds-btn:not(.ghost), .ed-btn:not(.ghost), .ed-btn.yellow, .site-nav .bar > .btn, .pp-actions button, .pp-more button) { background: #c8ff3c !important; color: #071006 !important; border-color: #c8ff3c !important; }
+html body.ds :is(.ds-btn:not(.ghost), .ed-btn:not(.ghost), .site-nav .bar > .btn):hover { box-shadow: 0 0 0 1px rgba(200, 255, 60, .55), 0 8px 30px -6px rgba(200, 255, 60, .55) !important; }
+html body.ds :is(.ds-btn.ghost, .ed-btn.ghost, #pv-card, .pp-actions a, .pp-more a) { background: var(--ds-surface) !important; color: var(--ds-text) !important; border-color: var(--ds-line-2) !important; }
+html body.ds :is(.ds-btn.ghost, .ed-btn.ghost, .pp-actions a, .pp-more a):hover { box-shadow: 0 0 0 1px rgba(63, 227, 255, .5), 0 8px 26px -8px rgba(63, 227, 255, .45) !important; }
+html body.ds :is(.tool-pills :is(.active, [aria-pressed="true"]), #ipl-lens .tool-pills :is(.active, [aria-pressed="true"]), .ed-seg .on, .ed-tabs .on) { background: #c8ff3c !important; color: #071006 !important; border-color: #c8ff3c !important; }
+html body.ds :is(.ed-tag:not(.dark):not(.white), .ed-chip.on, .phase-chip) { background: rgba(200, 255, 60, .14) !important; color: #c8ff3c !important; }
+
+/* Panels: dark ground, thin lines, lime edge on hover */
+html body.ds :is(.tool-panel, .tile, .mx-card, .chart, .battle, .phase-profile, .bento-card, #ipl-lens .panel, .tool-filter, .battle-filters, .fx-tile, .fx-player, .qz-card, .pp-card, .pp-feat, .ed-card, .ed-stat, .t-card, .h-tool) { background: var(--ds-surface) !important; border-color: var(--ds-line) !important; box-shadow: var(--ds-shadow); }
+html body.ds :is(.tile, .fx-player, .pp-feat, .t-card, .h-tool, a.ed-card):hover { border-color: rgba(200, 255, 60, .45) !important; box-shadow: 0 0 0 1px rgba(200, 255, 60, .3), 0 14px 34px -18px rgba(200, 255, 60, .35) !important; }
+html body.ds :is(.tool-table, #ipl-lens .table-wrap, .pp-scroll, .ed-table-wrap) { background: var(--ds-bg-2) !important; border-color: var(--ds-line) !important; }
+html body.ds :is(.tool-table th, #ipl-lens th, .pp-table thead th, .ed-table thead th) { background: #0b1110 !important; color: var(--ds-subtle) !important; font-family: var(--ds-num) !important; letter-spacing: .06em; }
+html body.ds :is(input, select, textarea) { background-color: var(--ds-bg-2) !important; border-color: var(--ds-line-2) !important; color: var(--ds-text) !important; }
+html body.ds a:is(.ed-more, .bento-link) { color: #c8ff3c; }
+
+/* Charts and bars in floodlight colours */
+html body.ds .pp-bar { fill: #1f3a2a; } html body.ds .pp-bar.hi, html body.ds .pp-bar:hover { fill: #c8ff3c; }
+html body.ds .pp-track i { background: linear-gradient(90deg, #2bb8d6, #3fe3ff); } html body.ds .pp-track i.up { background: linear-gradient(90deg, #9ad11a, #c8ff3c); }
+html body.ds .rt-bar i::before, html body.ds .ea-bar i { background: linear-gradient(90deg, #3fe3ff, #c8ff3c) !important; }
+html body.ds .pp-hero { background: radial-gradient(70% 120% at 80% 0%, rgba(200, 255, 60, .2), transparent 60%), radial-gradient(50% 90% at 0% 100%, rgba(63, 227, 255, .12), transparent 60%), #0b1110 !important; border: 1px solid var(--ds-line-2) !important; }
+html body.ds .pp-chips span:nth-child(3) { background: #c8ff3c !important; color: #071006 !important; }
+html body.ds .pp-big div:nth-child(2) dd { color: #c8ff3c; text-shadow: 0 0 16px rgba(200, 255, 60, .4); }
+
+/* Footer */
+html body.ds .site-footer { background: #040606; border-top-color: var(--ds-line); }
+html body.ds .footer-col a:hover { color: #c8ff3c; }
+/* ed.css declares its tokens on :root after this file loads, so its components read
+   the floodlight values from body instead. */
+html body.ds.ed, html body.ds .ed-main, html body.ed {
+  --ed-bg: #06080a; --ed-page: #06080a; --ed-surface: #0f1716; --ed-soft: #142120;
+  --ed-ink: #eaf2ee; --ed-ink-2: #d4dfda; --ed-muted: #a7b8b2; --ed-subtle: #8a9e97;
+  --ed-line: #1f2e2c; --ed-line-2: #2c403d;
+  --ed-yellow: #c8ff3c; --ed-yellow-2: #d8ff6a; --ed-yellow-soft: rgba(200, 255, 60, .12); --ed-on-yellow: #071006;
+  --ed-grad-yellow: linear-gradient(135deg, #d8ff6a, #c8ff3c 55%, #a8e21f);
+  --ed-green: #c8ff3c; --ed-red: #ff4f6d; --ed-blue: #3fe3ff;
+  --ed-shadow: 0 14px 34px -20px rgba(0, 0, 0, .9); --ed-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .9);
+  --ed-font: "Barlow", system-ui, sans-serif;
+}
+html body.ds .ed-icon-chip { background: rgba(200, 255, 60, .12); color: #c8ff3c; box-shadow: inset 0 0 0 1px rgba(200, 255, 60, .35); }
+html body.ds .pp-bar { fill: #1f3a2a !important; }
+html body.ds .pp-bar.hi, html body.ds .pp-bar:hover { fill: #c8ff3c !important; }
+html body.ds .pp-val { fill: var(--ds-text); }
+/* No tiny labels above headings: the heading carries itself. */
+html body.ds #ipl-lens .tool-page > .label, html body.ds .section.tool-page > .label, html body.ds #ipl-lens .panel-head > .eyebrow, html body.ds .pp-head > .pp-eyebrow { display: none; }
+html body.ds .detail-head .title { text-transform: uppercase; font-family: var(--ds-num) !important; }
+html body.ds #battle-panel-label { display: none; }
+/* Homepage buttons keep their own look: lime only for the main action. */
+html body.ds .fl .btn:not(.go) { background: var(--panel) !important; color: var(--chalk) !important; border-color: var(--line-2) !important; }
+html body.ds .fl .btn.go { background: #c8ff3c !important; color: #071006 !important; border-color: #c8ff3c !important; }
+html body.ds .pp-sources { max-width: 75ch; }
