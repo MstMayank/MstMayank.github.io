@@ -71,6 +71,11 @@ older page styles where needed. The header and footer markup is identical on eve
   and the fitted win-probability model) and one `matches/<competition>/<season>.json` file, built by
   `scripts/build-match-charts.py` (model details at the top of the script; weekly workflow).
   Tests: `tests/test_match_charts.py`.
+- **Milestone watch** (Record Book): active players close to the next 1,000 runs or 50 wickets in
+  Tests, ODIs and T20Is, and milestones reached in the last 30 days, men and women, from the same
+  archives (`milestones-core.js`). Test and ODI players who debuted before the archive began are left
+  out so partial careers never show a false milestone. On This Day titles on the homepage link the
+  player to the Record Book. Tests: `tests/milestones-core.test.ts`.
 - **Pace vs spin**: `data/bowler-types.json` (all bowlers) and `data/bowler-types/<competition>.json`
   (small per-page files) give each bowler a type (pace or spin) and sub-type (right-/left-arm pace,
   off-spin, leg-spin, left-arm orthodox, left-arm wrist spin). Styles come from `player_meta` in the

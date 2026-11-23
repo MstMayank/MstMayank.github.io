@@ -22,7 +22,15 @@
       const year = document.createElement('span');
       year.className = 'yr D';
       year.textContent = event.date.slice(0,4);
-      heading.textContent = event.title;
+      // Titles start with the player ("Corey Anderson scores 131 against …"): link the name to the Record Book.
+      const named = /^(.+?) (scores|takes|hits|claims|makes|reaches|becomes|smashes|picks) /.exec(event.title);
+      if (named) {
+        const link = document.createElement('a');
+        link.href = '/record-book.html?q=' + encodeURIComponent(named[1]);
+        link.textContent = named[1];
+        link.title = 'Find ' + named[1] + ' in the Record Book';
+        heading.append(link, event.title.slice(named[1].length));
+      } else heading.textContent = event.title;
       text.textContent = event.summary;
       container.replaceChildren(label,year,heading,text);
     } else {
