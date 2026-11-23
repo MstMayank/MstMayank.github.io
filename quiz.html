@@ -30,7 +30,7 @@
   .qz-progress .done { background: rgb(var(--ds-accent-rgb)); } .qz-progress .now { background: rgba(var(--ds-accent-rgb), .45); }
   .qz-card { border: 1px solid rgba(var(--ds-ink-rgb), .09); border-radius: 22px; padding: clamp(20px, 3vw, 32px); background: rgb(var(--ds-surface-rgb)); }
   .qz-card h2 { margin: 6px 0 18px; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.3; }
-  .qz-eyebrow { font: 650 12px var(--ds-font), sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle); }
+  .qz-eyebrow { font: 600 14px var(--ds-font), sans-serif; color: var(--ds-muted); }
   .qz-options { display: grid; gap: 10px; }
   body.ds .qz-options button { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 54px; padding: 12px 18px; border: 1px solid rgba(var(--ds-ink-rgb), .16); border-radius: 14px; background: rgb(var(--ds-bg-rgb)); font: 650 16px var(--ds-font), sans-serif; color: rgb(var(--ds-ink-rgb)); cursor: pointer; transition: border-color .16s, background .16s, transform .16s; }
   body.ds .qz-options button:hover:not(:disabled) { border-color: rgba(var(--ds-ink-rgb), .32); transform: translateY(-1px); }
@@ -43,7 +43,13 @@
   .qz-next { margin-top: 18px; }
   .qz-result { text-align: center; }
   .qz-score { font: 800 clamp(56px, 10vw, 88px)/1 var(--ds-num), sans-serif; color: rgb(var(--ds-accent-rgb)); }
-  .qz-dots { font-size: 28px; letter-spacing: 4px; margin: 10px 0; }
+  .qz-dots { display: flex; justify-content: center; gap: 8px; margin: 12px 0; }
+  .qz-tile { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--ds-line-2); }
+  .qz-tile.y { background: #c8ff3c; border-color: #c8ff3c; color: #071006; }
+  .qz-tile.n { color: #ff4f6d; border-color: rgba(255, 79, 109, .6); }
+  .qz-tile svg, .qz-line svg, .qz-options svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+  .qz-line { display: flex; gap: 10px; align-items: flex-start; }
+  .qz-line.y svg { color: #c8ff3c; } .qz-line.n svg { color: #ff4f6d; }
   .qz-stats { display: flex; justify-content: center; gap: 28px; margin: 14px 0 20px; color: var(--ds-muted); }
   .qz-stats b { display: block; font: 800 28px var(--ds-num), sans-serif; color: rgb(var(--ds-ink-rgb)); }
   .qz-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
@@ -60,7 +66,7 @@
   .qz-review { text-align: left; margin-top: 18px; display: grid; gap: 8px; }
   .qz-review p { margin: 0; font-size: 14px; }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=fl-1">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=fl-2">
 </head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
@@ -118,6 +124,11 @@
   let league = new URLSearchParams(location.search).get('league') === 'wpl' ? 'wpl' : 'ipl';
   let questions = [], index = 0, answers = [];
   const linkLeague = league;
+  // Result tiles and review marks: drawn icons, not emoji (emoji stay only in the share text).
+  const ICON = {y: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>', n: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'};
+  const tiles = (box, list) => { box.innerHTML = list.map(ok => '<span class="qz-tile ' + (ok ? 'y' : 'n') + '">' + ICON[ok ? 'y' : 'n'] + '</span>').join(''); box.setAttribute('aria-label', list.filter(Boolean).length + ' right out of ' + list.length); };
+  const reviewLine = (q, ok) => { const p = document.createElement('p'); p.className = 'qz-line ' + (ok ? 'y' : 'n'); p.innerHTML = ICON[ok ? 'y' : 'n']; const t = document.createElement('span'); const ans = document.createElement('b'); ans.textContent = 'Answer: ' + q.options[q.answer]; t.append(q.question + ' ', ans); p.append(t); return p; };
+
   // Practice: extra rounds from random seeds. Nothing is saved, so the daily score stays fair.
   let mode = 'daily', dataset = null, dailyQuestions = [], practiceRound = 0, practiceSeen = new Set();
   const practiceTally = {right: 0, played: 0};
@@ -156,8 +167,8 @@
     answers[index] = i === q.answer;
     [...$('qz-options').children].forEach((b, k) => {
       b.disabled = true;
-      if (k === q.answer) { b.classList.add('right'); b.lastChild.textContent = '✓'; }
-      else if (k === i) { b.classList.add('wrong'); b.lastChild.textContent = '✕'; }
+      if (k === q.answer) { b.classList.add('right'); b.lastChild.innerHTML = ICON.y; }
+      else if (k === i) { b.classList.add('wrong'); b.lastChild.innerHTML = ICON.n; }
     });
     $('qz-explain').textContent = (answers[index] ? 'Correct. ' : 'Not quite. ') + q.explain;
     $('qz-explain').hidden = false;
@@ -185,7 +196,7 @@
     $('qz-card').hidden = true; $('qz-result').hidden = false;
     $('qz-result-label').textContent = league.toUpperCase() + ' quiz · ' + new Date(today + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'long'});
     $('qz-score').textContent = score + '/' + questions.length;
-    $('qz-dots').textContent = answers.map(ok => (ok ? '🏏' : '⬜')).join('');
+    tiles($('qz-dots'), answers);
     $('qz-streak').textContent = streakOf(all.days); $('qz-best').textContent = all.best; $('qz-played').textContent = Object.values(all.days).filter(d => d.done).length;
     $('qz-other').textContent = 'Play the ' + (league === 'ipl' ? 'WPL' : 'IPL') + ' quiz';
     const challenge = league === linkLeague ? Q.readChallenge(location.search, today, questions.length) : null;
@@ -193,7 +204,7 @@
     if (challenge) $('qz-verdict').textContent = Q.verdict(score, challenge.score);
     $('qz-wa').href = wa(Q.challengeText(league, today, answers));
     $('qz-invite').hidden = true; $('qz-challenge').hidden = true; $('qz-invite-status').textContent = '';
-    $('qz-review').replaceChildren(...questions.map((q, i) => { const p = document.createElement('p'); p.textContent = (answers[i] ? '🏏 ' : '⬜ ') + q.question + ' — ' + q.options[q.answer]; return p; }));
+    $('qz-review').replaceChildren(...questions.map((q, i) => reviewLine(q, answers[i])));
   }
   async function start() {
     document.querySelectorAll('[data-league]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.league === league)));
@@ -245,9 +256,9 @@
     $('qz-card').hidden = true; $('qz-practice-result').hidden = false;
     $('qz-practice-label').textContent = league.toUpperCase() + ' practice · round ' + practiceRound;
     $('qz-practice-score').textContent = right + '/' + questions.length;
-    $('qz-practice-dots').textContent = answers.map(ok => (ok ? '🏏' : '⬜')).join('');
+    tiles($('qz-practice-dots'), answers);
     $('qz-practice-total').textContent = 'All practice this visit: ' + practiceTally.right + ' of ' + practiceTally.played + ' right.';
-    $('qz-practice-review').replaceChildren(...questions.map((q, i) => { const p = document.createElement('p'); p.textContent = (answers[i] ? '🏏 ' : '⬜ ') + q.question + ' — ' + q.options[q.answer]; return p; }));
+    $('qz-practice-review').replaceChildren(...questions.map((q, i) => reviewLine(q, answers[i])));
     $('qz-practice-again').focus();
   }
   function backToDaily() {

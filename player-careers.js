@@ -6,7 +6,7 @@
  const text=(tag,value,className)=>{const e=document.createElement(tag);e.textContent=value;if(className)e.className=className;return e;};
  async function json(url){const response=await fetch(url);if(!response.ok)throw new Error('Download failed');return response.json();}
  function sourceLink(url,label){const a=text('a',label);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;}
- const fmt=value=>value===null||value===undefined||value===''?'—':typeof value==='number'?value.toLocaleString('en-IN',{maximumFractionDigits:2}):String(value);
+ const fmt=value=>value===null||value===undefined||value===''?'–':typeof value==='number'?value.toLocaleString('en-IN',{maximumFractionDigits:2}):String(value);
  window.TCSPlayerCareers={mount};
  async function mount(host,initialPlayer,competition='international'){
   if(mounted===competition)return;mounted=competition;const revision=++mountRevision;

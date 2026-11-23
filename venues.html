@@ -49,7 +49,7 @@
   @media (max-width: 760px) { .venue-grid { grid-template-columns: minmax(0, 1fr); } th, td { padding: 10px 8px; } }
 </style>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1">
-<link rel="stylesheet" href="/ds.css?v=fl-1"></head>
+<link rel="stylesheet" href="/ds.css?v=fl-2"></head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main class="wrap page tool-page archive-page">
@@ -124,9 +124,9 @@
   }
   const vs = () => { const em = document.createElement('em'); em.textContent = 'vs'; return em; };
   const phaseNames = ['Powerplay · overs 1–6', 'Middle · overs 7–15', 'Death · overs 16–20'];
-  const num = value => value === null || value === undefined ? '—' : Number(value).toLocaleString('en-IN');
-  const pct = value => value === null || value === undefined ? '—' : value.toFixed(1) + '%';
-  const fixed = (value, digits = 1) => value === null || value === undefined ? '—' : value.toFixed(digits);
+  const num = value => value === null || value === undefined ? '–' : Number(value).toLocaleString('en-IN');
+  const pct = value => value === null || value === undefined ? '–' : value.toFixed(1) + '%';
+  const fixed = (value, digits = 1) => value === null || value === undefined ? '–' : value.toFixed(digits);
   const when = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 
   // Short scorecard name -> /player/<slug>.html (built by scripts/build-player-pages.py).
@@ -194,7 +194,7 @@
       const tr = document.createElement('tr');
       const a = document.createElement('a'); a.href = link({v: v.slug}); a.textContent = v.name;
       const first = document.createElement('td'); first.appendChild(a); tr.appendChild(first);
-      [[v.city || '—'], [num(v.all.matches), 1], [fixed(v.all.firstInnings.average), 1], [pct(v.all.results.chaseWinPct), 1], [pct(v.all.toss.fieldFirstPct), 1], [when(v.lastMatch)]]
+      [[v.city || '–'], [num(v.all.matches), 1], [fixed(v.all.firstInnings.average), 1], [pct(v.all.results.chaseWinPct), 1], [pct(v.all.toss.fieldFirstPct), 1], [when(v.lastMatch)]]
         .forEach(([text, isNum]) => { const td = document.createElement('td'); td.textContent = text; if (isNum) td.className = 'num'; tr.appendChild(td); });
       tr.tabIndex = 0;
       tr.addEventListener('click', event => { if (event.target.tagName !== 'A') open(v.slug); });
