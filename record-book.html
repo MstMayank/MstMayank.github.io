@@ -18,10 +18,39 @@
   td:nth-child(2) { color: #ff946f; font-weight: 700; white-space: nowrap; }
   .series-heading { background: #23231f; color: #ff946f; font-weight: 700; }
   button { margin-top: 16px; cursor: pointer; }
+
+  .milestones { border: 1px solid #ffffff1f; border-radius: 20px; padding: clamp(16px, 2.4vw, 26px); margin: 0 0 22px; background: #121a16; }
+  .milestones[hidden] { display: none; }
+  .ms-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+  .ms-head h2 { margin: 0; font-size: clamp(22px, 2.6vw, 28px); }
+  .ms-toggle { display: flex; gap: 6px; }
+  .ms-toggle button { margin: 0; height: 34px; padding: 0 14px; border-radius: 999px; font: 650 13px Manrope, sans-serif; }
+  .ms-toggle [aria-pressed="true"] { background: #f4f6f1; color: #0b100d; border-color: #f4f6f1; }
+  .ms-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 14px; }
+  .ms-grid h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #74837a; }
+  .ms-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .ms-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid #ffffff12; }
+  .ms-list li:last-child { border-bottom: 0; }
+  .ms-list button { all: unset; cursor: pointer; font-weight: 700; color: #eef1ec; }
+  .ms-list button:hover, .ms-list button:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  .ms-list small { grid-column: 1 / -1; color: #a3b0a8; font-size: 13px; }
+  .ms-list b { font-family: "Big Shoulders Display", sans-serif; font-size: 20px; color: #e9c46a; }
+  .ms-empty { color: #a3b0a8; font-size: 14px; }
+  .ms-note { font-size: 12.5px; color: #74837a; margin: 12px 0 0; }
+  @media (max-width: 760px) { .ms-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 </style><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=nav-icon-1"><link rel="stylesheet" href="record-lens.css?v=coverage1"><link rel="stylesheet" href="/ds.css?v=2"></head><body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main class="wrap page tool-page archive-page">
 <nav class="tool-links" aria-label="Cricket tools"><a href="record-book.html" aria-current="page">Record Book</a></nav><h1 class="tool-heading">Cricket<br><span>Record Book</span></h1>
 <p class="tool-coverage">Covers matches with ball-by-ball scorecards: Tests from December 2001, ODIs from June 2002 and T20Is from February 2005. Older matches are not included, so totals for players from earlier eras are incomplete.</p>
+<section class="milestones" id="milestones" aria-labelledby="ms-title" hidden>
+  <div class="ms-head"><h2 id="ms-title">Milestone watch</h2>
+    <div class="ms-toggle" role="group" aria-label="Men or women"><button type="button" data-gender="male" aria-pressed="true">Men</button><button type="button" data-gender="female" aria-pressed="false">Women</button></div></div>
+  <div class="ms-grid">
+    <div><h3>Close to a milestone</h3><ol class="ms-list" id="ms-near"></ol></div>
+    <div><h3>Reached in the last 30 days</h3><ol class="ms-list" id="ms-reached"></ol></div>
+  </div>
+  <p class="ms-note">Counted from matches with ball-by-ball data. Test and ODI players who debuted before the archive began (2001–02) are left out so partial careers never show a false milestone. Active = played in the last 18 months.</p>
+</section>
 <div class="filters tool-filter">
   <label>Player name<input type="search" id="query" placeholder="e.g. Virat Kohli"></label>
   <label>Year<select id="year"><option value="">All years</option></select></label>
@@ -37,6 +66,7 @@
 </div>
 <button id="more" type="button" hidden>Show more</button>
 </main>
+<script src="milestones-core.js?v=1"></script>
 <script>
   const format = document.getElementById('format');
   const category = document.getElementById('category');
@@ -117,6 +147,46 @@
     return pending.get(key);
   }
 
+  // Milestone watch (milestones-core.js). Uses the formats already loaded for the table.
+  const ARCHIVE_START = {Test: '2001-12-01', ODI: '2002-06-01', T20I: null};
+  let msGender = 'male';
+  function renderMilestones(requested) {
+    const box = document.getElementById('milestones');
+    const formats = requested.filter(key => key in ARCHIVE_START);
+    box.hidden = !formats.length || !window.TCSMilestones;
+    if (box.hidden) return;
+    const near = [], reached = [];
+    for (const key of formats) {
+      const rows = datasets.get(key).rows.filter(row => row[7] === msGender);
+      const result = window.TCSMilestones.milestones(rows, {format: key, archiveStart: ARCHIVE_START[key], limit: 12});
+      near.push(...result.near); reached.push(...result.reached);
+    }
+    near.sort((a, b) => Math.min(a.inningsAway ?? 9, 3) - Math.min(b.inningsAway ?? 9, 3) || b.next - a.next || a.need - b.need);
+    reached.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.milestone - a.milestone));
+    const fmt = n => n.toLocaleString('en-IN');
+    const item = (name, team, big, text) => {
+      const li = document.createElement('li');
+      const button = document.createElement('button');
+      button.type = 'button'; button.textContent = playerNames.get(name) || name; button.title = 'Show ' + name + ' in the Record Book';
+      button.addEventListener('click', () => { query.value = playerNames.get(name) || name; render(); document.querySelector('.tool-table').scrollIntoView({behavior: 'smooth', block: 'start'}); });
+      const b = document.createElement('b'); b.textContent = big;
+      const small = document.createElement('small'); small.textContent = team + ' · ' + text;
+      li.append(button, b, small); return li;
+    };
+    const fill = (id, list, make, empty) => {
+      const ol = document.getElementById(id);
+      ol.replaceChildren(...list.slice(0, 8).map(make));
+      if (!list.length) { const li = document.createElement('li'); li.className = 'ms-empty'; li.textContent = empty; ol.appendChild(li); }
+    };
+    fill('ms-near', near, m => item(m.name, m.team, fmt(m.need), 'needs ' + fmt(m.need) + ' ' + m.unit + ' for ' + fmt(m.next) + ' ' + m.format + ' ' + m.unit + (m.inningsAway ? ' · about ' + m.inningsAway + ' innings at their current average' : '')), 'No active player is close to a milestone in this selection.');
+    fill('ms-reached', reached, m => item(m.name, m.team, fmt(m.milestone), 'reached ' + fmt(m.milestone) + ' ' + m.format + ' ' + m.unit + ' v ' + m.opponent + ', ' + new Date(m.date + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})), 'No milestones in the last 30 days.');
+  }
+  document.querySelectorAll('[data-gender]').forEach(button => button.addEventListener('click', () => {
+    msGender = button.dataset.gender;
+    document.querySelectorAll('[data-gender]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    renderMilestones(activeFormats().filter(key => datasets.has(key)));
+  }));
+
   async function render() {
     const current = ++request;
     const selectedFormat = format.value;
@@ -131,6 +201,7 @@
         await Promise.all(requested.filter(key => !datasets.has(key)).map(loadDataset));
       }
       if (current !== request) return;
+      renderMilestones(requested);
       const rowFormats = new WeakMap();
       const rows = requested.flatMap(key => {
         const data = datasets.get(key);
