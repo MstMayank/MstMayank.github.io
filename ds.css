@@ -504,9 +504,12 @@ html body.ds #ipl-lens .battle-result .form-spark rect { fill: var(--ds-yellow);
 html body.ds #ipl-lens .result-heading { color: var(--ds-text); }
 html body.ds :is(.tool-heading, #ipl-lens h1) span::before { content: " "; }
 @media (max-width: 520px) {
-  html body.ds #ipl-lens .duel-face { width: 42px; height: 42px; border-radius: 12px; font-size: 15px; }
+  html body.ds #ipl-lens .duel-face { width: 44px; height: 44px; border-radius: 12px; font-size: 15px; }
   html body.ds #ipl-lens .duel-name { gap: 8px; padding: 14px 10px; }
-  html body.ds #ipl-lens .duel-name strong { font-size: clamp(16px, 4.6vw, 22px); overflow-wrap: normal; word-break: normal; hyphens: none; }
+  html body.ds #ipl-lens .duel-names { grid-template-columns: minmax(0, 1fr); }
+  html body.ds #ipl-lens .duel-name, html body.ds #ipl-lens .duel-name:last-child { flex-direction: row; text-align: left; }
+  html body.ds #ipl-lens .duel-name + .duel-name { border-top: 1px solid var(--ds-line); }
+  html body.ds #ipl-lens .duel-name strong { font-size: 22px; white-space: nowrap; }
 }
 /* Article: black and yellow instead of the old red */
 html body.ds .share-actions button { background: var(--ds-chalk); color: var(--ds-on-chalk); border: 0; }
