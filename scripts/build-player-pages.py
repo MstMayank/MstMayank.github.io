@@ -464,8 +464,8 @@ def index_page(shell, entries, featured=()):
 
 
 def make_thumbnails(slug_of_name):
-    """battle-art/<name>.jpg -> battle-art/thumbs/<name>.webp (360 px wide), only when missing or older."""
-    from PIL import Image
+    """battle-art/<name>.jpg -> battle-art/thumbs/<name>.webp (360 px wide), only when missing or older.
+    Pillow is only needed when a thumbnail has to be (re)made."""
     art, thumbs = ROOT / 'battle-art', ROOT / 'battle-art' / 'thumbs'
     thumbs.mkdir(exist_ok=True)
     out = {}
@@ -477,6 +477,7 @@ def make_thumbnails(slug_of_name):
             continue
         dst = thumbs / f'{src.stem}.webp'
         if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+            from PIL import Image
             with Image.open(src) as im:
                 im = im.convert('RGB')
                 im.thumbnail((360, 540))

@@ -29,6 +29,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install Pillow (portrait thumbnails)
+        run: python -m pip install --quiet pillow
       - name: Check page builder
         run: python -m unittest tests.test_player_pages
       - name: Build player pages
