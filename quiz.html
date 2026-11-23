@@ -100,7 +100,7 @@
   </section>
 </div>
 </main>
-<script src="quiz-core.js?v=2"></script>
+<script src="quiz-core.js?v=3"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -190,8 +190,9 @@
     document.querySelectorAll('[data-league]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.league === league)));
     $('qz-status').textContent = 'Loading today’s questions…';
     try {
-      const [venues, impact] = await Promise.all([json('venue-stats-' + league + '.json?v=1'), json('impact-' + league + '.json?v=1')]);
-      dataset = {label: league.toUpperCase(), venues, impact};
+      const [venues, impact, teams, matches] = await Promise.all([json('venue-stats-' + league + '.json?v=1'), json('impact-' + league + '.json?v=1'),
+        json('team-stats-' + league + '.json?v=1').catch(() => null), json('match-index-' + league + '.json').catch(() => null)]);
+      dataset = {label: league.toUpperCase(), venues, impact, teams, matches};
       mode = 'daily'; practiceRound = 0; practiceSeen = new Set(); practiceTally.right = practiceTally.played = 0;
       questions = dailyQuestions = Q.dailyQuiz(dataset, today);
       questions.forEach(q => practiceSeen.add(q.question + '|' + q.options.join('|')));
