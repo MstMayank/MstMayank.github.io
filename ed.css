@@ -1,7 +1,7 @@
 /* ==========================================================================
    The Cricket Space — editorial design system (ed.css)
    Light, editorial and photo-led: white pages, near-black ink, one sunshine-yellow accent.
-   Inter for interface and headings, Playfair Display for editorial headlines.
+   Plus Jakarta Sans for everything: interface, headings and numbers.
    Dark mode keeps the same structure on near-black.
    ========================================================================== */
 :root {
@@ -29,8 +29,7 @@
   --ed-r-s: 10px;
   --ed-r: 14px;
   --ed-r-l: 20px;
-  --ed-font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --ed-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --ed-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ed-gutter: clamp(16px, 4vw, 48px);
   --ed-max: 1240px;
   color-scheme: light;
@@ -93,7 +92,6 @@ body.ed ::selection { background: var(--ed-yellow); color: #111; }
 .ed-title.no-dot::after { content: none; }
 .ed-display { margin: 0; font: 800 clamp(40px, 5.2vw, 70px)/1 var(--ed-font); letter-spacing: -.045em; }
 .ed-display mark { background: none; color: inherit; box-shadow: inset 0 -.14em 0 var(--ed-yellow); }
-.ed-serif { font-family: var(--ed-serif); font-weight: 700; letter-spacing: -.01em; }
 .ed-lede { margin: 0; max-width: 60ch; font-size: clamp(16px, 1.4vw, 18px); color: var(--ed-muted); }
 .ed-h2 { margin: 0; font: 750 clamp(20px, 2vw, 26px)/1.15 var(--ed-font); letter-spacing: -.02em; }
 .ed-h3 { margin: 0; font: 700 16px/1.25 var(--ed-font); letter-spacing: -.01em; }
