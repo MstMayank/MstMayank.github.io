@@ -12,6 +12,9 @@ Cricket stories, records and player comparisons by Mayank Shekhar Tiwari, live a
 | `venues.html` | IPL and WPL ground-by-ground stats: average scores, par scores, chasing record, toss trends, phase run rates, top performers and team records |
 | `preview.html` | Match preview for any two IPL or WPL teams and a ground: head to head, venue summary, key battles, phase strengths and players in form |
 | `match.html` | Every IPL and WPL match: worm, Manhattan and ball-by-ball win-probability charts, with top batters and bowlers |
+| `player/<slug>.html` | One static page per player with IPL, WPL, ODI or T20I records (983): career by format, IPL/WPL batting and bowling by phase, seasons, last 10 matches and main match-ups, plus every match-up on demand. `player/` lists them A–Z |
+| `fantasy.html` | Fantasy XI helper for any IPL or WPL fixture: expected points from form, venue and match-ups, credits, captain and vice-captain. Not betting advice |
+| `quiz.html` | Daily quiz: five data-backed IPL or WPL questions a day, the same for everyone, with streaks and a shareable result |
 | `ipl-retentions.html` | IPL 2027 retained squads for all 10 teams, rated and ranked |
 | `ipl-auction/play.html` | IPL mini-auction game (solo) and `ipl-auction/multiplayer.html` (rooms with friends) |
 | `what-makes-the-ipl-so-special.html` | Article |
@@ -126,6 +129,10 @@ older page styles where needed. The header and footer markup is identical on eve
   npm install
   npm run build:auction
   ```
+
+### Player pages
+
+`python scripts/build-player-pages.py` writes `player/<slug>.html`, `player/index.html` and `player/links.json`, and rewrites the player block of `sitemap.xml`. Run it again after rebuilding `battle-ipl.json`, `battle-wpl.json` or the player career files. Slugs already in `player/links.json` are kept, so player URLs do not change between builds. `links.json` maps the short scorecard names in the battle files to pages; venues, fantasy and the Player Battle profiles use it to link player names.
 
 ## Fonts
 
