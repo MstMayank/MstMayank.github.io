@@ -7,100 +7,73 @@
    ========================================================================== */
 
 /* ---------- Tokens ----------
-   Two themes: dark (default) and light. Colours that need transparency are stored as RGB
-   triples (--ds-*-rgb) so any rule can write rgba(var(--ds-ink-rgb), .08) and still flip
-   with the theme. "ink" is the foreground (white on dark, near-black on light); "bg" and
-   "surface" are the page and card backgrounds; "accent" is the single violet highlight. */
+   Editorial theme: white pages, near-black ink, one sunshine-yellow accent (light is the
+   default; dark comes from the header toggle). Colours that need transparency are RGB
+   triples (--ds-*-rgb), so rgba(var(--ds-ink-rgb), .08) flips with the theme. "accent" is a
+   deep gold that stays readable as text on white; --ds-yellow is the bright fill colour. */
 :root {
-  --ds-bg-rgb: 9, 9, 15;
-  --ds-surface-rgb: 22, 22, 33;
-  --ds-ink-rgb: 255, 255, 255;
-  --ds-accent-rgb: 167, 139, 250;
-  --ds-red-rgb: 251, 113, 133;
-  --ds-green-rgb: 52, 211, 153;
-  --ds-blue-rgb: 96, 165, 250;
-  --ds-bg: rgb(var(--ds-bg-rgb));
-  --ds-bg-2: rgba(var(--ds-ink-rgb), .03);
-  --ds-surface: rgba(var(--ds-ink-rgb), .045);
-  --ds-surface-2: rgba(var(--ds-ink-rgb), .07);
-  --ds-surface-3: rgba(var(--ds-ink-rgb), .1);
-  --ds-surface-solid: rgb(var(--ds-surface-rgb));
-  --ds-line: rgba(var(--ds-ink-rgb), .08);
-  --ds-line-2: rgba(var(--ds-ink-rgb), .15);
-  --ds-text: #f4f4fb;
-  --ds-muted: #a3a3b8;
-  --ds-subtle: #71718a;
+  --ds-bg-rgb: 255, 255, 255;
+  --ds-surface-rgb: 255, 255, 255;
+  --ds-ink-rgb: 17, 17, 17;
+  --ds-accent-rgb: 150, 104, 0;
+  --ds-red-rgb: 220, 38, 38;
+  --ds-green-rgb: 22, 150, 70;
+  --ds-blue-rgb: 37, 99, 235;
+  --ds-bg: #ffffff;
+  --ds-bg-2: #f6f6f4;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #f6f6f4;
+  --ds-surface-3: #efefec;
+  --ds-surface-solid: #ffffff;
+  --ds-line: #e8e8e6;
+  --ds-line-2: #d9d9d6;
+  --ds-text: #111111;
+  --ds-muted: #6b6b6b;
+  --ds-subtle: #8c8c86;
   --ds-gold: rgb(var(--ds-accent-rgb));
-  --ds-gold-soft: rgba(var(--ds-accent-rgb), .14);
+  --ds-gold-soft: #fff6cc;
   --ds-accent: rgb(var(--ds-accent-rgb));
+  --ds-yellow: #ffd21f;
+  --ds-yellow-soft: #fff6cc;
+  --ds-grad-yellow: linear-gradient(135deg, #ffe45c 0%, #ffd21f 45%, #ffb020 100%);
   --ds-red: rgb(var(--ds-red-rgb));
   --ds-green: rgb(var(--ds-green-rgb));
   --ds-blue: rgb(var(--ds-blue-rgb));
-  --ds-chalk: #f4f4fb;
-  --ds-on-chalk: #0b0b14;
-  --ds-glass-blur: saturate(150%) blur(18px);
-  --ds-aurora-1: rgba(139, 92, 246, .30);
-  --ds-aurora-2: rgba(56, 189, 248, .16);
-  --ds-aurora-3: rgba(236, 72, 153, .13);
-  --ds-radius-s: 12px;
-  --ds-radius: 16px;
-  --ds-radius-l: 24px;
-  --ds-shadow: 0 1px 0 rgba(var(--ds-ink-rgb), .06) inset, 0 20px 40px -24px rgba(0, 0, 0, .65);
-  --ds-ring: 0 0 0 3px rgba(var(--ds-accent-rgb), .4);
+  --ds-chalk: #111111;
+  --ds-on-chalk: #ffffff;
+  --ds-glass-blur: none;
+  --ds-radius-s: 10px;
+  --ds-radius: 14px;
+  --ds-radius-l: 20px;
+  --ds-shadow: 0 1px 2px rgba(17, 17, 17, .04), 0 8px 24px -12px rgba(17, 17, 17, .12);
+  --ds-shadow-lg: 0 24px 60px -28px rgba(17, 17, 17, .28);
+  --ds-ring: 0 0 0 3px rgba(255, 196, 0, .45);
   --ds-ease: cubic-bezier(.2, .7, .2, 1);
   --ds-fast: 160ms;
   --ds-mid: 240ms;
-  --ds-font: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --ds-num: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif;
-  --page-gutter: clamp(16px, 4vw, 56px);
-  color-scheme: dark;
-}
-/* Light theme: chosen with the header toggle, or the phone's setting when nothing is chosen. */
-:root[data-theme="light"] {
-  --ds-bg-rgb: 246, 246, 251;
-  --ds-surface-rgb: 255, 255, 255;
-  --ds-ink-rgb: 17, 17, 34;
-  --ds-accent-rgb: 109, 40, 217;
-  --ds-red-rgb: 220, 38, 38;
-  --ds-green-rgb: 4, 141, 96;
-  --ds-blue-rgb: 29, 99, 222;
-  --ds-surface: rgba(255, 255, 255, .62);
-  --ds-surface-2: rgba(255, 255, 255, .85);
-  --ds-surface-3: #fff;
-  --ds-text: #12121f;
-  --ds-muted: #4c4c66;
-  --ds-subtle: #6e6e88;
-  --ds-chalk: #12121f;
-  --ds-on-chalk: #ffffff;
-  --ds-aurora-1: rgba(139, 92, 246, .22);
-  --ds-aurora-2: rgba(56, 189, 248, .18);
-  --ds-aurora-3: rgba(236, 72, 153, .12);
-  --ds-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 40px -26px rgba(40, 30, 90, .35);
+  --ds-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-num: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --page-gutter: clamp(16px, 4vw, 48px);
   color-scheme: light;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
-    --ds-bg-rgb: 246, 246, 251; --ds-surface-rgb: 255, 255, 255; --ds-ink-rgb: 17, 17, 34; --ds-accent-rgb: 109, 40, 217;
-    --ds-red-rgb: 220, 38, 38; --ds-green-rgb: 4, 141, 96; --ds-blue-rgb: 29, 99, 222;
-    --ds-surface: rgba(255, 255, 255, .62); --ds-surface-2: rgba(255, 255, 255, .85); --ds-surface-3: #fff;
-    --ds-text: #12121f; --ds-muted: #4c4c66; --ds-subtle: #6e6e88; --ds-chalk: #12121f; --ds-on-chalk: #ffffff;
-    --ds-aurora-1: rgba(139, 92, 246, .22); --ds-aurora-2: rgba(56, 189, 248, .18); --ds-aurora-3: rgba(236, 72, 153, .12);
-    --ds-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 40px -26px rgba(40, 30, 90, .35);
-    color-scheme: light;
-  }
+:root[data-theme="dark"] {
+  --ds-bg-rgb: 13, 13, 13;
+  --ds-surface-rgb: 22, 22, 22;
+  --ds-ink-rgb: 244, 244, 242;
+  --ds-accent-rgb: 255, 210, 31;
+  --ds-red-rgb: 248, 113, 113;
+  --ds-green-rgb: 74, 222, 128;
+  --ds-blue-rgb: 96, 165, 250;
+  --ds-bg: #0d0d0d; --ds-bg-2: #141414; --ds-surface: #161616; --ds-surface-2: #1d1d1d; --ds-surface-3: #252525; --ds-surface-solid: #161616;
+  --ds-line: #262626; --ds-line-2: #333331;
+  --ds-text: #f4f4f2; --ds-muted: #a3a3a0; --ds-subtle: #77776f;
+  --ds-gold-soft: #2b2508; --ds-yellow-soft: #2b2508;
+  --ds-chalk: #f4f4f2; --ds-on-chalk: #111111;
+  --ds-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -14px rgba(0, 0, 0, .7);
+  --ds-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .8);
+  color-scheme: dark;
 }
-
-/* Page background with a soft aurora behind everything. */
-html:has(body.ds) { background: var(--ds-bg); }
-html body.ds { background: transparent !important; }
-body.ds::before {
-  content: ""; position: fixed; inset: -10% -10% auto; height: 120vh; z-index: -1; pointer-events: none;
-  background:
-    radial-gradient(38% 34% at 12% 8%, var(--ds-aurora-1), transparent 70%),
-    radial-gradient(32% 30% at 88% 4%, var(--ds-aurora-2), transparent 72%),
-    radial-gradient(40% 38% at 70% 70%, var(--ds-aurora-3), transparent 72%);
-  filter: blur(30px);
-}
+html:has(body.ds) { background: var(--ds-bg); overflow-x: clip; }
 
 /* Map the older variables onto the tokens so every page shares one palette. */
 body.ds {
@@ -407,39 +380,6 @@ html body.ds .mx-card h3, html body.ds .battle h3, html body.ds .chart h2 { font
 }
 @media (max-width: 960px) { html body.ds .site-nav .bar > .nav-toggle { width: auto; height: 38px; padding: 0 14px; font: 650 14px var(--ds-font); display: inline-flex; align-items: center; justify-content: center; } }
 
-/* ==========================================================================
-   Glass theme: frosted cards over the aurora, violet accent, theme toggle.
-   ========================================================================== */
-html body.ds .site-nav { background: rgba(var(--ds-bg-rgb), .6); backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur); border-bottom-color: var(--ds-line); }
-html body.ds .site-footer { background: transparent; }
-html body.ds :is(.bento-card, .bento-cta, .tool-panel, .tool-filter, .battle-filters, .tile, .mx-card, .chart, .battle, .pp-section, .qz-card, .fx-tile, .fx-player, .fx-rules, .panel) {
-  background: var(--ds-surface); border-color: var(--ds-line);
-  backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur);
-}
-html body.ds :is(.pp-tiles div, .pp-scroll, .tool-table) { background: rgba(var(--ds-ink-rgb), .025); border-color: var(--ds-line); }
-html body.ds a.bento-card:hover { background: var(--ds-surface-2); border-color: rgba(var(--ds-accent-rgb), .45); box-shadow: 0 24px 50px -28px rgba(var(--ds-accent-rgb), .55); }
-/* Primary buttons: solid ink pill; accent glow on hover. */
-html body.ds :is(.ds-btn:not(.ghost), .ap-cta, .bento-send, #pv-share):hover { background: var(--ds-chalk); box-shadow: 0 10px 30px -12px rgba(var(--ds-accent-rgb), .7); }
-html body.ds .site-nav .bar > .btn:hover { background: var(--ds-chalk); box-shadow: 0 8px 24px -10px rgba(var(--ds-accent-rgb), .7); }
-/* Accent text: the second line of page titles and highlighted numbers get a soft gradient. */
-html body.ds :is(.tool-heading span, .hero-title em, #ipl-lens h1 span) {
-  background: linear-gradient(100deg, rgb(var(--ds-accent-rgb)), #ec4899 60%, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-html body.ds .site-nav .logo.d span, html body.ds .footer-brand .logo.d span { color: rgb(var(--ds-accent-rgb)); }
-html body.ds .site-nav #site-links a[aria-current="page"] { background: rgba(var(--ds-accent-rgb), .16); color: var(--ds-text); }
-@media (max-width: 960px) { html body.ds .site-nav #site-links a[aria-current="page"] { background: none; color: rgb(var(--ds-accent-rgb)); } }
-/* Theme toggle */
-html body.ds .site-nav .theme-toggle {
-  display: inline-grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; padding: 0; margin: 0 0 0 6px; border-radius: 50%;
-  border: 1px solid var(--ds-line-2); background: rgba(var(--ds-ink-rgb), .05); color: var(--ds-text); cursor: pointer; box-shadow: none; opacity: 1;
-  transition: background var(--ds-fast), transform var(--ds-fast) var(--ds-ease), border-color var(--ds-fast);
-}
-html body.ds .site-nav .theme-toggle:hover { background: rgba(var(--ds-ink-rgb), .1); border-color: rgba(var(--ds-accent-rgb), .5); transform: rotate(-12deg); }
-html body.ds .site-nav .theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-html body.ds .site-nav .theme-toggle svg path:only-child { fill: currentColor; stroke: none; }
-@media (max-width: 960px) { html body.ds .site-nav .theme-toggle { margin-left: auto; } html body.ds .site-nav .bar > .nav-toggle { margin-left: 0; } }
-/* Smooth switch between themes (not on first paint). */
-html.theme-anim body.ds, html.theme-anim body.ds * { transition: background-color .3s, border-color .3s, color .3s !important; }
 /* Record Book milestones: names are links, not buttons (an old archive-page rule painted all buttons red). */
 html body.ds .milestones .ms-list button { all: unset; cursor: pointer; font-weight: 700; color: var(--ds-text); }
 html body.ds .milestones .ms-list button:hover, html body.ds .milestones .ms-list button:focus-visible { text-decoration: underline; text-underline-offset: 3px; color: rgb(var(--ds-accent-rgb)); }
@@ -448,65 +388,6 @@ html body.ds .milestones .ms-toggle button[aria-pressed="true"] { background: va
 /* Article body text */
 html body.ds .v2 .article-main .prose p, html body.ds.v2 .article-main .prose p { color: rgba(var(--ds-ink-rgb), .8); }
 html body.ds.v2 .article-main .prose p:first-child { color: var(--ds-text); }
-
-/* ==========================================================================
-   Homepage: face-off card and star players rail (portraits from battle-art/)
-   ========================================================================== */
-html body.ds.home-page .hero { padding: clamp(28px, 5vw, 64px) 0 clamp(24px, 4vw, 40px); }
-html body.ds .faceoff { position: relative; display: grid; gap: 14px; padding: 16px; border-radius: 28px; text-decoration: none; color: var(--ds-text);
-  border: 1px solid var(--ds-line-2); background: var(--ds-surface); backdrop-filter: var(--ds-glass-blur); -webkit-backdrop-filter: var(--ds-glass-blur);
-  box-shadow: 0 40px 80px -40px rgba(var(--ds-accent-rgb), .6); overflow: hidden; transition: transform var(--ds-mid) var(--ds-ease), border-color var(--ds-mid); }
-html body.ds .faceoff:hover { transform: translateY(-4px) rotate(-.3deg); border-color: rgba(var(--ds-accent-rgb), .6); }
-html body.ds .fo-top { display: flex; justify-content: space-between; gap: 10px; font: 700 11.5px var(--ds-font); letter-spacing: .1em; text-transform: uppercase; color: var(--ds-subtle); }
-html body.ds .fo-live { display: inline-flex; align-items: center; gap: 8px; color: var(--ds-text); }
-html body.ds .fo-live i { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--ds-red-rgb)); box-shadow: 0 0 0 4px rgba(var(--ds-red-rgb), .2); animation: fo-pulse 1.8s ease-in-out infinite; }
-@keyframes fo-pulse { 50% { box-shadow: 0 0 0 8px rgba(var(--ds-red-rgb), 0); } }
-html body.ds .fo-faces { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-html body.ds .fo-faces figure { position: relative; margin: 0; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; background: rgb(var(--ds-surface-rgb)); }
-html body.ds .fo-faces img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block; transition: transform .6s var(--ds-ease); }
-html body.ds .faceoff:hover .fo-faces img { transform: scale(1.04); }
-html body.ds .fo-faces figcaption { position: absolute; inset: auto 0 0; padding: 40px 12px 12px; background: linear-gradient(transparent, rgba(0, 0, 0, .82)); color: #fff; font: 800 clamp(15px, 1.6vw, 19px)/1.1 var(--ds-font); letter-spacing: -.01em; }
-html body.ds .fo-faces figcaption small { display: block; margin-top: 3px; font: 600 11px var(--ds-font); letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
-html body.ds .fo-vs { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%;
-  background: linear-gradient(135deg, rgb(var(--ds-accent-rgb)), #ec4899); color: #fff; font: 900 20px/1 var(--ds-num); letter-spacing: .04em; box-shadow: 0 0 0 5px rgba(var(--ds-bg-rgb), .9), 0 12px 30px -8px rgba(236, 72, 153, .7); z-index: 2; }
-html body.ds .fo-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin: 0; }
-html body.ds .fo-stats div { padding: 8px 6px; border-radius: 14px; background: rgba(var(--ds-ink-rgb), .05); text-align: center; min-width: 0; }
-html body.ds .fo-stats dt { font-size: 10.5px; color: var(--ds-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-html body.ds .fo-stats dd { margin: 2px 0 0; font: 800 clamp(20px, 2.2vw, 26px)/1 var(--ds-num); color: var(--ds-text); }
-html body.ds .fo-stats div:nth-child(3) dd { color: rgb(var(--ds-red-rgb)); }
-html body.ds .fo-cta { font: 700 14px var(--ds-font); color: rgb(var(--ds-accent-rgb)); }
-
-html body.ds .star-rail { max-width: 1200px; margin: 0 auto clamp(28px, 5vw, 56px); padding-inline: var(--page-gutter); display: grid; gap: 14px; }
-html body.ds .star-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-html body.ds .star-head h2 { margin: 0; font: 800 clamp(24px, 3vw, 34px)/1.05 var(--ds-font); letter-spacing: -.03em; }
-html body.ds .star-head a { font: 650 14px var(--ds-font); color: rgb(var(--ds-accent-rgb)); text-decoration: none; white-space: nowrap; }
-html body.ds .star-track { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(140px, 16vw, 176px); gap: 12px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
-html body.ds .star-card { position: relative; display: block; scroll-snap-align: start; aspect-ratio: 3 / 4.2; border-radius: 22px; overflow: hidden; text-decoration: none; color: #fff;
-  border: 1px solid var(--ds-line); transition: transform var(--ds-mid) var(--ds-ease), box-shadow var(--ds-mid); }
-html body.ds .star-card:hover { transform: translateY(-5px); box-shadow: 0 24px 44px -22px rgba(var(--ds-accent-rgb), .8); }
-html body.ds .star-face { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(160deg, hsl(var(--h, 260) 70% 55%), hsl(calc(var(--h, 260) + 50) 70% 30%)); font: 900 48px var(--ds-num); }
-html body.ds .star-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; transition: transform .6s var(--ds-ease); }
-html body.ds .star-card:hover .star-face img { transform: scale(1.06); }
-html body.ds .star-meta { position: absolute; inset: auto 0 0; display: grid; gap: 2px; padding: 44px 12px 12px; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); }
-html body.ds .star-meta b { font: 800 15.5px/1.15 var(--ds-font); letter-spacing: -.01em; }
-html body.ds .star-meta small { font: 600 11.5px/1.3 var(--ds-font); color: rgba(255, 255, 255, .78); }
-@media (max-width: 860px) { html body.ds .faceoff { max-width: 520px; width: 100%; justify-self: center; } }
-@media (max-width: 480px) { html body.ds .fo-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } html body.ds .fo-stats div:nth-child(n+4) { display: none; } }
-@media (prefers-reduced-motion: reduce) { html body.ds .fo-live i { animation: none; } }
-/* Homepage density: less dead space around the auction card and between sections. */
-html body.ds .match-centre .match-wrap { padding: 4px var(--page-gutter) 28px; max-width: 1200px; }
-html body.ds .auction-preview .ap-lot { min-height: 0; }
-html body.ds .auction-preview .ap-in { padding: clamp(18px, 3vw, 30px); gap: 22px; align-items: center; }
-html body.ds .auction-preview .ap-title { font-size: clamp(44px, 6vw, 72px); }
-html body.ds .home-bento .bento-wrap { padding: 8px var(--page-gutter) 40px; max-width: 1200px; }
-html body.ds .home-bento .bento-num { font-size: clamp(36px, 4vw, 50px); margin-bottom: 8px; }
-html body.ds .star-track { mask-image: linear-gradient(90deg, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); }
-@media (max-width: 480px) {
-  html body.ds .star-track { grid-auto-columns: 46%; }
-  html body.ds .star-meta b { font-size: 14px; }
-  html body.ds .star-meta small { font-size: 10.5px; }
-}
-html body.ds .auction-preview .ap-lot { grid-template-rows: auto auto auto; align-content: start; }
 
 /* Player faces (player-faces.js): portrait or initials badge. */
 html body.ds .tcs-face { flex: 0 0 auto; display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; vertical-align: middle;
@@ -524,3 +405,90 @@ html body.ds td.with-face { white-space: nowrap; }
 /* Grid tool pages: the grid gap spaces blocks, so their own margins do not stack on top of it. */
 html body.ds .fx { gap: 16px; }
 html body.ds .fx > * { margin-block: 0; }
+
+/* ==========================================================================
+   Editorial layer (approved design, Nov 2026): restyles the shared components every
+   page already uses. Black ink, white cards, yellow for fills and highlights.
+   ========================================================================== */
+html body.ds { background: var(--ds-bg) !important; color: var(--ds-text); font-family: var(--ds-font); }
+body.ds::before { content: none; }
+html body.ds ::selection { background: var(--ds-yellow); color: #111; }
+html body.ds :focus-visible { outline: 2px solid var(--ds-text); outline-offset: 3px; }
+
+/* Header */
+html body.ds .site-nav { background: color-mix(in srgb, var(--ds-bg) 90%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--ds-line); }
+html body.ds .site-nav .bar { height: 68px; max-width: 1240px; }
+html body.ds .logo.d { display: inline-block; font: 800 17px/1 var(--ds-font) !important; letter-spacing: -.03em !important; text-transform: none !important; color: var(--ds-text) !important; text-decoration: none; white-space: nowrap; }
+html body.ds .logo.d small { display: block; font: inherit; font-size: 13px; margin-bottom: 1px; }
+html body.ds .logo.d i, html body.ds .logo.d span { font-style: normal; color: var(--ds-yellow) !important; }
+html body.ds .site-nav #site-links { font: 600 14px var(--ds-font); color: var(--ds-text); gap: 2px; }
+html body.ds .site-nav #site-links a { position: relative; border-radius: 8px; color: var(--ds-text); }
+html body.ds .site-nav #site-links a:hover { background: var(--ds-surface-2); }
+html body.ds .site-nav #site-links a[aria-current="page"] { background: none; color: var(--ds-text); }
+@media (min-width: 961px) { html body.ds .site-nav #site-links a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -15px; height: 3px; border-radius: 3px; background: var(--ds-yellow); } }
+html body.ds .site-nav .bar > .btn, html body.ds .site-nav .nav-cta { background: var(--ds-chalk); color: var(--ds-on-chalk); }
+html body.ds .site-nav .bar > .btn:hover { background: var(--ds-chalk); box-shadow: 0 8px 20px -10px rgba(17, 17, 17, .5); }
+html body.ds .site-nav .theme-toggle { display: inline-grid; place-items: center; flex: 0 0 auto; width: 40px; height: 40px; padding: 0; margin: 0 0 0 6px; border-radius: 50%; border: 0; background: transparent; color: var(--ds-text); cursor: pointer; }
+html body.ds .site-nav .theme-toggle:hover { background: var(--ds-surface-2); }
+html body.ds .site-nav .theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+html body.ds .site-nav .theme-toggle svg path:only-child { fill: currentColor; stroke: none; }
+@media (max-width: 960px) {
+  html body.ds .site-nav .theme-toggle { margin-left: auto; }
+  html body.ds .site-nav .bar > .nav-toggle { margin-left: 0; border-color: var(--ds-line-2); background: transparent; }
+  html body.ds .site-nav #site-links { background: var(--ds-bg); }
+  html body.ds .site-nav #site-links a[aria-current="page"] { color: var(--ds-text); box-shadow: inset 4px 0 0 var(--ds-yellow); padding-left: 14px; }
+}
+
+/* Titles: solid ink with a yellow full stop */
+html body.ds :is(.tool-heading, #ipl-lens h1, .archive-page h1, .detail-head .title, .pp-head h1, .pp-hero h1) { font-family: var(--ds-font) !important; font-weight: 800 !important; letter-spacing: -.04em !important; color: var(--ds-text); }
+html body.ds :is(.tool-heading, #ipl-lens h1, .pp-head h1) span { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; color: inherit !important; }
+html body.ds :is(.tool-heading, #ipl-lens h1, .pp-head h1, .pp-hero h1)::after { content: "."; color: var(--ds-yellow); }
+html body.ds .detail-head .title em { color: var(--ds-muted); }
+html body.ds :is(.eyebrow, .label, .bento-eye, .pp-eyebrow, .detail-head .eyebrow) { color: var(--ds-text); letter-spacing: .14em; }
+html body.ds .tool-panel .eyebrow, html body.ds #ipl-lens .eyebrow, html body.ds #ipl-lens .panel-head .eyebrow { color: var(--ds-text); }
+html body.ds h2, html body.ds h3 { font-family: var(--ds-font); }
+
+/* Buttons */
+html body.ds :is(.ds-btn, .btn:not(.d), .ap-cta, .bento-send, #pv-share) { background: var(--ds-chalk); color: var(--ds-on-chalk); border: 1.5px solid var(--ds-chalk); font-family: var(--ds-font); }
+html body.ds :is(.ds-btn, .btn:not(.d), .ap-cta, .bento-send, #pv-share):hover { background: var(--ds-chalk); transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(17, 17, 17, .45); }
+html body.ds :is(.ds-btn.ghost, #pv-card) { background: transparent; color: var(--ds-text); border-color: var(--ds-line-2); }
+html body.ds :is(.ds-btn.ghost, #pv-card):hover { border-color: var(--ds-text); background: transparent; }
+html body.ds .ds-btn.yellow { background: var(--ds-grad-yellow); color: #111; border-color: transparent; box-shadow: 0 10px 24px -12px rgba(255, 166, 0, .8); }
+
+/* Pills and segmented controls: black when active */
+html body.ds :is(.tool-pills button, #ipl-lens .tool-pills button) { background: var(--ds-surface); border: 1px solid var(--ds-line); color: var(--ds-text); font-family: var(--ds-font); }
+html body.ds :is(.tool-pills :is(.active, [aria-pressed="true"]), #ipl-lens .tool-pills :is(.active, [aria-pressed="true"])) { background: var(--ds-chalk); color: var(--ds-on-chalk); border-color: var(--ds-chalk); }
+html body.ds :is(.phase-chip, #ipl-lens .battle-result .phase-chip) { background: var(--ds-yellow-soft); color: var(--ds-text); }
+
+/* Cards, panels, tiles */
+html body.ds :is(.tool-panel, .tile, .mx-card, .chart, .battle, .phase-profile, .bento-card, .bento-cta, #ipl-lens .panel, .tool-filter, .battle-filters, .fx-tile, .fx-player, .qz-card) {
+  background: var(--ds-surface); border: 1px solid var(--ds-line); box-shadow: var(--ds-shadow); backdrop-filter: none; -webkit-backdrop-filter: none; }
+html body.ds :is(.tile, .mx-card, .bento-card, .fx-player):hover { border-color: var(--ds-line-2); }
+html body.ds :is(.tile b, .fx-tile b, .qz-score, .bento-num) { font-family: var(--ds-font) !important; font-weight: 800; letter-spacing: -.03em; color: var(--ds-text); }
+
+/* Inputs */
+html body.ds :is(.tool-filter, .tool-picker, .tool-compare, #ipl-lens, .pv-controls, .mx-controls) :is(input, select), html body.ds #ipl-lens :is(input, select) { background-color: var(--ds-surface); border: 1px solid var(--ds-line-2); color: var(--ds-text); font-family: var(--ds-font); }
+html body.ds :is(input, select, textarea):focus { border-color: var(--ds-text) !important; box-shadow: var(--ds-ring) !important; }
+
+/* Tables */
+html body.ds :is(.tool-table, #ipl-lens .table-wrap, .pp-scroll) { background: var(--ds-surface); border: 1px solid var(--ds-line); }
+html body.ds :is(.tool-table th, #ipl-lens th, .pp-table thead th) { background: var(--ds-bg-2); color: var(--ds-muted); font-family: var(--ds-font); }
+html body.ds :is(.tool-table td, #ipl-lens td) { font-family: var(--ds-font); }
+
+/* Footer */
+html body.ds .site-footer { background: var(--ds-bg); border-top: 1px solid var(--ds-line); }
+html body.ds .footer-col h2 { color: var(--ds-text); letter-spacing: .12em; }
+html body.ds .footer-col a { color: var(--ds-muted); }
+html body.ds .footer-col a:hover { color: var(--ds-text); }
+
+/* Header layout without the older stylesheets (pages like the homepage load only ds.css). */
+html body.ds .site-nav { position: sticky; top: 0; z-index: 50; }
+html body.ds .site-nav .bar { display: flex; align-items: center; justify-content: space-between; margin-inline: auto; padding-inline: var(--page-gutter); }
+html body.ds .site-nav #site-links a { display: inline-flex; align-items: center; text-decoration: none; }
+html body.ds .site-nav .bar > .btn { display: inline-flex; }
+@media (max-width: 960px) { html body.ds .site-nav .bar > .btn { display: none; } html body.ds .site-nav #site-links a { display: flex; } }
+html body.ds .site-footer .wrap { max-width: 1240px; margin-inline: auto; padding-inline: var(--page-gutter); }
+html body.ds .site-footer a { text-decoration: none; }
+html body.ds #ipl-lens #battle-swap { background: var(--ds-chalk); color: var(--ds-on-chalk); border-color: var(--ds-chalk); }
+html body.ds #ipl-lens .duel-face { box-shadow: 0 12px 24px -14px rgba(17, 17, 17, .6); }
+html body.ds main:is(.archive-page, .tool-page, .cricket-tools) { background: none; }

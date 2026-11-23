@@ -24,18 +24,18 @@
   .cricket-tools .fx-controls.tool-filter select { width: 100%; }
   .fx-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
   .fx-tile { border: 1px solid rgba(var(--ds-ink-rgb), .09); border-radius: 20px; padding: 16px 18px; background: rgb(var(--ds-surface-rgb)); }
-  .fx-tile b { display: block; font: 800 clamp(26px, 3.4vw, 36px)/1.1 "Big Shoulders Display", sans-serif; color: rgb(var(--ds-ink-rgb)); }
+  .fx-tile b { display: block; font: 800 clamp(26px, 3.4vw, 36px)/1.1 var(--ds-num), sans-serif; color: rgb(var(--ds-ink-rgb)); }
   .fx-tile span { display: block; font-size: 13px; color: var(--ds-muted); margin-top: 4px; }
   .fx-role h2 { margin: 6px 0 10px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ds-subtle); }
   .fx-list { display: grid; gap: 8px; }
   .fx-player { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; border: 1px solid rgba(var(--ds-ink-rgb), .09); border-radius: 16px; padding: 12px 16px; background: rgb(var(--ds-surface-rgb)); }
-  .fx-badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 13px Manrope, sans-serif; background: rgba(var(--ds-ink-rgb), .06); color: var(--ds-muted); }
+  .fx-badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 13px var(--ds-font), sans-serif; background: rgba(var(--ds-ink-rgb), .06); color: var(--ds-muted); }
   .fx-badge.c { background: rgb(var(--ds-accent-rgb)); color: rgb(var(--ds-bg-rgb)); }
   .fx-badge.vc { background: rgba(var(--ds-accent-rgb), .18); color: rgb(var(--ds-accent-rgb)); }
   .fx-name b { display: block; font-weight: 700; }
   .fx-name small { color: var(--ds-muted); font-size: 13px; }
   .fx-points { text-align: right; }
-  .fx-points b { font: 800 22px "Big Shoulders Display", sans-serif; color: rgb(var(--ds-accent-rgb)); display: block; }
+  .fx-points b { font: 800 22px var(--ds-num), sans-serif; color: rgb(var(--ds-accent-rgb)); display: block; }
   .fx-points small { color: var(--ds-subtle); font-size: 12px; }
   .fx-why { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
   .fx-why span { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(var(--ds-ink-rgb), .05); color: var(--ds-muted); }
@@ -44,10 +44,10 @@
   .fx-rules { border: 1px solid rgba(var(--ds-ink-rgb), .09); border-radius: 16px; padding: 14px 18px; background: rgb(var(--ds-bg-rgb)); }
   .fx-rules summary { cursor: pointer; font-weight: 700; }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=glass-1"><link rel="stylesheet" href="record-lens.css?v=glass-1"><link rel="stylesheet" href="tools.css?v=glass-1"><link rel="stylesheet" href="/ds.css?v=5">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=ed-1">
 </head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
-<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home">The Cricket <span>Space</span></a><div class="links" id="site-links"><a href="/player-battle.html">Players</a><a href="/match.html">Matches</a><a href="/preview.html">Preview</a><a href="/venues.html">Venues</a><a href="/record-book.html">Records</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a href="/writing.html">Writing</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
+<nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
 <main class="wrap page tool-page archive-page">
 <h1 class="tool-heading" id="fx-title">Fantasy <span>XI helper</span></h1>
 <p class="tool-coverage">A stats-based team for any IPL or WPL fixture: expected points from recent form, the venue and match-ups against the other squad. Built from ball-by-ball data.</p>
@@ -158,4 +158,4 @@
   start();
 })();
 </script>
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/">The Cricket <span>Space</span></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/player-faces.js?v=1"></script><script defer src="/design-v2.js?v=theme-1"></script></body></html>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/"><small>The</small>Cricket Space<i>.</i></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/player-faces.js?v=2"></script><script defer src="/design-v2.js?v=ed-1"></script></body></html>

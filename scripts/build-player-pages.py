@@ -184,7 +184,10 @@ def face(name, slug, cls='pp-face', eager=False):
     photo = PHOTOS.get(slug)
     if photo:
         lazy = '' if eager else ' loading="lazy"'
-        return f'<span class="{cls} has-photo"><img src="{photo}" alt="" width="360" height="540"{lazy} decoding="async"></span>'
+        stem = photo.rsplit('/', 1)[-1].split('.')[0]
+        if cls in ('pp-mini',) and (ROOT / 'battle-art' / 'faces' / f'{stem}.webp').exists():
+            return f'<span class="{cls} has-photo"><img src="/battle-art/faces/{stem}.webp" alt="" width="96" height="96"{lazy} decoding="async"></span>'
+        return f'<span class="{cls} has-photo"><img src="{photo}" alt="" width="360" height="540" style="{focus_style(slug)}"{lazy} decoding="async"></span>'
     return f'<span class="{cls}" style="--h:{hue(name)}" aria-hidden="true">{esc(initials(name))}</span>'
 
 
@@ -434,8 +437,8 @@ def shell_from(source):
             '<meta property="og:type" content="profile"><meta property="og:site_name" content="The Cricket Space">\n'
             '<meta property="og:title" content="{{OGTITLE}}">\n<meta property="og:description" content="{{DESC}}">\n<meta property="og:url" content="{{URL}}">\n'
             '<meta property="og:image" content="https://mstmayank.github.io/og-player-battle.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">\n'
-            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=faces-1">\n')
-    return {'head': head, 'nav': nav.replace('<a href="/player-battle.html">Players</a>', '<a href="/player-battle.html" aria-current="page">Players</a>'), 'footer': footer}
+            '<meta name="twitter:card" content="summary_large_image">\n' + styles.strip() + '<link rel="stylesheet" href="/player/player.css?v=ed-2">\n')
+    return {'head': head, 'nav': nav.replace('<a href="/player/">Players</a>', '<a href="/player/" aria-current="page">Players</a>'), 'footer': footer}
 
 
 def index_page(shell, entries, featured=()):
@@ -493,11 +496,23 @@ def league_phase_averages(data):
 HOME_START, HOME_END = '<!-- star-players:start (built by scripts/build-player-pages.py) -->', '<!-- star-players:end -->'
 
 
+FOCUS = {}           # portrait file stem -> [x, y, face width] from battle-art/focus.json
+
+
+def focus_style(slug):
+    """CSS object-position that keeps the face in frame for a portrait (battle-art/focus.json)."""
+    photo = PHOTOS.get(slug)
+    if not photo:
+        return ''
+    cx, cy, _w = FOCUS.get(photo.rsplit('/', 1)[-1].split('.')[0], (.5, .25, .3))
+    return f'object-position:{cx * 100:.0f}% {cy * 100:.0f}%'
+
+
 def star_rail(featured):
-    cards = ''.join(f'<a class="star-card" href="/player/{slug}.html">{face(name, slug, "star-face")}<span class="star-meta"><b>{esc(name)}</b><small>{esc(line)}</small></span></a>'
-                    for name, slug, line, _ in featured[:16])
-    return (HOME_START + '<section class="star-rail" aria-labelledby="star-title"><div class="star-head"><h2 id="star-title">Star players</h2>'
-            '<a href="/player/">All 983 players ↗</a></div><div class="star-track">' + cards + '</div></section>' + HOME_END)
+    cards = ''.join(f'<a class="star-card" href="/player/{slug}.html"><div class="ed-photo"><img src="{PHOTOS[slug]}" alt="" style="{focus_style(slug)}" loading="lazy" decoding="async"></div>'
+                    f'<b>{esc(name)}</b><small>{esc(line)}</small></a>' for name, slug, line, _ in featured[:16] if PHOTOS.get(slug))
+    return (HOME_START + '<section class="ed-stack" data-reveal aria-labelledby="star-title"><div class="ed-row-head"><h2 class="ed-h2" id="star-title">Star players</h2>'
+            '<a class="ed-more" href="/player/">All 983 players</a></div><div class="ed-marquee"><div class="track">' + cards + cards.replace('<a class="star-card"', '<a class="star-card" tabindex="-1" aria-hidden="true"') + '</div></div></section>' + HOME_END)
 
 
 def faceoff(battle, ids, bat='V Kohli', bowl='JJ Bumrah'):
@@ -584,6 +599,8 @@ def main():
     shell = shell_from(ROOT / 'fantasy.html')
     all_slugs = set(slug_of.values())
     PHOTOS.clear()
+    FOCUS.clear()
+    FOCUS.update(load('battle-art/focus.json'))
     match_art = lambda stem: PORTRAIT_SLUGS.get(stem) or (stem if stem in all_slugs else None)
     PHOTOS.update(make_thumbnails(match_art))
     DISPLAY.clear()
@@ -623,7 +640,8 @@ def main():
     home = update_home(featured, faceoff(battle, ids))
     links = {'generated': date.today().isoformat(), 'note': 'Short scorecard name -> /player/<slug>.html, per competition. Built by scripts/build-player-pages.py.',
              'ipl': dict(sorted(by_short['ipl'].items())), 'wpl': dict(sorted(by_short['wpl'].items())),
-             'byId': dict(sorted(slug_of.items())), 'photos': dict(sorted(PHOTOS.items()))}
+             'byId': dict(sorted(slug_of.items())), 'photos': dict(sorted(PHOTOS.items())),
+             'faces': {slug: url.replace('/thumbs/', '/faces/') for slug, url in sorted(PHOTOS.items()) if (ROOT / url.lstrip('/').replace('/thumbs/', '/faces/')).exists()}}
     (OUT / 'links.json').write_text(json.dumps(links, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     update_sitemap(slug_of.values())
     print(f'Wrote {len(chosen)} player pages ({total / 1e6:.1f} MB), player/index.html, player/links.json '

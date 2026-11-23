@@ -9,7 +9,7 @@
   const initials = name => { const w = name.trim().split(/\s+/); return ((w[0] || '?')[0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase(); };
   const slug = (competition, name) => ((links || {})[competition] || {})[name] || null;
   function face(competition, name, cls) {
-    const s = slug(competition, name), photo = s && ((links || {}).photos || {})[s];
+    const s = slug(competition, name), photo = s && (((links || {}).faces || {})[s] || ((links || {}).photos || {})[s]);
     const el = document.createElement('span');
     el.className = 'tcs-face' + (cls ? ' ' + cls : '');
     el.setAttribute('aria-hidden', 'true');

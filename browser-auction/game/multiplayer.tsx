@@ -101,7 +101,7 @@ function App(){
   const player=game&&game.stage!=='COMPLETE'?findPlayer(game.queue[game.index]):null;
   const team=teams.find(t=>t.id===(me?.teamId||selected))!;
   return <div className="room" style={{'--team':team.color} as React.CSSProperties}>
-    <header className="room-nav"><a href="/">THE CRICKET <span>SPACE</span></a><div className="room-nav-actions"><a href="play.html">Single player ↗</a><ThemeToggle/></div></header>
+    <header className="room-nav"><a href="/"><small>The</small>Cricket Space<i>.</i></a><div className="room-nav-actions"><a href="play.html">Single player ↗</a><ThemeToggle/></div></header>
     <main><div className="room-heading"><div><span className="eyebrow">IPL 2027 · MINI AUCTION WITH FRIENDS</span><h1>MULTIPLAYER ROOM<span>.</span></h1></div><span className="live-label"><i/>{credentials?(connected?'CONNECTED':'RECONNECTING'):'2–10 PLAYERS'}</span></div>
       <p className="notice" role="status">{miniReady?MINI_LIST_NOTE:MINI_PENDING}</p>
       {error&&<p className="alert" role="alert">{error}</p>}{notice&&<p className="notice" role="status">{notice}</p>}

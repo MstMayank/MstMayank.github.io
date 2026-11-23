@@ -42,16 +42,6 @@
   --ed-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -14px rgba(0, 0, 0, .7); --ed-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .8);
   color-scheme: dark;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --ed-bg: #0d0d0d; --ed-page: #0d0d0d; --ed-surface: #161616; --ed-soft: #1d1d1d;
-    --ed-ink: #f4f4f2; --ed-ink-2: #dcdcda; --ed-muted: #a3a3a0; --ed-subtle: #77776f;
-    --ed-line: #262626; --ed-line-2: #333331; --ed-yellow-soft: #2b2508;
-    --ed-green-soft: #0f2a19; --ed-red-soft: #2c1212;
-    --ed-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -14px rgba(0, 0, 0, .7); --ed-shadow-lg: 0 30px 60px -28px rgba(0, 0, 0, .8);
-    color-scheme: dark;
-  }
-}
 
 /* ---------- Base ---------- */
 html:has(body.ed) { overflow-x: clip; }
@@ -194,7 +184,6 @@ body.ed ::selection { background: var(--ed-yellow); color: #111; }
                   radial-gradient(50% 55% at 60% 100%, rgba(120, 190, 255, .16), transparent 70%);
 }
 :root[data-theme="dark"] { --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .16), transparent 70%), radial-gradient(45% 50% at 5% 0%, rgba(255, 140, 60, .12), transparent 70%); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --ed-grad-hero: radial-gradient(55% 60% at 85% 10%, rgba(255, 210, 31, .16), transparent 70%), radial-gradient(45% 50% at 5% 0%, rgba(255, 140, 60, .12), transparent 70%); } }
 .ed-glow { position: relative; isolation: isolate; }
 .ed-glow::before { content: ""; position: absolute; inset: -60px 0 -40px; z-index: -1; background: var(--ed-grad-hero); pointer-events: none; }
 .ed-btn.yellow, .ed-tag:not(.dark):not(.white), .ed-chip.on, .ed-chip[aria-pressed="true"] { background: var(--ed-grad-yellow); border-color: transparent; }
@@ -297,3 +286,16 @@ a:hover .ed-photo img, .ed-photo:hover img { transform: scale(1.06); }
 .ea-bar i { display: block; height: 100%; width: 22%; background: var(--ed-grad-yellow); }
 @media (max-width: 900px) { .ed-auction { grid-template-columns: minmax(0, 1fr); } .ea-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 420px) { .ea-row { grid-template-columns: 92px minmax(0, 1fr); } .ea-name { font-size: 22px; } .ea-bid b { font-size: 36px; } }
+
+/* Link-style components keep their own colours when the page also loads ds.css (its
+   "body.ds a { color: inherit }" is more specific than a single class). */
+body.ed a.ed-btn, body.ed button.ed-btn { color: var(--ed-bg); }
+body.ed a.ed-btn.ghost, body.ed button.ed-btn.ghost { color: var(--ed-ink); }
+body.ed a.ed-btn.yellow, body.ed span.ed-btn.yellow { color: var(--ed-on-yellow); }
+body.ed .ed-auction h2, body.ed .ed-auction .ea-name { color: inherit; }
+body.ed .ed-auction h2 { color: #fff; }
+body.ed .ed-auction .ea-lot h4 { color: #888; }
+body.ed .ed-auction p { color: #c9c9c6; }
+body.ed .ed-auction .ea-lot small { color: #777; }
+body.ed .ed-auction a.ed-btn.ghost { color: #fff; }
+body.ed .ed-h2, body.ed .ed-h3, body.ed .ed-display, body.ed .ed-title { color: var(--ed-ink); }

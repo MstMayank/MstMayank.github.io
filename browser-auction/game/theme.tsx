@@ -1,8 +1,8 @@
 import {useEffect,useState} from 'react';
 
 // Light/dark switch shared with the rest of the site (localStorage "tcs-theme").
-// With no saved choice the page follows the device setting.
-const light=()=>document.documentElement.getAttribute('data-theme')==='light'||(!document.documentElement.hasAttribute('data-theme')&&matchMedia('(prefers-color-scheme: light)').matches);
+// Light is the site's default; dark only when chosen.
+const light=()=>document.documentElement.getAttribute('data-theme')!=='dark';
 
 export function ThemeToggle(){
   const [isLight,setLight]=useState(light);
