@@ -3,19 +3,20 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
-const {dailyQuiz, shareText, rng, GENERATORS, quizLink, inviteText, challengeText, readChallenge, verdict} = require('../quiz-core.js');
-const leagues = ['ipl', 'wpl'].map(l => ({label: l.toUpperCase(), venues: require(`../venue-stats-${l}.json`), impact: require(`../impact-${l}.json`)}));
+const {dailyQuiz, FORMAT, shareText, rng, GENERATORS, quizLink, inviteText, challengeText, readChallenge, verdict} = require('../quiz-core.js');
+const leagues = ['ipl', 'wpl'].map(l => ({label: l.toUpperCase(), venues: require(`../venue-stats-${l}.json`), impact: require(`../impact-${l}.json`),
+  teams: require(`../team-stats-${l}.json`), matches: require(`../match-index-${l}.json`)}));
 const day = (i: number) => new Date(Date.UTC(2026, 10, 23 + i)).toISOString().slice(0, 10);
 
-test('every day has five distinct questions with four distinct options and a valid answer', () => {
-  for (const data of leagues) for (let i = 0; i < 45; i++) {
+test('every day has five distinct questions with distinct options and a valid answer', () => {
+  for (const data of leagues) for (let i = 0; i < 90; i++) {
     const qs = dailyQuiz(data, day(i));
     assert.equal(qs.length, 5, data.label + ' ' + day(i));
     assert.equal(new Set(qs.map((q: {question: string}) => q.question)).size, 5);
     for (const q of qs) {
-      assert.equal(q.options.length, 4);
-      assert.equal(new Set(q.options).size, 4);
-      assert.ok(q.answer >= 0 && q.answer < 4);
+      assert.ok([2, 4].includes(q.options.length), q.kind);
+      assert.equal(new Set(q.options).size, q.options.length);
+      assert.ok(q.answer >= 0 && q.answer < q.options.length);
       assert.ok(q.explain.includes(q.options[q.answer]), 'explanation names the answer');
     }
   }
@@ -71,4 +72,42 @@ test('a challenge counts only on the same day and with a valid score', () => {
   assert.match(verdict(4, 3), /beat/);
   assert.match(verdict(3, 3), /Level/);
   assert.match(verdict(2, 3), /rematch/);
+});
+
+test('from 24 November each day mixes five different question formats', () => {
+  for (const data of leagues) for (let i = 1; i < 60; i++) {
+    const qs = dailyQuiz(data, day(i));
+    assert.equal(new Set(qs.map((q: {format: string}) => q.format)).size, 5, data.label + ' ' + day(i));
+  }
+  assert.ok(new Set(Object.values(FORMAT)).size >= 6);
+  // 23 November (already played) keeps the original question types.
+  for (const q of dailyQuiz(leagues[0], '2026-11-23')) assert.ok(['player', 'ground'].includes(q.format));
+});
+
+test('new question types are checked against the data', () => {
+  for (const data of leagues) for (let i = 0; i < 300; i++) for (const q of dailyQuiz(data, 'practice-' + i)) {
+    const ans = q.options[q.answer];
+    if (q.kind === 'wicketsCount') {
+      const name = /has (.+) taken/.exec(q.question)![1];
+      assert.equal(String(data.impact.all[name].bowling.wickets), ans);
+    }
+    if (q.kind === 'headToHead') {
+      const [, a, b] = /between (.+) and (.+)\?/.exec(q.question)!;
+      const wins = (t: string) => data.matches.matches.filter((m: string[]) => m[6] === 'win' && m[5] === t && [m[3], m[4]].includes(a) && [m[3], m[4]].includes(b)).length;
+      assert.ok(wins(ans) > wins(ans === a ? b : a));
+    }
+    if (q.kind === 'groundHighestTotal') {
+      const v = data.venues.venues.find((x: {name: string}) => q.question.endsWith(' at ' + x.name.split(',')[0] + '?'));
+      assert.equal(v.all.highest[0].team, ans);
+    }
+    if (q.kind === 'seasonTopTeam') {
+      const season = data.teams.latestSeason;
+      const won = (t: string) => data.teams.teams[t].seasons[season].won;
+      for (const o of q.options) if (o !== ans) assert.ok(won(ans) > won(o));
+    }
+    if (q.kind === 'chaseTrueFalse') {
+      const v = data.venues.venues.find((x: {name: string}) => q.question.includes(' at ' + x.name.split(',')[0] + ','));
+      assert.equal(ans, v.all.results.chaseWins > v.all.results.defendWins ? 'True' : 'False');
+    }
+  }
 });
