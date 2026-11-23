@@ -17,6 +17,12 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: rgb(var(--ds-bg-rgb)); color: rgb(var(--ds-ink-rgb)); }
   .qz { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; max-width: 760px; }
+  .qz-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
+  .qz-aside { display: grid; gap: 14px; }
+  .qz-aside ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--ds-muted); font-size: 14.5px; }
+  .qz-aside h2 { margin: 0 0 6px; font-size: 18px; }
+  .qz-aside .qz-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (min-width: 1000px) { .qz-layout { grid-template-columns: minmax(0, 760px) minmax(260px, 1fr); } .qz-aside { position: sticky; top: 92px; } }
   .qz > * { min-width: 0; }
   .qz[hidden], .qz [hidden] { display: none !important; }
   .qz-progress { display: flex; gap: 6px; }
@@ -54,7 +60,7 @@
   .qz-review { text-align: left; margin-top: 18px; display: grid; gap: 8px; }
   .qz-review p { margin: 0; font-size: 14px; }
 </style>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=ed-2">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=ed-3">
 </head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
@@ -65,7 +71,7 @@
   <button type="button" data-league="ipl" aria-pressed="true">IPL</button>
   <button type="button" data-league="wpl" aria-pressed="false">WPL</button>
 </div>
-<div class="qz">
+<div class="qz-layout"><div class="qz">
   <p class="tool-count" id="qz-status" role="status">Loading today’s questions…</p>
   <p class="qz-challenge" id="qz-challenge" hidden></p>
   <div class="qz-invite" id="qz-invite"><p>Same five questions for everyone today. Send it to a friend and compare scores.</p><button type="button" class="ds-btn ghost" id="qz-invite-share">Challenge a friend ↗</button><a class="ds-btn ghost qz-wa" id="qz-invite-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a></div>
@@ -98,7 +104,10 @@
     <div class="qz-review" id="qz-review"></div>
     <p class="qz-explain">New questions at midnight (India time).</p>
   </section>
-</div>
+</div><aside class="qz-aside" aria-label="About the quiz">
+  <section class="tool-panel"><h2>How it works</h2><ol><li>Five questions a day from real IPL or WPL match data.</li><li>Everyone gets the same quiz, so you can compare scores.</li><li>New questions every midnight, India time.</li><li>After the daily quiz, practise as much as you like. Practice never changes your score or streak.</li></ol></section>
+  <section class="tool-panel"><h2>Brush up first</h2><p class="hint" style="margin:0 0 10px">Most answers come from these pages.</p><div class="qz-links"><a class="ds-btn ghost" href="/venues.html">Venues</a><a class="ds-btn ghost" href="/player/">Player pages</a><a class="ds-btn ghost" href="/player-battle.html?view=finder">Match-ups</a></div></section>
+</aside></div>
 </main>
 <script src="quiz-core.js?v=3"></script>
 <script>
