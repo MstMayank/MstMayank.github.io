@@ -66,6 +66,13 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 /* find a player */
 .sb .find { justify-self: center; width: min(100%, 440px); transition: opacity .6s; }
 .gl:not(.tcs-ready) .sb .find, .gl:not(.tcs-ready) .sb .legend { opacity: 0; }
+.sb .find { position: relative; }
+.sb .sugg { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 5; margin: 0; padding: 6px; list-style: none; background: #0b1118; border: 2px solid var(--seam); border-radius: 4px; }
+.sb .sugg li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 10px; border-radius: 2px; cursor: pointer; }
+.sb .sugg li b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 18px/1.1 var(--cond); text-transform: uppercase; letter-spacing: .03em; }
+.sb .sugg li small { flex: none; font-size: 13px; color: var(--paint-2); }
+.sb .sugg li[aria-selected="true"] { background: #17222e; box-shadow: inset 3px 0 0 var(--bulb); }
+@media (hover: hover) and (pointer: fine) { .sb .sugg li:hover { background: #17222e; } }
 .sb .find form { display: flex; gap: 6px; padding: 6px; background: rgba(11, 17, 24, .9); border: 2px solid var(--seam); border-radius: 4px; }
 .sb .find input { flex: 1; min-width: 0; padding: 10px 12px; border: 0 !important; border-radius: 2px; background: var(--space) !important; color: var(--paint); font: 17px var(--text); }
 .sb .find input:focus { outline: 2px solid var(--bulb); }
