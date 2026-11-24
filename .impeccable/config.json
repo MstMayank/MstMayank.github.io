@@ -182,6 +182,33 @@
         ],
         "createdAt": "2026-11-24T04:02:34.358Z",
         "reason": "false positive: stat cells have 16-48px padding; detector reads the shared hairline as flush"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/board/home.html"
+        ],
+        "createdAt": "2026-11-24T04:07:25.901Z",
+        "reason": "user asked to start over with a new direction; this sample proposes new colours"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "_samples/board/home.html"
+        ],
+        "createdAt": "2026-11-24T04:07:25.909Z",
+        "reason": "false positive: h1/h2 use clamp() up to 124px/68px; static scan reads them as 18px"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "_samples/board/home.html"
+        ],
+        "createdAt": "2026-11-24T04:07:25.918Z",
+        "reason": "false positive: section seam is a top border; the inner .wrap carries 36-96px padding-block, fall-of-wickets cells have 18px gaps"
       }
     ]
   }
