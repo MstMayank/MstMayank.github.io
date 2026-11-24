@@ -1,23 +1,25 @@
 ---
 version: alpha
-name: The-Cricket-Space-Scoreboard
+name: The-Cricket-Space
 description: |
-  "Scoreboard" is the single theme of The Cricket Space: an old hand-operated cricket scoreboard.
-  Painted green boards, black number plates, white paint, one yellow bulb, and red only for wickets.
+  The site is literally a space made of cricket. The homepage is a 3D universe (three.js): a red
+  cricket-ball planet, four ball moons that are the doors (Stats, Players, Play, My story), and a
+  galaxy with one star per real player. Every other page is deep space with faint stars, panels like
+  scoreboard plates floating in it, white paint for the main action, one yellow light, red only for wickets.
   Headings and numbers use Barlow Condensed in capitals; reading text uses Barlow. Everything is flat:
   no glows, no gradients, no soft shadows. Numbers are the hero, hung on the board as plates or written
   into a scorecard, and every number is real data from the site.
 
 colors:
-  board: "#1d3b2a"       # page background, painted board
-  board-2: "#183323"     # lower panels, cards, footer
-  board-3: "#21442f"     # raised panel / hover fill
-  seam: "#10261a"        # gaps between boards: borders and dividers
-  line-2: "#2f5a41"      # outlines on secondary buttons and inputs
+  space: "#05080d"       # page background (with a faint fixed starfield)
+  panel: "#0b1118"       # panels, cards, footer
+  panel-2: "#111a24"     # raised panel / hover fill
+  seam: "#1c2733"        # borders and dividers
+  line-2: "#33414f"      # outlines on secondary buttons and inputs
   plate: "#0d130f"       # number plates, input fields, icon tiles
   paint: "#f1ede2"       # primary text and the main button
-  paint-2: "#c2ccc2"     # secondary text
-  subtle: "#a3b2a4"      # captions, meta
+  paint-2: "#b9c0c6"     # secondary text
+  subtle: "#95a0aa"      # captions, meta
   bulb: "#f5c518"        # the one light: current item, key mark, focus ring, link hover
   wicket: "#ff7c68"      # outs, losses, errors only
   sky: "#9ad7f5"         # second chart series only
@@ -55,7 +57,7 @@ motion:
   hover: "colour change only, 0.15s"
 ---
 
-# The Cricket Space: Scoreboard
+# The Cricket Space
 
 ## Overview
 
@@ -63,9 +65,18 @@ The Cricket Space is a personal cricket stats site (IPL, WPL, internationals) wi
 stories, a daily quiz and an IPL auction game. The brand story is one fan's innings with the game:
 the 2003 World Cup final, Dravid, the Dhoni storm of 2005, Sachin, then Kohli, Rohit, Gill and Bumrah.
 
-The look is **the old hand-operated scoreboard** at a cricket ground. It comes from cricket itself, not
-from a web trend. Pages are painted boards separated by dark seams; numbers hang on black plates; the main
-action is a flat white board; one yellow bulb marks what is current.
+The site is **a space made of cricket**. Opening it, you fly into a universe: the red cricket ball is the
+planet, the white, pink, tennis and old red balls are moons and doors, and every star in the galaxy is a real
+player (933 of them, from `player/galaxy.json`). Hover a star for the player's numbers, click to open their
+page, or search and the camera flies to them. Every other page is the same deep space: panels like scoreboard
+plates, a flat white main button, one yellow light for "current" and red only for wickets.
+
+### The homepage universe
+- `space.js` (ES module) draws it with `vendor/three-0.170.0.module.min.js` (MIT). `scripts/build-player-pages.py` writes `player/galaxy.json`.
+- Star colours: white batters, red bowlers, yellow all-rounders, pink WPL. Bigger career, bigger star.
+- The four doors are real links. Without WebGL or JavaScript they show as a row of plain buttons.
+- Motion: fly-in once, slow orbit and spin. Reduced motion: no fly-in, nothing moves on its own. Rendering pauses off-screen.
+- Below the universe: the story ("Fall of wickets", `#about`) and the contact form (`#contact`), which every page links to.
 
 ### The rules (from the site owner)
 - No Inter. No purple gradients. No glowing buttons.
@@ -78,16 +89,17 @@ action is a flat white board; one yellow bulb marks what is current.
 
 | File | Owns |
 | --- | --- |
-| `ds.css` | Shared tokens and site chrome. The `SCOREBOARD` block at the end overrides every older token. |
-| `ed.css` | Editorial components. Its `--ed-*` tokens are re-declared in the Scoreboard block because `ed.css` loads later. |
+| `ds.css` | Shared tokens and site chrome. The `THE CRICKET SPACE` block at the end overrides every older token. |
+| `ed.css` | Editorial components. Its `--ed-*` tokens are re-declared in the theme block because `ed.css` loads later. |
 | `home.css` | Homepage only, scoped to `main.sb`. |
+| `space.js` | The 3D universe on the homepage. |
 | `browser-auction/game/room.css` | Auction game theme. Rebuild with `npm run build:auction`. |
 | `scripts/build-player-pages.py` | Player pages; references `ds.css?v=…`. Rebuild after changing it. |
 | `fonts/` | Self-hosted woff2. Never load fonts from a CDN. |
 
 ## Colors
 
-- **Board greens** (`board`, `board-2`, `board-3`) are the only surfaces. Separate them with `seam`, never shadows.
+- **Space** (`space`, `panel`, `panel-2`) are the only surfaces. Separate them with `seam`, never shadows. No purple.
 - **Paint** (`#f1ede2`) is the text and the main button. **Plate** (`#0d130f`) holds numbers and inputs.
 - **Bulb yellow** (`#f5c518`) is the one light: current nav item, the logo dot, focus ring, a highlighted
   number, link hover. Use it sparingly; one or two touches per screen.
@@ -107,8 +119,7 @@ action is a flat white board; one yellow bulb marks what is current.
 
 - Content width 1240px max, gutter `clamp(16px, 4vw, 48px)` (16px on phones).
 - Sections are boards stacked with a 6px seam between them.
-- Homepage order: hero with the Kohli v Bumrah board → **Batting card** (tools table) → **Team sheet**
-  (numbered player list) → **Fall of wickets** (the story) → **In the nets** (games) → contact.
+- Homepage: the universe fills the first screen (name, four doors, find a player), then **Fall of wickets** and contact. Nothing else.
 - Lists and tables are preferred over grids of cards. Button rows wrap. Wide tables scroll in their own container.
 - Breakpoints: 900px (single column), 520px (phone tightening). Test at 1440 and 390.
 
@@ -125,7 +136,7 @@ action is a flat white board; one yellow bulb marks what is current.
 
 ## Motion
 
-- Plates slide into place once when the board comes into view. Nothing else moves on its own.
+- Only the homepage universe moves on its own (fly-in, slow orbit, spin). Other pages stay still.
 - Hover changes colour only, and only on real pointers (`@media (hover: hover) and (pointer: fine)`).
 - No marquees, no glows, no pulsing dots, no bouncy lifts.
 - `prefers-reduced-motion: reduce` shows everything in place.
