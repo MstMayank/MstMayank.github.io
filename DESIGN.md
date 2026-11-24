@@ -130,7 +130,7 @@ plates, a flat white main button, one yellow light for "current" and red only fo
 - **Second action in a hero**: an underlined text link, not a second button.
 - **Number plates**: black tiles, one digit each on the homepage board; the wicket count is red.
 - **Scorecard table (`.card`)**: name in condensed caps, description in Barlow, number right-aligned.
-- **Six balls (`.over`)**: the story as one over: six cards that snap sideways, each with a picture (the 2003 final scoreboard, the Wall, Dhoni, a hundred hundreds, my generation, the planet) and an over tracker of six balls that fills in red.
+- **Six balls (`.over`, `story.js`)**: the story as one over. On laptops the section holds while you scroll and the six cards slide past (one ball per third of a screen); on phones it is a sideways swipe. Each card plays once when its ball is bowled: the 2003 score counts up, the Wall is built brick by brick, Dhoni hits a six, the hundred ticks up, my generation is stamped in, the planet spins in. The tracker bowls a ball into each dot and ball six knocks the bails off. Cards tilt slightly towards the mouse. Reduced motion: no holding, everything shown in place.
 - **Panels**: `board-2` fill, 3px seam border, 4px radius.
 - **Icons**: inline SVG line icons in `currentColor`. No emoji as icons, except in share text.
 
