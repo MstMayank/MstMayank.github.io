@@ -127,8 +127,6 @@ function start() {
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
     }));
     galaxy.add(starPoints);
-    const dl = document.getElementById('names');
-    list.slice(0, 400).forEach(p => { const o = document.createElement('option'); o.value = p[0]; dl.appendChild(o); });
   }).catch(() => {});
 
   // Camera: fly in, then drag to look around.
@@ -187,25 +185,65 @@ function start() {
     flyTo(m.clone().sub(dir.multiplyScalar(7)), m, 1000, () => { location.href = a.href; });
   }));
 
-  // Find a player: fly to their star.
-  const norm = s => s.toLowerCase().normalize('NFD').replace(/[^a-z ]/g, '');
-  const msg = document.getElementById('find-msg');
-  document.getElementById('find').addEventListener('submit', e => {
-    e.preventDefault();
-    const q = norm(document.getElementById('q').value.trim());
-    if (!q || !players.length || !starPoints) return;
-    let i = players.findIndex(p => norm(p[0]) === q);
-    if (i < 0) i = players.findIndex(p => norm(p[0]).split(' ').includes(q));
-    if (i < 0) i = players.findIndex(p => norm(p[0]).includes(q));
-    if (i < 0) { msg.textContent = 'No star by that name yet. Try a surname, like Kohli.'; return; }
+  // Find a player: our own small suggestion list (the browser's built-in one covered half the screen).
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[^a-z ]/g, '').trim();
+  const msg = document.getElementById('find-msg'), input = document.getElementById('q'), sugg = document.getElementById('sugg');
+  let shown = [], active = -1;
+  const statLine = p => p[5] * 25 > p[4] ? `${fmt(p[5])} ${p[2]} wkts` : `${fmt(p[4])} ${p[2]} runs`;
+  // Best matches first: whole name, then any name word that starts with the query, then anywhere. Bigger careers first within each.
+  function search(raw, limit) {
+    const q = norm(raw); if (q.length < 2 || !players.length) return [];
+    const out = [];
+    players.forEach((p, i) => {
+      const n = norm(p[0]), words = n.split(' ');
+      const score = n === q ? 0 : (n.startsWith(q) || words.some(w => w.startsWith(q))) ? 1 : n.includes(q) ? 2 : -1;
+      if (score >= 0) out.push([score, i]);
+    });
+    return out.sort((x, y) => x[0] - y[0] || x[1] - y[1]).slice(0, limit).map(x => x[1]);
+  }
+  function closeList() { sugg.hidden = true; sugg.textContent = ''; shown = []; active = -1; input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-activedescendant'); }
+  function setActive(k) {
+    active = k;
+    [...sugg.children].forEach((li, j) => li.setAttribute('aria-selected', j === k ? 'true' : 'false'));
+    if (k >= 0) input.setAttribute('aria-activedescendant', 'sugg-' + k); else input.removeAttribute('aria-activedescendant');
+  }
+  function openList() {
+    shown = search(input.value, 6); sugg.textContent = '';
+    if (!shown.length) { closeList(); return; }
+    shown.forEach((i, k) => {
+      const li = document.createElement('li'), b = document.createElement('b'), sm = document.createElement('small');
+      li.id = 'sugg-' + k; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false');
+      b.textContent = players[i][0]; sm.textContent = statLine(players[i]); li.append(b, sm);
+      li.addEventListener('pointerdown', e => { e.preventDefault(); choose(i); });
+      sugg.appendChild(li);
+    });
+    sugg.hidden = false; input.setAttribute('aria-expanded', 'true'); setActive(-1);
+  }
+  function choose(i) { input.value = players[i][0]; closeList(); fly(i); }
+  function fly(i) {
+    if (!starPoints) return;
     pinned = i; root.classList.add('tcs-pinned'); starPoints.material.uniforms.hi.value = i;
     galaxy.updateMatrixWorld();
     const star = new THREE.Vector3().fromBufferAttribute(starPoints.geometry.attributes.position, i).applyMatrix4(galaxy.matrixWorld);
     const out = star.clone().setY(star.y + 6).add(star.clone().setY(0).normalize().multiplyScalar(18));
     flyTo(out, star, 1800, () => { const v = star.clone().project(camera), r = cv.getBoundingClientRect(); showTip(i, r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height); });
     msg.textContent = ''; const a = document.createElement('a'); a.href = '/player/' + players[i][1] + '.html'; a.textContent = `Open ${players[i][0]}’s page →`; msg.appendChild(a);
+  }
+  input.addEventListener('input', () => { unpin(); openList(); });
+  input.addEventListener('keydown', e => {
+    if (sugg.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive((active + 1) % shown.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active <= 0 ? shown.length - 1 : active - 1); }
+    else if (e.key === 'Escape') { e.preventDefault(); closeList(); }
   });
-  document.getElementById('q').addEventListener('input', unpin);
+  input.addEventListener('blur', () => setTimeout(closeList, 120));
+  document.getElementById('find').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!players.length || !starPoints) return;
+    const i = active >= 0 ? shown[active] : search(input.value, 1)[0];
+    if (i === undefined) { closeList(); msg.textContent = 'No star by that name yet. Try a surname, like Kohli.'; return; }
+    choose(i);
+  });
 
   const AX = new THREE.Vector3(1, 0, 0), AY = new THREE.Vector3(0, 1, 0), camAt = new THREE.Vector3();
   const rotated = () => camAt.copy(home).applyAxisAngle(AX, -pitch).applyAxisAngle(AY, yaw).clone();
