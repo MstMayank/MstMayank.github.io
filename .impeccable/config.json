@@ -74,6 +74,114 @@
         ],
         "createdAt": "2026-11-24T04:00:19.040Z",
         "reason": "sample of the user's levigav reference: gold spotlight glow is the requested look"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument serif",
+        "files": [
+          "_samples/v5/fonts.css"
+        ],
+        "createdAt": "2026-11-24T04:02:34.262Z",
+        "reason": "serif echoes the user's levigav reference; user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument serif",
+        "files": [
+          "_samples/v5/1-gold.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.273Z",
+        "reason": "serif echoes the user's levigav reference; user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument serif",
+        "files": [
+          "_samples/v5/4-pitchmap.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.283Z",
+        "reason": "serif echoes the user's levigav reference; user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/v5/1-gold.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.292Z",
+        "reason": "user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/v5/2-paper.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.300Z",
+        "reason": "user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/v5/3-broadcast.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.307Z",
+        "reason": "user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/v5/4-pitchmap.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.316Z",
+        "reason": "user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "_samples/v5/5-gully.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.324Z",
+        "reason": "user asked for 4-5 new directions after sharing levigav as reference; exploratory samples, not the locked system"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "_samples/v5/2-paper.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.333Z",
+        "reason": "newsprint paper is the concept of the Morning Paper sample"
+      },
+      {
+        "rule": "kicker-above-heading",
+        "value": "*",
+        "files": [
+          "_samples/v5/2-paper.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.342Z",
+        "reason": "newspaper section slug (Front page) is a real broadsheet convention in this sample"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "_samples/v5/3-broadcast.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.350Z",
+        "reason": "TV stats ticker is the literal broadcast concept; stops under reduced motion"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "_samples/v5/4-pitchmap.html"
+        ],
+        "createdAt": "2026-11-24T04:02:34.358Z",
+        "reason": "false positive: stat cells have 16-48px padding; detector reads the shared hairline as flush"
       }
     ]
   }
