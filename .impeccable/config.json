@@ -29,6 +29,15 @@
         ],
         "createdAt": "2026-11-23T16:38:48.199Z",
         "reason": "User asked for a neon gaming style with a dark tone; glow is the brief"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "_samples/space/home.html"
+        ],
+        "createdAt": "2026-11-24T04:45:51.088Z",
+        "reason": "user asked for motion: spinning ball seams and the slow orbit are decorative, hide no content, pause on hover/focus, and stop under reduced motion"
       }
     ]
   }
