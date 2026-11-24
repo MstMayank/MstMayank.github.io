@@ -65,6 +65,15 @@
         ],
         "createdAt": "2026-11-24T03:45:06.499Z",
         "reason": "italic serif accent echoes the user's levigav reference; already self-hosted; flagged to user as a sample choice"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "_samples/v5/1-gold.html"
+        ],
+        "createdAt": "2026-11-24T04:00:19.040Z",
+        "reason": "sample of the user's levigav reference: gold spotlight glow is the requested look"
       }
     ]
   }
