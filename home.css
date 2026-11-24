@@ -110,6 +110,9 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .over { list-style: none; margin: 0; display: flex; gap: clamp(14px, 2vw, 22px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
   padding: 6px max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))) clamp(48px, 7vw, 96px); scroll-padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))); scrollbar-width: none; }
 .sb .over::-webkit-scrollbar { display: none; }
+/* Safari ignores end padding in sideways scrollers, so a spacer keeps the last card clear of the edge. */
+.sb .over { padding-right: 0; }
+.sb .over::after { content: ""; flex: 0 0 max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))); }
 .sb .over:focus-visible { outline: 3px solid var(--bulb); outline-offset: -3px; }
 .sb .ball-card { flex: 0 0 min(440px, 84vw); scroll-snap-align: start; display: grid; grid-template-rows: auto 260px; align-content: start; gap: 12px; padding: 20px; background: var(--panel); border: 3px solid var(--seam); border-radius: 6px; }
 .sb .ball-card .n { font: 600 14px var(--cond); letter-spacing: .14em; text-transform: uppercase; color: var(--bulb); }
