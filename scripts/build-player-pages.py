@@ -169,6 +169,42 @@ def known_names(slug_of_name):
     return out
 SKIP_ART = {'kohli-india', 'auction-preview-bumrah', 'auction-preview-dhoni'}
 
+# Names fans use, for the homepage galaxy. The registry has full legal names ("Suresh Kumar Raina");
+# the scorecard short name ("SK Raina") tells us which given name to keep. A few players are known by a
+# name neither gives, so they are listed here by page slug.
+NICKNAMES = {
+    'ravindrasinh-jadeja': 'Ravindra Jadeja', 'krishnakumar-karthik': 'Dinesh Karthik', 'umeshkumar-yadav': 'Umesh Yadav',
+    'separamadu-malinga': 'Lasith Malinga', 'praveenkumar-singh': 'Praveen Kumar', 'johannes-morkel': 'Albie Morkel',
+    'rudra-singh': 'RP Singh', 'christopher-morris': 'Chris Morris', 'samuel-curran': 'Sam Curran', 'timothy-david': 'Tim David',
+    'timothy-southee': 'Tim Southee', 'jonathan-bairstow': 'Jonny Bairstow', 'christopher-lynn': 'Chris Lynn',
+    'christopher-jordan': 'Chris Jordan', 'christopher-woakes': 'Chris Woakes', 'william-jacks': 'Will Jacks',
+    'samuel-billings': 'Sam Billings', 'narangoda-perera': 'Thisara Perera', 'pinnaduwage-de-silva': 'Wanindu Hasaranga',
+    'morawakage-theekshana': 'Maheesh Theekshana', 'pathira-chameera': 'Dushmantha Chameera', 'gade-vihari': 'Hanuma Vihari',
+    'benjamin-cutting': 'Ben Cutting', 'benjamin-hilfenhaus': 'Ben Hilfenhaus', 'douglas-bollinger': 'Doug Bollinger',
+    'bradley-hodge': 'Brad Hodge', 'lungisani-ngidi': 'Lungi Ngidi', 'george-hogg': 'Brad Hogg', 'steven-smith': 'Steve Smith',
+    'kulasekara-kulasekara': 'Nuwan Kulasekara', 'hendrik-van-der-dussen': 'Rassie van der Dussen',
+}
+NAME_PARTICLES = {'de', 'du', 'van', 'der', 'von', 'al', 'ul', 'le', 'da', 'di', 'ten'}
+
+
+def common_name(full, short, slug):
+    if slug in NICKNAMES:
+        return NICKNAMES[slug]
+    words = full.split()
+    if len(words) <= 2 or not short:
+        return full
+    toks = short.split()
+    is_init = lambda t: bool(re.fullmatch(r'[A-Z]{1,4}', t))
+    if not any(is_init(t) for t in toks):
+        return short                                   # the scorecard already uses the real name: "Mohammed Shami"
+    inits, rest = [t for t in toks if is_init(t)], [t for t in toks if not is_init(t)]
+    if len(rest) >= 2 and rest[0].lower() not in NAME_PARTICLES:
+        return ' '.join(rest)                          # "R Vinay Kumar" -> "Vinay Kumar"
+    lower_rest = [r.lower() for r in rest]
+    first = next((w for w in words if w[0].upper() == inits[0][0] and w.lower() not in lower_rest), None)
+    return f'{first} {" ".join(rest)}' if first else full
+
+
 
 def initials(name):
     words = [w for w in re.split(r'\s+', name) if w]
@@ -635,7 +671,8 @@ def main():
         if leagues:
             label, _k, _sh, s0, _d = leagues[0]
             bb, ww = s0['batting'] or {}, s0['bowling'] or {}
-            galaxy.append([DISPLAY.get(slug_of[r[0]], r[1]), slug_of[r[0]], label, s0['matches'], bb.get('runs', 0), ww.get('wickets', 0)])
+            shown = DISPLAY.get(slug_of[r[0]]) or common_name(r[1], _sh, slug_of[r[0]])
+            galaxy.append([shown, slug_of[r[0]], label, s0['matches'], bb.get('runs', 0), ww.get('wickets', 0)] + ([r[1]] if r[1] != shown else []))
         text = page(shell, slug_of[r[0]], r, records[r[0]], leagues, slugs)
         (OUT / f'{slug_of[r[0]]}.html').write_text(text, encoding='utf-8')
         total += len(text.encode())
@@ -649,7 +686,7 @@ def main():
              'byId': dict(sorted(slug_of.items())), 'photos': dict(sorted(PHOTOS.items())),
              'faces': {slug: url.replace('/thumbs/', '/faces/') for slug, url in sorted(PHOTOS.items()) if (ROOT / url.lstrip('/').replace('/thumbs/', '/faces/')).exists()}}
     (OUT / 'links.json').write_text(json.dumps(links, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
-    # The homepage galaxy: one star per player with IPL or WPL data. [name, slug, league, matches, runs, wickets]
+    # The homepage galaxy: one star per player with IPL or WPL data. [name, slug, league, matches, runs, wickets, full name if different]
     (OUT / 'galaxy.json').write_text(json.dumps(sorted(galaxy, key=lambda g: -g[3]), separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     update_sitemap(slug_of.values())
     print(f'Wrote {len(chosen)} player pages ({total / 1e6:.1f} MB), player/index.html, player/links.json '

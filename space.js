@@ -195,9 +195,14 @@ function start() {
     const q = norm(raw); if (q.length < 2 || !players.length) return [];
     const out = [];
     players.forEach((p, i) => {
-      const n = norm(p[0]), words = n.split(' ');
-      const score = n === q ? 0 : (n.startsWith(q) || words.some(w => w.startsWith(q))) ? 1 : n.includes(q) ? 2 : -1;
-      if (score >= 0) out.push([score, i]);
+      // Match the name fans use and, if different, the full name too ("Ravindrasinh" still finds Jadeja).
+      let best = -1;
+      [p[0], p[6]].filter(Boolean).forEach(name => {
+        const n = norm(name), words = n.split(' ');
+        const score = n === q ? 0 : (n.startsWith(q) || words.some(w => w.startsWith(q))) ? 1 : n.includes(q) ? 2 : -1;
+        if (score >= 0 && (best < 0 || score < best)) best = score;
+      });
+      if (best >= 0) out.push([best, i]);
     });
     return out.sort((x, y) => x[0] - y[0] || x[1] - y[1]).slice(0, limit).map(x => x[1]);
   }
