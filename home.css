@@ -131,11 +131,12 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
   background: repeating-linear-gradient(0deg, #2a1e19 0 3px, transparent 3px 34px), repeating-linear-gradient(90deg, #2a1e19 0 3px, transparent 3px 70px), #7a4a35; }
 .sb .wall b { font: 800 clamp(54px, 6vw, 76px)/.9 var(--cond); text-transform: uppercase; color: #f4f1ea; text-shadow: 0 3px 0 rgba(0, 0, 0, .35); transform: rotate(-3deg); }
 .sb .wall span { justify-self: center; padding: 4px 12px; background: var(--plate); border-radius: 3px; font: 800 20px var(--cond); }
-/* ball 3: Dhoni */
-.sb .storm img { width: 100%; height: 100%; object-fit: cover; }
-.sb .storm .knocks { position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; gap: 8px; }
-.sb .storm .knocks span { flex: 1; padding: 8px 10px; background: rgba(7, 11, 16, .92); border-radius: 3px; font-size: 12px; color: var(--paint-2); }
-.sb .storm .knocks b { display: block; font: 800 30px/1 var(--cond); color: var(--paint); }
+/* ball 3: Dhoni, the whole face in frame on the left, his two knocks on the right */
+.sb .storm { display: grid; grid-template-columns: 46% 1fr; grid-template-rows: minmax(0, 1fr); background: #070b10; }
+.sb .storm > img { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: 40% 10%; }
+.sb .storm .knocks { position: static; display: grid; align-content: center; gap: 8px; padding: 12px; min-height: 0; }
+.sb .storm .knocks span { padding: 8px 10px; background: var(--plate); border-radius: 3px; font-size: 13px; color: var(--paint-2); }
+.sb .storm .knocks b { display: block; font: 800 32px/1 var(--cond); color: var(--paint); }
 /* ball 4: a hundred hundreds */
 .sb .hundred { display: grid; place-content: center; text-align: center; background: radial-gradient(60% 60% at 50% 45%, rgba(245, 197, 24, .16), transparent 70%), #070b10; }
 .sb .hundred b { font: 800 clamp(120px, 13vw, 170px)/.85 var(--cond); color: var(--bulb); }
@@ -145,13 +146,24 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .gen a { position: relative; display: block; overflow: hidden; text-decoration: none; }
 .sb .gen img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s cubic-bezier(.2, .7, .2, 1); }
 .sb .gen b { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 8px 6px; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); font: 800 18px/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; color: #fff; }
-/* ball 6: me */
-.sb .me { display: grid; place-items: center; background: radial-gradient(1px 1px at 20% 30%, #fff8, transparent), radial-gradient(1px 1px at 70% 20%, #fff8, transparent), radial-gradient(1.5px 1.5px at 80% 70%, #fff6, transparent), radial-gradient(1px 1px at 35% 80%, #fff6, transparent), #05080d; }
-.sb .mini-planet { position: absolute; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #e2564a, #a5241c 52%, #4a0d09); }
+.sb .gen .yuvi { display: grid; place-content: center; text-align: center; background: radial-gradient(70% 70% at 50% 40%, rgba(245, 197, 24, .18), transparent 70%), #0d130f; }
+.sb .yuvi .sixes { font: 800 64px/.9 var(--cond); color: var(--bulb); }
+.sb .yuvi .sixes small { font-size: .5em; margin: 0 4px; color: var(--paint-2); }
+.sb .yuvi .where { padding: 0 6px 22px; font: 600 11px var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--paint-2); }
+/* ball 6: the young generation, three across */
+.sb .gen.young { grid-template-columns: repeat(3, 1fr); }
+.sb .gen.young > * { position: relative; display: block; overflow: hidden; }
+/* a small cricket-ball planet */
+.sb .mini-planet { border-radius: 50%; background: radial-gradient(circle at 34% 30%, #e2564a, #a5241c 52%, #4a0d09); }
 .sb .mini-planet::before, .sb .mini-planet::after { content: ""; position: absolute; inset: 6%; border-radius: 50%; border: 0 dashed #f3e3c8; transform: rotate(-28deg) scaleX(.42); }
 .sb .mini-planet::before { border-left-width: 2px; translate: -10% 0; }
 .sb .mini-planet::after { border-right-width: 2px; translate: 10% 0; }
-.sb .me b { position: relative; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 4px; background: var(--plate); color: var(--bulb); font: 800 36px var(--cond); }
+/* the sign-off after the over */
+.sb .sign-off { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding-bottom: clamp(48px, 7vw, 96px); }
+.sb .sign-off .mini-planet { position: relative; flex: none; width: 64px; height: 64px; }
+.sb .sign-off .mark { position: absolute; left: calc(var(--gutter) + 18px); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 3px; background: var(--plate); color: var(--bulb); font: 800 18px var(--cond); }
+.sb .sign-off p { flex: 1 1 320px; margin: 0; max-width: 64ch; color: var(--paint-2); }
+.sb .sign-off strong { color: var(--paint); }
 
 /* ---- the over in motion (story.js) ---- */
 /* Laptops: the section holds while the page scrolls and the cards slide past. */
@@ -197,18 +209,13 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 /* ball 4: the hundred ticks up, then pulses */
 .js .sb .hundred b { animation-name: tcs-pop; animation-duration: .5s; animation-delay: 1.3s; }
 /* ball 5: my generation walks in, nicknames stamped on */
-.js .sb .gen a { animation-name: tcs-rise; animation-duration: .5s; }
-.js .sb .gen a:nth-child(2) { animation-delay: .12s; } .js .sb .gen a:nth-child(3) { animation-delay: .24s; } .js .sb .gen a:nth-child(4) { animation-delay: .36s; }
+.js .sb .gen > .a { animation-name: tcs-rise; animation-duration: .5s; }
+.js .sb .gen > :nth-child(2) { animation-delay: .12s; } .js .sb .gen > :nth-child(3) { animation-delay: .24s; } .js .sb .gen > :nth-child(4) { animation-delay: .36s; }
 .sb .gen b { opacity: 0; }
-.js .sb .gen a b { animation: tcs-stamp-flat .4s both paused; }
-.js .sb .gen a:nth-child(1) b { animation-delay: .5s; } .js .sb .gen a:nth-child(2) b { animation-delay: .62s; } .js .sb .gen a:nth-child(3) b { animation-delay: .74s; } .js .sb .gen a:nth-child(4) b { animation-delay: .86s; }
-.sb .play .gen a b, html:not(.js) .sb .gen b { animation-play-state: running; opacity: 1; }
+.js .sb .gen > * > b { animation: tcs-stamp-flat .4s both paused; }
+.js .sb .gen > :nth-child(1) > b { animation-delay: .5s; } .js .sb .gen > :nth-child(2) > b { animation-delay: .62s; } .js .sb .gen > :nth-child(3) > b { animation-delay: .74s; } .js .sb .gen > :nth-child(4) > b { animation-delay: .86s; }
+.sb .play .gen > * > b, html:not(.js) .sb .gen b { animation-play-state: running; opacity: 1; }
 @keyframes tcs-stamp-flat { from { opacity: 0; transform: scale(1.5); } to { opacity: 1; transform: none; } }
-/* ball 6: the planet spins in and the M drops onto it */
-.js .sb .mini-planet { animation-name: tcs-spin; animation-duration: 1.6s; }
-@keyframes tcs-spin { from { opacity: 0; transform: scale(.4) rotate(-200deg); } to { opacity: 1; transform: none; } }
-.js .sb .me b { animation-name: tcs-drop; animation-duration: .8s; animation-delay: .9s; animation-timing-function: linear; }
-@keyframes tcs-drop { 0% { opacity: 0; transform: translateY(-120px); } 55% { opacity: 1; transform: translateY(0); } 70% { transform: translateY(-18px); } 85% { transform: none; } 93% { transform: translateY(-5px); } 100% { opacity: 1; transform: none; } }
 /* the tracker: each new ball is bowled into its dot */
 .sb .balls i.just { animation: tcs-bowl .5s cubic-bezier(.3, 1.5, .5, 1); }
 @keyframes tcs-bowl { from { transform: translateX(-30px) scale(.5); } to { transform: none; } }
