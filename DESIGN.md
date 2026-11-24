@@ -76,7 +76,7 @@ plates, a flat white main button, one yellow light for "current" and red only fo
 - Star colours: white batters, red bowlers, yellow all-rounders, pink WPL. Bigger career, bigger star.
 - The four doors are real links. Without WebGL or JavaScript they show as a row of plain buttons.
 - Motion: fly-in once, slow orbit and spin. Reduced motion: no fly-in, nothing moves on its own. Rendering pauses off-screen.
-- Below the universe: the story ("Fall of wickets", `#about`) and the contact form (`#contact`), which every page links to.
+- Below the universe: the story ("Six balls that made me", `#about`: one over of six swipeable cards with an over tracker) and the contact form (`#contact`), which every page links to.
 
 ### The rules (from the site owner)
 - No Inter. No purple gradients. No glowing buttons.
@@ -119,7 +119,7 @@ plates, a flat white main button, one yellow light for "current" and red only fo
 
 - Content width 1240px max, gutter `clamp(16px, 4vw, 48px)` (16px on phones).
 - Sections are boards stacked with a 6px seam between them.
-- Homepage: the universe fills the first screen (name, four doors, find a player), then **Fall of wickets** and contact. Nothing else.
+- Homepage: the universe fills the first screen (name, four doors, find a player), then **Six balls that made me** and contact. Nothing else.
 - Lists and tables are preferred over grids of cards. Button rows wrap. Wide tables scroll in their own container.
 - Breakpoints: 900px (single column), 520px (phone tightening). Test at 1440 and 390.
 
@@ -130,7 +130,7 @@ plates, a flat white main button, one yellow light for "current" and red only fo
 - **Second action in a hero**: an underlined text link, not a second button.
 - **Number plates**: black tiles, one digit each on the homepage board; the wicket count is red.
 - **Scorecard table (`.card`)**: name in condensed caps, description in Barlow, number right-aligned.
-- **Fall of wickets (`.fow`)**: "1– 2003" style entries with a short heading and one line.
+- **Six balls (`.over`)**: the story as one over: six cards that snap sideways, each with a picture (the 2003 final scoreboard, the Wall, Dhoni, a hundred hundreds, my generation, the planet) and an over tracker of six balls that fills in red.
 - **Panels**: `board-2` fill, 3px seam border, 4px radius.
 - **Icons**: inline SVG line icons in `currentColor`. No emoji as icons, except in share text.
 
