@@ -611,12 +611,12 @@ def main():
         LEAGUE_PHASES[key] = league_phase_averages(data)
     featured = []
     OUT.mkdir(exist_ok=True)
-    keep = {'player.js', 'player.css', 'links.json', 'index.html'}
+    keep = {'player.js', 'player.css', 'links.json', 'galaxy.json', 'index.html'}
     wanted = {f'{s}.html' for s in slug_of.values()}
     for old in OUT.glob('*.html'):
         if old.name not in wanted and old.name not in keep:
             old.unlink()
-    entries, total = [], 0
+    entries, total, galaxy = [], 0, []
     for r in chosen:
         leagues = []
         for label, key in LEAGUES.items():
@@ -632,6 +632,10 @@ def main():
             line = (f'{label} · {fmt(bb["runs"])} runs · SR {fmt(bb["sr"], 1)}' if bb and (not ww or bb['balls'] >= ww['legal'])
                     else f'{label} · {fmt(ww["wickets"])} wkts · econ {fmt(ww["econ"])}')
             featured.append((DISPLAY.get(slug_of[r[0]], r[1]), slug_of[r[0]], line, s0['matches']))
+        if leagues:
+            label, _k, _sh, s0, _d = leagues[0]
+            bb, ww = s0['batting'] or {}, s0['bowling'] or {}
+            galaxy.append([DISPLAY.get(slug_of[r[0]], r[1]), slug_of[r[0]], label, s0['matches'], bb.get('runs', 0), ww.get('wickets', 0)])
         text = page(shell, slug_of[r[0]], r, records[r[0]], leagues, slugs)
         (OUT / f'{slug_of[r[0]]}.html').write_text(text, encoding='utf-8')
         total += len(text.encode())
@@ -645,6 +649,8 @@ def main():
              'byId': dict(sorted(slug_of.items())), 'photos': dict(sorted(PHOTOS.items())),
              'faces': {slug: url.replace('/thumbs/', '/faces/') for slug, url in sorted(PHOTOS.items()) if (ROOT / url.lstrip('/').replace('/thumbs/', '/faces/')).exists()}}
     (OUT / 'links.json').write_text(json.dumps(links, separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
+    # The homepage galaxy: one star per player with IPL or WPL data. [name, slug, league, matches, runs, wickets]
+    (OUT / 'galaxy.json').write_text(json.dumps(sorted(galaxy, key=lambda g: -g[3]), separators=(',', ':'), ensure_ascii=False) + '\n', encoding='utf-8')
     update_sitemap(slug_of.values())
     print(f'Wrote {len(chosen)} player pages ({total / 1e6:.1f} MB), player/index.html, player/links.json '
           f'({len(by_short["ipl"])} IPL and {len(by_short["wpl"])} WPL scorecard names linked, {len(PHOTOS)} portraits); updated sitemap.xml'
