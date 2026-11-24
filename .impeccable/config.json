@@ -38,6 +38,15 @@
         ],
         "createdAt": "2026-11-24T04:45:51.088Z",
         "reason": "user asked for motion: spinning ball seams and the slow orbit are decorative, hide no content, pause on hover/focus, and stop under reduced motion"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "home.css"
+        ],
+        "createdAt": "2026-11-24T09:24:27.488Z",
+        "reason": "false positive: one-sided dashed borders on squashed circles draw the cricket-ball seam of the mini planet (.mini-planet::before/::after), not a side-tab accent"
       }
     ]
   }

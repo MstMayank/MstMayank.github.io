@@ -11,7 +11,8 @@ const small = () => innerWidth < 761;
 
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ antialias: devicePixelRatio < 1.5, powerPreference: 'high-performance' });
+  // Smooth edges on laptops and desktops; phones skip it to stay light.
+  renderer = new THREE.WebGLRenderer({ antialias: innerWidth > 760, powerPreference: 'high-performance' });
 } catch (e) {
   renderer = null;
 }
@@ -23,7 +24,7 @@ function start() {
   // Sizes are cached and only re-read on resize, so the animation never forces the browser to re-measure the page.
   let w = box.clientWidth, h = box.clientHeight;
   const W = () => w, H = () => h;
-  const maxRatio = () => Math.min(devicePixelRatio, small() ? 1.5 : 1.75);
+  const maxRatio = () => Math.min(devicePixelRatio, small() ? 1.5 : 1.5);
   renderer.setPixelRatio(maxRatio());
   renderer.setSize(W(), H());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -256,12 +257,13 @@ function start() {
   // Only draw while the universe is on screen and the tab is visible.
   let onScreen = true;
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen) loop(); }).observe(box);
-  const tmp = new THREE.Vector3(), labelAt = [], labelVis = [], slow = []; let lowered = false;
+  const tmp = new THREE.Vector3(), labelVis = [], slow = []; let lowered = false, smoothDt = 0;
   let raf = 0, last = performance.now();
   function loop() { if (!raf) raf = requestAnimationFrame(frame); }
   function frame(now) {
     raf = 0;
-    const dt = Math.min((now - last) / 1000, .05); last = now;
+    const raw = Math.min((now - last) / 1000, .05); last = now;
+    smoothDt = smoothDt ? smoothDt * .85 + raw * .15 : raw; const dt = smoothDt;
     if (!still) planet.rotation.y += dt * .08;
     moons.forEach((m, i) => { if (!still) m.userData.a += dt * .05; m.position.set(Math.cos(m.userData.a) * ORBIT_R, Math.sin(m.userData.a * 2) * 1.2, Math.sin(m.userData.a) * ORBIT_R); m.rotation.y += still ? 0 : dt * (.4 + i * .1); });
     if (!still && introDone && !down && pinned < 0) galaxy.rotation.y += dt * .012;
@@ -276,13 +278,13 @@ function start() {
     // Door labels sit under their moons. Moved with transform only, and only when they actually move.
     moons.forEach((m, i) => {
       tmp.copy(m.position); tmp.y -= 5.4; tmp.project(camera);
-      const x = Math.round((tmp.x + 1) / 2 * w), y = Math.round((1 - tmp.y) / 2 * h), vis = tmp.z < 1, a = links[i], k = x * 10000 + y;
-      if (labelAt[i] !== k) { labelAt[i] = k; a.style.transform = `translate3d(${x}px, ${y}px, 0) translateX(-50%)`; }
+      const x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h, vis = tmp.z < 1, a = links[i];
+      a.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translateX(-50%)`;
       if (labelVis[i] !== vis) { labelVis[i] = vis; a.style.visibility = vis ? 'visible' : 'hidden'; }
     });
     if (hoverEvent) { hover(hoverEvent); hoverEvent = null; }
     // If this device struggles, drop to a lighter resolution once.
-    if (!lowered && introDone) { slow.push(dt); if (slow.length > 90) { const avg = slow.reduce((x, y) => x + y) / slow.length; slow.length = 0; if (avg > 0.024) { lowered = true; renderer.setPixelRatio(1); if (starPoints) starPoints.material.uniforms.scale.value = h / 2; } else lowered = true; } }
+    if (!lowered && introDone) { slow.push(dt); if (slow.length > 90) { const avg = slow.reduce((x, y) => x + y) / slow.length; slow.length = 0; if (avg > 0.034) { lowered = true; renderer.setPixelRatio(1); if (starPoints) starPoints.material.uniforms.scale.value = h / 2; } else lowered = true; } }
     renderer.render(scene, camera);
     if (onScreen && !document.hidden) loop();
   }
@@ -290,7 +292,7 @@ function start() {
   loop();
 
   addEventListener('resize', () => {
-    w = box.clientWidth; h = box.clientHeight; labelAt.length = 0;
+    w = box.clientWidth; h = box.clientHeight;
     camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); home = homeFor();
     if (starPoints) starPoints.material.uniforms.scale.value = renderer.getPixelRatio() * H() / 2;
   });
