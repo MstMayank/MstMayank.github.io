@@ -398,6 +398,10 @@ html body.ds .fx > * { margin-block: 0; }
    ========================================================================== */
 html body.ds { background: var(--ds-bg) !important; color: var(--ds-text); font-family: var(--ds-font); }
 body.ds::before { content: none; }
+html body.ds::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; transform: translateZ(0);
+  background-image: radial-gradient(1px 1px at 23px 41px, rgba(241, 237, 226, .55), transparent 60%), radial-gradient(1px 1px at 151px 97px, rgba(241, 237, 226, .35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 87px 173px, rgba(241, 237, 226, .45), transparent 60%), radial-gradient(1px 1px at 201px 13px, rgba(255, 124, 104, .45), transparent 60%),
+    radial-gradient(1px 1px at 263px 211px, rgba(241, 237, 226, .3), transparent 60%), radial-gradient(1px 1px at 9px 250px, rgba(245, 197, 24, .4), transparent 60%); background-size: 280px 280px; }
 html body.ds ::selection { background: var(--ds-yellow); color: #111; }
 html body.ds :focus-visible { outline: 2px solid var(--ds-text); outline-offset: 3px; }
 
@@ -542,11 +546,9 @@ html body.ds img[src*="logos/"] { filter: drop-shadow(0 0 .7px rgba(0, 0, 0, .7)
   --ed-font: "Barlow", system-ui, sans-serif;
   color-scheme: dark;
 }
-html body.ds, html body.ed { background-color: var(--ds-bg) !important;
-  background-image: radial-gradient(1px 1px at 23px 41px, rgba(241, 237, 226, .55), transparent 60%), radial-gradient(1px 1px at 151px 97px, rgba(241, 237, 226, .35), transparent 60%),
-    radial-gradient(1.5px 1.5px at 87px 173px, rgba(241, 237, 226, .45), transparent 60%), radial-gradient(1px 1px at 201px 13px, rgba(255, 124, 104, .45), transparent 60%),
-    radial-gradient(1px 1px at 263px 211px, rgba(241, 237, 226, .3), transparent 60%), radial-gradient(1px 1px at 9px 250px, rgba(245, 197, 24, .4), transparent 60%) !important;
-  background-size: 280px 280px !important; background-attachment: fixed !important; color: var(--ds-text); font-family: var(--ds-font); font-size: 17px; }
+html { background: #05080d; }
+html body.ds, html body.ed { background: transparent !important;
+  /* The starfield is a fixed layer of its own (below), so scrolling never repaints the page background. */ color: var(--ds-text); font-family: var(--ds-font); font-size: 17px; }
 html body.ds ::selection { background: #f5c518; color: #0d130f; }
 html body.ds :focus-visible { outline: 3px solid #f5c518; outline-offset: 2px; }
 html { scrollbar-color: #33414f #05080d; }
