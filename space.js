@@ -11,7 +11,7 @@ const small = () => innerWidth < 761;
 
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ antialias: devicePixelRatio < 1.5, powerPreference: 'high-performance' });
 } catch (e) {
   renderer = null;
 }
@@ -20,8 +20,11 @@ if (box && renderer) start();
 
 function start() {
   root.classList.add('gl');
-  const W = () => box.clientWidth, H = () => box.clientHeight;
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  // Sizes are cached and only re-read on resize, so the animation never forces the browser to re-measure the page.
+  let w = box.clientWidth, h = box.clientHeight;
+  const W = () => w, H = () => h;
+  const maxRatio = () => Math.min(devicePixelRatio, small() ? 1.5 : 1.75);
+  renderer.setPixelRatio(maxRatio());
   renderer.setSize(W(), H());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   box.prepend(renderer.domElement);
@@ -86,7 +89,7 @@ function start() {
 
   // Far background stars.
   {
-    const n = small() ? 2500 : 5000, pos = new Float32Array(n * 3);
+    const n = small() ? 1500 : 3500, pos = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) { const r = 900 + Math.random() * 1600, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1); pos.set([r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th)], i * 3); }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: '#c9d0d6', size: 1.6, sizeAttenuation: false, transparent: true, opacity: .7 })));
@@ -146,7 +149,8 @@ function start() {
       if (down.type === 'mouse') tPitch = Math.max(-0.5, Math.min(0.6, down.pitch + dy * 0.003)); // on touch, vertical moves scroll the page
     }
   });
-  cv.addEventListener('pointermove', e => hover(e));
+  let hoverEvent = null;
+  cv.addEventListener('pointermove', e => { hoverEvent = e; });
   addEventListener('pointerup', e => { cv.classList.remove('dragging'); if (down && !down.moved && e.target === cv) click(e); down = null; });
   cv.addEventListener('pointercancel', () => { down = null; cv.classList.remove('dragging'); });
 
@@ -155,8 +159,7 @@ function start() {
   const mouse = new THREE.Vector2(), tip = document.getElementById('tip');
   function pick(e) {
     if (!starPoints || !introDone) return -1;
-    const r = cv.getBoundingClientRect();
-    mouse.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(mouse, camera);
+    mouse.set(e.offsetX / w * 2 - 1, -(e.offsetY / h) * 2 + 1); ray.setFromCamera(mouse, camera);
     const hits = ray.intersectObject(starPoints); return hits.length ? hits[0].index : -1;
   }
   function showTip(i, x, y) {
@@ -204,11 +207,13 @@ function start() {
   });
   document.getElementById('q').addEventListener('input', unpin);
 
-  const rotated = () => { const p = home.clone(); p.applyAxisAngle(new THREE.Vector3(1, 0, 0), -pitch); p.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw); return p; };
+  const AX = new THREE.Vector3(1, 0, 0), AY = new THREE.Vector3(0, 1, 0), camAt = new THREE.Vector3();
+  const rotated = () => camAt.copy(home).applyAxisAngle(AX, -pitch).applyAxisAngle(AY, yaw).clone();
 
   // Only draw while the universe is on screen and the tab is visible.
   let onScreen = true;
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen) loop(); }).observe(box);
+  const tmp = new THREE.Vector3(), labelAt = [], labelVis = [], slow = []; let lowered = false;
   let raf = 0, last = performance.now();
   function loop() { if (!raf) raf = requestAnimationFrame(frame); }
   function frame(now) {
@@ -223,14 +228,18 @@ function start() {
       if (t >= 1) { const f = flying; flying = null; if (f.after) f.after(); }
     } else if (pinned < 0) {
       yaw += (tYaw - yaw) * .08; pitch += (tPitch - pitch) * .08;
-      camera.position.copy(rotated()); look.set(0, 0, 0); camera.lookAt(look);
+      camAt.copy(home).applyAxisAngle(AX, -pitch).applyAxisAngle(AY, yaw); camera.position.copy(camAt); look.set(0, 0, 0); camera.lookAt(look);
     }
-    // Door labels sit under their moons.
-    const r = cv.getBoundingClientRect();
+    // Door labels sit under their moons. Moved with transform only, and only when they actually move.
     moons.forEach((m, i) => {
-      const v = m.position.clone().add(new THREE.Vector3(0, -5.4, 0)).project(camera), a = links[i];
-      a.style.left = ((v.x + 1) / 2 * r.width) + 'px'; a.style.top = ((1 - v.y) / 2 * r.height) + 'px'; a.style.visibility = v.z < 1 ? 'visible' : 'hidden';
+      tmp.copy(m.position); tmp.y -= 5.4; tmp.project(camera);
+      const x = Math.round((tmp.x + 1) / 2 * w), y = Math.round((1 - tmp.y) / 2 * h), vis = tmp.z < 1, a = links[i], k = x * 10000 + y;
+      if (labelAt[i] !== k) { labelAt[i] = k; a.style.transform = `translate3d(${x}px, ${y}px, 0) translateX(-50%)`; }
+      if (labelVis[i] !== vis) { labelVis[i] = vis; a.style.visibility = vis ? 'visible' : 'hidden'; }
     });
+    if (hoverEvent) { hover(hoverEvent); hoverEvent = null; }
+    // If this device struggles, drop to a lighter resolution once.
+    if (!lowered && introDone) { slow.push(dt); if (slow.length > 90) { const avg = slow.reduce((x, y) => x + y) / slow.length; slow.length = 0; if (avg > 0.024) { lowered = true; renderer.setPixelRatio(1); if (starPoints) starPoints.material.uniforms.scale.value = h / 2; } else lowered = true; } }
     renderer.render(scene, camera);
     if (onScreen && !document.hidden) loop();
   }
@@ -238,7 +247,8 @@ function start() {
   loop();
 
   addEventListener('resize', () => {
-    camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); home = homeFor();
+    w = box.clientWidth; h = box.clientHeight; labelAt.length = 0;
+    camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); home = homeFor();
     if (starPoints) starPoints.material.uniforms.scale.value = renderer.getPixelRatio() * H() / 2;
   });
 }
