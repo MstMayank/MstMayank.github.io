@@ -29,6 +29,42 @@
         ],
         "createdAt": "2026-11-23T16:38:48.199Z",
         "reason": "User asked for a neon gaming style with a dark tone; glow is the brief"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "_samples/levi/home.html"
+        ],
+        "createdAt": "2026-11-24T03:43:23.290Z",
+        "reason": "neon brief: user asked for gaming style, dark tone, neon palette; lime glow is the Floodlights action light (DESIGN.md)"
+      },
+      {
+        "rule": "kicker-above-heading",
+        "value": "*",
+        "files": [
+          "_samples/levi/home.html"
+        ],
+        "createdAt": "2026-11-24T03:45:06.483Z",
+        "reason": "chapter labels carry the date, place and chapter number (film-credit device from the user's levigav reference); decorative kickers removed"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "_samples/levi/home.html"
+        ],
+        "createdAt": "2026-11-24T03:45:06.491Z",
+        "reason": "crowd camera-flash starfield in the hero, a literal stadium effect; off under reduced motion"
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "files": [
+          "_samples/levi/home.html"
+        ],
+        "createdAt": "2026-11-24T03:45:06.499Z",
+        "reason": "italic serif accent echoes the user's levigav reference; already self-hosted; flagged to user as a sample choice"
       }
     ]
   }
