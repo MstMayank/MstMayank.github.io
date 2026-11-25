@@ -85,7 +85,7 @@
   <div class="qz-progress" id="qz-progress" aria-hidden="true"></div>
   <section class="qz-card" id="qz-card" hidden aria-live="polite">
     <span class="qz-eyebrow" id="qz-count"></span>
-    <h2 id="qz-question"></h2>
+    <h2 id="qz-question" tabindex="-1"></h2>
     <div class="qz-options" id="qz-options"></div>
     <p class="qz-explain" id="qz-explain" hidden></p>
     <button type="button" class="ds-btn qz-next" id="qz-next" hidden>Next question →</button>
@@ -145,7 +145,7 @@
   function progress() {
     $('qz-progress').replaceChildren(...questions.map((_, i) => { const s = document.createElement('span'); s.className = i < index ? 'done' : i === index ? 'now' : ''; return s; }));
   }
-  function show() {
+  function show(focusQuestion = false) {
     const q = questions[index];
     progress();
     $('qz-card').hidden = false; $('qz-result').hidden = true;
@@ -160,7 +160,7 @@
       b.addEventListener('click', () => choose(i));
       return b;
     }));
-    $('qz-options').querySelector('button')?.focus({preventScroll: true});
+    if (focusQuestion) $('qz-question').focus({preventScroll: true});
   }
   function choose(i) {
     const q = questions[index];
@@ -228,7 +228,7 @@
       if (saved?.done || index >= questions.length) finish(); else show();
     } catch (e) { $('qz-status').textContent = 'The quiz could not load. Refresh the page to try again.'; }
   }
-  $('qz-next').addEventListener('click', () => { index++; if (index < questions.length) show(); else if (mode === 'practice') practiceEnd(); else finish(); });
+  $('qz-next').addEventListener('click', () => { index++; if (index < questions.length) show(true); else if (mode === 'practice') practiceEnd(); else finish(); });
   function practiceRoundQuestions() {
     // Several random seeds, keeping questions not seen today (daily or earlier practice rounds).
     const out = [];
@@ -247,7 +247,7 @@
     if (!questions.length) { mode = 'daily'; practiceRound--; $('qz-share-status').textContent = 'No practice questions could be made right now.'; return; }
     $('qz-result').hidden = true; $('qz-invite').hidden = true; $('qz-challenge').hidden = true;
     $('qz-status').textContent = league.toUpperCase() + ' practice · doesn’t change your score or streak';
-    show();
+    show(true);
   }
   function practiceEnd() {
     const right = answers.filter(Boolean).length;
