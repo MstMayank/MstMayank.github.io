@@ -1043,11 +1043,23 @@
     "summary": "Kenya defeated Uganda by 39 runs in the final of Africa Continental Cup.",
     "title": "Kenya win Africa Continental Cup"
   },
+  "1557572": {
+    "date": "2026-11-25",
+    "priority": 900,
+    "summary": "Sri Lanka defeated Ireland by 6 wickets in the final of ICC Women's Emerging Nations Trophy.",
+    "title": "Sri Lanka win ICC Women's Emerging Nations Trophy"
+  },
   "1558250": {
     "date": "2026-10-18",
     "priority": 900,
     "summary": "Sweden defeated Austria by 64 runs in the final of ECA Women's European Cup.",
     "title": "Sweden win ECA Women's European Cup"
+  },
+  "1560731": {
+    "date": "2026-11-14",
+    "priority": 900,
+    "summary": "Uganda defeated Rwanda by 19 runs in the final of Women's Victoria T20 Series.",
+    "title": "Uganda win Women's Victoria T20 Series"
   },
   "218250": {
     "date": "2005-09-06",

@@ -9191,6 +9191,12 @@
     ],
     "11-07": [
       {
+        "competition": "Women’s T20I",
+        "date": "2026-11-07",
+        "summary": "JA Diergaardt took 5 wickets for 21 runs for Namibia against United States of America in T20I cricket.",
+        "title": "JA Diergaardt takes 5/21 against United States of America"
+      },
+      {
         "competition": "Men’s ODI",
         "date": "2024-11-07",
         "summary": "Shakeel Ahmed (2) took 5 wickets for 23 runs for Oman against United Arab Emirates in ODI cricket.",
@@ -9213,12 +9219,6 @@
         "date": "2015-11-07",
         "summary": "Marlon Samuels scored 110 for West Indies against Sri Lanka in ODI cricket.",
         "title": "Marlon Samuels scores 110 against Sri Lanka"
-      },
-      {
-        "competition": "Men’s ODI",
-        "date": "2015-11-07",
-        "summary": "Mushfiqur Rahim scored 107 for Bangladesh against Zimbabwe in ODI cricket.",
-        "title": "Mushfiqur Rahim scores 107 against Zimbabwe"
       }
     ],
     "11-08": [
@@ -9389,14 +9389,14 @@
       {
         "competition": "Men’s ODI",
         "date": "2026-11-13",
-        "summary": "Mahli Beardman took 6 wickets for 24 runs for Australia against England in ODI cricket.",
-        "title": "Mahli Beardman takes 6/24 against England"
+        "summary": "M Beardman took 6 wickets for 24 runs for Australia against England in ODI cricket.",
+        "title": "M Beardman takes 6/24 against England"
       },
       {
         "competition": "Men’s ODI",
         "date": "2026-11-13",
-        "summary": "Matthew James Henry took 6 wickets for 27 runs for New Zealand against India in ODI cricket.",
-        "title": "Matthew James Henry takes 6/27 against India"
+        "summary": "Matthew Henry took 6 wickets for 27 runs for New Zealand against India in ODI cricket.",
+        "title": "Matthew Henry takes 6/27 against India"
       },
       {
         "competition": "Men’s T20I",
@@ -9418,6 +9418,11 @@
         "title": "Australia win ICC Men's T20 World Cup"
       },
       {
+        "date": "2026-11-14",
+        "summary": "Uganda defeated Rwanda by 19 runs in the final of Women's Victoria T20 Series.",
+        "title": "Uganda win Women's Victoria T20 Series"
+      },
+      {
         "competition": "Women’s T20I",
         "date": "2025-11-14",
         "summary": "O Kamchomphu took 5 wickets for 18 runs for Thailand against Namibia in T20I cricket.",
@@ -9434,12 +9439,6 @@
         "date": "2008-11-14",
         "summary": "Yuvraj Singh scored 138 for India against England in ODI cricket.",
         "title": "Yuvraj Singh scores 138 against England"
-      },
-      {
-        "competition": "Men’s ODI",
-        "date": "2008-11-14",
-        "summary": "Shivnarine Chanderpaul scored 107 for West Indies against Pakistan in ODI cricket.",
-        "title": "Shivnarine Chanderpaul scores 107 against Pakistan"
       }
     ],
     "11-15": [
@@ -9448,6 +9447,12 @@
         "date": "2023-11-15",
         "summary": "Mohammed Shami took 7 wickets for 57 runs for India against New Zealand in ODI cricket.",
         "title": "Mohammed Shami takes 7/57 against New Zealand"
+      },
+      {
+        "competition": "Women’s T20I",
+        "date": "2026-11-15",
+        "summary": "C Mutasa took 6 wickets for 10 runs for Zimbabwe against Thailand in T20I cricket.",
+        "title": "C Mutasa takes 6/10 against Thailand"
       },
       {
         "competition": "Women’s T20I",
@@ -9466,12 +9471,6 @@
         "date": "2021-11-15",
         "summary": "Nahida Akter took 5 wickets for 21 runs for Bangladesh against Zimbabwe in ODI cricket.",
         "title": "Nahida Akter takes 5/21 against Zimbabwe"
-      },
-      {
-        "competition": "Men’s T20I",
-        "date": "2024-11-15",
-        "summary": "Tilak Varma scored 120 for India against South Africa in T20I cricket.",
-        "title": "Tilak Varma scores 120 against South Africa"
       }
     ],
     "11-16": [
@@ -9548,8 +9547,8 @@
       {
         "competition": "Men’s ODI",
         "date": "2026-11-18",
-        "summary": "Ben Matthew Duckett scored 133 for England against Australia in ODI cricket.",
-        "title": "Ben Matthew Duckett scores 133 against Australia"
+        "summary": "Ben Duckett scored 133 for England against Australia in ODI cricket.",
+        "title": "Ben Duckett scores 133 against Australia"
       }
     ],
     "11-19": [
@@ -9697,16 +9696,16 @@
         "title": "NRP Scholtz takes 5/13 against Canada"
       },
       {
+        "competition": "Women’s T20I",
+        "date": "2026-11-23",
+        "summary": "C Murray took 5 wickets for 17 runs for Ireland against Netherlands in T20I cricket.",
+        "title": "C Murray takes 5/17 against Netherlands"
+      },
+      {
         "competition": "Men’s T20I",
         "date": "2023-11-23",
         "summary": "Josh Inglis scored 110 for Australia against India in T20I cricket.",
         "title": "Josh Inglis scores 110 against India"
-      },
-      {
-        "competition": "Men’s T20I",
-        "date": "2024-11-23",
-        "summary": "V Balakrishnan scored 101 for Botswana against Eswatini in T20I cricket.",
-        "title": "V Balakrishnan scores 101 against Eswatini"
       }
     ],
     "11-24": [
@@ -9730,6 +9729,11 @@
     ],
     "11-25": [
       {
+        "date": "2026-11-25",
+        "summary": "Sri Lanka defeated Ireland by 6 wickets in the final of ICC Women's Emerging Nations Trophy.",
+        "title": "Sri Lanka win ICC Women's Emerging Nations Trophy"
+      },
+      {
         "competition": "Women’s T20I",
         "date": "2021-11-25",
         "summary": "Khushi Sharma took 5 wickets for 22 runs for United Arab Emirates against Bhutan in T20I cricket.",
@@ -9752,12 +9756,6 @@
         "date": "2024-11-25",
         "summary": "Faisal Khan scored 101 for Saudi Arabia against Cambodia in T20I cricket.",
         "title": "Faisal Khan scores 101 against Cambodia"
-      },
-      {
-        "competition": "Men’s ODI",
-        "date": "2022-11-25",
-        "summary": "TWM Latham scored 145 for New Zealand against India in ODI cricket.",
-        "title": "TWM Latham scores 145 against India"
       }
     ],
     "11-26": [
