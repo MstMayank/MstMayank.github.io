@@ -302,6 +302,8 @@ function start() {
   // Only draw while the universe is on screen and the tab is visible.
   let onScreen = true;
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen) loop(); }).observe(box);
+  const ballCenter = new THREE.Vector3();
+  const ballRadius = planet.geometry.parameters.radius;
   const tmp = new THREE.Vector3(), labelVis = [], slow = []; let lowered = false, smoothDt = 0;
   let raf = 0, last = performance.now();
   function loop() { if (!raf) raf = requestAnimationFrame(frame); }
@@ -320,11 +322,24 @@ function start() {
       yaw += (tYaw - yaw) * .08; pitch += (tPitch - pitch) * .08;
       camAt.copy(home).applyAxisAngle(AX, -pitch).applyAxisAngle(AY, yaw); camera.position.copy(camAt); look.set(0, 0, 0); camera.lookAt(look);
     }
-    // Door labels sit under their moons. Moved with transform only, and only when they actually move.
+    // Cut the ball silhouette out of labels on the far half of the orbit.
+    camera.updateMatrixWorld();
+    ballCenter.copy(planet.position).applyMatrix4(camera.matrixWorldInverse);
+    const ballZ = ballCenter.z;
+    const radiusPx = h * camera.projectionMatrix.elements[5] * ballRadius /
+      (2 * Math.sqrt(Math.max(1, ballZ * ballZ - ballRadius * ballRadius)));
+    ballCenter.applyMatrix4(camera.projectionMatrix);
+    const ballX = (1 + ballCenter.x) * w / 2, ballY = (1 - ballCenter.y) * h / 2;
     moons.forEach((m, i) => {
+      const behind = tmp.copy(m.position).applyMatrix4(camera.matrixWorldInverse).z < ballZ;
       tmp.copy(m.position); tmp.y -= 5.4; tmp.project(flying === introFlight ? navigationCamera : camera);
       const x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h, vis = tmp.z < 1, a = links[i];
       a.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translateX(-50%)`;
+      const mask = behind && ballZ < -ballRadius && !a.matches(':focus-visible')
+        ? `radial-gradient(circle at calc(50% + ${(ballX - x).toFixed(2)}px) ${(ballY - y).toFixed(2)}px, transparent ${Math.max(0, radiusPx - 0.5).toFixed(2)}px, black ${(radiusPx + 0.5).toFixed(2)}px)`
+        : 'none';
+      a.style.maskImage = mask;
+      a.style.webkitMaskImage = mask;
       if (labelVis[i] !== vis) { labelVis[i] = vis; a.style.visibility = vis ? 'visible' : 'hidden'; }
     });
     if (hoverEvent) { hover(hoverEvent); hoverEvent = null; }
