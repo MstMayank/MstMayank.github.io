@@ -251,6 +251,16 @@ function start() {
     choose(i);
   });
 
+  // Allow story cards and sign-off to fly the universe camera straight to a player's star.
+  addEventListener('tcs:fly-slug', e => {
+    const slug = e.detail && e.detail.slug;
+    if (!slug || !players.length || !starPoints) return;
+    const i = players.findIndex(p => p[1] === slug);
+    if (i < 0) return;
+    scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+    setTimeout(() => choose(i), still ? 0 : 420);
+  });
+
   const AX = new THREE.Vector3(1, 0, 0), AY = new THREE.Vector3(0, 1, 0), camAt = new THREE.Vector3();
   const rotated = () => camAt.copy(home).applyAxisAngle(AX, -pitch).applyAxisAngle(AY, yaw).clone();
 

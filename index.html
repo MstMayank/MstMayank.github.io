@@ -6,7 +6,7 @@
   gtag('js', new Date());
   gtag('config', 'G-CT3F1MC8VS');
 </script>
-<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/ds.css?v=sp-2"><link rel="stylesheet" href="/home.css?v=sp-6">
+<link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/ds.css?v=sp-2"><link rel="stylesheet" href="/home.css?v=sp-7">
 <script>document.documentElement.classList.add('js')</script>
 </head><body class="ds home-page space-home" id="top"><nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav><main class="sb">
   <section class="universe" id="universe" aria-labelledby="hero-title">
@@ -33,73 +33,198 @@
     <div class="over-stage">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="story-title">Six balls that made me</h2>
+        <div class="over-heading">
+          <span class="over-eyebrow">An innings in one over</span>
+          <h2 id="story-title">Six balls that made me</h2>
+        </div>
         <div class="over-ctrl">
           <p class="over-track" aria-live="polite"><span class="balls" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span id="over-label">Ball 1 of 6</span><span class="done-tag" aria-hidden="true"><svg class="stumps" viewBox="0 0 40 44"><g class="poles"><rect x="6" y="10" width="4" height="34" rx="1"/><rect x="18" y="10" width="4" height="34" rx="1"/><rect x="30" y="10" width="4" height="34" rx="1"/></g><rect class="bail l" x="5" y="6" width="15" height="3" rx="1.5"/><rect class="bail r" x="20" y="6" width="15" height="3" rx="1.5"/></svg>Over complete</span></p>
           <div class="over-btns"><button class="btn" type="button" id="over-prev" aria-label="Previous ball">←</button><button class="btn" type="button" id="over-next" aria-label="Next ball">→</button></div>
         </div>
       </div>
+
+      <!-- Broadcast over strip + 22-yard pitch delivery bar -->
+      <div class="over-hud">
+        <div class="over-strip" role="tablist" aria-label="Jump to ball in the over">
+          <button type="button" class="over-pill on" data-ball="0" role="tab" aria-selected="true"><span class="ov-code">0.1</span><b>2003</b><span class="ov-mark">W</span></button>
+          <button type="button" class="over-pill" data-ball="1" role="tab" aria-selected="false"><span class="ov-code">0.2</span><b>Dravid</b><span class="ov-mark">1</span></button>
+          <button type="button" class="over-pill" data-ball="2" role="tab" aria-selected="false"><span class="ov-code">0.3</span><b>Dhoni</b><span class="ov-mark">6</span></button>
+          <button type="button" class="over-pill" data-ball="3" role="tab" aria-selected="false"><span class="ov-code">0.4</span><b>Sachin</b><span class="ov-mark">100</span></button>
+          <button type="button" class="over-pill" data-ball="4" role="tab" aria-selected="false"><span class="ov-code">0.5</span><b>My gen</b><span class="ov-mark">4</span></button>
+          <button type="button" class="over-pill" data-ball="5" role="tab" aria-selected="false"><span class="ov-code">0.6</span><b>Now</b><span class="ov-mark">★</span></button>
+        </div>
+        <div class="pitch-bar" aria-hidden="true">
+          <span class="pitch-tag" id="pitch-tag">0.1 · Bouncer · Johannesburg</span>
+          <div class="pitch-strip">
+            <span class="crease bow"></span>
+            <span class="pitch-line" id="pitch-line"></span>
+            <span class="pitch-bounce" id="pitch-bounce"></span>
+            <span class="pitch-ball" id="pitch-ball"></span>
+            <span class="crease bat"></span>
+          </div>
+          <span class="pitch-out" id="pitch-out">125-run gap</span>
+        </div>
+      </div>
     </div>
+
     <ol class="over" id="over" tabindex="0" aria-label="My story in six balls. Scroll sideways or use the arrows.">
       <li class="ball-card b1">
-        <span class="n">Ball 1 · 2003</span>
-        <div class="art final" aria-hidden="true">
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">2003</span>
+          <span class="n">Ball 0.1 · 2003</span>
+          <h3>The first match I ever watched.</h3>
+          <p>India lost the final by 125 runs. <strong>I didn’t care. I was hooked.</strong></p>
+          <dl class="b-plates">
+            <div><dt>Australia</dt><dd>359/2</dd></div>
+            <div><dt>India</dt><dd class="is-wicket">234</dd></div>
+          </dl>
+        </div>
+        <div class="art final">
           <div class="sc-row a"><b>AUS</b><span><i data-to="359">359</i>/2</span></div>
           <div class="sc-row ind a"><b>IND</b><span><i data-to="234">234</i></span></div>
+          <div class="chase-meter" aria-label="Runs comparison: Australia 359 vs India 234">
+            <div class="cm-head"><span>Chase gap</span><strong id="chase-gap-label">125 runs short</strong></div>
+            <div class="cm-track"><span class="cm-aus" style="width:100%"></span></div>
+            <div class="cm-track"><span class="cm-ind" style="width:65.2%"></span></div>
+          </div>
           <small>World Cup final · Johannesburg · 23 March 2003</small>
         </div>
-        <h3>The first match I ever watched.</h3>
-        <p>India lost the final by 125 runs. <strong>I didn’t care. I was hooked.</strong></p>
       </li>
+
       <li class="ball-card b2">
-        <span class="n">Ball 2 · 2003</span>
-        <div class="art wall" aria-hidden="true"><div class="bricks"></div><b class="a">The Wall</b><span class="a">13,288 Test runs</span></div>
-        <h3>My first favourite: Rahul Dravid.</h3>
-        <p>Calm, patient, impossible to get out. <a href="/player/rahul-dravid.html">His page →</a></p>
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">WALL</span>
+          <span class="n">Ball 0.2 · 2003</span>
+          <h3>My first favourite: Rahul Dravid.</h3>
+          <p>Calm, patient, impossible to get out. Every brick held when everything else shook.</p>
+          <dl class="b-plates">
+            <div><dt>Test runs</dt><dd>13,288</dd></div>
+            <div><dt>Test avg</dt><dd>52.31</dd></div>
+          </dl>
+          <div class="b-actions">
+            <a class="b-link" href="/player/rahul-dravid.html">His page →</a>
+            <button type="button" class="b-fly" data-fly="rahul-dravid">Fly to star ↑</button>
+          </div>
+        </div>
+        <div class="art wall">
+          <div class="bricks" aria-hidden="true"></div>
+          <div class="wall-overlay">
+            <b class="a">The Wall</b>
+            <span class="a" id="wall-readout">13,288 Test runs · HS 270</span>
+          </div>
+          <div class="wall-chips" role="group" aria-label="Dravid career formats">
+            <button type="button" class="w-chip on" data-wall="164 Tests · 13,288 runs · Avg 52.31 · HS 270">Test</button>
+            <button type="button" class="w-chip" data-wall="344 ODIs · 10,889 runs · Avg 39.17">ODI</button>
+            <button type="button" class="w-chip" data-wall="298 First-class · 23,794 runs · Avg 55.33">First-class</button>
+            <button type="button" class="w-chip" data-wall="89 IPL matches · 2,174 runs · SR 115.52">IPL</button>
+          </div>
+        </div>
       </li>
+
       <li class="ball-card b3">
-        <span class="n">Ball 3 · 2005</span>
-        <div class="art storm" aria-hidden="true">
-          <img class="a" src="/battle-art/dhoni.jpg" alt="" loading="lazy">
-          <span class="knocks"><span class="a"><b>148</b>v Pakistan, Vizag</span><span class="a"><b>183*</b>v Sri Lanka, Jaipur</span></span>
-          <span class="six"><i></i><b>Six!</b></span>
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">2005</span>
+          <span class="n">Ball 0.3 · 2005</span>
+          <h3>Then came a storm named Dhoni.</h3>
+          <p>Long hair, huge sixes, no fear. <strong>He felt like one of us.</strong></p>
+          <dl class="b-plates">
+            <div><dt>ODI runs</dt><dd>10,773</dd></div>
+            <div><dt>IPL SR</dt><dd>137.45</dd></div>
+          </dl>
+          <div class="b-actions">
+            <a class="b-link" href="/player/ms-dhoni.html">His page →</a>
+            <button type="button" class="b-fly" data-fly="ms-dhoni">Fly to star ↑</button>
+          </div>
         </div>
-        <h3>Then came a storm named Dhoni.</h3>
-        <p>Long hair, huge sixes, no fear. <strong>He felt like one of us.</strong> <a href="/player/ms-dhoni.html">His page →</a></p>
+        <div class="art storm">
+          <img class="a" src="/battle-art/dhoni.jpg" alt="MS Dhoni illustrated portrait" loading="lazy">
+          <div class="knocks">
+            <button type="button" class="knock-btn a on" data-knock="vizag"><b>148</b><span>v Pakistan, Vizag</span></button>
+            <button type="button" class="knock-btn a" data-knock="jaipur"><b>183*</b><span>v Sri Lanka, Jaipur</span></button>
+            <div class="knock-note" id="dhoni-note">2005 · Vizag · Announced India's new fearless finisher</div>
+          </div>
+          <span class="six" aria-hidden="true"><i></i><b>Six!</b></span>
+        </div>
       </li>
+
       <li class="ball-card b4">
-        <span class="n">Ball 4 · Always</span>
-        <div class="art hundred" aria-hidden="true"><b class="a" data-to="100">100</b><span>international hundreds</span></div>
-        <h3>I grew up on stories of a god.</h3>
-        <p>Sachin Tendulkar: 34,357 international runs, and every elder had a story about him. <a href="/player/sachin-tendulkar.html">His page →</a></p>
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">100</span>
+          <span class="n">Ball 0.4 · Always</span>
+          <h3>I grew up on stories of a god.</h3>
+          <p>Sachin Tendulkar: 34,357 international runs, and every elder had a story about him.</p>
+          <dl class="b-plates">
+            <div><dt>Test + ODI</dt><dd>51 + 49</dd></div>
+            <div><dt>Test high</dt><dd>248*</dd></div>
+          </dl>
+          <div class="b-actions">
+            <a class="b-link" href="/player/sachin-tendulkar.html">His page →</a>
+            <button type="button" class="b-fly" data-fly="sachin-tendulkar">Fly to star ↑</button>
+          </div>
+        </div>
+        <div class="art hundred">
+          <div class="hun-top">
+            <b class="a" data-to="100">100</b>
+            <div>
+              <span>international hundreds</span>
+              <small id="sachin-star-note">51 Test · 49 ODI · Hover or tap a tile</small>
+            </div>
+          </div>
+          <div class="century-grid" id="century-grid" role="group" aria-label="100 international centuries grid: 51 Test and 49 ODI"></div>
+        </div>
       </li>
+
       <li class="ball-card b5">
-        <span class="n">Ball 5 · My generation</span>
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">GEN</span>
+          <span class="n">Ball 0.5 · My generation</span>
+          <h3>Then my generation took over.</h3>
+          <p>Kohli the King, Rohit the Hitman, Yuvi’s six sixes and Bumrah, the bowling god.</p>
+          <div class="b-fly-row" role="group" aria-label="Fly to star in 3D universe">
+            <button type="button" class="b-fly" data-fly="virat-kohli">King ↑</button>
+            <button type="button" class="b-fly" data-fly="rohit-sharma">Hitman ↑</button>
+            <button type="button" class="b-fly" data-fly="yuvraj-singh">Yuvi ↑</button>
+            <button type="button" class="b-fly" data-fly="jasprit-bumrah">Boom ↑</button>
+          </div>
+        </div>
         <div class="art gen">
-          <a class="a" href="/player/virat-kohli.html"><img src="/battle-art/kohli-india.jpg" alt="" loading="lazy" style="object-position:55% 22%"><b>King</b></a>
-          <a class="a" href="/player/rohit-sharma.html"><img src="/battle-art/thumbs/rohit.webp" alt="" loading="lazy" style="object-position:54% 23%"><b>Hitman</b></a>
+          <a class="a" href="/player/virat-kohli.html"><img src="/battle-art/kohli-india.jpg" alt="Virat Kohli" loading="lazy" style="object-position:55% 22%"><b>King</b></a>
+          <a class="a" href="/player/rohit-sharma.html"><img src="/battle-art/thumbs/rohit.webp" alt="Rohit Sharma" loading="lazy" style="object-position:54% 23%"><b>Hitman</b></a>
           <a class="a yuvi" href="/player/yuvraj-singh.html"><span class="sixes">6<small>×</small>6</span><span class="where">Six sixes · Durban 2007</span><b>Yuvi</b></a>
-          <a class="a" href="/player/jasprit-bumrah.html"><img src="/battle-art/thumbs/bumrah.webp" alt="" loading="lazy" style="object-position:50% 4%"><b>Boom</b></a>
+          <a class="a" href="/player/jasprit-bumrah.html"><img src="/battle-art/thumbs/bumrah.webp" alt="Jasprit Bumrah" loading="lazy" style="object-position:50% 4%"><b>Boom</b></a>
         </div>
-        <h3>Then my generation took over.</h3>
-        <p>Kohli the King, Rohit the Hitman, Yuvi’s six sixes and Bumrah, the bowling god.</p>
       </li>
+
       <li class="ball-card b6">
-        <span class="n">Ball 6 · Now</span>
-        <div class="art gen young">
-          <a class="a" href="/player/shubman-gill.html"><img src="/battle-art/thumbs/shubman-gill.webp" alt="" loading="lazy" style="object-position:48% 30%"><b>Gill</b></a>
-          <a class="a" href="/player/abhishek-sharma.html"><img src="/battle-art/thumbs/abhishek-sharma.webp" alt="" loading="lazy" style="object-position:51% 32%"><b>Abhishek</b></a>
-          <span class="a"><img src="/battle-art/thumbs/vaibhav-sooryavanshi.webp" alt="" loading="lazy" style="object-position:53% 32%"><b>Vaibhav</b></span>
+        <div class="b-copy">
+          <span class="b-era" aria-hidden="true">NOW</span>
+          <span class="n">Ball 0.6 · Now</span>
+          <h3>Now I’m watching the young ones go mad.</h3>
+          <p>Gill’s class, Abhishek’s carnage, and a 14-year-old Vaibhav hitting a 35-ball IPL hundred.</p>
+          <dl class="b-plates">
+            <div><dt>Vaibhav</dt><dd>35-ball 100</dd></div>
+            <div><dt>Gill IPL</dt><dd>4,598 runs</dd></div>
+          </dl>
+          <div class="b-fly-row" role="group" aria-label="Fly to young stars in 3D universe">
+            <button type="button" class="b-fly" data-fly="shubman-gill">Gill ↑</button>
+            <button type="button" class="b-fly" data-fly="abhishek-sharma">Abhishek ↑</button>
+          </div>
         </div>
-        <h3>Now I’m watching the young ones go mad.</h3>
-        <p>Gill’s class, Abhishek’s carnage, and a 14-year-old Vaibhav hitting a 35-ball IPL hundred.</p>
+        <div class="art gen young">
+          <a class="a" href="/player/shubman-gill.html"><img src="/battle-art/thumbs/shubman-gill.webp" alt="Shubman Gill" loading="lazy" style="object-position:48% 30%"><b>Gill</b></a>
+          <a class="a" href="/player/abhishek-sharma.html"><img src="/battle-art/thumbs/abhishek-sharma.webp" alt="Abhishek Sharma" loading="lazy" style="object-position:51% 32%"><b>Abhishek</b></a>
+          <span class="a"><img src="/battle-art/thumbs/vaibhav-sooryavanshi.webp" alt="Vaibhav Sooryavanshi" loading="lazy" style="object-position:53% 32%"><b>Vaibhav</b></span>
+        </div>
       </li>
     </ol>
     </div>
     <div class="wrap sign-off">
       <span class="mini-planet" aria-hidden="true"></span><b class="mark" aria-hidden="true">M</b>
       <p><strong>I wanted to be a cricketer. So I built a space for it.</strong> The Cricket Space is every ball I ever loved, in one place.<br>Mayank Shekhar Tiwari, creator</p>
-      <a class="btn go" href="#contact">Say hi</a>
+      <div class="sign-off-actions">
+        <a class="btn go" href="#contact">Say hi</a>
+        <a class="btn" href="#top">Back to universe ↑</a>
+      </div>
     </div>
   </section>
 
@@ -114,5 +239,5 @@
     </div>
   </section>
 </main><footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/"><small>The</small>Cricket Space<i>.</i></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script defer src="/design-v2.js?v=ed-1"></script>
-<script type="module" src="/space.js?v=5"></script><script defer src="/story.js?v=3"></script>
+<script type="module" src="/space.js?v=6"></script><script defer src="/story.js?v=4"></script>
 </body></html>
