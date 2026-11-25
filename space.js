@@ -60,7 +60,18 @@ function start() {
   const camera = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 5000);
   const homeFor = () => small() ? new THREE.Vector3(0, 130, 290) : new THREE.Vector3(0, 88, 196);
   let home = homeFor();
-  camera.position.copy(home).multiplyScalar(still ? 1 : 1.08);
+  // Place navigation at its resting position while the scene flies in.
+  const navigationCamera = camera.clone();
+  function positionNavigationCamera() {
+    navigationCamera.aspect = camera.aspect;
+    navigationCamera.updateProjectionMatrix();
+    navigationCamera.position.copy(home);
+    navigationCamera.lookAt(0, 0, 0);
+    navigationCamera.updateMatrixWorld();
+  }
+  positionNavigationCamera();
+  if (still) camera.position.copy(home);
+  else camera.position.set(0, 220, 1400);
 
   scene.add(new THREE.AmbientLight('#8fa0b0', 0.55));
   const sun = new THREE.DirectionalLight('#fff4e0', 2.4); sun.position.set(-60, 50, 80); scene.add(sun);
@@ -156,7 +167,8 @@ function start() {
   const ease = t => 1 - Math.pow(1 - t, 3);
   function flyTo(pos, target, ms, after) { flying = { from: camera.position.clone(), fromLook: look.clone(), to: pos, toLook: target, t0: performance.now(), ms: still ? 1 : ms, after }; }
   root.classList.add('tcs-ready');
-  flyTo(home.clone(), look.clone(), 500);
+  flyTo(home.clone(), look.clone(), 3600);
+  const introFlight = flying;
 
   const cv = renderer.domElement;
   let down = null;
@@ -310,7 +322,7 @@ function start() {
     }
     // Door labels sit under their moons. Moved with transform only, and only when they actually move.
     moons.forEach((m, i) => {
-      tmp.copy(m.position); tmp.y -= 5.4; tmp.project(camera);
+      tmp.copy(m.position); tmp.y -= 5.4; tmp.project(flying === introFlight ? navigationCamera : camera);
       const x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h, vis = tmp.z < 1, a = links[i];
       a.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translateX(-50%)`;
       if (labelVis[i] !== vis) { labelVis[i] = vis; a.style.visibility = vis ? 'visible' : 'hidden'; }
@@ -327,6 +339,8 @@ function start() {
   addEventListener('resize', () => {
     w = box.clientWidth; h = box.clientHeight;
     camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); home = homeFor();
+    positionNavigationCamera();
+    if (flying === introFlight) introFlight.to.copy(home);
     if (starPoints) starPoints.material.uniforms.scale.value = renderer.getPixelRatio() * H() / 2;
   });
 }
