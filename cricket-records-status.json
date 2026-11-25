@@ -2,9 +2,9 @@
   "version": 1,
   "formats": {
     "Test": {
-      "matches": 930,
-      "through": "2026-11-18",
-      "revision": "32ed75e192f68283"
+      "matches": 931,
+      "through": "2026-11-23",
+      "revision": "e27efe9d3ea9c0d1"
     },
     "ODI": {
       "matches": 3245,
@@ -17,5 +17,5 @@
       "revision": "7034b4dee2e634f1"
     }
   },
-  "pendingScorecards": 26
+  "pendingScorecards": 0
 }
