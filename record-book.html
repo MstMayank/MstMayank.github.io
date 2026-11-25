@@ -149,12 +149,18 @@
 
   // Milestone watch (milestones-core.js). Uses the formats already loaded for the table.
   const ARCHIVE_START = {Test: '2001-12-01', ODI: '2002-06-01', T20I: null};
+  let lastMilestones, lastArchive;
+  function sameSources(previous, current) {
+    return previous && previous.length === current.length && current.every((source, i) => source === previous[i]);
+  }
   let msGender = 'male';
   function renderMilestones(requested) {
     const box = document.getElementById('milestones');
     const formats = requested.filter(key => key in ARCHIVE_START);
     box.hidden = !formats.length || !window.TCSMilestones;
     if (box.hidden) return;
+    const sources = formats.map(key => datasets.get(key));
+    if (lastMilestones?.gender === msGender && sameSources(lastMilestones.sources, sources)) return;
     const near = [], reached = [];
     for (const key of formats) {
       const rows = datasets.get(key).rows.filter(row => row[7] === msGender);
@@ -180,6 +186,7 @@
     };
     fill('ms-near', near, m => item(m.name, m.team, fmt(m.need), 'needs ' + fmt(m.need) + ' ' + m.unit + ' for ' + fmt(m.next) + ' ' + m.format + ' ' + m.unit + (m.inningsAway ? ' · about ' + m.inningsAway + ' innings at their current average' : '')), 'No active player is close to a milestone in this selection.');
     fill('ms-reached', reached, m => item(m.name, m.team, fmt(m.milestone), 'reached ' + fmt(m.milestone) + ' ' + m.format + ' ' + m.unit + ' v ' + m.opponent + ', ' + new Date(m.date + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short'})), 'No milestones in the last 30 days.');
+    lastMilestones = {gender: msGender, sources};
   }
   document.querySelectorAll('[data-gender]').forEach(button => button.addEventListener('click', () => {
     msGender = button.dataset.gender;
@@ -202,16 +209,22 @@
       }
       if (current !== request) return;
       renderMilestones(requested);
-      const rowFormats = new WeakMap();
-      const rows = requested.flatMap(key => {
-        const data = datasets.get(key);
-        data.rows.forEach(row => rowFormats.set(row, key));
-        return data.rows;
-      });
-      const matches = requested.reduce((sum, key) => sum + datasets.get(key).matches, 0);
-      const aliases = Object.assign({}, ...requested.map(key => datasets.get(key).aliases));
+      const sources = requested.map(key => datasets.get(key));
+      const archiveChanged = !sameSources(lastArchive?.sources, sources);
+      if (archiveChanged) {
+        const rowFormats = new WeakMap();
+        const rows = requested.flatMap(key => {
+          const data = datasets.get(key);
+          data.rows.forEach(row => rowFormats.set(row, key));
+          return data.rows;
+        });
+        const matches = requested.reduce((sum, key) => sum + datasets.get(key).matches, 0);
+        const aliases = Object.assign({}, ...requested.map(key => datasets.get(key).aliases));
+        lastArchive = {sources, rows, aliases, matches, rowFormats};
+      }
+      const {rows, aliases, matches, rowFormats} = lastArchive;
       const selectedYear = year.value || (legacyQuery && !year.dataset.ready ? legacyQuery[2] : '');
-      if (year.dataset.format !== selectedFormat) {
+      if (archiveChanged || year.dataset.format !== selectedFormat) {
         const years = [...new Set(rows.map(row => row[6].slice(0, 4)))].sort().reverse();
         if (selectedYear && !years.includes(selectedYear)) years.push(selectedYear);
         years.sort().reverse();

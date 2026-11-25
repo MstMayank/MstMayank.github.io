@@ -60,7 +60,7 @@ function start() {
   const camera = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 5000);
   const homeFor = () => small() ? new THREE.Vector3(0, 130, 290) : new THREE.Vector3(0, 88, 196);
   let home = homeFor();
-  camera.position.set(0, 220, 1400);
+  camera.position.copy(home).multiplyScalar(still ? 1 : 1.08);
 
   scene.add(new THREE.AmbientLight('#8fa0b0', 0.55));
   const sun = new THREE.DirectionalLight('#fff4e0', 2.4); sun.position.set(-60, 50, 80); scene.add(sun);
@@ -151,11 +151,12 @@ function start() {
   }).catch(() => {});
 
   // Camera: fly in, then drag to look around.
-  let yaw = 0, pitch = 0, tYaw = 0, tPitch = 0, flying = null, introDone = false, pinned = -1;
+  let yaw = 0, pitch = 0, tYaw = 0, tPitch = 0, flying = null, pinned = -1;
   const look = new THREE.Vector3();
   const ease = t => 1 - Math.pow(1 - t, 3);
   function flyTo(pos, target, ms, after) { flying = { from: camera.position.clone(), fromLook: look.clone(), to: pos, toLook: target, t0: performance.now(), ms: still ? 1 : ms, after }; }
-  flyTo(home.clone(), new THREE.Vector3(), 3600, () => { introDone = true; root.classList.add('tcs-ready'); });
+  root.classList.add('tcs-ready');
+  flyTo(home.clone(), look.clone(), 500);
 
   const cv = renderer.domElement;
   let down = null;
@@ -177,7 +178,7 @@ function start() {
   const ray = new THREE.Raycaster(); ray.params.Points.threshold = 1.6;
   const mouse = new THREE.Vector2(), tip = document.getElementById('tip');
   function pick(e) {
-    if (!starPoints || !introDone) return -1;
+    if (!starPoints) return -1;
     mouse.set(e.offsetX / w * 2 - 1, -(e.offsetY / h) * 2 + 1); ray.setFromCamera(mouse, camera);
     const hits = ray.intersectObject(starPoints); return hits.length ? hits[0].index : -1;
   }
@@ -199,7 +200,7 @@ function start() {
 
   const links = [...box.querySelectorAll('.moon')];
   links.forEach((link, index) => link.addEventListener('click', event => {
-    if (still || !introDone || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hash) return;
+    if (still || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hash) return;
     event.preventDefault();
     const moon = moons[index].position;
     // Keep the surrounding orbit in view as the camera approaches the chosen moon.
@@ -298,7 +299,7 @@ function start() {
     smoothDt = smoothDt ? smoothDt * .85 + raw * .15 : raw; const dt = smoothDt;
     if (!still) planet.rotation.y += dt * .08;
     moons.forEach((m, i) => { if (!still) m.userData.a += dt * .05; m.position.set(Math.cos(m.userData.a) * ORBIT_R, Math.sin(m.userData.a * 2) * 1.2, Math.sin(m.userData.a) * ORBIT_R); m.rotation.y += still ? 0 : dt * (.4 + i * .1); });
-    if (!still && introDone && !down && pinned < 0) galaxy.rotation.y += dt * .012;
+    if (!still && !down && pinned < 0) galaxy.rotation.y += dt * .012;
     if (flying) {
       const t = Math.min(1, (now - flying.t0) / flying.ms), k = ease(t);
       camera.position.lerpVectors(flying.from, flying.to, k); look.lerpVectors(flying.fromLook, flying.toLook, k); camera.lookAt(look);
@@ -316,7 +317,7 @@ function start() {
     });
     if (hoverEvent) { hover(hoverEvent); hoverEvent = null; }
     // If this device struggles, drop to a lighter resolution once.
-    if (!lowered && introDone) { slow.push(dt); if (slow.length > 90) { const avg = slow.reduce((x, y) => x + y) / slow.length; slow.length = 0; if (avg > 0.034) { lowered = true; renderer.setPixelRatio(1); if (starPoints) starPoints.material.uniforms.scale.value = h / 2; } else lowered = true; } }
+    if (!lowered) { slow.push(dt); if (slow.length > 90) { const avg = slow.reduce((x, y) => x + y) / slow.length; slow.length = 0; if (avg > 0.034) { lowered = true; renderer.setPixelRatio(1); if (starPoints) starPoints.material.uniforms.scale.value = h / 2; } else lowered = true; } }
     renderer.render(scene, camera);
     if (onScreen && !document.hidden) loop();
   }

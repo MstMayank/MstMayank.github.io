@@ -390,6 +390,7 @@
 <section id="player-career-shell" class="panel" aria-label="Player career profiles" hidden></section>
 <button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="battle-filters-box">Filters <span id="filters-count" aria-hidden="true"></span></button>
 <div class="battle-filters tool-filter" id="battle-filters-box">
+<label id="archive-format-field" hidden>Archive format<select id="battle-archive-format"><option>T20I</option><option>ODI</option><option>Test</option><option value="all">All formats</option></select></label>
 <label id="gender-field" hidden>Category<select id="battle-gender"><option value="male">Men</option><option value="female">Women</option></select></label>
 
 <label>Season<select id="battle-season"><option value="">All seasons</option></select></label>
@@ -445,14 +446,14 @@
 <script defer src="phase-core.js?v=1"></script>
 <script defer src="form-core.js?v=1"></script>
 <script defer src="similarity-core.js?v=1"></script>
-<script defer src="player-battle.js?v=faces-1"></script>
+<script defer src="player-battle.js?v=archive-2"></script>
 <footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="logo d" href="/"><small>The</small>Cricket Space<i>.</i></a><p>Cricket stories, ball-by-ball stats and games. Match data from Cricsheet.</p></div><nav class="footer-col" aria-label="Stats"><h2>Stats</h2><a href="/player-battle.html">Player Battle</a><a href="/player-battle.html?view=finder">Match-ups</a><a href="/preview.html">Match preview</a><a href="/match.html">Match charts</a><a href="/venues.html">Venues</a><a href="/record-book.html">Record Book</a><a href="/player/">Player pages</a></nav><nav class="footer-col" aria-label="More"><h2>More</h2><a href="/ipl-auction/play.html">IPL Auction game</a><a href="/fantasy.html">Fantasy XI helper</a><a href="/quiz.html">Daily quiz</a><a href="/ipl-retentions.html">IPL Retentions</a><a href="/writing.html">Writing</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><nav class="footer-col" aria-label="Follow"><h2>Follow</h2><a href="https://www.instagram.com/thecricketspace/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.youtube.com/@CricketSpaceHQ" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.facebook.com/p/TheCricketSpace-61593993720371/" target="_blank" rel="noopener noreferrer">Facebook ↗</a></nav></div><div class="footer-base"><span>© <span data-year></span> The Cricket Space</span><a href="#top">Back to top ↑</a></div></div></footer><script>
 // Phones: filters fold behind one button so the player search comes first.
 (() => {
   const toggle = document.getElementById('filters-toggle'), box = document.getElementById('battle-filters-box'), count = document.getElementById('filters-count');
   const lens = document.getElementById('ipl-lens');
   toggle.addEventListener('click', () => { const open = !lens.classList.contains('filters-open'); lens.classList.toggle('filters-open', open); toggle.setAttribute('aria-expanded', String(open)); });
-  const update = () => { const n = [...box.querySelectorAll('select')].filter(sel => sel.value && sel.id !== 'battle-gender').length; count.textContent = n ? '· ' + n : ''; };
+  const update = () => { const n = [...box.querySelectorAll('select')].filter(sel => sel.value && sel.id !== 'battle-gender' && sel.id !== 'battle-archive-format').length; count.textContent = n ? '· ' + n : ''; };
   box.addEventListener('change', update); document.getElementById('battle-reset')?.addEventListener('click', () => setTimeout(update));
   update();
 })();

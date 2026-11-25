@@ -436,11 +436,11 @@ function venueLabel(name) {
       result.hidden = !data;
       if (result.hidden) return;
       if (selected[0] === null) {
-        (competition === 'international' ? ['T20I', 'ODI'] : [null]).forEach(renderFormLeaders);
+        archiveFormats().filter(format => format !== 'Test').forEach(renderFormLeaders);
         if (competition !== 'international') renderImpactLeaders();
         return;
       }
-      const finderFormats = competition === 'international' ? ['Test', 'ODI', 'T20I'] : [null];
+      const finderFormats = archiveFormats();
       finderFormats.forEach(renderFinder);
       updateFinderLink();
       return;
@@ -451,7 +451,7 @@ function venueLabel(name) {
     result.hidden = !data || (matchup && selected.some(value => value === null));
     if (result.hidden) return;
     if(careerView){renderCareerRecords();return;}
-    const formats = competition === 'international' ? ['Test','ODI','T20I'] : [null];
+    const formats = archiveFormats();
     for (const format of formats) {
       if (matchup && mode === 'teams') {
         if (format) {
@@ -1238,6 +1238,12 @@ function venueLabel(name) {
     document.querySelector('.battle-workspace').scrollIntoView({behavior: 'smooth', block: 'start'});
   }
 
+  function archiveFormats() {
+    if (competition !== 'international') return [null];
+    const value = byId('battle-archive-format').value;
+    return value === 'all' ? ['Test', 'ODI', 'T20I'] : [value];
+  }
+
   function updateFinderLink() {
     if (!history.replaceState) return;
     const params = new URLSearchParams({competition, view: 'finder', player: data.players[selected[0]], role: finderRole()});
@@ -1245,6 +1251,7 @@ function venueLabel(name) {
     if (finderRole() === 'batting' && byId('finder-type').value) params.set('type', byId('finder-type').value);
     for (const [param, id] of [['season', 'battle-season'], ['venue', 'battle-venue'], ['phase', 'battle-phase']]) if (byId(id).value) params.set(param, byId(id).value);
     if (competition === 'international' && byId('battle-gender').value === 'female') params.set('gender', 'female');
+    if (competition === 'international') params.set('archiveFormat', byId('battle-archive-format').value);
     history.replaceState(null, '', location.pathname + '?' + params);
   }
 
@@ -1352,10 +1359,47 @@ function venueLabel(name) {
 
   function appendInsights(parent, format, ids) {
     const block=document.createElement('details');
-    block.className='batting-insights'; block.open=true;
-    const title=document.createElement('summary'); title.textContent=(format?format+' · ':'')+'Batting insights'; block.appendChild(title);
-    if(data.insightsUnavailable){const note=document.createElement('p');note.textContent='Batting insights could not load. Reselect the competition to retry; the main comparison is still available.';block.appendChild(note);parent.appendChild(block);return;}
-    const eligible=(data.insights||[]).filter(row=>rowIncluded(row,format) && ids.includes(row[1]) &&
+    block.className = 'batting-insights';
+    const title = document.createElement('summary');
+    title.textContent = (format ? format + ' · ' : '') + 'Batting insights';
+    const note = document.createElement('p');
+    block.append(title, note);
+    parent.appendChild(block);
+    const archive = data;
+    const source = archive.insightSources.get(format);
+    let started = false;
+    block.addEventListener('toggle', async () => {
+      if (!block.open || started) return;
+      started = true;
+      note.textContent = 'Loading batting insights…';
+      try {
+        source.pending ??= fetch('battle-insights-' + source.key + '.json', {signal: loadingController.signal})
+          .then(response => {
+            if (!response.ok) throw new Error('Insights unavailable');
+            return response.json();
+          }).then(({rows}) => {
+            if (source.players) {
+              for (const row of rows) {
+                row[0] += source.matchOffset;
+                row[1] = source.players[row[1]];
+                row[2] = source.players[row[2]];
+              }
+            }
+            return rows;
+          }).catch(error => { source.pending = null; throw error; });
+        const rows = await source.pending;
+        if (archive !== data || !block.isConnected) return;
+        populateInsights(block, format, ids, rows);
+        note.remove();
+      } catch {
+        started = false;
+        note.textContent = 'Could not load batting insights. Close and reopen to retry.';
+      }
+    });
+  }
+
+  function populateInsights(block, format, ids, rows) {
+    const eligible=rows.filter(row=>rowIncluded(row,format) && ids.includes(row[1]) &&
       (view!=='matchups'||mode!=='direct'||row[2]===selected[1]));
     function sum(rows) { const totals=Array(10).fill(0); rows.forEach(row=>totals.forEach((_,i)=>totals[i]+=row[6+i])); return totals; }
     function table(title,headers,rows) {
@@ -1391,7 +1435,6 @@ function venueLabel(name) {
     table('First 10 vs Last 10 Balls',['Player','Window','Runs','Balls','SR','Dot %'],windows);
     const scoring=ids.map(id=>{const a=sum(eligible.filter(r=>r[1]===id));return [data.players[id],number(a[0]),number(a[3]),divide(a[3],a[0],100),number(a[4]+a[5]+a[6]),number(a[4]),number(a[5]),number(a[6]),number(a[7])];});
     table('Boundary vs Rotation',['Player','Runs','Boundary runs','Boundary %','Rotation runs','Singles runs','Doubles runs','Triples runs','Other runs'],scoring);
-    parent.appendChild(block);
   }
 
   function updateShareTools() {
@@ -1772,10 +1815,9 @@ function venueLabel(name) {
   });
 
   function combineFormats(datasets) {
-    const combined = { players: [], venues: [], matches: [], rows: [], insights: [], dismissals: [], format: 'International' };
+    const combined = { players: [], venues: [], matches: [], rows: [], insightSources: new Map(), dismissals: [], format: 'International' };
     const playerIds = new Map();
     const venueIds = new Map();
-    combined.insightsUnavailable=datasets.some(dataset=>dataset.insightsUnavailable);
     for (const dataset of datasets) {
       const players = dataset.players.map(name => {
         if (!playerIds.has(name)) {
@@ -1807,13 +1849,7 @@ function venueLabel(name) {
         merged[5] = wicket[5].map(id => players[id]);
         combined.dismissals.push(merged);
       }
-      for (const row of dataset.insights || []) {
-        const merged = row.slice();
-        merged[0] += matchOffset;
-        merged[1] = players[row[1]];
-        merged[2] = players[row[2]];
-        combined.insights.push(merged);
-      }
+      combined.insightSources.set(format, {key: dataset.archiveKey, players, matchOffset});
       for (const row of dataset.rows) {
         const merged = row.slice();
         merged[0] += matchOffset;
@@ -1825,7 +1861,7 @@ function venueLabel(name) {
     return combined;
   }
 
-  async function loadData(forceArchive=false) {
+  async function loadData(forceArchive=false, previousNames=[]) {
     const current = ++requestNumber;
     if (loadingController) loadingController.abort();
     loadingController = new AbortController();
@@ -1841,39 +1877,25 @@ function venueLabel(name) {
       render();return;
     }
     byId('gender-field').hidden = !international;
+    byId('archive-format-field').hidden = !international;
     document.querySelectorAll('[data-competition]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.competition === competition));
     });
     byId('battle-season').replaceChildren(new Option('All seasons', ''));
     byId('battle-venue').replaceChildren(new Option('All venues', ''));
     status.textContent = 'Loading ' + (international ? 'international' : competition.toUpperCase()) + ' match data…';
-    const keys = international
-      ? ['tests', 'odis', 't20s'].map(format => format + '_' + byId('battle-gender').value)
-      : [competition];
+    const keys = archiveFormats().map(typeKey);
     try {
-      const careerPromise=international && byId('battle-gender').value==='male'
-        ? fetch('career-batting-records.json',{signal:loadingController.signal}).then(response=>response.ok?response.json():null).catch(()=>null)
-        : Promise.resolve(null);
       const datasets = await Promise.all(keys.map(async key => {
-        // Start both downloads together; insights no longer wait for the main dataset.
-        const insightsPromise = fetch('battle-insights-' + key + '.json', {signal:loadingController.signal})
-          .then(insights => { if (!insights.ok) throw new Error('Batting insights download failed'); return insights.json(); });
-        insightsPromise.catch(() => {});
         const response = await fetch('battle-' + key + '.json', { signal: loadingController.signal });
         if (!response.ok) throw new Error('Dataset download failed');
         const dataset = await response.json();
-        try {
-          dataset.insights = (await insightsPromise).rows;
-        } catch(error) {
-          if(error.name==='AbortError') throw error;
-          dataset.insightsUnavailable = true;
-        }
+        dataset.archiveKey = key;
         return dataset;
       }));
       if (current !== requestNumber) return;
       data = international ? combineFormats(datasets) : datasets[0];
-      careerRecords=await careerPromise;
-      if(current!==requestNumber)return;
+      if (!international) data.insightSources = new Map([[null, {key: competition}]]);
       const seasons = [...new Set(data.matches.map(match => match[0]))].sort().reverse();
       seasons.forEach(season => { byId('battle-season').add(new Option(season, season)); });
       [...new Set(data.venues.map(venueLabel))].sort().forEach(venue => { byId('battle-venue').add(new Option(venue, venue)); });
@@ -1905,6 +1927,14 @@ function venueLabel(name) {
         if (initialLink.get('gender')==='female') byId('battle-gender').value='female';
         [0,1].forEach(index=>{const name=initialLink.get(index?'second':'first');const id=mode==='teams'?name:data.players.indexOf(name);if(name && (mode==='teams'?data.matches.some(m=>m[3].includes(name)):id>=0)){selected[index]=id;inputs[index].value=name;}});
       }
+      previousNames.forEach((name, index) => {
+        if (!name) return;
+        const id = mode === 'teams' ? name : data.players.indexOf(name);
+        if (mode === 'teams' ? data.matches.some(match => match[3].includes(name)) : id >= 0) {
+          selected[index] = id;
+          inputs[index].value = name;
+        }
+      });
       // First visit with no shared link: show a ready-made IPL matchup instead of an empty form.
       if (!defaultMatchupShown && view === 'matchups' && competition === 'ipl' && mode === 'direct' && !initialLink.has('first') && !initialLink.has('second') && selected[0] === null && selected[1] === null) {
         defaultMatchupShown = true;
@@ -1972,6 +2002,13 @@ function venueLabel(name) {
     for (const id of ['battle-season','battle-venue','battle-phase','battle-search']) byId(id).value = '';
     clearSelections();
     render();
+  });
+  const archiveFormat = initialLink.get('archiveFormat');
+  if (['T20I', 'ODI', 'Test', 'all'].includes(archiveFormat)) byId('battle-archive-format').value = archiveFormat;
+  else if (initialLink.has('first') || initialLink.get('view') === 'finder') byId('battle-archive-format').value = 'all';
+  byId('battle-archive-format').addEventListener('change', () => {
+    const names = selected.map(id => mode === 'teams' ? id : data?.players[id]);
+    loadData(true, names);
   });
   byId('battle-gender').addEventListener('change', loadData);
   for (const id of ['battle-season', 'battle-venue']) byId(id).addEventListener('change', filterChanged);
