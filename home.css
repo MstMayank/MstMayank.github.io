@@ -1,18 +1,19 @@
 /* Homepage (index.html): The Cricket Space universe, then the story and contact. Scoped to main.sb.
    Header, footer and tokens come from ds.css; the 3D scene is drawn by /space.js. */
 .sb {
-  --space: #05080d;
-  --panel: #0b1118;
-  --panel-2: #111a24;
-  --seam: #1c2733;
-  --line-2: #33414f;
-  --plate: #0d130f;
-  --paint: #f1ede2;
-  --paint-2: #b9c0c6;
-  --subtle: #95a0aa;
-  --bulb: #f5c518;
-  --wicket: #ff7c68;
-  --sky: #9ad7f5;
+  --space: #06070a;
+  --panel: #0e1117;
+  --panel-2: #151a23;
+  --seam: #222a36;
+  --line-2: #384354;
+  --plate: #090b0f;
+  --paint: #f4efe4;
+  --paint-2: #aab4c2;
+  --subtle: #8a95a5;
+  --bulb: #f3b73f;
+  --wicket: #ff6b5b;
+  --leather: #d9483b;
+  --sky: #7cc4f0;
   --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
   --text: "Barlow", system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 48px);
@@ -73,13 +74,13 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .find { justify-self: center; width: min(100%, 440px); transition: opacity .6s; }
 .gl:not(.tcs-ready) .sb .find, .gl:not(.tcs-ready) .sb .legend { opacity: 0; }
 .sb .find { position: relative; }
-.sb .sugg { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 5; margin: 0; padding: 6px; list-style: none; background: #0b1118; border: 2px solid var(--seam); border-radius: 4px; }
+.sb .sugg { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 5; margin: 0; padding: 6px; list-style: none; background: var(--panel); border: 2px solid var(--seam); border-radius: 4px; }
 .sb .sugg li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 10px; border-radius: 2px; cursor: pointer; }
 .sb .sugg li b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 18px/1.1 var(--cond); text-transform: uppercase; letter-spacing: .03em; }
 .sb .sugg li small { flex: none; font-size: 13px; color: var(--paint-2); }
-.sb .sugg li[aria-selected="true"] { background: #17222e; box-shadow: inset 3px 0 0 var(--bulb); }
-@media (hover: hover) and (pointer: fine) { .sb .sugg li:hover { background: #17222e; } }
-.sb .find form { display: flex; gap: 6px; padding: 6px; background: rgba(11, 17, 24, .9); border: 2px solid var(--seam); border-radius: 4px; }
+.sb .sugg li[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--bulb); }
+@media (hover: hover) and (pointer: fine) { .sb .sugg li:hover { background: var(--panel-2); } }
+.sb .find form { display: flex; gap: 6px; padding: 6px; background: rgba(14, 17, 23, .92); border: 2px solid var(--seam); border-radius: 4px; }
 .sb .find input { flex: 1; min-width: 0; padding: 10px 12px; border: 0 !important; border-radius: 2px; background: var(--space) !important; color: var(--paint); font: 17px var(--text); }
 .sb .find input:focus { outline: 2px solid var(--bulb); }
 .sb .find .btn { min-height: 44px; padding: 0 16px; }
@@ -87,7 +88,7 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .find p a { color: var(--paint); }
 .sb .legend { position: absolute; left: var(--gutter); bottom: clamp(18px, 4vh, 32px); display: grid; gap: 4px; font: 600 12px var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); transition: opacity .6s; }
 .sb .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
-.sb .tip { position: fixed; z-index: 60; left: 0; top: 0; max-width: 260px; padding: 10px 12px; background: rgba(11, 17, 24, .96); border: 2px solid var(--seam); border-radius: 4px; pointer-events: none; transform: translate(14px, 14px); opacity: 0; transition: opacity .15s; }
+.sb .tip { position: fixed; z-index: 60; left: 0; top: 0; max-width: 260px; padding: 10px 12px; background: rgba(14, 17, 23, .96); border: 2px solid var(--seam); border-radius: 4px; pointer-events: none; transform: translate(14px, 14px); opacity: 0; transition: opacity .15s; }
 .sb .tip.on { opacity: 1; }
 .sb .tip b { display: block; font: 800 20px/1.1 var(--cond); text-transform: uppercase; }
 .sb .tip span { font-size: 14px; color: var(--paint-2); }
@@ -101,214 +102,174 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .sec-head h2 { font-size: clamp(40px, 5vw, 68px); line-height: .95; }
 .sb .sec-head p { margin: 0; max-width: 44ch; color: var(--paint-2); }
 
-/* six balls that made me: the living over scoreboard theater */
-.sb .over-sec .wrap { padding-bottom: 0; }
-.sb .over-sec .sec-head { align-items: end; margin-bottom: 18px; }
+/* six balls that made me: full-stage floodlit stadium theater */
+.sb .over-sec { background: var(--space); }
+.sb .over-arena { position: relative; overflow: hidden; padding-block: clamp(44px, 6vw, 76px) clamp(28px, 4vw, 48px); border-bottom: 3px solid var(--seam); }
+.sb .arena-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+.sb .arena-head, .sb .arena-stage, .sb .arena-dock { position: relative; z-index: 1; padding-block: 0 !important; }
+.sb .arena-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 24px; flex-wrap: wrap; margin-bottom: clamp(22px, 3vw, 34px); }
 .sb .over-heading { display: grid; gap: 6px; min-width: 0; }
-.sb .over-eyebrow { font: 600 13px/1 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: var(--bulb); }
-.sb .over-ctrl { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.sb .over-eyebrow { font: 600 13px/1 var(--cond); letter-spacing: .18em; text-transform: uppercase; color: var(--bulb); }
+.sb .arena-head h2 { font-size: clamp(42px, 5.4vw, 72px); line-height: .92; }
+.sb .over-ctrl { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .sb .over-track { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font: 600 15px var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); }
 .sb .balls { display: flex; gap: 6px; }
 .sb #over-label, .sb .done-tag { white-space: nowrap; }
-.sb .balls i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #4a5663; transition: background-color .3s, border-color .3s; }
-.sb .balls i.on { background: #b8291f; border-color: #e2564a; }
-.sb .over-btns { display: flex; gap: 6px; }
-.sb .over-btns .btn { min-height: 44px; min-width: 52px; padding: 0 14px; font-size: 20px; }
+.sb .balls i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line-2); transition: background-color .3s, border-color .3s; }
+.sb .balls i.on { background: var(--leather); border-color: var(--wicket); }
+.sb .over-btns { display: flex; gap: 8px; }
+.sb .over-btns .btn { min-height: 44px; padding: 0 16px; font-size: 17px; }
+.sb .over-btns #over-prev { min-width: 48px; }
 
-/* Broadcast over strip + 22-yard pitch delivery bar */
-.sb .over-hud { display: grid; gap: 10px; margin-bottom: 18px; }
+/* Single full-bleed theatrical stage */
+.sb .arena-stage { min-height: clamp(360px, 48vh, 450px); }
+.sb .arena-stage:focus-visible { outline: 3px solid var(--bulb); outline-offset: 6px; }
+.js .sb .ball-scene { display: none; }
+.js .sb .ball-scene.active { display: grid; animation: tcs-scene-in .42s cubic-bezier(.2, .8, .2, 1) both; }
+html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
+.sb .ball-scene { grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); align-items: center; gap: clamp(22px, 4vw, 52px); }
+@keyframes tcs-scene-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* Left column: open editorial story over the live stadium backdrop */
+.sb .scene-copy { position: relative; display: grid; gap: 14px; min-width: 0; align-content: center; }
+.sb .scene-era { font: 800 clamp(68px, 10vw, 132px)/.8 var(--cond); text-transform: uppercase; letter-spacing: -.02em; color: rgba(244, 239, 228, .08); user-select: none; font-variant-numeric: tabular-nums; margin-bottom: -14px; }
+.sb .scene-copy .n { font: 600 14px/1 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: var(--bulb); }
+.sb .scene-copy h3 { font-size: clamp(34px, 4.2vw, 56px); line-height: .94; }
+.sb .scene-copy p { margin: 0; font-size: clamp(16px, 1.4vw, 18px); line-height: 1.55; color: var(--paint-2); max-width: 46ch; }
+.sb .scene-copy p strong { color: var(--paint); }
+
+/* Open hairline stat strip (no nested card boxes) */
+.sb .scene-stats { margin: 4px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; padding: 12px 0; border-top: 2px solid var(--seam); border-bottom: 2px solid var(--seam); }
+.sb .scene-stats > div { min-width: 0; }
+.sb .scene-stats dt { font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); }
+.sb .scene-stats dd { margin: 4px 0 0; font: 800 clamp(22px, 2.3vw, 30px)/1 var(--cond); font-variant-numeric: tabular-nums; color: var(--paint); white-space: nowrap; }
+.sb .scene-stats dd.is-wicket { color: var(--wicket); }
+
+.sb .scene-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-top: 2px; }
+.sb .b-link { font: 800 17px/1 var(--cond); text-transform: uppercase; letter-spacing: .05em; color: var(--paint); text-underline-offset: 4px; }
+.sb .b-fly { min-height: 40px; padding: 0 14px; background: rgba(14, 17, 23, .85); border: 2px solid var(--line-2); border-radius: 3px; font: 800 15px/1 var(--cond); letter-spacing: .06em; text-transform: uppercase; color: var(--paint); cursor: pointer; transition: border-color .15s, color .15s, background-color .15s; }
+.sb .b-fly.accent-fly { border-color: var(--bulb); color: var(--bulb); }
+.sb .b-fly:focus-visible { outline: 3px solid var(--bulb); outline-offset: 2px; }
+
+/* Right column: bespoke interactive cricket arenas */
+.sb .scene-visual { position: relative; min-width: 0; }
+
+/* Ball 1: Scoreboard plates + proportional bars */
+.sb .final-board { display: grid; gap: 12px; }
+.sb .sc-plate { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 16px; padding: 16px 20px; background: rgba(14, 17, 23, .9); border: 3px solid var(--seam); border-radius: 4px; }
+.sb .sc-plate.ind { border-color: var(--wicket); }
+.sb .sc-team { font: 800 clamp(26px, 3vw, 36px)/1 var(--cond); letter-spacing: .05em; color: var(--paint); }
+.sb .sc-num { font: 800 clamp(54px, 6.2vw, 82px)/.88 var(--cond); font-variant-numeric: tabular-nums; color: var(--paint); }
+.sb .sc-plate.ind .sc-num { color: var(--wicket); }
+.sb .sc-wkts { font: 600 14px/1 var(--cond); font-style: normal; letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); text-align: right; }
+.sb .chase-bars { display: grid; gap: 8px; padding: 12px 16px; background: rgba(9, 11, 15, .88); border: 2px solid var(--seam); border-radius: 4px; }
+.sb .cb-row { display: grid; grid-template-columns: 36px 1fr 40px; align-items: center; gap: 10px; font: 800 15px/1 var(--cond); font-variant-numeric: tabular-nums; }
+.sb .cb-row i { display: block; height: 10px; background: var(--panel-2); border-radius: 2px; overflow: hidden; }
+.sb .cb-row b { display: block; height: 100%; background: var(--paint); }
+.sb .cb-row.ind b { background: var(--wicket); }
+.sb .cb-row em { font-style: normal; text-align: right; color: var(--paint-2); }
+
+/* Ball 2: Interactive masonry wall */
+.sb .wall-board { display: grid; gap: 10px; }
+.sb .wall { position: relative; overflow: hidden; min-height: 270px; display: grid; place-items: center; text-align: center; padding: 20px; background: #261b16; border: 3px solid var(--seam); border-radius: 4px; }
+.sb .wall.hit { animation: tcs-wall-hit .35s ease-out; }
+@keyframes tcs-wall-hit { 0% { transform: translateX(0); } 25% { transform: translateX(4px); } 55% { transform: translateX(-3px); } 100% { transform: translateX(0); } }
+.sb .wall .bricks { position: absolute; inset: 0; }
+.sb .wall .bricks i { position: absolute; left: calc(var(--c) * 16.666% - 1px); top: calc(var(--r) * 14.285%); width: calc(16.666% - 3px); height: calc(14.285% - 3px); background: #7a4a35; border-radius: 1px;
+  animation: tcs-brick .45s calc((6 - var(--r)) * .08s + var(--c) * .03s) both cubic-bezier(.3, 1.4, .5, 1); }
+.sb .wall .bricks i.off { left: calc(var(--c) * 16.666% - 8.333% - 1px); }
+@keyframes tcs-brick { from { opacity: 0; transform: translateY(-34px); } to { opacity: 1; transform: none; } }
+.sb .wall-front { position: relative; z-index: 1; display: grid; justify-items: center; gap: 10px; }
+.sb .wall-front b { font: 800 clamp(56px, 6.4vw, 84px)/.88 var(--cond); text-transform: uppercase; color: #f4efe4; transform: rotate(-3deg); }
+.sb .wall-front span { padding: 7px 14px; background: var(--plate); border: 2px solid var(--bulb); border-radius: 3px; font: 800 18px/1.1 var(--cond); font-variant-numeric: tabular-nums; color: var(--paint); }
+.sb .wall-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sb .w-chip { min-height: 38px; padding: 0 14px; background: var(--panel); border: 2px solid var(--seam); border-radius: 3px; font: 800 14px/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; color: var(--paint-2); cursor: pointer; }
+.sb .w-chip.on { border-color: var(--bulb); color: var(--bulb); background: var(--panel-2); }
+
+/* Ball 3: Dhoni portrait + Six launchpad */
+.sb .storm-board { display: grid; grid-template-columns: 48% 1fr; gap: 14px; align-items: stretch; min-height: 310px; }
+.sb .storm-portrait { position: relative; overflow: hidden; border: 3px solid var(--seam); border-radius: 4px; background: var(--plate); }
+.sb .storm-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 10%; display: block; }
+.sb .six-badge { position: absolute; right: 10px; top: 10px; padding: 5px 12px; background: var(--bulb); color: var(--plate); border-radius: 3px; font: 800 24px/1 var(--cond); text-transform: uppercase; transition: transform .25s cubic-bezier(.2, 1.4, .4, 1); }
+.sb .six-badge.pop { transform: scale(1.18) rotate(-4deg); }
+.sb .storm-knocks { display: grid; align-content: center; gap: 10px; min-width: 0; }
+.sb .knock-btn { display: grid; gap: 4px; width: 100%; padding: 14px 16px; background: rgba(14, 17, 23, .92); border: 3px solid var(--seam); border-radius: 4px; text-align: left; color: var(--paint-2); font-size: 14px; cursor: pointer; }
+.sb .knock-btn b { display: block; font: 800 clamp(34px, 3.6vw, 46px)/.9 var(--cond); color: var(--paint); font-variant-numeric: tabular-nums; }
+.sb .knock-btn.on { border-color: var(--bulb); background: var(--panel-2); }
+.sb .knock-btn.on b { color: var(--bulb); }
+.sb .knock-note { margin: 0; padding: 10px 12px; background: var(--plate); border: 2px solid var(--seam); border-radius: 3px; font-size: 14px; line-height: 1.45; color: var(--paint-2); }
+
+/* Ball 4: 100 international centuries constellation */
+.sb .hundred-board { display: grid; gap: 12px; padding: 20px; background: rgba(14, 17, 23, .88); border: 3px solid var(--seam); border-radius: 4px; }
+.sb .hun-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.sb .hun-top b { font: 800 clamp(68px, 7vw, 94px)/.82 var(--cond); color: var(--bulb); font-variant-numeric: tabular-nums; }
+.sb .hun-top > div { display: grid; gap: 4px; min-width: 0; }
+.sb .hun-top span { font: 600 16px/1 var(--cond); letter-spacing: .14em; text-transform: uppercase; color: var(--paint); }
+.sb .hun-top small { font-size: 14px; color: var(--paint-2); }
+.sb .century-grid { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
+.sb .c-tile { height: 18px; min-width: 0; padding: 0; border: 1px solid var(--seam); border-radius: 2px; background: var(--bulb); opacity: .72; cursor: pointer; }
+.sb .c-tile.odi { background: var(--sky); }
+.sb .c-tile.key { opacity: 1; }
+.sb .c-tile.on { opacity: 1; border: 2px solid var(--paint); }
+.sb .hun-legend { display: flex; gap: 18px; font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); }
+.sb .hun-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sb .hun-legend i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.sb .hun-legend .is-test { background: var(--bulb); }
+.sb .hun-legend .is-odi { background: var(--sky); }
+
+/* Ball 5 & 6: Gallery panels */
+.sb .gen-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.sb .young-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.sb .gen-tile { position: relative; overflow: hidden; display: grid; min-height: 175px; border: 3px solid var(--seam); border-radius: 4px; background: var(--plate); text-decoration: none; }
+.sb .young-board .gen-tile { min-height: 290px; }
+.sb .gen-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.sb .gen-tile b { position: absolute; left: 0; right: 0; bottom: 22px; padding: 6px 10px 2px; background: var(--plate); border-top: 2px solid var(--seam); font: 800 19px/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; color: var(--paint); }
+.sb .gen-tile span { position: absolute; left: 0; right: 0; bottom: 0; padding: 2px 10px 6px; background: var(--plate); font: 600 12px/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; color: var(--bulb); font-variant-numeric: tabular-nums; }
+.sb .gen-tile.yuvi { place-content: center; text-align: center; background: var(--panel); }
+.sb .gen-tile.yuvi .sixes { font: 800 62px/.9 var(--cond); color: var(--bulb); }
+.sb .gen-tile.yuvi .sixes small { font-size: .5em; margin: 0 4px; color: var(--paint-2); }
+.sb .gen-tile.yuvi em { font: 600 12px/1 var(--cond); font-style: normal; letter-spacing: .1em; text-transform: uppercase; color: var(--paint-2); padding-bottom: 34px; }
+
+/* Bottom Floodlit Over Dock */
+.sb .arena-dock { margin-top: clamp(22px, 3.2vw, 34px); }
 .sb .over-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
-.sb .over-pill { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 44px; padding: 6px 10px; background: var(--panel); border: 2px solid var(--seam); border-radius: 3px; color: var(--paint-2); text-align: left; cursor: pointer; transition: border-color .15s, background-color .15s, color .15s; }
+.sb .over-pill { box-sizing: border-box; display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 46px; padding: 7px 11px; background: rgba(14, 17, 23, .92); border: 2px solid var(--seam); border-radius: 3px; color: var(--paint-2); text-align: left; cursor: pointer; transition: border-color .15s, background-color .15s; }
 .sb .over-pill .ov-code { font: 600 13px/1 var(--cond); letter-spacing: .08em; color: var(--subtle); font-variant-numeric: tabular-nums; }
-.sb .over-pill b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 16px/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; color: var(--paint); }
-.sb .over-pill .ov-mark { display: grid; place-items: center; min-width: 24px; height: 22px; padding: 0 5px; border-radius: 2px; background: var(--plate); border: 1px solid var(--seam); font: 800 12px/1 var(--cond); color: var(--paint-2); font-variant-numeric: tabular-nums; }
+.sb .over-pill b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 17px/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; color: var(--paint); }
+.sb .over-pill .ov-mark { display: grid; place-items: center; min-width: 26px; height: 22px; padding: 0 6px; border-radius: 2px; background: var(--plate); border: 1px solid var(--seam); font: 800 12px/1 var(--cond); color: var(--paint-2); font-variant-numeric: tabular-nums; }
 .sb .over-pill.faced .ov-mark { border-color: var(--line-2); color: var(--paint); }
 .sb .over-pill.on { background: var(--panel-2); border-color: var(--bulb); }
 .sb .over-pill.on .ov-code { color: var(--bulb); }
 .sb .over-pill.on .ov-mark { background: var(--bulb); border-color: var(--bulb); color: var(--plate); }
 .sb .over-pill:focus-visible { outline: 3px solid var(--bulb); outline-offset: 2px; }
 
-.sb .pitch-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 8px 12px; background: var(--panel); border: 2px solid var(--seam); border-radius: 3px; }
-.sb .pitch-tag, .sb .pitch-out { font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); white-space: nowrap; }
-.sb .pitch-out { color: var(--bulb); }
-.sb .pitch-strip { position: relative; height: 18px; background: var(--plate); border: 1px solid var(--seam); border-radius: 2px; overflow: hidden; --bx: 35%; --ex: 88%; }
-.sb .pitch-strip .crease { position: absolute; top: 2px; bottom: 2px; width: 2px; background: var(--line-2); }
-.sb .pitch-strip .crease.bow { left: 10%; }
-.sb .pitch-strip .crease.bat { right: 10%; }
-.sb .pitch-line { position: absolute; left: 10%; top: 50%; height: 2px; width: calc(var(--ex) - 10%); transform: translateY(-50%); background: var(--line-2); transition: width .45s cubic-bezier(.2, .8, .2, 1); }
-.sb .pitch-bounce { position: absolute; left: var(--bx); top: 50%; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--bulb); transform: translate(-50%, -50%); transition: left .45s cubic-bezier(.2, .8, .2, 1); }
-.sb .pitch-ball { position: absolute; left: var(--ex); top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #b8291f; border: 2px solid #f3e3c8; transform: translate(-50%, -50%); transition: left .55s cubic-bezier(.2, .8, .2, 1); }
-
-/* Horizontal stage of 6 broadsheet scoreboard spreads */
-.sb .over { list-style: none; margin: 0; display: flex; gap: clamp(14px, 2.2vw, 24px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
-  padding: 6px max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))) clamp(40px, 6vw, 72px); scroll-padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))); scrollbar-width: none; }
-.sb .over::-webkit-scrollbar { display: none; }
-.sb .over { padding-right: 0; }
-.sb .over::after { content: ""; flex: 0 0 max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))); }
-.sb .over:focus-visible { outline: 3px solid var(--bulb); outline-offset: -3px; }
-
-.sb .ball-card { box-sizing: border-box; flex: 0 0 min(880px, 86vw); scroll-snap-align: start; display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); align-items: stretch; gap: clamp(16px, 2.4vw, 28px); min-height: 360px; padding: clamp(18px, 2.5vw, 28px); background: var(--panel); border: 3px solid var(--seam); border-radius: 4px; transition: border-color .2s, transform .2s ease-out; }
-.sb .ball-card.play { border-color: var(--line-2); }
-.sb .b-copy { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; min-width: 0; }
-.sb .b-era { font: 800 clamp(46px, 5vw, 68px)/.85 var(--cond); text-transform: uppercase; letter-spacing: -.01em; color: var(--seam); user-select: none; font-variant-numeric: tabular-nums; }
-.sb .ball-card .n { font: 600 14px/1 var(--cond); letter-spacing: .14em; text-transform: uppercase; color: var(--bulb); }
-.sb .ball-card h3 { font-size: clamp(28px, 3vw, 40px); line-height: .98; }
-.sb .ball-card p { margin: 0; color: var(--paint-2); font-size: 16px; line-height: 1.5; }
-.sb .ball-card p strong { color: var(--paint); }
-
-/* Joined stat strip on each card */
-.sb .b-plates { margin: 4px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 2px solid var(--seam); border-radius: 3px; background: var(--plate); }
-.sb .b-plates > div { padding: 8px 12px; min-width: 0; }
-.sb .b-plates > div + div { border-left: 2px solid var(--seam); }
-.sb .b-plates dt { font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); }
-.sb .b-plates dd { margin: 4px 0 0; font: 800 24px/1 var(--cond); font-variant-numeric: tabular-nums; color: var(--paint); }
-.sb .b-plates dd.is-wicket { color: var(--wicket); }
-
-.sb .b-actions, .sb .b-fly-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding-top: 4px; }
-.sb .b-link { font: 800 16px/1 var(--cond); text-transform: uppercase; letter-spacing: .05em; color: var(--paint); text-underline-offset: 4px; }
-.sb .b-fly { min-height: 36px; padding: 0 12px; background: var(--plate); border: 2px solid var(--line-2); border-radius: 3px; font: 800 14px/1 var(--cond); letter-spacing: .06em; text-transform: uppercase; color: var(--paint); cursor: pointer; transition: border-color .15s, color .15s, background-color .15s; }
-.sb .b-fly:focus-visible { outline: 3px solid var(--bulb); outline-offset: 2px; }
-
-.sb .art { position: relative; overflow: hidden; border-radius: 4px; background: #070b10; border: 2px solid var(--seam); min-height: 290px; }
-
-/* ball 1: scoreboard + proportional chase gap bars */
-.sb .final { display: grid; align-content: center; gap: 10px; padding: 18px; }
-.sb .sc-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--plate); border: 1px solid var(--seam); border-radius: 3px; }
-.sb .sc-row b { font: 800 32px var(--cond); letter-spacing: .04em; }
-.sb .sc-row span { font: 800 44px/1 var(--cond); font-variant-numeric: tabular-nums; }
-.sb .sc-row.lost span { color: var(--wicket); }
-.sb .chase-meter { display: grid; gap: 6px; padding: 10px 12px; background: var(--plate); border: 1px solid var(--seam); border-radius: 3px; }
-.sb .cm-head { display: flex; justify-content: space-between; align-items: baseline; font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); }
-.sb .cm-head strong { color: var(--wicket); font-weight: 800; }
-.sb .cm-track { height: 8px; background: var(--panel); border-radius: 2px; overflow: hidden; }
-.sb .cm-aus { display: block; height: 100%; background: var(--paint); }
-.sb .cm-ind { display: block; height: 100%; background: var(--wicket); }
-.sb .final small { color: var(--paint-2); font-size: 13px; text-align: center; }
-
-/* ball 2: the wall with interactive format selector */
-.sb .wall { display: grid; grid-template-rows: 1fr auto; align-items: center; text-align: center; padding: 14px; background: #2a1e19; }
-.sb .wall-overlay { position: relative; z-index: 1; display: grid; justify-items: center; gap: 8px; }
-.sb .wall b { font: 800 clamp(54px, 6vw, 78px)/.9 var(--cond); text-transform: uppercase; color: #f4f1ea; transform: rotate(-3deg); }
-.sb .wall span { justify-self: center; padding: 6px 12px; background: var(--plate); border: 2px solid var(--seam); border-radius: 3px; font: 800 18px/1.1 var(--cond); letter-spacing: .04em; font-variant-numeric: tabular-nums; color: var(--paint); }
-.sb .wall-chips { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-.sb .w-chip { min-height: 36px; padding: 0 11px; background: var(--plate); border: 2px solid var(--seam); border-radius: 3px; font: 800 13px/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; color: var(--paint-2); cursor: pointer; }
-.sb .w-chip.on { border-color: var(--bulb); color: var(--bulb); }
-
-/* ball 3: Dhoni, portrait + interactive knocks */
-.sb .storm { display: grid; grid-template-columns: 44% 1fr; grid-template-rows: minmax(0, 1fr); background: #070b10; }
-.sb .storm > img { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: 40% 10%; }
-.sb .storm .knocks { position: static; display: grid; align-content: center; gap: 8px; padding: 14px; min-height: 0; min-width: 0; }
-.sb .knock-btn { display: grid; gap: 2px; width: 100%; padding: 9px 12px; background: var(--plate); border: 2px solid var(--seam); border-radius: 3px; text-align: left; color: var(--paint-2); font-size: 13px; cursor: pointer; }
-.sb .knock-btn b { display: block; font: 800 32px/1 var(--cond); color: var(--paint); font-variant-numeric: tabular-nums; }
-.sb .knock-btn.on { border-color: var(--bulb); }
-.sb .knock-btn.on b { color: var(--bulb); }
-.sb .knock-note { padding: 8px 10px; background: var(--panel); border: 1px solid var(--seam); border-radius: 3px; font-size: 13px; line-height: 1.4; color: var(--paint-2); }
-
-/* ball 4: 100 international hundreds + 10x10 constellation grid */
-.sb .hundred { display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; background: #070b10; }
-.sb .hun-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.sb .hundred b { font: 800 clamp(62px, 6.5vw, 84px)/.85 var(--cond); color: var(--bulb); font-variant-numeric: tabular-nums; }
-.sb .hun-top > div { display: grid; gap: 3px; min-width: 0; }
-.sb .hundred span { font: 600 15px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint); }
-.sb .hundred small { font-size: 13px; color: var(--paint-2); }
-.sb .century-grid { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; align-content: center; }
-.sb .c-tile { height: 16px; min-width: 0; padding: 0; border: 1px solid var(--seam); border-radius: 2px; background: var(--bulb); opacity: .75; cursor: pointer; }
-.sb .c-tile.odi { background: var(--sky); }
-.sb .c-tile.key { opacity: 1; }
-.sb .c-tile.on { opacity: 1; border: 2px solid var(--paint); }
-
-/* ball 5 & 6: flat plates, no gradients */
-.sb .gen { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: var(--seam); }
-.sb .gen a, .sb .gen.young > * { position: relative; display: block; overflow: hidden; text-decoration: none; min-height: 140px; }
-.sb .gen img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s cubic-bezier(.2, .7, .2, 1); }
-.sb .gen b { position: absolute; left: 0; right: 0; bottom: 0; padding: 7px 10px; background: #0d130f; border-top: 2px solid var(--seam); font: 800 17px/1 var(--cond); text-transform: uppercase; letter-spacing: .05em; color: var(--paint); }
-.sb .gen .yuvi { display: grid; place-content: center; text-align: center; background: #0d130f; }
-.sb .yuvi .sixes { font: 800 60px/.9 var(--cond); color: var(--bulb); }
-.sb .yuvi .sixes small { font-size: .5em; margin: 0 4px; color: var(--paint-2); }
-.sb .yuvi .where { padding: 0 6px 26px; font: 600 11px var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--paint-2); }
-.sb .gen.young { grid-template-columns: repeat(3, 1fr); }
-.sb .gen.young > * { min-height: 290px; }
-
-/* a small cricket-ball planet */
+/* a small cricket-ball planet + sign-off */
 .sb .mini-planet { border-radius: 50%; background: #a5241c; border: 2px solid #e2564a; }
 .sb .mini-planet::before, .sb .mini-planet::after { content: ""; position: absolute; inset: 6%; border-radius: 50%; border: 0 dashed #f3e3c8; transform: rotate(-28deg) scaleX(.42); }
 .sb .mini-planet::before { border-left-width: 2px; translate: -10% 0; }
 .sb .mini-planet::after { border-right-width: 2px; translate: 10% 0; }
-/* the sign-off after the over */
-.sb .sign-off { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding-bottom: clamp(48px, 7vw, 96px); }
+.sb .sign-off { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding-block: clamp(36px, 5vw, 64px); }
 .sb .sign-off .mini-planet { position: relative; flex: none; width: 64px; height: 64px; }
 .sb .sign-off .mark { position: absolute; left: calc(var(--gutter) + 18px); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 3px; background: var(--plate); color: var(--bulb); font: 800 18px var(--cond); }
 .sb .sign-off p { flex: 1 1 320px; margin: 0; max-width: 64ch; color: var(--paint-2); }
 .sb .sign-off strong { color: var(--paint); }
 .sb .sign-off-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
-/* ---- the over in motion (story.js) ---- */
-/* Laptops: the section holds while the page scrolls and the cards slide past. */
-.sb .over-sec.pin .over-stage { position: sticky; top: 0; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-.sb .over-sec.pin .over { overflow: visible; scroll-snap-type: none; padding-bottom: clamp(28px, 4vw, 48px); will-change: transform; }
-.sb .over-sec.pin .wrap { padding-top: clamp(28px, 4vw, 48px); }
-.sb .ball-card { transition: transform .2s ease-out; }
-/* Every card's animation waits, paused on its first frame, until that ball is bowled. */
-.js .sb .ball-card .a { animation-fill-mode: both; animation-play-state: paused; animation-timing-function: cubic-bezier(.2, .7, .2, 1); }
-.js .sb .ball-card.play .a { animation-play-state: running; }
-@keyframes tcs-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-@keyframes tcs-stamp { 0% { opacity: 0; transform: scale(1.8) rotate(-3deg); } 70% { opacity: 1; transform: scale(.95) rotate(-3deg); } 100% { opacity: 1; transform: scale(1) rotate(-3deg); } }
-@keyframes tcs-pop { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
-/* ball 1: the score counts up, then India's total turns red */
-.js .sb .b1 .sc-row { animation-name: tcs-rise; animation-duration: .5s; }
-.js .sb .b1 .sc-row + .sc-row { animation-delay: .15s; }
-.sb .b1 .sc-row.ind span { transition: color .4s 1.2s; }
-.sb .b1.play .sc-row.ind span, html:not(.js) .sb .b1 .sc-row.ind span { color: var(--wicket); }
-/* ball 2: bricks stack up, then THE WALL is stamped on */
-.sb .wall { background: #2a1e19; }
-.sb .wall .bricks { position: absolute; inset: 0; }
-.sb .wall .bricks i { position: absolute; left: calc(var(--c) * 16.666% - 1px); top: calc(var(--r) * 14.285%); width: calc(16.666% - 3px); height: calc(14.285% - 3px); background: #7a4a35; border-radius: 1px;
-  animation: tcs-brick .45s calc((6 - var(--r)) * .09s + var(--c) * .035s) both paused cubic-bezier(.3, 1.4, .5, 1); }
-.sb .wall .bricks i.off { left: calc(var(--c) * 16.666% - 8.333% - 1px); }
-.sb .play .wall .bricks i { animation-play-state: running; }
-@keyframes tcs-brick { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
-.sb .wall .wall-overlay b, .sb .wall .wall-overlay span { position: relative; }
-.js .sb .wall .wall-overlay b { animation-name: tcs-stamp; animation-duration: .5s; animation-delay: .95s; }
-.js .sb .wall .wall-overlay span { animation-name: tcs-rise; animation-duration: .4s; animation-delay: 1.2s; }
-/* ball 3: Dhoni comes into focus, the knocks flip up, and one goes for six */
-.js .sb .storm img { animation-name: tcs-zoom; animation-duration: 1.4s; }
-@keyframes tcs-zoom { from { transform: scale(1.18); filter: brightness(.6); } to { transform: none; filter: none; } }
-.js .sb .storm .knocks .knock-btn { animation-name: tcs-flip; animation-duration: .5s; animation-delay: .5s; transform-origin: 50% 100%; }
-.js .sb .storm .knocks .knock-btn + .knock-btn { animation-delay: .7s; }
-@keyframes tcs-flip { from { opacity: 0; transform: perspective(400px) rotateX(80deg); } to { opacity: 1; transform: none; } }
-.sb .storm .six { position: absolute; inset: 0; pointer-events: none; }
-.sb .storm .six i { position: absolute; left: 30%; bottom: 30%; width: 14px; height: 14px; border-radius: 50%; background: #e2564a; box-shadow: inset -2px -2px 0 rgba(0, 0, 0, .3); opacity: 0; }
-.sb .storm .six b { position: absolute; right: 12px; top: 12px; padding: 4px 10px; background: var(--bulb); color: var(--plate); border-radius: 3px; font: 800 24px var(--cond); text-transform: uppercase; opacity: 0; }
-.js .sb .storm .six i { animation: tcs-six 1s 1.1s both paused cubic-bezier(.3, .1, .6, 1); }
-.js .sb .storm .six b { animation: tcs-stamp .45s 1.8s both paused; }
-.sb .play .storm .six i, .sb .play .storm .six b { animation-play-state: running; }
-@keyframes tcs-six { 0% { opacity: 0; transform: none; } 6% { opacity: 1; } 100% { opacity: 1; transform: translate(260px, -240px) scale(.4); } }
-/* ball 4: the hundred ticks up, then pulses */
-.js .sb .hundred b { animation-name: tcs-pop; animation-duration: .5s; animation-delay: 1.3s; }
-/* ball 5: my generation walks in, nicknames stamped on */
-.js .sb .gen > .a { animation-name: tcs-rise; animation-duration: .5s; }
-.js .sb .gen > :nth-child(2) { animation-delay: .12s; } .js .sb .gen > :nth-child(3) { animation-delay: .24s; } .js .sb .gen > :nth-child(4) { animation-delay: .36s; }
-.sb .gen b { opacity: 0; }
-.js .sb .gen > * > b { animation: tcs-stamp-flat .4s both paused; }
-.js .sb .gen > :nth-child(1) > b { animation-delay: .5s; } .js .sb .gen > :nth-child(2) > b { animation-delay: .62s; } .js .sb .gen > :nth-child(3) > b { animation-delay: .74s; } .js .sb .gen > :nth-child(4) > b { animation-delay: .86s; }
-.sb .play .gen > * > b, html:not(.js) .sb .gen b { animation-play-state: running; opacity: 1; }
-@keyframes tcs-stamp-flat { from { opacity: 0; transform: scale(1.5); } to { opacity: 1; transform: none; } }
-/* the tracker: each new ball is bowled into its dot */
+/* Tracker + Stumps animation */
 .sb .balls i.just { animation: tcs-bowl .5s cubic-bezier(.3, 1.5, .5, 1); }
 @keyframes tcs-bowl { from { transform: translateX(-30px) scale(.5); } to { transform: none; } }
-/* ball six: the bails fly and the over is complete */
-.sb .done-tag { display: inline-flex; align-items: center; gap: 8px; color: var(--bulb); opacity: 0; transition: opacity .4s .5s; }
+.sb .done-tag { display: inline-flex; align-items: center; gap: 8px; color: var(--bulb); opacity: 0; transition: opacity .35s; }
 .sb .over-done .done-tag { opacity: 1; }
 .sb .stumps { width: 22px; height: 24px; overflow: visible; }
 .sb .stumps .poles rect { fill: var(--paint); }
 .sb .stumps .bail { fill: var(--bulb); transform-box: fill-box; transform-origin: center; }
-.sb .over-done .stumps .bail.l { animation: tcs-bail-l .8s .3s both cubic-bezier(.2, .7, .3, 1); }
-.sb .over-done .stumps .bail.r { animation: tcs-bail-r .8s .3s both cubic-bezier(.2, .7, .3, 1); }
+.sb .over-done .stumps .bail.l { animation: tcs-bail-l .8s .2s both cubic-bezier(.2, .7, .3, 1); }
+.sb .over-done .stumps .bail.r { animation: tcs-bail-r .8s .2s both cubic-bezier(.2, .7, .3, 1); }
 @keyframes tcs-bail-l { to { transform: translate(-12px, -14px) rotate(-70deg); } }
 @keyframes tcs-bail-r { to { transform: translate(12px, -18px) rotate(80deg); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .sb .ball-card .a, .sb .ball-card *, .sb .balls i, .sb .stumps .bail, .sb .pitch-line, .sb .pitch-bounce, .sb .pitch-ball { animation: none !important; transition: none !important; }
-  .sb .gen b, .sb .storm .six b { opacity: 1; }
+  .sb .ball-scene.active, .sb .wall .bricks i, .sb .balls i, .sb .stumps .bail, .sb .wall.hit { animation: none !important; transition: none !important; }
 }
 
 /* contact */
@@ -324,7 +285,8 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb #idea-status { margin: 0; min-height: 1.5em; color: var(--paint-2); }
 
 @media (hover: hover) and (pointer: fine) {
-  .sb .gen a:hover img { transform: scale(1.05); }
+  .sb .gen-tile:hover img { transform: scale(1.04); }
+  .sb .gen-tile:hover { border-color: var(--bulb); }
   .sb .btn:hover { background: var(--paint); color: var(--plate); }
   .sb .btn.go:hover { background: #fff; }
   .sb .moon:hover b { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
@@ -335,27 +297,21 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
   .sb .c-tile:hover { opacity: 1; border-color: var(--paint); }
 }
 @media (max-width: 900px) {
-  .sb .contact { grid-template-columns: minmax(0, 1fr); }
+  .sb .contact, .sb .ball-scene { grid-template-columns: minmax(0, 1fr); }
   .sb .over-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 860px) {
-  .sb .ball-card { flex: 0 0 min(460px, calc(100% - var(--gutter) * 2)); grid-template-columns: minmax(0, 1fr); min-height: 0; }
-  .sb .b-era { display: none; }
-  .sb .art { min-height: 250px; }
-  .sb .gen.young > * { min-height: 220px; }
-  .sb .pitch-bar { grid-template-columns: 1fr; gap: 6px; }
+  .sb .scene-era { display: none; }
 }
 @media (max-width: 760px) {
   .sb .moons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gl .sb .legend, .sb .legend, .sb .moon small { display: none; }
 }
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .sb .over-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sb .storm { grid-template-columns: minmax(0, 1fr); grid-template-rows: 170px auto; }
-  .sb .storm > img { object-position: 50% 15%; }
-  .sb .gen.young { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .sb .gen.young > * { min-height: 170px; }
+  .sb .storm-board { grid-template-columns: minmax(0, 1fr); }
+  .sb .storm-portrait { height: 210px; }
+  .sb .young-board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sb .young-board .gen-tile { min-height: 175px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .gl .sb .brand h1 .title-word > span, .gl .sb .brand p { animation: none; opacity: 1; }
+  .gl .sb .brand h1 span, .gl .sb .brand p { animation: none; opacity: 1; }
 }
