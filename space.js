@@ -197,13 +197,15 @@ function start() {
   function click(e) { const i = pick(e); if (i >= 0) location.href = '/player/' + players[i][1] + '.html'; }
   function unpin() { if (pinned < 0) return; pinned = -1; root.classList.remove('tcs-pinned'); tip.classList.remove('on'); if (starPoints) starPoints.material.uniforms.hi.value = -1; flyTo(rotated(), new THREE.Vector3(), 1200); }
 
-  // The moons are doors: the camera dives in, then the page opens.
   const links = [...box.querySelectorAll('.moon')];
-  links.forEach((a, i) => a.addEventListener('click', e => {
-    if (still || !introDone || e.metaKey || e.ctrlKey || e.shiftKey || a.getAttribute('href').startsWith('#')) return;
-    e.preventDefault();
-    const m = moons[i].position.clone(), dir = m.clone().sub(camera.position).normalize();
-    flyTo(m.clone().sub(dir.multiplyScalar(7)), m, 1000, () => { location.href = a.href; });
+  links.forEach((link, index) => link.addEventListener('click', event => {
+    if (still || !introDone || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hash) return;
+    event.preventDefault();
+    const moon = moons[index].position;
+    // Keep the surrounding orbit in view as the camera approaches the chosen moon.
+    const destination = camera.position.clone().lerp(moon, 0.24);
+    const focus = look.clone().lerp(moon, 0.55);
+    flyTo(destination, focus, 480, () => location.assign(link.href));
   }));
 
   // Find a player: our own small suggestion list (the browser's built-in one covered half the screen).
