@@ -35,14 +35,15 @@ html body.ds .sb :is(h1, h2, h3) { margin: 0; font-family: var(--cond); font-wei
 /* The header floats over the universe on the homepage only. */
 html body.ds.space-home .site-nav { position: absolute; left: 0; right: 0; background: transparent; border-bottom: 0; }
 html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
-.sb .universe { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; padding: clamp(84px, 12vh, 120px) var(--gutter) clamp(18px, 4vh, 32px); }
+.sb .universe { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; padding: clamp(84px, 12vh, 120px) var(--gutter) clamp(18px, 4vh, 32px); }
 .sb .universe canvas { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
 .sb .universe canvas.dragging { cursor: grabbing; }
 .sb .universe canvas.pointing { cursor: pointer; }
 .sb .brand { text-align: center; pointer-events: none; }
 .sb .brand h1 { font-size: clamp(44px, 7.4vw, 116px); line-height: .9; }
 .sb .brand h1 span { display: inline-block; }
-.gl .sb .brand h1 span { opacity: 0; animation: tcs-letter .5s both cubic-bezier(.2, .7, .2, 1); }
+.sb .brand .title-word { white-space: nowrap; }
+.gl .sb .brand h1 .title-word > span { opacity: 0; animation: tcs-letter .5s both cubic-bezier(.2, .7, .2, 1); }
 .sb .brand p { margin: 12px 0 0; color: var(--paint-2); font-size: clamp(15px, 1.4vw, 18px); }
 .gl .sb .brand p { opacity: 0; animation: tcs-fade .8s 2.6s both; }
 @keyframes tcs-letter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
@@ -356,5 +357,5 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
   .sb .gen.young > * { min-height: 170px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .gl .sb .brand h1 span, .gl .sb .brand p { animation: none; opacity: 1; }
+  .gl .sb .brand h1 .title-word > span, .gl .sb .brand p { animation: none; opacity: 1; }
 }

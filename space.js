@@ -31,9 +31,29 @@ function start() {
   box.prepend(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden', 'true');
 
-  // Name appears letter by letter.
-  const nm = box.querySelector('h1'), txt = nm.textContent; nm.textContent = ''; nm.setAttribute('aria-label', txt);
-  [...txt].forEach((c, i) => { const s = document.createElement('span'); s.textContent = c === ' ' ? ' ' : c; s.style.animationDelay = (still ? 0 : 0.6 + i * 0.05) + 's'; s.setAttribute('aria-hidden', 'true'); nm.appendChild(s); });
+  // Animate each letter, but allow the title to wrap only between words.
+  const heading = box.querySelector('h1');
+  const title = heading.textContent.trim();
+  heading.setAttribute('aria-label', title);
+  heading.replaceChildren();
+  let letterIndex = 0;
+  for (const word of title.split(/\s+/)) {
+    if (letterIndex) {
+      heading.append(' ');
+      letterIndex++;
+    }
+    const group = document.createElement('span');
+    group.className = 'title-word';
+    group.setAttribute('aria-hidden', 'true');
+    for (const char of word) {
+      const letter = document.createElement('span');
+      letter.textContent = char;
+      letter.style.animationDelay = (still ? 0 : 0.6 + letterIndex * 0.05) + 's';
+      group.append(letter);
+      letterIndex++;
+    }
+    heading.append(group);
+  }
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#05080d');
