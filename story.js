@@ -49,7 +49,9 @@
     sec.classList.toggle('pin', pinned);
     track.style.transform = '';
     if (!pinned) { sec.style.height = ''; return; }
-    dist = Math.max(0, track.scrollWidth - track.clientWidth);
+    // Measure to the end of the last card plus the end space, so the last card always slides fully into view.
+    const last = cards[cards.length - 1], endSpace = parseFloat(getComputedStyle(track, '::after').flexBasis) || 0;
+    dist = Math.max(0, last.offsetLeft + last.offsetWidth + endSpace - track.clientWidth);
     // Each ball gets about a third of a screen of scrolling, so it never flies past.
     sec.style.height = (stage.offsetHeight + Math.max(dist, innerHeight * .34 * (cards.length - 1))) + 'px';
     onScroll();
