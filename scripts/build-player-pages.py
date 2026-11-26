@@ -467,6 +467,7 @@ def page(shell, slug, row, profile, leagues, slugs, international=None):
     for label, key, sh, s, data in leagues:
         cards += league_cards(label, key, sh, s, data, slugs)
     cards.append(career_card(profile))
+    # The opening scoreline uses the player’s league when available.
     big = headline(profile, leagues)
     chips = ''.join(f'<span>{esc(t)}</span>' for t in tags + [label for label, *_ in leagues])
     span = ''
