@@ -290,7 +290,7 @@
    * Sharing. A shared link opens the same league, and carries the sharer's score and date so a
    * friend sees "beat 3/5" on the same day's quiz. The questions themselves are never in the link.
    */
-  const SITE = 'https://mstmayank.github.io/quiz.html';
+  const SITE = 'https://thecricketspace.in/quiz.html';
   function quizLink(league, date, score) {
     const q = new URLSearchParams();
     if (league === 'wpl') q.set('league', 'wpl');

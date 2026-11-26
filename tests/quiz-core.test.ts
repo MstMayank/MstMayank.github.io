@@ -54,9 +54,9 @@ test('share text', () => {
 });
 
 test('share links keep the league and carry the score only for a challenge', () => {
-  assert.equal(quizLink('ipl', '2026-11-23'), 'https://mstmayank.github.io/quiz.html');
-  assert.equal(quizLink('wpl', '2026-11-23'), 'https://mstmayank.github.io/quiz.html?league=wpl');
-  assert.equal(quizLink('wpl', '2026-11-23', 3), 'https://mstmayank.github.io/quiz.html?league=wpl&beat=3&d=2026-11-23');
+  assert.equal(quizLink('ipl', '2026-11-23'), 'https://thecricketspace.in/quiz.html');
+  assert.equal(quizLink('wpl', '2026-11-23'), 'https://thecricketspace.in/quiz.html?league=wpl');
+  assert.equal(quizLink('wpl', '2026-11-23', 3), 'https://thecricketspace.in/quiz.html?league=wpl&beat=3&d=2026-11-23');
   assert.match(inviteText('ipl', '2026-11-23'), /today’s IPL quiz[\s\S]*quiz\.html$/);
   const text = challengeText('ipl', '2026-11-23', [true, false, true, true, false]);
   assert.match(text, /^I got 3\/5 on today’s IPL quiz/);

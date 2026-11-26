@@ -104,7 +104,7 @@
     <div class="qz-dots" id="qz-dots"></div>
     <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
     <p class="qz-verdict" id="qz-verdict" hidden></p>
-    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Challenge friends ↗</button><a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
+    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Share score ↗</button><button type="button" class="ds-btn ghost" id="qz-copy">Copy quiz link</button><a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
     <div class="qz-practice-cta"><p>Want more? Practice rounds give you new questions as often as you like. They don’t change your score or streak.</p><button type="button" class="ds-btn" id="qz-practice">Practice more ↗</button></div>
     <p class="qz-explain" id="qz-share-status" role="status"></p>
     <div class="qz-review" id="qz-review"></div>
@@ -115,7 +115,8 @@
   <section class="tool-panel"><h2>Brush up first</h2><p class="hint" style="margin:0 0 10px">Most answers come from these pages.</p><div class="qz-links"><a class="ds-btn ghost" href="/venues.html">Venues</a><a class="ds-btn ghost" href="/player/">Player pages</a><a class="ds-btn ghost" href="/player-battle.html?view=finder">Match-ups</a></div></section>
 </aside></div>
 </main>
-<script src="quiz-core.js?v=3"></script>
+<script src="quiz-story.js?v=1"></script>
+<script src="quiz-core.js?v=4"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -188,6 +189,7 @@
     while (days[d.toISOString().slice(0, 10)]?.done) { streak++; d.setUTCDate(d.getUTCDate() - 1); }
     return streak;
   }
+  let storyVersion = 0, storyFile, challengeLink;
   function finish() {
     save(true);
     index = questions.length; progress();
@@ -197,6 +199,18 @@
     $('qz-result-label').textContent = league.toUpperCase() + ' quiz · ' + new Date(today + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'long'});
     $('qz-score').textContent = score + '/' + questions.length;
     tiles($('qz-dots'), answers);
+    const version = ++storyVersion;
+    const button = $('qz-share');
+    const filename = league + '-quiz-' + today + '.png';
+    challengeLink = Q.quizLink(league, today, score);
+    storyFile = null;
+    button.disabled = true;
+    $('qz-share-status').textContent = '';
+    makeQuizStory(league, today, score, questions.length).then(blob => {
+      if (version === storyVersion) storyFile = new File([blob], filename, {type:'image/png'});
+    }).catch(() => {
+      if (version === storyVersion) $('qz-share-status').textContent = 'The Story image could not load. You can still share your score link.';
+    }).finally(() => { if (version === storyVersion) button.disabled = false; });
     $('qz-streak').textContent = streakOf(all.days); $('qz-best').textContent = all.best; $('qz-played').textContent = Object.values(all.days).filter(d => d.done).length;
     $('qz-other').textContent = 'Play the ' + (league === 'ipl' ? 'WPL' : 'IPL') + ' quiz';
     const challenge = league === linkLeague ? Q.readChallenge(location.search, today, questions.length) : null;
@@ -273,7 +287,32 @@
   $('qz-practice-back').addEventListener('click', backToDaily);
   $('qz-other').addEventListener('click', () => { league = league === 'ipl' ? 'wpl' : 'ipl'; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); });
   document.querySelectorAll('[data-league]').forEach(b => b.addEventListener('click', () => { if (b.dataset.league === league) return; league = b.dataset.league; history.replaceState(null, '', 'quiz.html' + (league === 'wpl' ? '?league=wpl' : '')); start(); }));
-  $('qz-share').addEventListener('click', () => share(Q.challengeText(league, today, answers), 'qz-share-status'));
+  $('qz-copy').addEventListener('click', async () => {
+    const status = $('qz-share-status');
+    try {
+      await navigator.clipboard.writeText(challengeLink);
+      status.textContent = 'Link copied. Paste it into your Instagram Story’s Link sticker.';
+    } catch { status.textContent = challengeLink; }
+  });
+  $('qz-share').addEventListener('click', async () => {
+    if (!storyFile) return share(Q.challengeText(league, today, answers), 'qz-share-status');
+    const file = storyFile;
+    try {
+      if (navigator.canShare?.({files:[file]})) {
+        await navigator.share({files:[file]});
+        return;
+      }
+    } catch (error) { if (error.name === 'AbortError') return; }
+    const url = URL.createObjectURL(file);
+    const download = document.createElement('a');
+    download.href = url;
+    download.download = file.name;
+    document.body.append(download);
+    download.click();
+    download.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    $('qz-share-status').textContent = 'Story card saved. Add it to Instagram, then use Copy quiz link for your Link sticker.';
+  });
   $('qz-invite-share').addEventListener('click', () => share(Q.inviteText(league, today), 'qz-invite-status'));
   start();
 })();
