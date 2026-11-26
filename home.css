@@ -110,7 +110,7 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .arena-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 24px; flex-wrap: wrap; margin-bottom: clamp(22px, 3vw, 34px); }
 .sb .over-heading { display: grid; gap: 6px; min-width: 0; }
 .sb .over-eyebrow { font: 600 13px/1 var(--cond); letter-spacing: .18em; text-transform: uppercase; color: var(--bulb); }
-.sb .arena-head h2 { font-size: clamp(42px, 5.4vw, 72px); line-height: .92; }
+.sb .arena-head h2 { font-size: clamp(34px, 4vw, 52px); line-height: .92; }
 .sb .over-ctrl { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .sb .over-track { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font: 600 15px var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); }
 .sb .balls { display: flex; gap: 6px; }
@@ -122,7 +122,7 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .sb .over-btns #over-prev { min-width: 48px; }
 
 /* Single full-bleed theatrical stage */
-.sb .arena-stage { min-height: clamp(360px, 48vh, 450px); }
+.sb .arena-stage { min-height: 0; }
 .sb .arena-stage:focus-visible { outline: 3px solid var(--bulb); outline-offset: 6px; }
 .js .sb .ball-scene { display: none; }
 .js .sb .ball-scene.active { display: grid; animation: tcs-scene-in .42s cubic-bezier(.2, .8, .2, 1) both; }
@@ -220,8 +220,9 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 /* Ball 5 & 6: Gallery panels */
 .sb .gen-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .sb .young-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.sb .gen-tile { position: relative; overflow: hidden; display: grid; min-height: 175px; border: 3px solid var(--seam); border-radius: 4px; background: var(--plate); text-decoration: none; }
-.sb .young-board .gen-tile { min-height: 290px; }
+.sb .gen-tile { position: relative; overflow: hidden; display: grid; height: clamp(145px, 14vw, 180px); min-height: 0; border: 1px solid var(--seam); border-radius: 4px; background: var(--plate); text-decoration: none; }
+.sb .young-board .gen-tile { height: clamp(175px, 21vw, 260px); }
+.sb .gen-tile img, .sb .storm-portrait img { position: absolute; inset: 0; }
 .sb .gen-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
 .sb .gen-tile b { position: absolute; left: 0; right: 0; bottom: 22px; padding: 6px 10px 2px; background: var(--plate); border-top: 2px solid var(--seam); font: 800 19px/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; color: var(--paint); }
 .sb .gen-tile span { position: absolute; left: 0; right: 0; bottom: 0; padding: 2px 10px 6px; background: var(--plate); font: 600 12px/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; color: var(--bulb); font-variant-numeric: tabular-nums; }
@@ -258,8 +259,8 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 /* Tracker + Stumps animation */
 .sb .balls i.just { animation: tcs-bowl .5s cubic-bezier(.3, 1.5, .5, 1); }
 @keyframes tcs-bowl { from { transform: translateX(-30px) scale(.5); } to { transform: none; } }
-.sb .done-tag { display: inline-flex; align-items: center; gap: 8px; color: var(--bulb); opacity: 0; transition: opacity .35s; }
-.sb .over-done .done-tag { opacity: 1; }
+.sb .done-tag { display: none; align-items: center; gap: 8px; color: var(--bulb); opacity: 0; transition: opacity .35s; }
+.sb .over-done .done-tag { display: inline-flex; opacity: 1; }
 .sb .stumps { width: 22px; height: 24px; overflow: visible; }
 .sb .stumps .poles rect { fill: var(--paint); }
 .sb .stumps .bail { fill: var(--bulb); transform-box: fill-box; transform-origin: center; }
@@ -315,3 +316,12 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 @media (prefers-reduced-motion: reduce) {
   .gl .sb .brand h1 span, .gl .sb .brand p { animation: none; opacity: 1; }
 }
+
+/* Keep all three story rows on the same editorial measure. */
+.sb .over-arena .wrap { max-width: 1160px; }
+.sb .over-arena { background: radial-gradient(ellipse at 78% 48%, #15233788, transparent 64%); }
+.sb .arena-bg { opacity: .52; }
+.sb .gen-board .gen-tile { border-radius: 8px; }
+.sb .gen-tile b { border: 0; bottom: 21px; padding-top: 24px; background: linear-gradient(transparent, #090b0f); }
+.sb .gen-tile span { background: #090b0f; }
+.sb .gen-tile.yuvi { background: radial-gradient(at top left, #48331a, var(--panel) 80%); }

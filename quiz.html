@@ -67,6 +67,35 @@
   .qz-review p { margin: 0; font-size: 14px; }
 </style>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/cricket-feel.css?v=ed-1"><link rel="stylesheet" href="record-lens.css?v=ed-1"><link rel="stylesheet" href="tools.css?v=ed-1"><link rel="stylesheet" href="/ds.css?v=sp-2">
+<style>
+  .archive-page:has(.qz-layout) { max-width: 1160px; }
+  .qz-header { max-width: none; gap: 10px; margin: 12px 0; }
+  .qz-header .tool-count { margin: 0; }
+  .qz-explain:empty { display: none; }
+  .qz-layout .qz { max-width: none; }
+  .qz-aside { gap: 12px; }
+  .qz-aside .tool-panel { margin: 0; padding: 18px; }
+  .qz-answers { text-align: left; border-top: 1px solid var(--ds-line-2); margin-top: 16px; padding-top: 12px; }
+  .qz-answers summary { cursor: pointer; font-weight: 700; }
+  html body.ds .qz-layout :is(.qz-card, .tool-panel) { border-width: 1px !important; border-radius: 12px !important; }
+  html body.ds #qz-result { background: radial-gradient(ellipse at 95% 0%, #233451, transparent 55%), var(--ds-surface) !important; }
+  .qz-scoreboard { display: grid; grid-template-columns: auto minmax(0,1fr); column-gap: 22px; align-items: center; text-align: left; }
+  .qz-scoreboard .qz-eyebrow { grid-column: 1 / -1; }
+  html body.ds #qz-score { grid-row: span 2; color: #f3b73f; }
+  .qz-scoreboard .qz-dots, .qz-scoreboard .qz-stats { justify-content: start; margin: 8px 0; }
+  .qz-scoreboard .qz-stats { gap: 18px; }
+  #qz-result .qz-actions { margin-top: 18px; }
+  @media (min-width: 850px) {
+    .qz-layout { grid-template-columns: minmax(0, 1fr) minmax(260px, 32%); gap: 18px; }
+    .qz-aside { position: static; }
+  }
+  @media (max-width: 560px) {
+    .qz-scoreboard { grid-template-columns: 1fr; text-align: center; }
+    .qz-scoreboard .qz-dots, .qz-scoreboard .qz-stats { justify-content: center; }
+    .qz-scoreboard .qz-stats { flex-wrap: wrap; }
+    #qz-result .qz-actions { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,130px),1fr)); }
+  }
+</style>
 </head>
 <body class="v2 cricket-feel cricket-tools ds" id="top">
 <nav class="nav site-nav" aria-label="Main navigation"><div class="wrap bar"><a class="logo d" href="/" aria-label="The Cricket Space home"><small>The</small>Cricket Space<i>.</i></a><div class="links" id="site-links"><a href="/writing.html">Stories</a><a href="/tools.html">Tools</a><a href="/player/">Players</a><a href="/match.html">Matches</a><a href="/ipl-auction/play.html">Auction</a><a href="/quiz.html">Quiz</a><a class="links-cta" href="/#contact">Let’s talk</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button><a class="btn d nav-cta" href="/#contact">Let’s talk</a></div></nav>
@@ -77,12 +106,14 @@
   <button type="button" data-league="ipl" aria-pressed="true">IPL</button>
   <button type="button" data-league="wpl" aria-pressed="false">WPL</button>
 </div>
-<div class="qz-layout"><div class="qz">
+<div class="qz-header qz">
   <p class="tool-count" id="qz-status" role="status">Loading today’s questions…</p>
   <p class="qz-challenge" id="qz-challenge" hidden></p>
   <div class="qz-invite" id="qz-invite"><p>Same five questions for everyone today. Send it to a friend and compare scores.</p><button type="button" class="ds-btn ghost" id="qz-invite-share">Challenge a friend ↗</button><a class="ds-btn ghost qz-wa" id="qz-invite-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a></div>
   <p class="qz-explain" id="qz-invite-status" role="status"></p>
   <div class="qz-progress" id="qz-progress" aria-hidden="true"></div>
+</div>
+<div class="qz-layout"><div class="qz">
   <section class="qz-card" id="qz-card" hidden aria-live="polite">
     <span class="qz-eyebrow" id="qz-count"></span>
     <h2 id="qz-question" tabindex="-1"></h2>
@@ -99,15 +130,16 @@
     <div class="qz-review" id="qz-practice-review"></div>
   </section>
   <section class="qz-card qz-result" id="qz-result" hidden aria-live="polite">
-    <span class="qz-eyebrow" id="qz-result-label"></span>
+    <div class="qz-scoreboard"><span class="qz-eyebrow" id="qz-result-label"></span>
     <div class="qz-score" id="qz-score"></div>
     <div class="qz-dots" id="qz-dots"></div>
     <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
+    </div>
     <p class="qz-verdict" id="qz-verdict" hidden></p>
     <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Share score ↗</button><button type="button" class="ds-btn ghost" id="qz-copy">Copy quiz link</button><a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
     <div class="qz-practice-cta"><p>Want more? Practice rounds give you new questions as often as you like. They don’t change your score or streak.</p><button type="button" class="ds-btn" id="qz-practice">Practice more ↗</button></div>
     <p class="qz-explain" id="qz-share-status" role="status"></p>
-    <div class="qz-review" id="qz-review"></div>
+    <details class="qz-answers"><summary>Review your answers</summary><div class="qz-review" id="qz-review"></div></details>
     <p class="qz-explain">New questions at midnight (India time).</p>
   </section>
 </div><aside class="qz-aside" aria-label="About the quiz">
