@@ -182,7 +182,7 @@ function start() {
     }
   });
   let hoverEvent = null;
-  cv.addEventListener('pointermove', e => { hoverEvent = e; });
+  cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') hoverEvent = e; });
   addEventListener('pointerup', e => { cv.classList.remove('dragging'); if (down && !down.moved && e.target === cv) click(e); down = null; });
   cv.addEventListener('pointercancel', () => { down = null; cv.classList.remove('dragging'); });
 
@@ -194,12 +194,22 @@ function start() {
     mouse.set(e.offsetX / w * 2 - 1, -(e.offsetY / h) * 2 + 1); ray.setFromCamera(mouse, camera);
     const hits = ray.intersectObject(starPoints); return hits.length ? hits[0].index : -1;
   }
-  function showTip(i, x, y) {
+  function showTip(i, x, y, touch = false) {
+    tip.classList.toggle('touch-preview', touch);
     const p = players[i], role = { bat: 'Batter', bowl: 'Bowler', all: 'All-rounder', wpl: 'WPL' }[roleOf(p)];
     const line = p[5] * 25 > p[4] ? `${fmt(p[5])} ${p[2]} wickets · ${p[3]} matches` : `${fmt(p[4])} ${p[2]} runs · ${p[3]} matches`;
     tip.innerHTML = '<b></b><span></span><em></em>';
-    tip.querySelector('b').textContent = p[0]; tip.querySelector('span').textContent = line; tip.querySelector('em').textContent = role + ' · click to open';
+    tip.querySelector('b').textContent = p[0]; tip.querySelector('span').textContent = line; tip.querySelector('em').textContent = touch ? role : role + ' · click to open';
     tip.style.left = Math.min(x, innerWidth - 280) + 'px'; tip.style.top = Math.min(y, innerHeight - 110) + 'px'; tip.classList.add('on');
+    if (touch) {
+      const link = document.createElement('a');
+      link.textContent = 'Open profile →';
+      link.href = '/player/' + p[1] + '.html';
+      tip.append(link);
+      const rect = tip.getBoundingClientRect();
+      tip.style.left = Math.max(8, Math.min(x - rect.width / 2, innerWidth - rect.width - 8)) + 'px';
+      tip.style.top = Math.max(8, y - rect.height - 14) + 'px';
+    }
   }
   function hover(e) {
     if (down && down.moved) return;
@@ -207,7 +217,26 @@ function start() {
     if (i >= 0) showTip(i, e.clientX, e.clientY); else if (pinned < 0) tip.classList.remove('on');
     if (starPoints) starPoints.material.uniforms.hi.value = i >= 0 ? i : pinned;
   }
-  function click(e) { const i = pick(e); if (i >= 0) location.href = '/player/' + players[i][1] + '.html'; }
+  function dismissPreview() {
+    if (!tip.classList.contains('touch-preview')) return;
+    tip.classList.remove('touch-preview', 'on');
+    tip.replaceChildren();
+    if (starPoints) starPoints.material.uniforms.hi.value = pinned;
+  }
+  document.addEventListener('pointerdown', e => { if (!tip.contains(e.target)) dismissPreview(); });
+  addEventListener('scroll', dismissPreview, {passive:true});
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') dismissPreview(); });
+  function click(e) {
+    const i = pick(e);
+    if (i < 0) return;
+    if (e.pointerType === 'mouse') {
+      location.href = '/player/' + players[i][1] + '.html';
+      return;
+    }
+    hoverEvent = null;
+    starPoints.material.uniforms.hi.value = i;
+    showTip(i, e.clientX, e.clientY, true);
+  }
   function unpin() { if (pinned < 0) return; pinned = -1; root.classList.remove('tcs-pinned'); tip.classList.remove('on'); if (starPoints) starPoints.material.uniforms.hi.value = -1; flyTo(rotated(), new THREE.Vector3(), 1200); }
 
   const links = [...box.querySelectorAll('.moon')];

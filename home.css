@@ -251,7 +251,7 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 .sb .mini-planet::after { border-right-width: 2px; translate: 10% 0; }
 .sb .sign-off { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding-block: clamp(36px, 5vw, 64px); }
 .sb .sign-off .mini-planet { position: relative; flex: none; width: 64px; height: 64px; }
-.sb .sign-off .mark { position: absolute; left: calc(var(--gutter) + 18px); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 3px; background: var(--plate); color: var(--bulb); font: 800 18px var(--cond); }
+.sb .sign-off .mark { position: absolute; inset: 0; margin: auto; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 3px; background: var(--plate); color: var(--bulb); font: 800 18px var(--cond); }
 .sb .sign-off p { flex: 1 1 320px; margin: 0; max-width: 64ch; color: var(--paint-2); }
 .sb .sign-off strong { color: var(--paint); }
 .sb .sign-off-actions { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -325,3 +325,17 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 .sb .gen-tile b { border: 0; bottom: 21px; padding-top: 24px; background: linear-gradient(transparent, #090b0f); }
 .sb .gen-tile span { background: #090b0f; }
 .sb .gen-tile.yuvi { background: radial-gradient(at top left, #48331a, var(--panel) 80%); }
+
+.sb .tip.touch-preview { pointer-events: auto; transform: none; }
+.sb .tip.touch-preview a { display: inline-flex; align-items: center; min-height: 44px; color: var(--bulb); }
+@media (max-width: 760px) {
+  .sb .sign-off { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 14px; }
+  .sb .sign-off .mini-planet { width: 40px; height: 40px; }
+  .sb .sign-off .mark { width: 20px; height: 20px; font-size: 14px; }
+  .sb .sign-off-actions { grid-column: 1 / -1; }
+  .sb .b1 .scene-stats, .sb .b1 .chase-bars { display: none; }
+  .sb .b1 .final-board { gap: 6px; }
+  .sb .b1 .sc-plate { padding: 10px 14px; }
+  .sb .b1 .sc-num { font-size: 38px; }
+  .sb .arena-bg { mask-image: linear-gradient(transparent 32%, #000 66%, transparent 95%); }
+}
