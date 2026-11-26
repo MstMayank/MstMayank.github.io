@@ -59,8 +59,6 @@
   body.ds .qz-challenge[hidden], body.ds .qz-verdict[hidden] { display: none; }
   body.ds .qz-verdict { margin: 0; color: rgb(var(--ds-accent-rgb)); font-weight: 700; }
   body.ds a.ds-btn.qz-wa { text-decoration: none; }
-  .qz-practice-cta { display: grid; justify-items: center; gap: 10px; margin-top: 6px; padding-top: 18px; border-top: 1px solid rgba(var(--ds-ink-rgb), .09); }
-  .qz-practice-cta p { margin: 0; max-width: 46ch; font-size: 14px; color: var(--ds-muted); }
   body.ds .qz-card.practice { border-color: rgba(var(--ds-blue-rgb), .35); }
   body.ds .qz-card.practice .qz-eyebrow { color: rgb(var(--ds-blue-rgb)); }
   .qz-review { text-align: left; margin-top: 18px; display: grid; gap: 8px; }
@@ -79,20 +77,14 @@
   .qz-answers summary { cursor: pointer; font-weight: 700; }
   html body.ds .qz-layout :is(.qz-card, .tool-panel) { border-width: 1px !important; border-radius: 12px !important; }
   html body.ds #qz-result { background: radial-gradient(ellipse at 95% 0%, #233451, transparent 55%), var(--ds-surface) !important; }
-  .qz-scoreboard { display: grid; grid-template-columns: auto minmax(0,1fr); column-gap: 22px; align-items: center; text-align: left; }
-  .qz-scoreboard .qz-eyebrow { grid-column: 1 / -1; }
-  html body.ds #qz-score { grid-row: span 2; color: #f3b73f; }
-  .qz-scoreboard .qz-dots, .qz-scoreboard .qz-stats { justify-content: start; margin: 8px 0; }
-  .qz-scoreboard .qz-stats { gap: 18px; }
-  #qz-result .qz-actions { margin-top: 18px; }
+  .qz-scoreboard { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; text-align: left; }
+  html body.ds #qz-score { color: #f3b73f; font-size: clamp(48px, 6vw, 70px); margin-top: 4px; }
+  #qz-details .qz-actions, #qz-details .qz-stats { justify-content: flex-start; flex-wrap: wrap; margin-top: 16px; }
   @media (min-width: 850px) {
     .qz-layout { grid-template-columns: minmax(0, 1fr) minmax(260px, 32%); gap: 18px; }
     .qz-aside { position: static; }
   }
   @media (max-width: 560px) {
-    .qz-scoreboard { grid-template-columns: 1fr; text-align: center; }
-    .qz-scoreboard .qz-dots, .qz-scoreboard .qz-stats { justify-content: center; }
-    .qz-scoreboard .qz-stats { flex-wrap: wrap; }
     #qz-result .qz-actions { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,130px),1fr)); }
   }
 </style>
@@ -130,17 +122,23 @@
     <div class="qz-review" id="qz-practice-review"></div>
   </section>
   <section class="qz-card qz-result" id="qz-result" hidden aria-live="polite">
-    <div class="qz-scoreboard"><span class="qz-eyebrow" id="qz-result-label"></span>
-    <div class="qz-score" id="qz-score"></div>
-    <div class="qz-dots" id="qz-dots"></div>
-    <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
+    <div class="qz-scoreboard">
+      <div><span class="qz-eyebrow" id="qz-result-label"></span><div class="qz-score" id="qz-score"></div></div>
+      <button type="button" class="ds-btn" id="qz-share">Share score ↗</button>
     </div>
     <p class="qz-verdict" id="qz-verdict" hidden></p>
-    <div class="qz-actions"><button type="button" class="ds-btn" id="qz-share">Share score ↗</button><button type="button" class="ds-btn ghost" id="qz-copy">Copy quiz link</button><a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a><button type="button" class="ds-btn ghost" id="qz-other"></button></div>
-    <div class="qz-practice-cta"><p>Want more? Practice rounds give you new questions as often as you like. They don’t change your score or streak.</p><button type="button" class="ds-btn" id="qz-practice">Practice more ↗</button></div>
     <p class="qz-explain" id="qz-share-status" role="status"></p>
-    <details class="qz-answers"><summary>Review your answers</summary><div class="qz-review" id="qz-review"></div></details>
-    <p class="qz-explain">New questions at midnight (India time).</p>
+    <details class="qz-answers" id="qz-details">
+      <summary>Answers, stats &amp; more</summary>
+      <div class="qz-stats"><div><b id="qz-streak">0</b>day streak</div><div><b id="qz-best">0</b>best score</div><div><b id="qz-played">0</b>days played</div></div>
+      <div class="qz-review" id="qz-review"></div>
+      <div class="qz-actions">
+        <button type="button" class="ds-btn ghost" id="qz-copy">Copy quiz link</button>
+        <a class="ds-btn ghost qz-wa" id="qz-wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/">WhatsApp ↗</a>
+        <button type="button" class="ds-btn ghost" id="qz-practice">Practice more</button>
+        <button type="button" class="ds-btn ghost" id="qz-other"></button>
+      </div>
+    </details>
   </section>
 </div><aside class="qz-aside" aria-label="About the quiz">
   <section class="tool-panel"><h2>How it works</h2><ol><li>Five questions a day from real IPL or WPL match data.</li><li>Everyone gets the same quiz, so you can compare scores.</li><li>New questions every midnight, India time.</li><li>After the daily quiz, practise as much as you like. Practice never changes your score or streak.</li></ol></section>
@@ -230,7 +228,7 @@
     $('qz-card').hidden = true; $('qz-result').hidden = false;
     $('qz-result-label').textContent = league.toUpperCase() + ' quiz · ' + new Date(today + 'T00:00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'long'});
     $('qz-score').textContent = score + '/' + questions.length;
-    tiles($('qz-dots'), answers);
+    $('qz-details').open = false;
     const version = ++storyVersion;
     const button = $('qz-share');
     const filename = league + '-quiz-' + today + '.png';
