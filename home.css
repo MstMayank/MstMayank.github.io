@@ -273,21 +273,16 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
   .sb .ball-scene.active, .sb .wall .bricks i, .sb .balls i, .sb .stumps .bail, .sb .wall.hit { animation: none !important; transition: none !important; }
 }
 
-/* contact */
-.sb #contact { background: linear-gradient(110deg, #101823, var(--space) 72%); border-block-start: 1px solid var(--seam); }
-.sb #contact .contact { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start; gap: clamp(24px, 4vw, 48px); max-width: 1000px; padding-block: clamp(28px, 4vw, 52px); }
-.sb .contact h2 { font-size: clamp(34px, 4vw, 48px); line-height: 1; }
-.sb .contact > div > p { margin: 10px 0 12px; max-width: 36ch; color: var(--paint-2); }
-.sb .social { display: flex; flex-wrap: wrap; gap: 0 18px; font: 600 16px var(--cond); letter-spacing: .05em; text-transform: uppercase; }
-.sb .social a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 5px; }
-.sb #idea-form { display: grid; gap: 8px; min-width: 0; }
-.sb #idea-form label { font: 600 14px var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--bulb); }
-.sb #idea-form textarea { box-sizing: border-box; width: 100%; min-width: 0; min-height: 92px; padding: 10px 12px; font: 16px/1.4 var(--text); resize: vertical; }
-.sb #idea-form .btn { justify-self: start; min-height: 44px; }
-.sb #idea-status { margin: 0; color: var(--paint-2); }
-.sb #idea-status:empty { display: none; }
-@media (max-width: 680px) {
-  .sb #contact .contact { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+/* The contact strip bridges the galaxy and site footer. */
+.sb #contact { background: #0c1018; border-block: 1px solid var(--seam); }
+.sb #contact .contact { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 32px; padding-block: clamp(18px, 3vw, 36px); }
+.sb #contact h2 { margin: 0; font-size: clamp(32px, 4vw, 54px); line-height: 1; }
+.sb #contact h2 span { color: var(--bulb); }
+.sb #contact .contact-email { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; max-width: 100%; color: var(--paint); font: 600 clamp(16px, 1.7vw, 22px)/1.3 var(--text); overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 5px; }
+.sb .contact-email span { color: var(--bulb); }
+.sb #contact .contact-email:is(:hover, :focus-visible) { text-decoration-color: var(--bulb); }
+@media (max-width: 580px) {
+  .sb #contact .contact { align-items: flex-start; flex-direction: column; gap: 2px; }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -296,14 +291,14 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
   .sb .btn:hover { background: var(--paint); color: var(--plate); }
   .sb .btn.go:hover { background: #fff; }
   .sb .moon:hover b { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
-  .sb .social a:hover, .sb .b-link:hover { color: var(--bulb); }
+  .sb .b-link:hover { color: var(--bulb); }
   .sb .over-pill:hover { border-color: var(--line-2); background: var(--panel-2); }
   .sb .over-pill.on:hover { border-color: var(--bulb); }
   .sb .b-fly:hover, .sb .w-chip:hover, .sb .knock-btn:hover { border-color: var(--bulb); color: var(--bulb); }
   .sb .c-tile:hover { opacity: 1; border-color: var(--paint); }
 }
 @media (max-width: 900px) {
-  .sb .contact, .sb .ball-scene { grid-template-columns: minmax(0, 1fr); }
+  .sb .ball-scene { grid-template-columns: minmax(0, 1fr); }
   .sb .over-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sb .scene-era { display: none; }
 }
