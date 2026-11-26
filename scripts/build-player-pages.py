@@ -391,12 +391,20 @@ def international_card(profile, figures):
         record = profile['formats'].get(key, {})
         bat = record.get('batting') or {}
         bowl = record.get('bowling') or {}
-        if bat.get('runs') is not None or bowl.get('wickets') is not None:
-            rows.append([key, 'Career snapshot', fmt(bat.get('runs')), fmt(bowl.get('wickets'))])
-        if key in figures:
-            totals = figures[key]
-            rows.append([key, 'Archived innings', fmt(totals.get('runs')), fmt(totals.get('wickets'))])
-    body = (table('Archived innings cover the scorecards on this site. A dash means unavailable.',
+        career = [bat.get('runs'), bowl.get('wickets')]
+        archive = figures.get(key, {})
+        if all(value is None for value in career):
+            if archive:
+                rows.append([key, 'Archived innings', fmt(archive.get('runs')), fmt(archive.get('wickets'))])
+            continue
+        cells = []
+        for value, stat in zip(career, ('runs', 'wickets')):
+            if value is None and archive.get(stat) is not None:
+                cells.append(f'{fmt(archive[stat])} (archived)')
+            else:
+                cells.append(fmt(value))
+        rows.append([key, 'Career snapshot', *cells])
+    body = (table('Archived figures cover only available scorecards. A dash means unavailable.',
                   ['Format', 'Coverage', 'Runs', 'Wickets'], rows) if rows else
             '<p>International figures are unavailable for this player.</p>')
     return card('International records', body, wide=True)
