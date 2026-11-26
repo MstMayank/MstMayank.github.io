@@ -448,11 +448,10 @@ def page(shell, slug, row, profile, leagues, slugs, international=None):
             record = profile['formats'].get(key, {})
             if (international or {}).get(key) or record.get('batting') or record.get('bowling'):
                 international_formats.append(key)
+    facts = []
     if international_formats:
-        facts = []
         title = f'{name}: international and league records | The Cricket Space'
     else:
-        facts = []
         for label, _key, _short, s, _d in leagues:
             if s['batting'] and s['batting']['runs']:
                 facts.append(f'{fmt(s["batting"]["runs"])} {label} runs at a strike rate of {fmt(s["batting"]["sr"], 1)}')

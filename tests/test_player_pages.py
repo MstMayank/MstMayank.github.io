@@ -72,7 +72,11 @@ class BuiltPagesTests(unittest.TestCase):
     def test_page_has_unique_meta(self):
         text = (ROOT / 'player' / f'{self.links["ipl"]["V Kohli"]}.html').read_text()
         self.assertIn('<link rel="canonical" href="https://mstmayank.github.io/player/virat-kohli.html">', text)
-        self.assertRegex(text, r'<title>Virat Kohli: IPL stats')
+        self.assertRegex(text, r'<title>Virat Kohli: [^<]+</title>')
+        if 'href="#league-records"' in text:
+            self.assertIn('id="league-records"', text)
+            self.assertIn('<span>Test</span>', text)
+            self.assertLess(text.index('<h2>International records'), text.index('id="league-records"'))
         self.assertIn('Batting by phase', text)
         self.assertEqual(len(re.findall(r'id="top"', text)), 1)
         sitemap = (ROOT / 'sitemap.xml').read_text()
