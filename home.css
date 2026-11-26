@@ -54,7 +54,7 @@ html body.ds.space-home .site-nav .logo.d { visibility: hidden; }
 .gl .sb .legend { display: grid; }
 
 /* The four doors. Without 3D they are a simple row of buttons; with 3D each label follows its ball. */
-.sb .moons { align-self: center; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: min(100%, 900px); margin: 0 auto; }
+.sb .moons { align-self: center; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(100%, 900px); margin: 0 auto; }
 .sb .moon { display: grid; justify-items: center; gap: 4px; padding: 16px 10px; border: 2px solid var(--seam); border-radius: 4px; background: var(--panel); text-decoration: none; white-space: nowrap; }
 .sb .moon b { font: 800 clamp(20px, 2vw, 26px)/1 var(--cond); text-transform: uppercase; letter-spacing: .04em; }
 .sb .moon small { font: 600 12px var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--paint-2); }
@@ -303,7 +303,7 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
   .sb .scene-era { display: none; }
 }
 @media (max-width: 760px) {
-  .sb .moons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sb .moons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .gl .sb .legend, .sb .legend, .sb .moon small { display: none; }
 }
 @media (max-width: 560px) {

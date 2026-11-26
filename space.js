@@ -1,5 +1,5 @@
 // The Cricket Space: the 3D universe on the homepage.
-// A red cricket-ball planet, four ball moons that are the site's doors, and a galaxy with one star
+// A red cricket-ball planet, three ball moons that are the site's doors, and a galaxy with one star
 // per real player (player/galaxy.json, written by scripts/build-player-pages.py).
 // Without WebGL nothing here runs and the doors stay as plain buttons.
 import * as THREE from '/vendor/three-0.170.0.module.min.js';
@@ -103,16 +103,15 @@ function start() {
   const planet = new THREE.Mesh(new THREE.SphereGeometry(20, 96, 64), new THREE.MeshStandardMaterial({ map: ballTexture('#b8291f', 'rgba(40,0,0,.6)', '#f3e3c8'), roughness: .55 }));
   planet.rotation.z = 0.35; scene.add(planet);
 
-  // Four moons, each a different ball. Same order as the door links.
+  // Three moons, each a different ball. Same order as the door links.
   const moonDefs = [
     ['#ece7da', 'rgba(120,110,90,.4)', '#b03a2e', {}],
     ['#e0477a', 'rgba(90,10,40,.5)', '#fff1f5', {}],
     ['#c9d232', 'rgba(70,80,0,.4)', '#fbfbf1', { tennis: true }],
-    ['#7a2f27', 'rgba(20,5,0,.6)', '#d9c7a8', {}]
   ];
   const moons = moonDefs.map(([b, d, s, o], i) => {
     const m = new THREE.Mesh(new THREE.SphereGeometry(4, 48, 32), new THREE.MeshStandardMaterial({ map: ballTexture(b, d, s, o), roughness: o.tennis ? .95 : .5 }));
-    m.userData.a = i * Math.PI / 2 + .4; scene.add(m); return m;
+    m.userData.a = i * 2 * Math.PI / moonDefs.length + .4; scene.add(m); return m;
   });
   const ORBIT_R = 38;
   const orbit = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 128 }, (_, i) => new THREE.Vector3(Math.cos(i / 64 * Math.PI) * ORBIT_R, 0, Math.sin(i / 64 * Math.PI) * ORBIT_R))),
