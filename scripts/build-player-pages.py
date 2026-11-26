@@ -442,19 +442,29 @@ def page(shell, slug, row, profile, leagues, slugs, international=None):
     pid, full_name, country, gender, aliases, _ = row
     name = DISPLAY.get(slug, full_name)
     tags = [t for t in (country, {'female': 'Women', 'male': 'Men'}.get(gender)) if t]
-    facts = []
-    for label, _key, _short, s, _d in leagues:
-        if s['batting'] and s['batting']['runs']:
-            facts.append(f'{fmt(s["batting"]["runs"])} {label} runs at a strike rate of {fmt(s["batting"]["sr"], 1)}')
-        if s['bowling'] and s['bowling']['wickets']:
-            facts.append(f'{fmt(s["bowling"]["wickets"])} {label} wickets at an economy of {fmt(s["bowling"]["econ"])}')
-    if not facts:
-        for key, label in FORMATS:
-            r = profile['formats'].get(key)
-            if r and (r.get('batting') or {}).get('runs'):
-                facts.append(f'{fmt(r["batting"]["runs"])} {label} runs'); break
-    leagues_text = ' and '.join(label for label, *_ in leagues)
-    title = f'{name}: {leagues_text} stats, phases and match-ups | The Cricket Space' if leagues else f'{name}: career stats by format | The Cricket Space'
+    international_formats = []
+    if leagues:
+        for key in ('Test', 'ODI', 'T20I'):
+            record = profile['formats'].get(key, {})
+            if (international or {}).get(key) or record.get('batting') or record.get('bowling'):
+                international_formats.append(key)
+    if international_formats:
+        facts = []
+        title = f'{name}: international and league records | The Cricket Space'
+    else:
+        facts = []
+        for label, _key, _short, s, _d in leagues:
+            if s['batting'] and s['batting']['runs']:
+                facts.append(f'{fmt(s["batting"]["runs"])} {label} runs at a strike rate of {fmt(s["batting"]["sr"], 1)}')
+            if s['bowling'] and s['bowling']['wickets']:
+                facts.append(f'{fmt(s["bowling"]["wickets"])} {label} wickets at an economy of {fmt(s["bowling"]["econ"])}')
+        if not facts:
+            for key, label in FORMATS:
+                r = profile['formats'].get(key)
+                if r and (r.get('batting') or {}).get('runs'):
+                    facts.append(f'{fmt(r["batting"]["runs"])} {label} runs'); break
+        leagues_text = ' and '.join(label for label, *_ in leagues)
+        title = f'{name}: {leagues_text} stats, phases and match-ups | The Cricket Space' if leagues else f'{name}: career stats by format | The Cricket Space'
     desc = f'{name}' + (f' ({", ".join(tags)})' if tags else '') + ': ' + ('; '.join(facts) or 'career records by format') + ('. Phase splits, seasons, recent form and match-ups from ball-by-ball data.' if leagues else '. Career records by format with sources.')
     url = f'{SITE}/player/{slug}.html'
     ld = {'@context': 'https://schema.org', '@type': 'ProfilePage', 'url': url, 'name': title,
@@ -464,13 +474,16 @@ def page(shell, slug, row, profile, leagues, slugs, international=None):
         head = head.replace('https://mstmayank.github.io/og-player-battle.jpg', SITE + PHOTOS[slug].replace('/thumbs/', '/').replace('.webp', '.jpg'))
     short = leagues[0][2] if leagues else ''
     cards = [international_card(profile, international or {})] if leagues else []
+    league_start = len(cards)
     for label, key, sh, s, data in leagues:
         cards += league_cards(label, key, sh, s, data, slugs)
+    if international_formats and len(cards) > league_start:
+        cards[league_start] = cards[league_start].replace(' class="', ' id="league-records" class="', 1)
     cards.append(career_card(profile))
-    big = headline(profile, leagues)
-    chips = ''.join(f'<span>{esc(t)}</span>' for t in tags + [label for label, *_ in leagues])
+    big = [] if international_formats else headline(profile, leagues)
+    chips = ''.join(f'<span>{esc(t)}</span>' for t in tags + (international_formats or [label for label, *_ in leagues]))
     span = ''
-    if leagues:
+    if leagues and not international_formats:
         s0 = leagues[0][3]
         span = f'<span>{esc(s0["first"][:4])}–{esc(s0["last"][:4])}</span>'
     return (head + f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n</head>\n<body class="ds">'
@@ -483,6 +496,7 @@ def page(shell, slug, row, profile, leagues, slugs, international=None):
             + (f'<p class="pp-lede">{esc("; ".join(facts))}.</p>' if facts else '')
             + ('<dl class="pp-big">' + ''.join(f'<div><dt>{esc(k)}</dt><dd>{esc(str(v))}</dd></div>' for k, v in big) + '</dl>' if big else '')
             + '<div class="pp-actions"><button type="button" class="pp-share" data-title="' + esc(name) + '">Share ↗</button>'
+            + (f'<a href="#league-records">{esc(leagues[0][0])} records ↓</a>' if international_formats else '')
             + (f'<a href="/player-battle.html?competition={leagues[0][1]}&amp;first={esc(short)}">Battle this player ↗</a>' if leagues else '')
             + f'<a href="/player-battle.html?competition=international&amp;view=careers&amp;player={esc(pid)}">All formats ↗</a></div>'
             + '</div></header>'
