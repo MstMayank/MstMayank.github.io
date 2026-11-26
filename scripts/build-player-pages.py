@@ -20,6 +20,7 @@ player section of sitemap.xml.
 import html
 import json
 import re
+import runpy
 import unicodedata
 from collections import defaultdict
 from datetime import date
@@ -369,6 +370,38 @@ def league_cards(label, key, short, s, data, slugs):
     return cards
 
 
+def international_figures():
+    """Index the same decoded scorecards used by the Record Book, by registry ID."""
+    read = runpy.run_path(str(ROOT / 'scripts/refresh-cricket.py'))['load_archive']
+    figures = defaultdict(dict)
+    for key in ('Test', 'ODI', 'T20I'):
+        archive = read(ROOT / f'archive-players-{key}.bin')
+        for row in archive['rows']:
+            if row[0] not in ('Batting', 'Bowling') or not row[10]:
+                continue
+            totals = figures['cs:' + row[10]].setdefault(key, {})
+            stat = 'runs' if row[0] == 'Batting' else 'wickets'
+            totals[stat] = totals.get(stat, 0) + row[4]
+    return figures
+
+
+def international_card(profile, figures):
+    rows = []
+    for key in ('Test', 'ODI', 'T20I'):
+        record = profile['formats'].get(key, {})
+        bat = record.get('batting') or {}
+        bowl = record.get('bowling') or {}
+        if bat.get('runs') is not None or bowl.get('wickets') is not None:
+            rows.append([key, 'Career snapshot', fmt(bat.get('runs')), fmt(bowl.get('wickets'))])
+        if key in figures:
+            totals = figures[key]
+            rows.append([key, 'Archived innings', fmt(totals.get('runs')), fmt(totals.get('wickets'))])
+    body = (table('Archived innings cover the scorecards on this site. A dash means unavailable.',
+                  ['Format', 'Coverage', 'Runs', 'Wickets'], rows) if rows else
+            '<p>International figures are unavailable for this player.</p>')
+    return card('International records', body, wide=True)
+
+
 def career_card(profile):
     rows = []
     for key, label in FORMATS:
@@ -405,7 +438,7 @@ def headline(profile, leagues):
     return []
 
 
-def page(shell, slug, row, profile, leagues, slugs):
+def page(shell, slug, row, profile, leagues, slugs, international=None):
     pid, full_name, country, gender, aliases, _ = row
     name = DISPLAY.get(slug, full_name)
     tags = [t for t in (country, {'female': 'Women', 'male': 'Men'}.get(gender)) if t]
@@ -430,7 +463,7 @@ def page(shell, slug, row, profile, leagues, slugs):
     if PHOTOS.get(slug):
         head = head.replace('https://mstmayank.github.io/og-player-battle.jpg', SITE + PHOTOS[slug].replace('/thumbs/', '/').replace('.webp', '.jpg'))
     short = leagues[0][2] if leagues else ''
-    cards = []
+    cards = [international_card(profile, international or {})] if leagues else []
     for label, key, sh, s, data in leagues:
         cards += league_cards(label, key, sh, s, data, slugs)
     cards.append(career_card(profile))
@@ -652,6 +685,7 @@ def main():
     for old in OUT.glob('*.html'):
         if old.name not in wanted and old.name not in keep:
             old.unlink()
+    international = international_figures()
     entries, total, galaxy = [], 0, []
     for r in chosen:
         leagues = []
@@ -673,7 +707,7 @@ def main():
             bb, ww = s0['batting'] or {}, s0['bowling'] or {}
             shown = DISPLAY.get(slug_of[r[0]]) or common_name(r[1], _sh, slug_of[r[0]])
             galaxy.append([shown, slug_of[r[0]], label, s0['matches'], bb.get('runs', 0), ww.get('wickets', 0)] + ([r[1]] if r[1] != shown else []))
-        text = page(shell, slug_of[r[0]], r, records[r[0]], leagues, slugs)
+        text = page(shell, slug_of[r[0]], r, records[r[0]], leagues, slugs, international.get(r[0]))
         (OUT / f'{slug_of[r[0]]}.html').write_text(text, encoding='utf-8')
         total += len(text.encode())
         meta = ' · '.join(x for x in [r[2]] + [f for f, _ in FORMATS if f in records[r[0]]['formats'] and f in PAGE_FORMATS] if x)
