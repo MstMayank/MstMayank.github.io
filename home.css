@@ -315,27 +315,3 @@ html:not(.js) .sb .ball-scene { display: grid; margin-bottom: 40px; }
 @media (prefers-reduced-motion: reduce) {
   .gl .sb .brand h1 span, .gl .sb .brand p { animation: none; opacity: 1; }
 }
-
-/* A stationary portal at the distant upper-right edge of the homepage. */
-#hole {
-  position: absolute; right: 5%; top: 11%; z-index: 4;
-  width: 54px; min-height: 48px; padding: 0; border: 0; background: transparent;
-  display: grid; place-content: center; justify-items: center;
-  font: 600 9px/1.3 Barlow, sans-serif; letter-spacing: .09em;
-  color: #cbbb9f; cursor: pointer;
-}
-#hole img { display: block; width: 40px; height: auto; opacity: .84; }
-#hole span { margin-top: -4px; white-space: nowrap; }
-#hole:disabled { opacity: 1; cursor: default; }
-body[data-mode="pull"], body[data-mode="inside"] { overflow: hidden; background: #05080d; }
-body:is([data-mode="pull"], [data-mode="inside"]) > :is(.site-nav,.site-footer),
-body[data-mode="pull"] #home > :not(#universe),
-body[data-mode="inside"] #home { display: none !important; }
-body:is([data-mode="pull"],[data-mode="inside"]) #hole span { visibility: hidden; }
-#home.gravity-composite #universe > :not(canvas) { opacity: 0 !important; transition: none !important; animation: none !important; pointer-events: none !important; }
-#restore { position: fixed; z-index: 8; bottom: 9vh; left: 50%; transform: translateX(-50%); padding: 10px 18px; background: #111821; color: #efcd91; border: 1px solid #796c55; border-radius: 4px; cursor: pointer; }
-#restore[hidden] { display: none; }
-@media (max-width: 650px) {
-  #hole { right: 4%; top: calc(72px + env(safe-area-inset-top)); width: 48px; }
-  #hole img { width: 32px; }
-}
