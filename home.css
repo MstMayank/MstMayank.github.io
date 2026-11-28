@@ -310,7 +310,6 @@ html body.ds .sb #res-title {
   .sb .gen-tile:hover { border-color: var(--bulb); }
   .sb .btn:hover { background: var(--paint); color: var(--plate); }
   .sb .btn.go:hover { background: #fff; }
-  .sb .moon:hover b { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
   .sb .b-link:hover { color: var(--bulb); }
   .sb .over-pill:hover { border-color: var(--line-2); background: var(--panel-2); }
   .sb .over-pill.on:hover { border-color: var(--bulb); }
